@@ -3,6 +3,7 @@ package types
 import (
 	"crypto/ed25519"
 	"errors"
+	"fmt"
 
 	"github.com/portto/solana-go-sdk/common"
 )
@@ -14,15 +15,27 @@ type Transaction struct {
 	Message    Message
 }
 
-func (tx *Transaction) sign(privateKeys []ed25519.PrivateKey) (*Transaction, error) {
-	messageData, err := tx.Message.Serialize()
+func (tx *Transaction) sign(accounts []Account) (*Transaction, error) {
+	if int(tx.Message.Header.NumRequireSignatures) != len(accounts) {
+		return nil, errors.New("signer's num not match")
+	}
+
+	message, err := tx.Message.Serialize()
 	if err != nil {
 		return nil, err
 	}
 
-	tx.Signatures = make([]Signature, 0, len(privateKeys))
-	for _, privateKey := range privateKeys {
-		signature := ed25519.Sign(privateKey, messageData)
+	accountMap := map[common.PublicKey]ed25519.PrivateKey{}
+	for _, account := range accounts {
+		accountMap[account.PublicKey] = account.PrivateKey
+	}
+
+	for i := 0; i < int(tx.Message.Header.NumRequireSignatures); i++ {
+		privateKey, exist := accountMap[tx.Message.Accounts[i]]
+		if !exist {
+			return nil, fmt.Errorf("lack %s's private key", tx.Message.Accounts[i].ToBase58())
+		}
+		signature := ed25519.Sign(privateKey, message)
 		tx.Signatures = append(tx.Signatures, signature)
 	}
 	return tx, nil
@@ -51,12 +64,12 @@ func (tx *Transaction) Serialize() ([]byte, error) {
 
 type CreateRawTransactionParam struct {
 	Instructions    []Instruction
-	PrivateKeys     []ed25519.PrivateKey
+	Signers         []Account
 	FeePayer        common.PublicKey
 	RecentBlockHash string
 }
 
-func NewTransaction(param CreateRawTransactionParam) ([]byte, error) {
+func CreateRawTransaction(param CreateRawTransactionParam) ([]byte, error) {
 	if param.RecentBlockHash == "" {
 		return nil, errors.New("recent block hash is required")
 	}
@@ -64,16 +77,12 @@ func NewTransaction(param CreateRawTransactionParam) ([]byte, error) {
 		return nil, errors.New("no instructions provided")
 	}
 
-	message := compileMessage(param.FeePayer, param.Instructions, param.RecentBlockHash)
-	if int(message.Header.NumRequireSignatures) != len(param.PrivateKeys) {
-		return nil, errors.New("")
-	}
-
 	tx := Transaction{
 		Signatures: []Signature{},
-		Message:    message,
+		Message:    compileMessage(param.FeePayer, param.Instructions, param.RecentBlockHash),
 	}
-	signTx, err := tx.sign(param.PrivateKeys)
+
+	signTx, err := tx.sign(param.Signers)
 	if err != nil {
 		return nil, err
 	}
