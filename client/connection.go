@@ -64,7 +64,6 @@ func (s *Client) request(method string, params []interface{}, response interface
 	if err != nil {
 		return err
 	}
-	fmt.Println(string(body))
 	if len(body) != 0 {
 		if err := json.Unmarshal(body, &response); err != nil {
 			return err
