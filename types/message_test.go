@@ -12,7 +12,7 @@ func TestMessage_Serialize(t *testing.T) {
 		Header          MessageHeader
 		Accounts        []common.PublicKey
 		RecentBlockHash string
-		Instructions    []compiledInstruction
+		Instructions    []CompiledInstruction
 	}
 	tests := []struct {
 		name    string
@@ -33,7 +33,7 @@ func TestMessage_Serialize(t *testing.T) {
 					common.PublicKeyFromHex("0"),
 				},
 				RecentBlockHash: "FwRYtTPRk5N4wUeP87rTw9kQVSwigB6kbikGzzeCMrW5",
-				Instructions: []compiledInstruction{
+				Instructions: []CompiledInstruction{
 					{
 						ProgramIDIndex: 2,
 						Accounts:       []int{0, 1},

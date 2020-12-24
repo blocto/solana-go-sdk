@@ -15,7 +15,7 @@ type Message struct {
 	Header          MessageHeader
 	Accounts        []common.PublicKey
 	RecentBlockHash string
-	Instructions    []compiledInstruction
+	Instructions    []CompiledInstruction
 }
 
 func (m *Message) Serialize() ([]byte, error) {
@@ -116,13 +116,13 @@ func NewMessage(feePayer common.PublicKey, instructions []Instruction, recentBlo
 		publicKeyToIdx[publicKey] = idx
 	}
 
-	compiledInstructions := []compiledInstruction{}
+	compiledInstructions := []CompiledInstruction{}
 	for _, instruction := range instructions {
 		accountIdx := []int{}
 		for _, account := range instruction.Accounts {
 			accountIdx = append(accountIdx, publicKeyToIdx[account.PubKey])
 		}
-		compiledInstructions = append(compiledInstructions, compiledInstruction{
+		compiledInstructions = append(compiledInstructions, CompiledInstruction{
 			ProgramIDIndex: publicKeyToIdx[instruction.ProgramID],
 			Accounts:       accountIdx,
 			Data:           instruction.Data,

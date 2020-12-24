@@ -2,7 +2,7 @@ package types
 
 import "github.com/portto/solana-go-sdk/common"
 
-type compiledInstruction struct {
+type CompiledInstruction struct {
 	ProgramIDIndex int
 	Accounts       []int
 	Data           []byte
