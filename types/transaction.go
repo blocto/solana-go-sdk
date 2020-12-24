@@ -79,7 +79,7 @@ func CreateRawTransaction(param CreateRawTransactionParam) ([]byte, error) {
 
 	tx := Transaction{
 		Signatures: []Signature{},
-		Message:    compileMessage(param.FeePayer, param.Instructions, param.RecentBlockHash),
+		Message:    NewMessage(param.FeePayer, param.Instructions, param.RecentBlockHash),
 	}
 
 	signTx, err := tx.sign(param.Signers)

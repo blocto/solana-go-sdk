@@ -49,7 +49,7 @@ func (m *Message) Serialize() ([]byte, error) {
 	return b, nil
 }
 
-func compileMessage(feePayer common.PublicKey, instructions []Instruction, recentBlockHash string) Message {
+func NewMessage(feePayer common.PublicKey, instructions []Instruction, recentBlockHash string) Message {
 	accountMap := map[common.PublicKey]*AccountMeta{}
 	for _, instruction := range instructions {
 		// program is a readonly unsigned account
