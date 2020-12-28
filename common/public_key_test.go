@@ -98,7 +98,7 @@ func TestPublicKeyFromHex(t *testing.T) {
 func TestCreateProgramAddress(t *testing.T) {
 	type args struct {
 		seeds     [][]byte
-		programId PublicKey
+		ProgramID PublicKey
 	}
 	tests := []struct {
 		name    string
@@ -109,7 +109,7 @@ func TestCreateProgramAddress(t *testing.T) {
 		{
 			args: args{
 				seeds:     [][]byte{{0x1}},
-				programId: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
+				ProgramID: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
 			},
 			want:    PublicKeyFromString("65JQyZBU2RzNpP9vTdW5zSzujZR5JHZyChJsDWvkbM8u"),
 			wantErr: nil,
@@ -117,7 +117,7 @@ func TestCreateProgramAddress(t *testing.T) {
 		{
 			args: args{
 				seeds:     [][]byte{{0x2}},
-				programId: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
+				ProgramID: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
 			},
 			want:    PublicKey{},
 			wantErr: errors.New("Invalid seeds, address must fall off the curve"),
@@ -125,7 +125,7 @@ func TestCreateProgramAddress(t *testing.T) {
 		{
 			args: args{
 				seeds:     [][]byte{[]byte("123456789012345678901234567890123")},
-				programId: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
+				ProgramID: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
 			},
 			want:    PublicKey{},
 			wantErr: errors.New("Max seed length exceeded"),
@@ -133,7 +133,7 @@ func TestCreateProgramAddress(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := CreateProgramAddress(tt.args.seeds, tt.args.programId)
+			got, err := CreateProgramAddress(tt.args.seeds, tt.args.ProgramID)
 			if tt.wantErr != nil && errors.Is(err, tt.wantErr) {
 				t.Errorf("CreateProgramAddress() error = %v, wantErr %v", err, tt.wantErr)
 				return
