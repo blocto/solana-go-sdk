@@ -71,9 +71,6 @@ func (p PublicKey) Bytes() []byte {
 	return p[:]
 }
 
-var TokenProgramID = PublicKeyFromString("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
-var SPLAssociatedTokenAccountProgramID = PublicKeyFromString("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL")
-
 func FindAssociatedTokenAddress(walletAddress, tokenMintAddress PublicKey) (PublicKey, int, error) {
 	seeds := [][]byte{}
 	seeds = append(seeds, walletAddress.Bytes())

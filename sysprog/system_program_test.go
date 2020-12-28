@@ -26,7 +26,7 @@ func TestTransfer(t *testing.T) {
 				number: 1,
 			},
 			want: types.Instruction{
-				ProgramID: SystemProgramID,
+				ProgramID: common.SystemProgramID,
 				Accounts: []types.AccountMeta{
 					{
 						PubKey:     common.PublicKeyFromHex("ced387e6c36f57fe93ef8f516e9f318c6d89e0c51831df3d7b084e6d6e88e4f0"),

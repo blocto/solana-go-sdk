@@ -7,8 +7,6 @@ import (
 	"github.com/portto/solana-go-sdk/types"
 )
 
-var SystemProgramID = common.PublicKeyFromString("11111111111111111111111111111111")
-
 type CreateAccountParam struct {
 	FromPublicKey    common.PublicKey
 	NewAccountPubkey common.PublicKey
@@ -36,7 +34,7 @@ func CreateAccount(param CreateAccountParam) types.Instruction {
 			{PubKey: param.FromPublicKey, IsSigner: true, IsWritable: true},
 			{PubKey: param.NewAccountPubkey, IsSigner: true, IsWritable: true},
 		},
-		ProgramID: SystemProgramID,
+		ProgramID: common.SystemProgramID,
 		Data:      data,
 	}
 }
@@ -56,7 +54,7 @@ func Transfer(from, to common.PublicKey, number uint64) types.Instruction {
 			{PubKey: from, IsSigner: true, IsWritable: true},
 			{PubKey: to, IsSigner: false, IsWritable: true},
 		},
-		ProgramID: SystemProgramID,
+		ProgramID: common.SystemProgramID,
 		Data:      data,
 	}
 }
