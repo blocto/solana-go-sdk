@@ -144,3 +144,42 @@ func TestCreateProgramAddress(t *testing.T) {
 		})
 	}
 }
+
+func TestFindAssociatedTokenAddress(t *testing.T) {
+	type args struct {
+		walletAddress    PublicKey
+		tokenMintAddress PublicKey
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    PublicKey
+		want1   int
+		wantErr bool
+	}{
+		{
+			args: args{
+				walletAddress:    PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				tokenMintAddress: PublicKeyFromString("8765cK2Vucsic6NA5nm4cfkrCzusaFVqBf6Pk31tGkXH"),
+			},
+			want:    PublicKeyFromString("HLzppk6ohPg9Ab99XTFhsa6FcG14Au3rTijGe9c8QHp1"),
+			want1:   254,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1, err := FindAssociatedTokenAddress(tt.args.walletAddress, tt.args.tokenMintAddress)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("FindAssociatedTokenAddress() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("FindAssociatedTokenAddress() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("FindAssociatedTokenAddress() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}

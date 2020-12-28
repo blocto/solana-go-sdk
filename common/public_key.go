@@ -66,3 +66,33 @@ func CreateProgramAddress(seeds [][]byte, programId PublicKey) (PublicKey, error
 func (p PublicKey) ToBase58() string {
 	return base58.Encode(p[:])
 }
+
+func (p PublicKey) Bytes() []byte {
+	return p[:]
+}
+
+var TokenProgramID = PublicKeyFromString("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
+var SPLAssociatedTokenAccountProgramID = PublicKeyFromString("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL")
+
+func FindAssociatedTokenAddress(walletAddress, tokenMintAddress PublicKey) (PublicKey, int, error) {
+	seeds := [][]byte{}
+	seeds = append(seeds, walletAddress.Bytes())
+	seeds = append(seeds, TokenProgramID.Bytes())
+	seeds = append(seeds, tokenMintAddress.Bytes())
+
+	return FindProgramAddress(seeds, SPLAssociatedTokenAccountProgramID)
+}
+
+func FindProgramAddress(seed [][]byte, programID PublicKey) (PublicKey, int, error) {
+	var pubKey PublicKey
+	var err error
+	nonce := 0xff
+	for nonce != 0x0 {
+		pubKey, err = CreateProgramAddress(append(seed, []byte{byte(nonce)}), programID)
+		if err == nil {
+			return pubKey, nonce, nil
+		}
+		nonce--
+	}
+	return ZeroPublicKey, nonce, errors.New("unable to find a viable program address")
+}
