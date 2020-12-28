@@ -15,6 +15,7 @@ var ZeroPublicKey = PublicKeyFromHex("0")
 const (
 	PublicKeyLength = 32
 	MaxSeedLength   = 32
+	MaxSeed         = 16
 )
 
 type PublicKey [PublicKeyLength]byte
@@ -37,12 +38,18 @@ func PublicKeyFromBytes(b []byte) PublicKey {
 	return pubkey
 }
 
-func CreateProgramAddress(seed []byte, programId PublicKey) (PublicKey, error) {
-	if len(seed) > MaxSeedLength {
-		return PublicKey{}, errors.New("Max seed length exceeded")
+func CreateProgramAddress(seeds [][]byte, programId PublicKey) (PublicKey, error) {
+	if len(seeds) > MaxSeed {
+		return PublicKey{}, errors.New("Length of the seed is too long for address generation")
 	}
+
 	buf := []byte{}
-	buf = append(buf, seed...)
+	for _, seed := range seeds {
+		if len(seed) > MaxSeedLength {
+			return PublicKey{}, errors.New("Length of the seed is too long for address generation")
+		}
+		buf = append(buf, seed...)
+	}
 	buf = append(buf, programId[:]...)
 	buf = append(buf, []byte("ProgramDerivedAddress")...)
 	h := sha256.Sum256(buf)

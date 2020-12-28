@@ -97,7 +97,7 @@ func TestPublicKeyFromHex(t *testing.T) {
 
 func TestCreateProgramAddress(t *testing.T) {
 	type args struct {
-		seed      []byte
+		seeds     [][]byte
 		programId PublicKey
 	}
 	tests := []struct {
@@ -108,7 +108,7 @@ func TestCreateProgramAddress(t *testing.T) {
 	}{
 		{
 			args: args{
-				seed:      []byte{0x1},
+				seeds:     [][]byte{{0x1}},
 				programId: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
 			},
 			want:    PublicKeyFromString("65JQyZBU2RzNpP9vTdW5zSzujZR5JHZyChJsDWvkbM8u"),
@@ -116,7 +116,7 @@ func TestCreateProgramAddress(t *testing.T) {
 		},
 		{
 			args: args{
-				seed:      []byte{0x2},
+				seeds:     [][]byte{{0x2}},
 				programId: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
 			},
 			want:    PublicKey{},
@@ -124,7 +124,7 @@ func TestCreateProgramAddress(t *testing.T) {
 		},
 		{
 			args: args{
-				seed:      []byte("123456789012345678901234567890123"),
+				seeds:     [][]byte{[]byte("123456789012345678901234567890123")},
 				programId: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
 			},
 			want:    PublicKey{},
@@ -133,7 +133,7 @@ func TestCreateProgramAddress(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := CreateProgramAddress(tt.args.seed, tt.args.programId)
+			got, err := CreateProgramAddress(tt.args.seeds, tt.args.programId)
 			if tt.wantErr != nil && errors.Is(err, tt.wantErr) {
 				t.Errorf("CreateProgramAddress() error = %v, wantErr %v", err, tt.wantErr)
 				return
