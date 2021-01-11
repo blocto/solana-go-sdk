@@ -7,32 +7,24 @@ import (
 	"github.com/portto/solana-go-sdk/types"
 )
 
-type CreateAccountParam struct {
-	FromPublicKey    common.PublicKey
-	NewAccountPubkey common.PublicKey
-	Lamports         uint64
-	Space            uint64
-	ProgramId        common.PublicKey
-}
-
-func CreateAccount(param CreateAccountParam) types.Instruction {
+func CreateAccount(fromAccount, newAccount, owner common.PublicKey, initLamports, accountSpace uint64) types.Instruction {
 	instruction := make([]byte, 4)
 	binary.LittleEndian.PutUint32(instruction, 0)
 	lamports := make([]byte, 8)
-	binary.LittleEndian.PutUint64(lamports, param.Lamports)
+	binary.LittleEndian.PutUint64(lamports, initLamports)
 	space := make([]byte, 8)
-	binary.LittleEndian.PutUint64(space, param.Space)
+	binary.LittleEndian.PutUint64(space, accountSpace)
 
 	data := make([]byte, 0, 52)
 	data = append(data, instruction...)
 	data = append(data, lamports...)
 	data = append(data, space...)
-	data = append(data, param.ProgramId[:]...)
+	data = append(data, owner[:]...)
 
 	return types.Instruction{
 		Accounts: []types.AccountMeta{
-			{PubKey: param.FromPublicKey, IsSigner: true, IsWritable: true},
-			{PubKey: param.NewAccountPubkey, IsSigner: true, IsWritable: true},
+			{PubKey: fromAccount, IsSigner: true, IsWritable: true},
+			{PubKey: newAccount, IsSigner: true, IsWritable: true},
 		},
 		ProgramID: common.SystemProgramID,
 		Data:      data,
