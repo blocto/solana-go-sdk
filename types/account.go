@@ -12,6 +12,11 @@ type Account struct {
 	PrivateKey ed25519.PrivateKey
 }
 
+func NewAccount() Account {
+	_, X, _ := ed25519.GenerateKey(nil)
+	return AccountFromPrivateKeyBytes(X)
+}
+
 func AccountFromPrivateKeyBytes(privateKey []byte) Account {
 	sk := ed25519.PrivateKey(privateKey)
 	return Account{

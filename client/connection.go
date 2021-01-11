@@ -2,7 +2,6 @@ package client
 
 import (
 	"bytes"
-	"crypto/ed25519"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -90,8 +89,4 @@ type GeneralResponse struct {
 	JsonRPC string        `json:"jsonrpc"`
 	ID      uint64        `json:"id"`
 	Error   ErrorResponse `json:"error"`
-}
-
-func (s *Client) GenerateKey() (ed25519.PublicKey, ed25519.PrivateKey, error) {
-	return ed25519.GenerateKey(nil)
 }
