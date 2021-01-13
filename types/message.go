@@ -1,6 +1,10 @@
 package types
 
 import (
+	"encoding/hex"
+	"errors"
+	"fmt"
+
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/sasaxie/go-client-api/common/base58"
 )
@@ -47,6 +51,84 @@ func (m *Message) Serialize() ([]byte, error) {
 		b = append(b, instruction.Data...)
 	}
 	return b, nil
+}
+
+func MessageDeserialize(messageData []byte) (Message, error) {
+	var numRequireSignatures, numReadonlySignedAccounts, numReadonlyUnsignedAccounts uint8
+	var t uint64
+	var err error
+	list := []*uint8{&numRequireSignatures, &numReadonlySignedAccounts, &numReadonlyUnsignedAccounts}
+	for i := 0; i < len(list); i++ {
+		t, err = parseUvarint(&messageData)
+		if t > 255 {
+			return Message{}, fmt.Errorf("message header #%d parse error: %v", i+1, err)
+		}
+		*list[i] = uint8(t)
+	}
+
+	accountCount, err := parseUvarint(&messageData)
+	if len(messageData) < int(accountCount)*32 {
+		return Message{}, errors.New("parse account error")
+	}
+	accounts := make([]common.PublicKey, 0, accountCount)
+	for i := 0; i < int(accountCount); i++ {
+		accounts = append(accounts, common.PublicKeyFromHex(hex.EncodeToString(messageData[:32])))
+		messageData = messageData[32:]
+	}
+
+	if len(messageData) < 32 {
+		return Message{}, errors.New("parse blockhash error")
+	}
+	blockHash := base58.Encode(messageData[:32])
+	messageData = messageData[32:]
+
+	instructionCount, err := parseUvarint(&messageData)
+	if err != nil {
+		return Message{}, fmt.Errorf("parse instruction count error: %v", err)
+	}
+
+	instructions := make([]CompiledInstruction, 0, instructionCount)
+	for i := 0; i < int(instructionCount); i++ {
+		programID, err := parseUvarint(&messageData)
+		if err != nil {
+			return Message{}, fmt.Errorf("parse instruction #%d programID error: %v", i+1, err)
+		}
+		accountCount, err := parseUvarint(&messageData)
+		if err != nil {
+			return Message{}, fmt.Errorf("parse instruction #%d account count error: %v", i+1, err)
+		}
+		accounts := make([]int, 0, accountCount)
+		for j := 0; j < int(accountCount); j++ {
+			accountIdx, err := parseUvarint(&messageData)
+			if err != nil {
+				return Message{}, fmt.Errorf("parse instruction #%d account #%d idx error: %v", i+1, j+1, err)
+			}
+			accounts = append(accounts, int(accountIdx))
+		}
+		dataLen, err := parseUvarint(&messageData)
+		if err != nil {
+			return Message{}, fmt.Errorf("parse instruction #%d data length error: %v", i+1, err)
+		}
+		var data []byte
+		data, messageData = messageData[:dataLen], messageData[dataLen:]
+
+		instructions = append(instructions, CompiledInstruction{
+			ProgramIDIndex: int(programID),
+			Accounts:       accounts,
+			Data:           data,
+		})
+	}
+
+	return Message{
+		Header: MessageHeader{
+			NumRequireSignatures:        numRequireSignatures,
+			NumReadonlySignedAccounts:   numReadonlySignedAccounts,
+			NumReadonlyUnsignedAccounts: numReadonlyUnsignedAccounts,
+		},
+		Accounts:        accounts,
+		RecentBlockHash: blockHash,
+		Instructions:    instructions,
+	}, nil
 }
 
 func NewMessage(feePayer common.PublicKey, instructions []Instruction, recentBlockHash string) Message {
