@@ -8,7 +8,7 @@ import (
 	"github.com/portto/solana-go-sdk/common"
 )
 
-const accountSize = 165
+const AccountSize = 165
 
 type AccountState uint8
 
@@ -37,7 +37,7 @@ type Account struct {
 }
 
 func AccountFromData(data []byte) (*Account, error) {
-	if len(data) != accountSize {
+	if len(data) != AccountSize {
 		return nil, fmt.Errorf("data length not match")
 	}
 
