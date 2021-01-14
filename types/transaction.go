@@ -92,6 +92,14 @@ func TransactionDeserialize(tx []byte) (Transaction, error) {
 	}, nil
 }
 
+func MustTransactionDeserialize(data []byte) Transaction {
+	tx, err := TransactionDeserialize(data)
+	if err != nil {
+		panic(err)
+	}
+	return tx
+}
+
 type CreateRawTransactionParam struct {
 	Instructions    []Instruction
 	Signers         []Account
