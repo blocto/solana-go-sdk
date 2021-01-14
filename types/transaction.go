@@ -139,3 +139,20 @@ func parseUvarint(tx *[]byte) (uint64, error) {
 	*tx = (*tx)[n:]
 	return u, nil
 }
+
+func CreateTransaction(message Message, signaturePairs map[common.PublicKey]Signature) (Transaction, error) {
+	signatures := make([]Signature, 0, len(signaturePairs))
+	for i := 0; i < int(message.Header.NumRequireSignatures); i++ {
+		account := message.Accounts[i]
+		signature, exist := signaturePairs[account]
+		if !exist {
+			return Transaction{}, fmt.Errorf("lack %s's signature", account.ToBase58())
+		}
+		signatures = append(signatures, signature)
+	}
+
+	return Transaction{
+		Signatures: signatures,
+		Message:    message,
+	}, nil
+}
