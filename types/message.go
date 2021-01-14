@@ -131,6 +131,14 @@ func MessageDeserialize(messageData []byte) (Message, error) {
 	}, nil
 }
 
+func MustMessageDeserialize(messageData []byte) Message {
+	message, err := MessageDeserialize(messageData)
+	if err != nil {
+		panic(err)
+	}
+	return message
+}
+
 func NewMessage(feePayer common.PublicKey, instructions []Instruction, recentBlockHash string) Message {
 	accountMap := map[common.PublicKey]*AccountMeta{}
 	for _, instruction := range instructions {
