@@ -1,9 +1,11 @@
 package types
 
 import (
+	"bytes"
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"sort"
 
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/sasaxie/go-client-api/common/base58"
@@ -182,6 +184,20 @@ func NewMessage(feePayer common.PublicKey, instructions []Instruction, recentBlo
 			}
 		}
 	}
+	sortAllAccount := func() {
+		sort.Slice(writableSignedAccount, func(i, j int) bool {
+			return bytes.Compare(writableSignedAccount[i].Bytes(), writableSignedAccount[j].Bytes()) < 0
+		})
+		sort.Slice(readOnlySignedAccount, func(i, j int) bool {
+			return bytes.Compare(readOnlySignedAccount[i].Bytes(), readOnlySignedAccount[j].Bytes()) < 0
+		})
+		sort.Slice(writableUnsignedAccount, func(i, j int) bool {
+			return bytes.Compare(writableUnsignedAccount[i].Bytes(), writableUnsignedAccount[j].Bytes()) < 0
+		})
+		sort.Slice(readOnlyUnsignedAccount, func(i, j int) bool {
+			return bytes.Compare(readOnlyUnsignedAccount[i].Bytes(), readOnlyUnsignedAccount[j].Bytes()) < 0
+		})
+	}
 	if feePayer != common.ZeroPublicKey {
 		for _, account := range accountMap {
 			if feePayer == account.PubKey {
@@ -189,11 +205,13 @@ func NewMessage(feePayer common.PublicKey, instructions []Instruction, recentBlo
 			}
 			classify(account)
 		}
+		sortAllAccount()
 		writableSignedAccount = append([]common.PublicKey{feePayer}, writableSignedAccount...)
 	} else {
 		for _, account := range accountMap {
 			classify(account)
 		}
+		sortAllAccount()
 	}
 
 	publicKeys := []common.PublicKey{}
