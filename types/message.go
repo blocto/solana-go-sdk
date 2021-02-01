@@ -49,7 +49,7 @@ func (m *Message) Serialize() ([]byte, error) {
 			b = append(b, byte(accountIdx))
 		}
 
-		b = append(b, byte(len(instruction.Data)))
+		b = append(b, common.UintToVarLenBytes(uint64(len(instruction.Data)))...)
 		b = append(b, instruction.Data...)
 	}
 	return b, nil
