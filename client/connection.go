@@ -17,10 +17,9 @@ const (
 type Commitment string
 
 const (
-	CommitmentMax          Commitment = "max"
-	CommitmentRoot                    = "root"
-	CommitmentSingleGossip            = "singleGossip"
-	CommitmentRecnet                  = "recent"
+	CommitmentFinalized Commitment = "finalized"
+	CommitmentConfirmed            = "confirmed"
+	CommitmentProcessed            = "processed"
 )
 
 type Client struct {

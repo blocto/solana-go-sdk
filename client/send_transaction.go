@@ -22,7 +22,7 @@ func (s *Client) SendRawTransaction(tx []byte) (string, error) {
 			base64.StdEncoding.EncodeToString([]byte(tx)),
 			SendTransactionConfig{
 				SkipPreflight:       false,
-				PreflightCommitment: CommitmentMax,
+				PreflightCommitment: CommitmentFinalized,
 				Encoding:            "base64",
 			},
 		},
