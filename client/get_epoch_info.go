@@ -13,6 +13,9 @@ func (s *Client) GetEpochInfo() (GetEpochInfoResponse, error) {
 		GeneralResponse
 		Result GetEpochInfoResponse `json:"result"`
 	}{}
-	s.request("getEpochInfo", []interface{}{}, &res)
+	err := s.request("getEpochInfo", []interface{}{}, &res)
+	if err != nil {
+		return GetEpochInfoResponse{}, err
+	}
 	return res.Result, nil
 }

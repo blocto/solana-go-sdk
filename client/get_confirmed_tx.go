@@ -1,9 +1,5 @@
 package client
 
-import (
-	"fmt"
-)
-
 type GetConfirmedTransactionResponse struct {
 	Slot        uint64          `json:"slot"`
 	Meta        TransactionMeta `json:"meta"`
@@ -15,6 +11,9 @@ func (s *Client) GetConfirmedTransaction(txhash string) (GetConfirmedTransaction
 		GeneralResponse
 		Result GetConfirmedTransactionResponse `json:"result"`
 	}{}
-	fmt.Println(s.request("getConfirmedTransaction", []interface{}{txhash, "json"}, &res))
+	err := s.request("getConfirmedTransaction", []interface{}{txhash, "json"}, &res)
+	if err != nil {
+		return GetConfirmedTransactionResponse{}, err
+	}
 	return res.Result, nil
 }

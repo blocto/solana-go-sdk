@@ -1,9 +1,5 @@
 package client
 
-import (
-	"fmt"
-)
-
 type GetConfirmBlockResponse struct {
 	Blockhash         string `json:"blockhash"`
 	PreviousBlockhash string `json:"previousBlockhash"`
@@ -26,6 +22,9 @@ func (s *Client) GetConfirmedBlock(slot uint64) (GetConfirmBlockResponse, error)
 		GeneralResponse
 		Result GetConfirmBlockResponse `json:"result"`
 	}{}
-	fmt.Println(s.request("getConfirmedBlock", []interface{}{slot, "json"}, &res))
+	err := s.request("getConfirmedBlock", []interface{}{slot, "json"}, &res)
+	if err != nil {
+		return GetConfirmBlockResponse{}, err
+	}
 	return res.Result, nil
 }
