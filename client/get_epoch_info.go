@@ -8,12 +8,12 @@ type GetEpochInfoResponse struct {
 	SlotsInEpoch int `json:"slotsInEpoch"`
 }
 
-func (s *Client) GetEpochInfo() (GetEpochInfoResponse, error) {
+func (s *Client) GetEpochInfo(commitment Commitment) (GetEpochInfoResponse, error) {
 	res := struct {
 		GeneralResponse
 		Result GetEpochInfoResponse `json:"result"`
 	}{}
-	err := s.request("getEpochInfo", []interface{}{}, &res)
+	err := s.request("getEpochInfo", []interface{}{map[string]interface{}{"commitment": commitment}}, &res)
 	if err != nil {
 		return GetEpochInfoResponse{}, err
 	}
