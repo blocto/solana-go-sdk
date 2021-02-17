@@ -71,3 +71,21 @@ func InitializeNonce(noncePubkey, authPubkey common.PublicKey) types.Instruction
 		Data:      data,
 	}
 }
+
+func NonceAdvance(noncePubkey, authPubkey common.PublicKey) types.Instruction {
+	instruction := make([]byte, 4)
+	binary.LittleEndian.PutUint32(instruction, 4)
+
+	data := make([]byte, 0, 4)
+	data = append(data, instruction...)
+
+	return types.Instruction{
+		Accounts: []types.AccountMeta{
+			{PubKey: noncePubkey, IsSigner: false, IsWritable: true},
+			{PubKey: common.SysVarRecentBlockhashsPubkey, IsSigner: false, IsWritable: false},
+			{PubKey: authPubkey, IsSigner: true, IsWritable: false},
+		},
+		ProgramID: common.SystemProgramID,
+		Data:      data,
+	}
+}
