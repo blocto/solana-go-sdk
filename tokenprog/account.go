@@ -80,3 +80,15 @@ func AccountFromData(data []byte) (*Account, error) {
 		CloseAuthority:  closeAuthority,
 	}, nil
 }
+
+type MintAccount struct {
+	MintAuthorityOption   uint32
+	MintAuthority         common.PublicKey
+	Supply                uint64
+	Decimals              uint8
+	IsInitialized         bool
+	FreezeAuthorityOption uint32
+	FreezeAuthority       common.PublicKey
+}
+
+const MintAccountSize = 82
