@@ -1,0 +1,23 @@
+package tokenprog
+
+type TokenInstruction uint8
+
+const (
+	TokenInstructionInitializeMint TokenInstruction = iota
+	TokenInstructionInitializeAccount
+	TokenInstructionInitializeMultisig
+	TokenInstructionTransfer
+	TokenInstructionApprove
+	TokenInstructionRevoke
+	TokenInstructionSetAuthority
+	TokenInstructionMintTo
+	TokenInstructionBurn
+	TokenInstructionCloseAccount
+	TokenInstructionFreezeAccount
+	TokenInstructionThawAccount
+	TokenInstructionTransferChecked
+	TokenInstructionApproveChecked
+	TokenInstructionMintToChecked
+	TokenInstructionBurnChecked
+	TokenInstructionInitializeAccount2
+)

@@ -17,13 +17,13 @@ func InitMint(decimals uint8, mint, mintAuthority common.PublicKey, freezeAuthor
 	}
 
 	data, err := common.SerializeData(struct {
-		Instruction     uint8
+		Instruction     TokenInstruction
 		Decimals        uint8
 		MintAuthority   common.PublicKey
 		Option          uint8
 		FreezeAuthority common.PublicKey
 	}{
-		Instruction:     0,
+		Instruction:     TokenInstructionInitializeMint,
 		Decimals:        decimals,
 		MintAuthority:   mintAuthority,
 		Option:          option,
