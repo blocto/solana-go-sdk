@@ -24,7 +24,6 @@ var (
 )
 
 // Account is token program account
-// https://github.com/solana-labs/solana-program-library/blob/master/token/program-v3/src/state.rs#L86
 type Account struct {
 	Mint            common.PublicKey
 	Owner           common.PublicKey
