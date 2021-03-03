@@ -5,6 +5,9 @@ import (
 )
 
 func UintToVarLenBytes(l uint64) []byte {
+	if l == 0 {
+		return []byte{0x0}
+	}
 	b := make([]byte, binary.MaxVarintLen64)
 	binary.PutUvarint(b, l)
 	trimTrailingZeroByte(&b)
