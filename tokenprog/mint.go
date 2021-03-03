@@ -1,14 +1,12 @@
 package tokenprog
 
 import (
-	"fmt"
-
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/types"
 )
 
 // InitMint create a new mint
-func InitMint(decimals uint8, mint, mintAuthority common.PublicKey, freezeAuthority *common.PublicKey) (types.Instruction, error) {
+func InitMint(decimals uint8, mint, mintAuthority common.PublicKey, freezeAuthority *common.PublicKey) types.Instruction {
 	var option uint8 = 1
 	if freezeAuthority == nil {
 		option = 0
@@ -30,7 +28,7 @@ func InitMint(decimals uint8, mint, mintAuthority common.PublicKey, freezeAuthor
 		FreezeAuthority: *freezeAuthority,
 	})
 	if err != nil {
-		return types.Instruction{}, fmt.Errorf("serialize data error: %v", err)
+		panic(err)
 	}
 
 	return types.Instruction{
@@ -40,5 +38,5 @@ func InitMint(decimals uint8, mint, mintAuthority common.PublicKey, freezeAuthor
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 		},
 		Data: data,
-	}, nil
+	}
 }
