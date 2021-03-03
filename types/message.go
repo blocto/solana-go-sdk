@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"sort"
 
+	"github.com/mr-tron/base58"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/sasaxie/go-client-api/common/base58"
 )
 
 type MessageHeader struct {
