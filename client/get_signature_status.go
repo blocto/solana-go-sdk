@@ -3,9 +3,10 @@ package client
 import "errors"
 
 type GetSignatureStatusesResponse struct {
-	Slot          uint64      `json:"slot"`
-	Confirmations *uint64     `json:"confirmations"`
-	Err           interface{} `json:"err"`
+	Slot               uint64      `json:"slot"`
+	Confirmations      *uint64     `json:"confirmations"`
+	ConfirmationStatus *Commitment `json:"confirmationStatus"`
+	Err                interface{} `json:"err"`
 }
 
 func (s *Client) GetSignatureStatuses(signatures []string) ([]GetSignatureStatusesResponse, error) {
