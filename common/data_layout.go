@@ -1,6 +1,7 @@
 package common
 
 import (
+	"encoding/binary"
 	"fmt"
 	"reflect"
 )
@@ -15,6 +16,30 @@ func serializeData(v reflect.Value) ([]byte, error) {
 		return boolEncode(v)
 	case reflect.Uint8:
 		return uint8Encode(v)
+	case reflect.Int16:
+		b := make([]byte, 2)
+		binary.LittleEndian.PutUint16(b, uint16(v.Int()))
+		return b, nil
+	case reflect.Uint16:
+		b := make([]byte, 2)
+		binary.LittleEndian.PutUint16(b, uint16(v.Uint()))
+		return b, nil
+	case reflect.Int32:
+		b := make([]byte, 4)
+		binary.LittleEndian.PutUint32(b, uint32(v.Int()))
+		return b, nil
+	case reflect.Uint32:
+		b := make([]byte, 4)
+		binary.LittleEndian.PutUint32(b, uint32(v.Uint()))
+		return b, nil
+	case reflect.Int64:
+		b := make([]byte, 8)
+		binary.LittleEndian.PutUint64(b, uint64(v.Int()))
+		return b, nil
+	case reflect.Uint64:
+		b := make([]byte, 8)
+		binary.LittleEndian.PutUint64(b, v.Uint())
+		return b, nil
 	case reflect.Array:
 		switch v.Type().Elem().Kind() {
 		case reflect.Uint8:
@@ -31,7 +56,7 @@ func serializeData(v reflect.Value) ([]byte, error) {
 			field := v.Field(i)
 			d, err := serializeData(field)
 			if err != nil {
-				return nil, fmt.Errorf("unsupport type: %v", field)
+				return nil, err
 			}
 			data = append(data, d...)
 		}
