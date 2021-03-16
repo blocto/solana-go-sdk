@@ -13,9 +13,12 @@ func SerializeData(data interface{}) ([]byte, error) {
 func serializeData(v reflect.Value) ([]byte, error) {
 	switch v.Kind() {
 	case reflect.Bool:
-		return boolEncode(v)
+		if v.Bool() {
+			return []byte{1}, nil
+		}
+		return []byte{0}, nil
 	case reflect.Uint8:
-		return uint8Encode(v)
+		return []byte{uint8(v.Uint())}, nil
 	case reflect.Int16:
 		b := make([]byte, 2)
 		binary.LittleEndian.PutUint16(b, uint16(v.Int()))
@@ -40,7 +43,7 @@ func serializeData(v reflect.Value) ([]byte, error) {
 		b := make([]byte, 8)
 		binary.LittleEndian.PutUint64(b, v.Uint())
 		return b, nil
-	case reflect.Array:
+	case reflect.Slice, reflect.Array:
 		switch v.Type().Elem().Kind() {
 		case reflect.Uint8:
 			b := make([]byte, 0, v.Len())
@@ -50,6 +53,8 @@ func serializeData(v reflect.Value) ([]byte, error) {
 			return b, nil
 		}
 		return nil, fmt.Errorf("unsupport type: %v, elem: %v", v.Kind(), v.Elem().Kind())
+	case reflect.String:
+		return []byte(v.String()), nil
 	case reflect.Struct:
 		data := make([]byte, 0, 1024)
 		for i := 0; i < v.NumField(); i++ {
@@ -63,15 +68,4 @@ func serializeData(v reflect.Value) ([]byte, error) {
 		return data, nil
 	}
 	return nil, fmt.Errorf("unsupport type: %v", v.Kind())
-}
-
-func boolEncode(v reflect.Value) ([]byte, error) {
-	if v.Bool() {
-		return []byte{1}, nil
-	}
-	return []byte{0}, nil
-}
-
-func uint8Encode(v reflect.Value) ([]byte, error) {
-	return []byte{uint8(v.Uint())}, nil
 }

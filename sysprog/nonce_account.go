@@ -5,8 +5,23 @@ import (
 	"fmt"
 
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/types"
 )
+
+const FeeCalculatorSize = 8
+
+type FeeCalculator struct {
+	LamportsPerSignature uint64
+}
+
+func FeeCalculatorDeserialize(data []byte) (FeeCalculator, error) {
+	if len(data) < FeeCalculatorSize {
+		return FeeCalculator{}, fmt.Errorf("fee calculator data size is not enough")
+	}
+	lamportsPerSignature := binary.LittleEndian.Uint64(data[:8])
+	return FeeCalculator{
+		LamportsPerSignature: lamportsPerSignature,
+	}, nil
+}
 
 const NonceAccountSize = 80
 
@@ -37,55 +52,4 @@ func NonceAccountDeserialize(data []byte) (NonceAccount, error) {
 		Nonce:            nonce,
 		FeeCalculator:    feeCalculator,
 	}, nil
-}
-
-type CreateNonceAccountParam struct {
-	FromPubkey       common.PublicKey
-	NoncePubkey      common.PublicKey
-	AuthorizedPubkey common.PublicKey
-	Lamports         uint64
-}
-
-func CreateNonceAccountInstruction(param CreateNonceAccountParam) []types.Instruction {
-	return []types.Instruction{
-		CreateAccount(param.FromPubkey, param.NoncePubkey, common.SystemProgramID, param.Lamports, NonceAccountSize),
-		InitializeNonce(param.NoncePubkey, param.AuthorizedPubkey),
-	}
-}
-
-func InitializeNonce(noncePubkey, authPubkey common.PublicKey) types.Instruction {
-	instruction := make([]byte, 4)
-	binary.LittleEndian.PutUint32(instruction, 6)
-
-	data := make([]byte, 0, 36)
-	data = append(data, instruction...)
-	data = append(data, authPubkey.Bytes()...)
-
-	return types.Instruction{
-		Accounts: []types.AccountMeta{
-			{PubKey: noncePubkey, IsSigner: false, IsWritable: true},
-			{PubKey: common.SysVarRecentBlockhashsPubkey, IsSigner: false, IsWritable: false},
-			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
-		},
-		ProgramID: common.SystemProgramID,
-		Data:      data,
-	}
-}
-
-func NonceAdvance(noncePubkey, authPubkey common.PublicKey) types.Instruction {
-	instruction := make([]byte, 4)
-	binary.LittleEndian.PutUint32(instruction, 4)
-
-	data := make([]byte, 0, 4)
-	data = append(data, instruction...)
-
-	return types.Instruction{
-		Accounts: []types.AccountMeta{
-			{PubKey: noncePubkey, IsSigner: false, IsWritable: true},
-			{PubKey: common.SysVarRecentBlockhashsPubkey, IsSigner: false, IsWritable: false},
-			{PubKey: authPubkey, IsSigner: true, IsWritable: false},
-		},
-		ProgramID: common.SystemProgramID,
-		Data:      data,
-	}
 }
