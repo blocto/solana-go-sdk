@@ -5,6 +5,7 @@ import (
 	"github.com/portto/solana-go-sdk/types"
 )
 
+// CreateAssociatedTokenAccount is the only instruction in associated token program
 func CreateAssociatedTokenAccount(funder, wallet, tokenMint common.PublicKey) types.Instruction {
 	assosiatedAccount, _, _ := common.FindAssociatedTokenAddress(wallet, tokenMint)
 	return types.Instruction{
