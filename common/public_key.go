@@ -71,6 +71,15 @@ func (p PublicKey) Bytes() []byte {
 	return p[:]
 }
 
+func CreateWithSeed(from PublicKey, seed string, programID PublicKey) PublicKey {
+	b := make([]byte, 0, 64+len(seed))
+	b = append(b, from[:]...)
+	b = append(b, seed[:]...)
+	b = append(b, programID[:]...)
+	hash := sha256.Sum256(b)
+	return PublicKeyFromBytes(hash[:])
+}
+
 func FindAssociatedTokenAddress(walletAddress, tokenMintAddress PublicKey) (PublicKey, int, error) {
 	seeds := [][]byte{}
 	seeds = append(seeds, walletAddress.Bytes())

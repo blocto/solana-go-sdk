@@ -183,3 +183,32 @@ func TestFindAssociatedTokenAddress(t *testing.T) {
 		})
 	}
 }
+
+func TestCreateWithSeed(t *testing.T) {
+	type args struct {
+		from      PublicKey
+		seed      string
+		programID PublicKey
+	}
+	tests := []struct {
+		name string
+		args args
+		want PublicKey
+	}{
+		{
+			args: args{
+				from:      PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				seed:      "0",
+				programID: SystemProgramID,
+			},
+			want: PublicKeyFromString("DTA7FmUNYuQs2mScj2Lx8gQV63SEL1zGtzCSvPxtijbi"),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := CreateWithSeed(tt.args.from, tt.args.seed, tt.args.programID); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("CreateWithSeed() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
