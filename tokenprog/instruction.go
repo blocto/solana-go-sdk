@@ -1,0 +1,158 @@
+package tokenprog
+
+import (
+	"encoding/binary"
+
+	"github.com/portto/solana-go-sdk/common"
+	"github.com/portto/solana-go-sdk/types"
+)
+
+type Instruction uint8
+
+const (
+	InstructionInitializeMint Instruction = iota
+	InstructionInitializeAccount
+	InstructionInitializeMultisig
+	InstructionTransfer
+	InstructionApprove
+	InstructionRevoke
+	InstructionSetAuthority
+	InstructionMintTo
+	InstructionBurn
+	InstructionCloseAccount
+	InstructionFreezeAccount
+	InstructionThawAccount
+	InstructionTransferChecked
+	InstructionApproveChecked
+	InstructionMintToChecked
+	InstructionBurnChecked
+	InstructionInitializeAccount2
+)
+
+func InitializeMint(decimals uint8, mint, mintAuthority common.PublicKey, freezeAuthority *common.PublicKey) types.Instruction {
+	var option uint8 = 1
+	if freezeAuthority == nil {
+		option = 0
+		randomPublicKey := types.NewAccount().PublicKey
+		freezeAuthority = &randomPublicKey
+	}
+
+	data, err := common.SerializeData(struct {
+		Instruction     Instruction
+		Decimals        uint8
+		MintAuthority   common.PublicKey
+		Option          uint8
+		FreezeAuthority common.PublicKey
+	}{
+		Instruction:     InstructionInitializeMint,
+		Decimals:        decimals,
+		MintAuthority:   mintAuthority,
+		Option:          option,
+		FreezeAuthority: *freezeAuthority,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts: []types.AccountMeta{
+			{PubKey: mint, IsSigner: false, IsWritable: true},
+			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
+		},
+		Data: data,
+	}
+}
+
+func InitializeAccount(accountPublicKey, mintPublicKey, ownerPublickey common.PublicKey) types.Instruction {
+	data := []byte{0x01}
+	accounts := []types.AccountMeta{
+		{PubKey: accountPublicKey, IsSigner: false, IsWritable: true},
+		{PubKey: mintPublicKey, IsSigner: false, IsWritable: false},
+		{PubKey: ownerPublickey, IsSigner: false, IsWritable: false},
+		{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
+	}
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts:  accounts,
+		Data:      data,
+	}
+}
+
+func InitializeMultisig() types.Instruction {
+	panic("not implement yet")
+}
+
+func Transfer(srcPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) types.Instruction {
+	instruction := []byte{0x03}
+	number := make([]byte, 8)
+	binary.LittleEndian.PutUint64(number, amount)
+	data := make([]byte, 0, 9)
+	data = append(data, instruction...)
+	data = append(data, number...)
+
+	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
+	accounts = append(accounts, types.AccountMeta{PubKey: srcPubkey, IsSigner: false, IsWritable: true})
+	accounts = append(accounts, types.AccountMeta{PubKey: destPubkey, IsSigner: false, IsWritable: true})
+	accounts = append(accounts, types.AccountMeta{PubKey: authPubkey, IsSigner: len(signerPubkeys) > 0, IsWritable: false})
+	for _, signerPubkey := range signerPubkeys {
+		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
+	}
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts:  accounts,
+		Data:      data,
+	}
+}
+
+func Approve() types.Instruction {
+	panic("not implement yet")
+}
+
+func Revoke() types.Instruction {
+	panic("not implement yet")
+}
+
+func SetAuthority() types.Instruction {
+	panic("not implement yet")
+}
+
+func MintTo() types.Instruction {
+	panic("not implement yet")
+}
+
+func Burn() types.Instruction {
+	panic("not implement yet")
+}
+
+func CloseAccount() types.Instruction {
+	panic("not implement yet")
+}
+
+func FreezeAccount() types.Instruction {
+	panic("not implement yet")
+}
+
+func ThawAccount() types.Instruction {
+	panic("not implement yet")
+}
+
+func TransferChecked() types.Instruction {
+	panic("not implement yet")
+}
+
+func ApproveChecked() types.Instruction {
+	panic("not implement yet")
+}
+
+func MintToChecked() types.Instruction {
+	panic("not implement yet")
+}
+
+func BurnChecked() types.Instruction {
+	panic("not implement yet")
+}
+
+func InitializeAccount2() types.Instruction {
+	panic("not implement yet")
+}

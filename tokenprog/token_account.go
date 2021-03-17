@@ -8,14 +8,14 @@ import (
 	"github.com/portto/solana-go-sdk/common"
 )
 
-const AccountSize = 165
+const TokenAccountSize = 165
 
-type AccountState uint8
+type TokenAccountState uint8
 
 const (
-	AccountStateUninitialized AccountState = iota
-	AccountStateInitialized
-	AccountFrozen
+	TokenAccountStateUninitialized TokenAccountState = iota
+	TokenAccountStateInitialized
+	TokenAccountFrozen
 )
 
 var (
@@ -23,20 +23,20 @@ var (
 	None = []byte{0, 0, 0, 0}
 )
 
-// Account is token program account
-type Account struct {
+// TokenAccount is token program account
+type TokenAccount struct {
 	Mint            common.PublicKey
 	Owner           common.PublicKey
 	Amount          uint64
 	Delegate        *common.PublicKey
-	State           AccountState
+	State           TokenAccountState
 	IsNative        *uint64
 	DelegatedAmount uint64
 	CloseAuthority  *common.PublicKey
 }
 
-func AccountFromData(data []byte) (*Account, error) {
-	if len(data) != AccountSize {
+func TokenAccountFromData(data []byte) (*TokenAccount, error) {
+	if len(data) != TokenAccountSize {
 		return nil, fmt.Errorf("data length not match")
 	}
 
@@ -52,7 +52,7 @@ func AccountFromData(data []byte) (*Account, error) {
 		delegate = &key
 	}
 
-	state := AccountState(data[108])
+	state := TokenAccountState(data[108])
 
 	var isNative *uint64
 	if bytes.Equal(data[109:113], Some) {
@@ -68,7 +68,7 @@ func AccountFromData(data []byte) (*Account, error) {
 		closeAuthority = &key
 	}
 
-	return &Account{
+	return &TokenAccount{
 		Mint:            mint,
 		Owner:           owner,
 		Amount:          amount,
@@ -79,15 +79,3 @@ func AccountFromData(data []byte) (*Account, error) {
 		CloseAuthority:  closeAuthority,
 	}, nil
 }
-
-type MintAccount struct {
-	MintAuthorityOption   uint32
-	MintAuthority         common.PublicKey
-	Supply                uint64
-	Decimals              uint8
-	IsInitialized         bool
-	FreezeAuthorityOption uint32
-	FreezeAuthority       common.PublicKey
-}
-
-const MintAccountSize = 82
