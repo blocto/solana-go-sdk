@@ -118,25 +118,8 @@ func DelegateStake(stakePubkey, authPubkey, votePubkey common.PublicKey) types.I
 	}
 }
 
-func Deactivate(stakePubkey, authPubkey common.PublicKey) types.Instruction {
-	data, err := common.SerializeData(struct {
-		Instruction Instruction
-	}{
-		Instruction: InstructionDeactivate,
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	return types.Instruction{
-		ProgramID: common.StakeProgramID,
-		Accounts: []types.AccountMeta{
-			{PubKey: stakePubkey, IsSigner: false, IsWritable: true},
-			{PubKey: common.SysVarClockPubkey, IsSigner: false, IsWritable: false},
-			{PubKey: authPubkey, IsSigner: true, IsWritable: false},
-		},
-		Data: data,
-	}
+func Split() types.Instruction {
+	panic("not implement yet")
 }
 
 func Withdraw(stakePubkey, authPubkey, toPubkey common.PublicKey, lamports uint64, custodianPubkey common.PublicKey) types.Instruction {
@@ -168,4 +151,37 @@ func Withdraw(stakePubkey, authPubkey, toPubkey common.PublicKey, lamports uint6
 		Accounts:  accounts,
 		Data:      data,
 	}
+}
+
+func Deactivate(stakePubkey, authPubkey common.PublicKey) types.Instruction {
+	data, err := common.SerializeData(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionDeactivate,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.StakeProgramID,
+		Accounts: []types.AccountMeta{
+			{PubKey: stakePubkey, IsSigner: false, IsWritable: true},
+			{PubKey: common.SysVarClockPubkey, IsSigner: false, IsWritable: false},
+			{PubKey: authPubkey, IsSigner: true, IsWritable: false},
+		},
+		Data: data,
+	}
+}
+
+func SetLockup() types.Instruction {
+	panic("not implement yet")
+}
+
+func Merge() types.Instruction {
+	panic("not implement yet")
+}
+
+func AuthorizeWithSeed() types.Instruction {
+	panic("not implement yet")
 }
