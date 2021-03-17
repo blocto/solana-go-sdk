@@ -29,26 +29,20 @@ const (
 	InstructionInitializeAccount2
 )
 
-func InitializeMint(decimals uint8, mint, mintAuthority common.PublicKey, freezeAuthority *common.PublicKey) types.Instruction {
-	var option uint8 = 1
-	if freezeAuthority == nil {
-		option = 0
-		randomPublicKey := types.NewAccount().PublicKey
-		freezeAuthority = &randomPublicKey
-	}
-
+// InitializeMint init a mint, if you don't need to freeze, pass the empty pubKey common.PublicKey{}
+func InitializeMint(decimals uint8, mint, mintAuthority common.PublicKey, freezeAuthority common.PublicKey) types.Instruction {
 	data, err := common.SerializeData(struct {
 		Instruction     Instruction
 		Decimals        uint8
 		MintAuthority   common.PublicKey
-		Option          uint8
+		Option          bool
 		FreezeAuthority common.PublicKey
 	}{
 		Instruction:     InstructionInitializeMint,
 		Decimals:        decimals,
 		MintAuthority:   mintAuthority,
-		Option:          option,
-		FreezeAuthority: *freezeAuthority,
+		Option:          freezeAuthority == common.PublicKey{},
+		FreezeAuthority: freezeAuthority,
 	})
 	if err != nil {
 		panic(err)
