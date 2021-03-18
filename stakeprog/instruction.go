@@ -118,8 +118,27 @@ func DelegateStake(stakePubkey, authPubkey, votePubkey common.PublicKey) types.I
 	}
 }
 
-func Split() types.Instruction {
-	panic("not implement yet")
+func Split(stakePubkey, authPubkey, splitStakePubkey common.PublicKey, lamports uint64) types.Instruction {
+	data, err := common.SerializeData(struct {
+		Instruction Instruction
+		Lamports    uint64
+	}{
+		Instruction: InstructionSplit,
+		Lamports:    lamports,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.StakeProgramID,
+		Accounts: []types.AccountMeta{
+			{PubKey: stakePubkey, IsSigner: false, IsWritable: true},
+			{PubKey: splitStakePubkey, IsSigner: false, IsWritable: true},
+			{PubKey: authPubkey, IsSigner: true, IsWritable: false},
+		},
+		Data: data,
+	}
 }
 
 func Withdraw(stakePubkey, authPubkey, toPubkey common.PublicKey, lamports uint64, custodianPubkey common.PublicKey) types.Instruction {
