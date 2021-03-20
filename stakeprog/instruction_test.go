@@ -46,3 +46,42 @@ func TestSplit(t *testing.T) {
 		})
 	}
 }
+
+func TestMerge(t *testing.T) {
+	type args struct {
+		dest common.PublicKey
+		src  common.PublicKey
+		auth common.PublicKey
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				dest: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+				src:  common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+				auth: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+			},
+			want: types.Instruction{
+				ProgramID: common.StakeProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: false, IsWritable: true},
+					{PubKey: common.SysVarClockPubkey, IsSigner: false, IsWritable: false},
+					{PubKey: common.SysVarStakeHistoryPubkey, IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: true, IsWritable: false},
+				},
+				Data: []byte{7, 0, 0, 0},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Merge(tt.args.dest, tt.args.src, tt.args.auth); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Merge() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

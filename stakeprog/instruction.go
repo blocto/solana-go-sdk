@@ -197,8 +197,27 @@ func SetLockup() types.Instruction {
 	panic("not implement yet")
 }
 
-func Merge() types.Instruction {
-	panic("not implement yet")
+func Merge(dest, src, auth common.PublicKey) types.Instruction {
+	data, err := common.SerializeData(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionMerge,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.StakeProgramID,
+		Accounts: []types.AccountMeta{
+			{PubKey: dest, IsSigner: false, IsWritable: true},
+			{PubKey: src, IsSigner: false, IsWritable: true},
+			{PubKey: common.SysVarClockPubkey, IsSigner: false, IsWritable: false},
+			{PubKey: common.SysVarStakeHistoryPubkey, IsSigner: false, IsWritable: false},
+			{PubKey: auth, IsSigner: true, IsWritable: false},
+		},
+		Data: data,
+	}
 }
 
 func AuthorizeWithSeed() types.Instruction {
