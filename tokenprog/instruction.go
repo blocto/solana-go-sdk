@@ -59,7 +59,15 @@ func InitializeMint(decimals uint8, mint, mintAuthority common.PublicKey, freeze
 }
 
 func InitializeAccount(accountPublicKey, mintPublicKey, ownerPublickey common.PublicKey) types.Instruction {
-	data := []byte{0x01}
+	data, err := common.SerializeData(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionInitializeAccount,
+	})
+	if err != nil {
+		panic(err)
+	}
+
 	accounts := []types.AccountMeta{
 		{PubKey: accountPublicKey, IsSigner: false, IsWritable: true},
 		{PubKey: mintPublicKey, IsSigner: false, IsWritable: false},
