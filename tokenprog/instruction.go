@@ -109,8 +109,31 @@ func Transfer(srcPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys 
 	}
 }
 
-func Approve() types.Instruction {
-	panic("not implement yet")
+func Approve(sourcePubkey, delegatePubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) types.Instruction {
+	data, err := common.SerializeData(struct {
+		Instruction Instruction
+		Amount      uint64
+	}{
+		Instruction: InstructionApprove,
+		Amount:      amount,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
+	accounts = append(accounts, types.AccountMeta{PubKey: sourcePubkey, IsSigner: false, IsWritable: true})
+	accounts = append(accounts, types.AccountMeta{PubKey: delegatePubkey, IsSigner: false, IsWritable: false})
+	accounts = append(accounts, types.AccountMeta{PubKey: authPubkey, IsSigner: len(signerPubkeys) == 0, IsWritable: false})
+	for _, signerPubkey := range signerPubkeys {
+		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
+	}
+
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts:  accounts,
+		Data:      data,
+	}
 }
 
 func Revoke() types.Instruction {

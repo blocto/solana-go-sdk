@@ -414,3 +414,44 @@ func TestThawAccount(t *testing.T) {
 		})
 	}
 }
+
+func TestApprove(t *testing.T) {
+	type args struct {
+		sourcePubkey   common.PublicKey
+		delegatePubkey common.PublicKey
+		authPubkey     common.PublicKey
+		signerPubkeys  []common.PublicKey
+		amount         uint64
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				sourcePubkey:   common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+				delegatePubkey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+				authPubkey:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				signerPubkeys:  []common.PublicKey{},
+				amount:         99999,
+			},
+			want: types.Instruction{
+				ProgramID: common.TokenProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: true, IsWritable: false},
+				},
+				Data: []byte{4, 159, 134, 1, 0, 0, 0, 0, 0},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Approve(tt.args.sourcePubkey, tt.args.delegatePubkey, tt.args.authPubkey, tt.args.signerPubkeys, tt.args.amount); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Approve() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
