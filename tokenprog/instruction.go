@@ -330,8 +330,34 @@ func TransferChecked(srcPubkey, destPubkey, mintPubkey, authPubkey common.Public
 	}
 }
 
-func ApproveChecked() types.Instruction {
-	panic("not implement yet")
+func ApproveChecked(sourcePubkey, mintPubkey, delegatePubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64, decimals uint8) types.Instruction {
+	data, err := common.SerializeData(struct {
+		Instruction Instruction
+		Amount      uint64
+		Decimals    uint8
+	}{
+		Instruction: InstructionApproveChecked,
+		Amount:      amount,
+		Decimals:    decimals,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	accounts := make([]types.AccountMeta, 0, 4+len(signerPubkeys))
+	accounts = append(accounts, types.AccountMeta{PubKey: sourcePubkey, IsSigner: false, IsWritable: true})
+	accounts = append(accounts, types.AccountMeta{PubKey: mintPubkey, IsSigner: false, IsWritable: false})
+	accounts = append(accounts, types.AccountMeta{PubKey: delegatePubkey, IsSigner: false, IsWritable: false})
+	accounts = append(accounts, types.AccountMeta{PubKey: authPubkey, IsSigner: len(signerPubkeys) == 0, IsWritable: false})
+	for _, signerPubkey := range signerPubkeys {
+		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
+	}
+
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts:  accounts,
+		Data:      data,
+	}
 }
 
 func MintToChecked(mintPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64, decimals uint8) types.Instruction {
