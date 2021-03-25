@@ -136,8 +136,30 @@ func Approve(sourcePubkey, delegatePubkey, authPubkey common.PublicKey, signerPu
 	}
 }
 
-func Revoke() types.Instruction {
-	panic("not implement yet")
+func Revoke(srcPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) types.Instruction {
+	data, err := common.SerializeData(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionRevoke,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	accounts := make([]types.AccountMeta, 0, 2+len(signerPubkeys))
+	accounts = append(accounts,
+		types.AccountMeta{PubKey: srcPubkey, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: authPubkey, IsSigner: len(signerPubkeys) == 0, IsWritable: false},
+	)
+	for _, signerPubkey := range signerPubkeys {
+		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
+	}
+
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts:  accounts,
+		Data:      data,
+	}
 }
 
 func SetAuthority() types.Instruction {
