@@ -205,8 +205,29 @@ func CloseAccount(accountPubkey, destPubkey, authPubkey common.PublicKey, signer
 	}
 }
 
-func FreezeAccount() types.Instruction {
-	panic("not implement yet")
+func FreezeAccount(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) types.Instruction {
+	data, err := common.SerializeData(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionFreezeAccount,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
+	accounts = append(accounts, types.AccountMeta{PubKey: accountPubkey, IsSigner: false, IsWritable: true})
+	accounts = append(accounts, types.AccountMeta{PubKey: mintPubkey, IsSigner: false, IsWritable: false})
+	accounts = append(accounts, types.AccountMeta{PubKey: authPubkey, IsSigner: len(signerPubkeys) == 0, IsWritable: false})
+	for _, signerPubkey := range signerPubkeys {
+		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
+	}
+
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts:  accounts,
+		Data:      data,
+	}
 }
 
 func ThawAccount() types.Instruction {
