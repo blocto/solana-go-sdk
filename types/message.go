@@ -214,7 +214,7 @@ func NewMessage(feePayer common.PublicKey, instructions []Instruction, recentBlo
 		sortAllAccount()
 	}
 
-	publicKeys := []common.PublicKey{}
+	publicKeys := make([]common.PublicKey, 0, len(writableSignedAccount)+len(readOnlySignedAccount)+len(writableUnsignedAccount)+len(readOnlyUnsignedAccount))
 	publicKeys = append(publicKeys, writableSignedAccount...)
 	publicKeys = append(publicKeys, readOnlySignedAccount...)
 	publicKeys = append(publicKeys, writableUnsignedAccount...)
