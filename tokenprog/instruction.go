@@ -309,6 +309,25 @@ func BurnChecked(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerP
 	}
 }
 
-func InitializeAccount2() types.Instruction {
-	panic("not implement yet")
+func InitializeAccount2(accountPubkey, mintPubkey, ownerPubkey common.PublicKey) types.Instruction {
+	data, err := common.SerializeData(struct {
+		Instruction Instruction
+		Owner       common.PublicKey
+	}{
+		Instruction: InstructionInitializeAccount2,
+		Owner:       ownerPubkey,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts: []types.AccountMeta{
+			{PubKey: accountPubkey, IsSigner: false, IsWritable: true},
+			{PubKey: mintPubkey, IsSigner: false, IsWritable: false},
+			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
+		},
+		Data: data,
+	}
 }
