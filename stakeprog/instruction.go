@@ -220,6 +220,47 @@ func Merge(dest, src, auth common.PublicKey) types.Instruction {
 	}
 }
 
-func AuthorizeWithSeed() types.Instruction {
-	panic("not implement yet")
+func AuthorizeWithSeed(
+	stakePubkey common.PublicKey,
+	authBasePubkey common.PublicKey,
+	authSeed string,
+	authOwnerPubkey common.PublicKey,
+	newAuthPubkey common.PublicKey,
+	authType StakeAuthorizationType,
+	custodianPubkey common.PublicKey) types.Instruction {
+
+	data, err := common.SerializeData(struct {
+		Instruction            Instruction
+		NewAuthorized          common.PublicKey
+		StakeAuthorizationType StakeAuthorizationType
+		AuthSeedLen            uint64
+		AuthSeed               string
+		AuthOwner              common.PublicKey
+	}{
+		Instruction:            InstructionAuthorizeWithSeed,
+		NewAuthorized:          newAuthPubkey,
+		StakeAuthorizationType: authType,
+		AuthSeedLen:            uint64(len(authSeed)),
+		AuthSeed:               authSeed,
+		AuthOwner:              authOwnerPubkey,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	accounts := make([]types.AccountMeta, 0, 4)
+	accounts = append(accounts,
+		types.AccountMeta{PubKey: stakePubkey, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: authBasePubkey, IsSigner: true, IsWritable: false},
+		types.AccountMeta{PubKey: common.SysVarClockPubkey, IsSigner: false, IsWritable: false},
+	)
+	if custodianPubkey != (common.PublicKey{}) {
+		accounts = append(accounts, types.AccountMeta{PubKey: custodianPubkey, IsSigner: true, IsWritable: false})
+	}
+
+	return types.Instruction{
+		ProgramID: common.StakeProgramID,
+		Accounts:  accounts,
+		Data:      data,
+	}
 }
