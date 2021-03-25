@@ -150,8 +150,33 @@ func MintTo(mintPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys [
 	}
 }
 
-func Burn() types.Instruction {
-	panic("not implement yet")
+func Burn(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) types.Instruction {
+	data, err := common.SerializeData(struct {
+		Instruction Instruction
+		Amount      uint64
+	}{
+		Instruction: InstructionBurn,
+		Amount:      amount,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
+	accounts = append(accounts,
+		types.AccountMeta{PubKey: accountPubkey, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: mintPubkey, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: authPubkey, IsSigner: len(signerPubkeys) == 0, IsWritable: false},
+	)
+	for _, signerPubkey := range signerPubkeys {
+		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
+	}
+
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts:  accounts,
+		Data:      data,
+	}
 }
 
 func CloseAccount() types.Instruction {
