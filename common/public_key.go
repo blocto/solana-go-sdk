@@ -2,15 +2,11 @@ package common
 
 import (
 	"crypto/sha256"
-	"encoding/hex"
 	"errors"
 
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/mr-tron/base58"
 	"github.com/teserakt-io/golang-ed25519/edwards25519"
 )
-
-var ZeroPublicKey = PublicKeyFromHex("0")
 
 const (
 	PublicKeyLength = 32
@@ -19,10 +15,6 @@ const (
 )
 
 type PublicKey [PublicKeyLength]byte
-
-func PublicKeyFromHex(s string) PublicKey {
-	return PublicKeyFromBytes(common.HexToHash(s).Bytes())
-}
 
 func PublicKeyFromString(s string) PublicKey {
 	d, _ := base58.Decode(s)
@@ -53,7 +45,7 @@ func CreateProgramAddress(seeds [][]byte, programId PublicKey) (PublicKey, error
 	buf = append(buf, programId[:]...)
 	buf = append(buf, []byte("ProgramDerivedAddress")...)
 	h := sha256.Sum256(buf)
-	pubKey := PublicKeyFromHex(hex.EncodeToString(h[:]))
+	pubKey := PublicKeyFromBytes(h[:])
 
 	// public key is on curve
 	var A edwards25519.ExtendedGroupElement
@@ -100,5 +92,5 @@ func FindProgramAddress(seed [][]byte, programID PublicKey) (PublicKey, int, err
 		}
 		nonce--
 	}
-	return ZeroPublicKey, nonce, errors.New("unable to find a viable program address")
+	return PublicKey{}, nonce, errors.New("unable to find a viable program address")
 }

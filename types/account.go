@@ -2,7 +2,6 @@ package types
 
 import (
 	"crypto/ed25519"
-	"encoding/hex"
 
 	"github.com/portto/solana-go-sdk/common"
 )
@@ -20,7 +19,7 @@ func NewAccount() Account {
 func AccountFromPrivateKeyBytes(privateKey []byte) Account {
 	sk := ed25519.PrivateKey(privateKey)
 	return Account{
-		PublicKey:  common.PublicKeyFromHex(hex.EncodeToString(sk.Public().(ed25519.PublicKey))),
+		PublicKey:  common.PublicKeyFromBytes(sk.Public().(ed25519.PublicKey)),
 		PrivateKey: sk,
 	}
 }

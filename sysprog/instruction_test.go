@@ -312,20 +312,20 @@ func TestTransfer(t *testing.T) {
 	}{
 		{
 			args: args{
-				from:   common.PublicKeyFromHex("ced387e6c36f57fe93ef8f516e9f318c6d89e0c51831df3d7b084e6d6e88e4f0"),
-				to:     common.PublicKeyFromHex("86acd1d5e3893d6c74abcd7c36443d6e501ff0756c8961de26f2449c1b411d8e"),
+				from:   common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				to:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
 				number: 1,
 			},
 			want: types.Instruction{
 				ProgramID: common.SystemProgramID,
 				Accounts: []types.AccountMeta{
 					{
-						PubKey:     common.PublicKeyFromHex("ced387e6c36f57fe93ef8f516e9f318c6d89e0c51831df3d7b084e6d6e88e4f0"),
+						PubKey:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
 						IsSigner:   true,
 						IsWritable: true,
 					},
 					{
-						PubKey:     common.PublicKeyFromHex("86acd1d5e3893d6c74abcd7c36443d6e501ff0756c8961de26f2449c1b411d8e"),
+						PubKey:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
 						IsSigner:   false,
 						IsWritable: true,
 					},

@@ -28,9 +28,9 @@ func TestMessage_Serialize(t *testing.T) {
 					NumReadonlyUnsignedAccounts: 1,
 				},
 				Accounts: []common.PublicKey{
-					common.PublicKeyFromHex("ced387e6c36f57fe93ef8f516e9f318c6d89e0c51831df3d7b084e6d6e88e4f0"),
-					common.PublicKeyFromHex("86acd1d5e3893d6c74abcd7c36443d6e501ff0756c8961de26f2449c1b411d8e"),
-					common.PublicKeyFromHex("0"),
+					common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					common.PublicKeyFromString("A4iUVr5KjmsLymUcv4eSKPedUtoaBceiPeGipKMYc69b"),
+					common.SystemProgramID,
 				},
 				RecentBlockHash: "FwRYtTPRk5N4wUeP87rTw9kQVSwigB6kbikGzzeCMrW5",
 				Instructions: []CompiledInstruction{

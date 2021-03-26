@@ -28,9 +28,9 @@ func TestTransaction_Serialize(t *testing.T) {
 						NumReadonlyUnsignedAccounts: 1,
 					},
 					Accounts: []common.PublicKey{
-						common.PublicKeyFromHex("ced387e6c36f57fe93ef8f516e9f318c6d89e0c51831df3d7b084e6d6e88e4f0"),
-						common.PublicKeyFromHex("86acd1d5e3893d6c74abcd7c36443d6e501ff0756c8961de26f2449c1b411d8e"),
-						common.PublicKeyFromHex("0"),
+						common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+						common.PublicKeyFromString("A4iUVr5KjmsLymUcv4eSKPedUtoaBceiPeGipKMYc69b"),
+						common.SystemProgramID,
 					},
 					RecentBlockHash: "FwRYtTPRk5N4wUeP87rTw9kQVSwigB6kbikGzzeCMrW5",
 					Instructions: []CompiledInstruction{
@@ -82,12 +82,12 @@ func TestCreateRawTransaction(t *testing.T) {
 							ProgramID: common.PublicKeyFromString("11111111111111111111111111111111"),
 							Accounts: []AccountMeta{
 								{
-									PubKey:     common.PublicKeyFromHex("ced387e6c36f57fe93ef8f516e9f318c6d89e0c51831df3d7b084e6d6e88e4f0"),
+									PubKey:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
 									IsSigner:   true,
 									IsWritable: true,
 								},
 								{
-									PubKey:     common.PublicKeyFromHex("86acd1d5e3893d6c74abcd7c36443d6e501ff0756c8961de26f2449c1b411d8e"),
+									PubKey:     common.PublicKeyFromString("A4iUVr5KjmsLymUcv4eSKPedUtoaBceiPeGipKMYc69b"),
 									IsSigner:   false,
 									IsWritable: true,
 								},
@@ -98,7 +98,7 @@ func TestCreateRawTransaction(t *testing.T) {
 					Signers: []Account{
 						AccountFromPrivateKeyBytes([]byte{220, 190, 97, 243, 86, 180, 6, 192, 121, 120, 30, 246, 134, 81, 46, 27, 181, 181, 148, 200, 182, 184, 13, 124, 51, 186, 141, 11, 125, 116, 9, 203, 206, 211, 135, 230, 195, 111, 87, 254, 147, 239, 143, 81, 110, 159, 49, 140, 109, 137, 224, 197, 24, 49, 223, 61, 123, 8, 78, 109, 110, 136, 228, 240}),
 					},
-					FeePayer:        common.PublicKeyFromHex("0"),
+					FeePayer:        common.PublicKey{},
 					RecentBlockHash: "FwRYtTPRk5N4wUeP87rTw9kQVSwigB6kbikGzzeCMrW5",
 				},
 			},
@@ -239,9 +239,9 @@ func TestTransactionDeserialize(t *testing.T) {
 						NumReadonlyUnsignedAccounts: 1,
 					},
 					Accounts: []common.PublicKey{
-						common.PublicKeyFromHex("ced387e6c36f57fe93ef8f516e9f318c6d89e0c51831df3d7b084e6d6e88e4f0"),
-						common.PublicKeyFromHex("86acd1d5e3893d6c74abcd7c36443d6e501ff0756c8961de26f2449c1b411d8e"),
-						common.PublicKeyFromHex("0"),
+						common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+						common.PublicKeyFromString("A4iUVr5KjmsLymUcv4eSKPedUtoaBceiPeGipKMYc69b"),
+						common.SystemProgramID,
 					},
 					RecentBlockHash: "FwRYtTPRk5N4wUeP87rTw9kQVSwigB6kbikGzzeCMrW5",
 					Instructions: []CompiledInstruction{
@@ -271,9 +271,9 @@ func TestTransactionDeserialize(t *testing.T) {
 						NumReadonlyUnsignedAccounts: 1,
 					},
 					Accounts: []common.PublicKey{
-						common.PublicKeyFromHex("ced387e6c36f57fe93ef8f516e9f318c6d89e0c51831df3d7b084e6d6e88e4f0"),
-						common.PublicKeyFromHex("86acd1d5e3893d6c74abcd7c36443d6e501ff0756c8961de26f2449c1b411d8e"),
-						common.PublicKeyFromHex("0"),
+						common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+						common.PublicKeyFromString("A4iUVr5KjmsLymUcv4eSKPedUtoaBceiPeGipKMYc69b"),
+						common.SystemProgramID,
 					},
 					RecentBlockHash: "9qERNBLXzCqchyfquh2DjUT21xsLym6ynZPRh9TZbEiq",
 					Instructions: []CompiledInstruction{

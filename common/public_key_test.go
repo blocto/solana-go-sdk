@@ -68,33 +68,6 @@ func TestPublicKeyFromString(t *testing.T) {
 	}
 }
 
-func TestPublicKeyFromHex(t *testing.T) {
-	type args struct {
-		s string
-	}
-	tests := []struct {
-		name string
-		args args
-		want PublicKey
-	}{
-		{
-			args: args{s: "ced387e6c36f57fe93ef8f516e9f318c6d89e0c51831df3d7b084e6d6e88e4f0"},
-			want: PublicKey([32]byte{206, 211, 135, 230, 195, 111, 87, 254, 147, 239, 143, 81, 110, 159, 49, 140, 109, 137, 224, 197, 24, 49, 223, 61, 123, 8, 78, 109, 110, 136, 228, 240}),
-		},
-		{
-			args: args{s: "0"},
-			want: PublicKey([32]byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}),
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := PublicKeyFromHex(tt.args.s); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("PublicKeyFromHex() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestCreateProgramAddress(t *testing.T) {
 	type args struct {
 		seeds     [][]byte

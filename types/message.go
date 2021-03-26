@@ -2,7 +2,6 @@ package types
 
 import (
 	"bytes"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"sort"
@@ -74,7 +73,7 @@ func MessageDeserialize(messageData []byte) (Message, error) {
 	}
 	accounts := make([]common.PublicKey, 0, accountCount)
 	for i := 0; i < int(accountCount); i++ {
-		accounts = append(accounts, common.PublicKeyFromHex(hex.EncodeToString(messageData[:32])))
+		accounts = append(accounts, common.PublicKeyFromBytes(messageData[:32]))
 		messageData = messageData[32:]
 	}
 
@@ -198,7 +197,7 @@ func NewMessage(feePayer common.PublicKey, instructions []Instruction, recentBlo
 			return bytes.Compare(readOnlyUnsignedAccount[i].Bytes(), readOnlyUnsignedAccount[j].Bytes()) < 0
 		})
 	}
-	if feePayer != common.ZeroPublicKey {
+	if feePayer != (common.PublicKey{}) {
 		for _, account := range accountMap {
 			if feePayer == account.PubKey {
 				continue
