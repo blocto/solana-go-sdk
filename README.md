@@ -41,9 +41,7 @@ go run main.go
 # solana version: 1.6.1
 ```
 
-you can find more examples in [wiki page](https://github.com/portto/solana-go-sdk/wiki)
-
-## Testing
+### Testing
 
 ```sh
 go test -v ./...
