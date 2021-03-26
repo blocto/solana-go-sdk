@@ -56,6 +56,7 @@ func InitializeMint(decimals uint8, mint, mintAuthority common.PublicKey, freeze
 	}
 }
 
+// InitializeAccount init a token account which can receive token
 func InitializeAccount(accountPublicKey, mintPublicKey, ownerPublickey common.PublicKey) types.Instruction {
 	data, err := common.SerializeData(struct {
 		Instruction Instruction
@@ -79,8 +80,42 @@ func InitializeAccount(accountPublicKey, mintPublicKey, ownerPublickey common.Pu
 	}
 }
 
-func InitializeMultisig() types.Instruction {
-	panic("not implement yet")
+func InitializeMultisig(authPubkey common.PublicKey, signerPubkeys []common.PublicKey, miniRequired uint8) types.Instruction {
+	if len(signerPubkeys) < 1 {
+		panic("minimum of signer is 1")
+	}
+	if len(signerPubkeys) > 11 {
+		panic("maximum of signer is 11")
+	}
+	if miniRequired > uint8(len(signerPubkeys)) {
+		panic("required number too big")
+	}
+
+	data, err := common.SerializeData(struct {
+		Instruction     Instruction
+		MinimumRequired uint8
+	}{
+		Instruction:     InstructionInitializeMultisig,
+		MinimumRequired: miniRequired,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	accounts := make([]types.AccountMeta, 0, 2+len(signerPubkeys))
+	accounts = append(accounts,
+		types.AccountMeta{PubKey: authPubkey, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
+	)
+	for _, signerPubkey := range signerPubkeys {
+		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
+	}
+
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts:  accounts,
+		Data:      data,
+	}
 }
 
 func Transfer(srcPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) types.Instruction {
