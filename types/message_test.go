@@ -64,3 +64,63 @@ func TestMessage_Serialize(t *testing.T) {
 		})
 	}
 }
+
+func TestMessage_DecompileInstructions(t *testing.T) {
+	type fields struct {
+		Header          MessageHeader
+		Accounts        []common.PublicKey
+		RecentBlockHash string
+		Instructions    []CompiledInstruction
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   []Instruction
+	}{
+		{
+			fields: fields{
+				Header: MessageHeader{
+					NumRequireSignatures:        1,
+					NumReadonlySignedAccounts:   0,
+					NumReadonlyUnsignedAccounts: 1,
+				},
+				Accounts: []common.PublicKey{
+					common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					common.PublicKeyFromString("A4iUVr5KjmsLymUcv4eSKPedUtoaBceiPeGipKMYc69b"),
+					common.SystemProgramID,
+				},
+				RecentBlockHash: "FwRYtTPRk5N4wUeP87rTw9kQVSwigB6kbikGzzeCMrW5",
+				Instructions: []CompiledInstruction{
+					{
+						ProgramIDIndex: 2,
+						Accounts:       []int{0, 1},
+						Data:           []byte{2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+					},
+				},
+			},
+			want: []Instruction{
+				{
+					Accounts: []AccountMeta{
+						{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: true, IsWritable: true},
+						{PubKey: common.PublicKeyFromString("A4iUVr5KjmsLymUcv4eSKPedUtoaBceiPeGipKMYc69b"), IsSigner: false, IsWritable: true},
+					},
+					ProgramID: common.SystemProgramID,
+					Data:      []byte{2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			m := &Message{
+				Header:          tt.fields.Header,
+				Accounts:        tt.fields.Accounts,
+				RecentBlockHash: tt.fields.RecentBlockHash,
+				Instructions:    tt.fields.Instructions,
+			}
+			if got := m.DecompileInstructions(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Message.DecompileInstructions() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
