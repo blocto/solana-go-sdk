@@ -54,6 +54,28 @@ func (m *Message) Serialize() ([]byte, error) {
 	return b, nil
 }
 
+func (m *Message) DecompileInstructions() []Instruction {
+	instructions := make([]Instruction, 0, len(m.Instructions))
+	for _, cins := range m.Instructions {
+		accounts := make([]AccountMeta, 0, len(cins.Accounts))
+		for i := 0; i < len(cins.Accounts); i++ {
+			accounts = append(accounts, AccountMeta{
+				PubKey:   m.Accounts[cins.Accounts[i]],
+				IsSigner: cins.Accounts[i] < int(m.Header.NumRequireSignatures),
+				IsWritable: cins.Accounts[i] <= int(m.Header.NumRequireSignatures-m.Header.NumReadonlySignedAccounts) ||
+					(cins.Accounts[i] >= int(m.Header.NumRequireSignatures) &&
+						cins.Accounts[i] <= len(cins.Accounts)-int(m.Header.NumReadonlyUnsignedAccounts)),
+			})
+		}
+		instructions = append(instructions, Instruction{
+			ProgramID: m.Accounts[cins.ProgramIDIndex],
+			Accounts:  accounts,
+			Data:      cins.Data,
+		})
+	}
+	return instructions
+}
+
 func MessageDeserialize(messageData []byte) (Message, error) {
 	var numRequireSignatures, numReadonlySignedAccounts, numReadonlyUnsignedAccounts uint8
 	var t uint64
