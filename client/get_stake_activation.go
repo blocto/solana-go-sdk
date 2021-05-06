@@ -1,6 +1,9 @@
 package client
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
 type StakeActivationState string
 
@@ -22,13 +25,13 @@ type GetStakeActivationResponse struct {
 	Inactive uint64               `json:"inactive"`
 }
 
-func (s *Client) GetStakeActivation(address string, cfg GetStakeActivationConfig) (GetStakeActivationResponse, error) {
+func (s *Client) GetStakeActivation(ctx context.Context, address string, cfg GetStakeActivationConfig) (GetStakeActivationResponse, error) {
 	res := struct {
 		GeneralResponse
 		Result GetStakeActivationResponse `json:"result"`
 	}{}
 
-	err := s.request("getStakeActivation", []interface{}{address, cfg}, &res)
+	err := s.request(ctx, "getStakeActivation", []interface{}{address, cfg}, &res)
 	if err != nil {
 		return GetStakeActivationResponse{}, err
 	}

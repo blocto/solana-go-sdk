@@ -1,6 +1,9 @@
 package client
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
 type GetSignatureStatusesResponse struct {
 	Slot               uint64      `json:"slot"`
@@ -9,7 +12,7 @@ type GetSignatureStatusesResponse struct {
 	Err                interface{} `json:"err"`
 }
 
-func (s *Client) GetSignatureStatuses(signatures []string) ([]GetSignatureStatusesResponse, error) {
+func (s *Client) GetSignatureStatuses(ctx context.Context, signatures []string) ([]GetSignatureStatusesResponse, error) {
 	res := struct {
 		GeneralResponse
 		Result struct {
@@ -17,7 +20,7 @@ func (s *Client) GetSignatureStatuses(signatures []string) ([]GetSignatureStatus
 			Value   []GetSignatureStatusesResponse `json:"value"`
 		} `json:"result"`
 	}{}
-	err := s.request("getSignatureStatuses", []interface{}{signatures, map[string]interface{}{"searchTransactionHistory": true}}, &res)
+	err := s.request(ctx, "getSignatureStatuses", []interface{}{signatures, map[string]interface{}{"searchTransactionHistory": true}}, &res)
 	if err != nil {
 		return nil, err
 	}

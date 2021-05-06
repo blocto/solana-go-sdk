@@ -1,6 +1,9 @@
 package client
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
 // GetAccountInfoConfig s
 // encoding:
@@ -29,7 +32,7 @@ type GetAccountInfoResponse struct {
 	Data      interface{} `json:"data"`
 }
 
-func (s *Client) GetAccountInfo(account string, cfg GetAccountInfoConfig) (GetAccountInfoResponse, error) {
+func (s *Client) GetAccountInfo(ctx context.Context, account string, cfg GetAccountInfoConfig) (GetAccountInfoResponse, error) {
 	res := struct {
 		GeneralResponse
 		Result struct {
@@ -37,7 +40,7 @@ func (s *Client) GetAccountInfo(account string, cfg GetAccountInfoConfig) (GetAc
 			Value   GetAccountInfoResponse `json:"value"`
 		} `json:"result"`
 	}{}
-	err := s.request("getAccountInfo", []interface{}{account, cfg}, &res)
+	err := s.request(ctx, "getAccountInfo", []interface{}{account, cfg}, &res)
 	if err != nil {
 		return GetAccountInfoResponse{}, err
 	}

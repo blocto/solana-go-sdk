@@ -1,8 +1,11 @@
 package client
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
-func (s *Client) GetBalance(base58Addr string) (uint64, error) {
+func (s *Client) GetBalance(ctx context.Context, base58Addr string) (uint64, error) {
 	res := struct {
 		GeneralResponse
 		Result struct {
@@ -10,7 +13,7 @@ func (s *Client) GetBalance(base58Addr string) (uint64, error) {
 			Value   uint64  `json:"value"`
 		} `json:"result"`
 	}{}
-	err := s.request("getBalance", []interface{}{base58Addr}, &res)
+	err := s.request(ctx, "getBalance", []interface{}{base58Addr}, &res)
 	if err != nil {
 		return 0, err
 	}

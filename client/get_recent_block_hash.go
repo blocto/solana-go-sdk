@@ -1,6 +1,9 @@
 package client
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
 type GetRecentBlockHashResponse struct {
 	Blockhash     string `json:"blockhash"`
@@ -9,7 +12,7 @@ type GetRecentBlockHashResponse struct {
 	} `json:"feeCalculator"`
 }
 
-func (s *Client) GetRecentBlockhash() (GetRecentBlockHashResponse, error) {
+func (s *Client) GetRecentBlockhash(ctx context.Context) (GetRecentBlockHashResponse, error) {
 	res := struct {
 		GeneralResponse
 		Result struct {
@@ -17,7 +20,7 @@ func (s *Client) GetRecentBlockhash() (GetRecentBlockHashResponse, error) {
 			Value   GetRecentBlockHashResponse `json:"value"`
 		} `json:"result"`
 	}{}
-	err := s.request("getRecentBlockhash", []interface{}{}, &res)
+	err := s.request(ctx, "getRecentBlockhash", []interface{}{}, &res)
 	if err != nil {
 		return GetRecentBlockHashResponse{}, err
 	}

@@ -1,6 +1,9 @@
 package client
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
 type SimulateTransactionConfig struct {
 	SigVerify           bool       `json:"sigVerify"`           // default: false
@@ -13,7 +16,7 @@ type SimulateTransactionResponse struct {
 	Logs []string    `json:"logs"`
 }
 
-func (s *Client) SimulateTransaction(rawTx string, cfg SimulateTransactionConfig) (SimulateTransactionResponse, error) {
+func (s *Client) SimulateTransaction(ctx context.Context, rawTx string, cfg SimulateTransactionConfig) (SimulateTransactionResponse, error) {
 	res := struct {
 		GeneralResponse
 		Result struct {
@@ -21,7 +24,7 @@ func (s *Client) SimulateTransaction(rawTx string, cfg SimulateTransactionConfig
 			Value   SimulateTransactionResponse `json:"value"`
 		} `json:"result"`
 	}{}
-	err := s.request("simulateTransaction", []interface{}{rawTx, cfg}, &res)
+	err := s.request(ctx, "simulateTransaction", []interface{}{rawTx, cfg}, &res)
 	if err != nil {
 		return SimulateTransactionResponse{}, err
 	}

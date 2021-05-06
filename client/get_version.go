@@ -1,16 +1,18 @@
 package client
 
+import "context"
+
 type GetVersionResponse struct {
 	SolanaCore string `json:"solana-core"`
 	FeatureSet uint64 `json:"feature-set"`
 }
 
-func (s *Client) GetVersion() (GetVersionResponse, error) {
+func (s *Client) GetVersion(ctx context.Context) (GetVersionResponse, error) {
 	res := struct {
 		GeneralResponse
 		Result GetVersionResponse `json:"result"`
 	}{}
-	err := s.request("getVersion", []interface{}{}, &res)
+	err := s.request(ctx, "getVersion", []interface{}{}, &res)
 	if err != nil {
 		return GetVersionResponse{}, err
 	}

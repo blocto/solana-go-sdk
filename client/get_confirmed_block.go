@@ -1,5 +1,7 @@
 package client
 
+import "context"
+
 type GetConfirmBlockResponse struct {
 	Blockhash         string `json:"blockhash"`
 	PreviousBlockhash string `json:"previousBlockhash"`
@@ -17,12 +19,12 @@ type GetConfirmBlockResponse struct {
 	} `json:"rewards"`
 }
 
-func (s *Client) GetConfirmedBlock(slot uint64) (GetConfirmBlockResponse, error) {
+func (s *Client) GetConfirmedBlock(ctx context.Context, slot uint64) (GetConfirmBlockResponse, error) {
 	res := struct {
 		GeneralResponse
 		Result GetConfirmBlockResponse `json:"result"`
 	}{}
-	err := s.request("getConfirmedBlock", []interface{}{slot, "json"}, &res)
+	err := s.request(ctx, "getConfirmedBlock", []interface{}{slot, "json"}, &res)
 	if err != nil {
 		return GetConfirmBlockResponse{}, err
 	}

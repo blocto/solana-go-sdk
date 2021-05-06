@@ -1,13 +1,16 @@
 package client
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
-func (s *Client) GetMinimumBalanceForRentExemption(accountDataLen uint64) (uint64, error) {
+func (s *Client) GetMinimumBalanceForRentExemption(ctx context.Context, accountDataLen uint64) (uint64, error) {
 	res := struct {
 		GeneralResponse
 		Result uint64 `json:"result"`
 	}{}
-	err := s.request("getMinimumBalanceForRentExemption", []interface{}{accountDataLen}, &res)
+	err := s.request(ctx, "getMinimumBalanceForRentExemption", []interface{}{accountDataLen}, &res)
 	if err != nil {
 		return 0, err
 	}
