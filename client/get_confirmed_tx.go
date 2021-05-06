@@ -1,17 +1,19 @@
 package client
 
+import "context"
+
 type GetConfirmedTransactionResponse struct {
 	Slot        uint64          `json:"slot"`
 	Meta        TransactionMeta `json:"meta"`
 	Transaction Transaction     `json:"transaction"`
 }
 
-func (s *Client) GetConfirmedTransaction(txhash string) (GetConfirmedTransactionResponse, error) {
+func (s *Client) GetConfirmedTransaction(ctx context.Context, txhash string) (GetConfirmedTransactionResponse, error) {
 	res := struct {
 		GeneralResponse
 		Result GetConfirmedTransactionResponse `json:"result"`
 	}{}
-	err := s.request("getConfirmedTransaction", []interface{}{txhash, "json"}, &res)
+	err := s.request(ctx, "getConfirmedTransaction", []interface{}{txhash, "json"}, &res)
 	if err != nil {
 		return GetConfirmedTransactionResponse{}, err
 	}

@@ -2,6 +2,7 @@ package common
 
 import (
 	"crypto/sha256"
+	"encoding/json"
 	"errors"
 
 	"github.com/mr-tron/base58"
@@ -61,6 +62,10 @@ func (p PublicKey) ToBase58() string {
 
 func (p PublicKey) Bytes() []byte {
 	return p[:]
+}
+
+func (p *PublicKey) MarshalJSON() ([]byte, error) {
+	return json.Marshal(p.ToBase58())
 }
 
 func CreateWithSeed(from PublicKey, seed string, programID PublicKey) PublicKey {

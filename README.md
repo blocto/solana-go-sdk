@@ -20,6 +20,7 @@ go get -v github.com/portto/solana-go-sdk
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -28,16 +29,17 @@ import (
 
 func main() {
 	c := client.NewClient(client.TestnetRPCEndpoint)
-  
-	res, err := c.GetVersion()
+
+	resp, err := c.GetVersion(context.Background())
 	if err != nil {
 		log.Fatalf("get version error, err: %v", err)
 	}
-  
-	fmt.Println("solana version:", res.SolanaCore)
-	
-	// solana version: 1.6.1
+
+	fmt.Println("solana version:", resp.SolanaCore)
+
+	// solana version: 1.6.7
 }
+
 ```
 
 #### New Account
@@ -46,6 +48,7 @@ func main() {
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -60,7 +63,7 @@ func main() {
 	fmt.Println("account address:", account.PublicKey.ToBase58())
 	fmt.Println("account private key:", account.PrivateKey)
 
-	airdropTxHash, err := c.RequestAirdrop(account.PublicKey.ToBase58(), 1000000000) // 1 SOL = 10e9 lamports
+	airdropTxHash, err := c.RequestAirdrop(context.Background(), account.PublicKey.ToBase58(), 1000000000) // 1 SOL = 10e9 lamports
 	if err != nil {
 		log.Fatalln("request airdrop error", err)
 	}
@@ -78,6 +81,7 @@ You can use `CreateRawTransaction` to generate raw tx
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/portto/solana-go-sdk/client"
@@ -89,7 +93,7 @@ import (
 func main() {
 	c := client.NewClient(client.TestnetRPCEndpoint)
 
-	res, err := c.GetRecentBlockhash()
+	res, err := c.GetRecentBlockhash(context.Background())
 	if err != nil {
 		log.Fatalf("get recent block hash error, err: %v\n", err)
 	}
@@ -114,7 +118,7 @@ func main() {
 		log.Fatalf("generate tx error, err: %v\n", err)
 	}
 
-	txSig, err := c.SendRawTransaction(rawTx)
+	txSig, err := c.SendRawTransaction(context.Background(), rawTx)
 	if err != nil {
 		log.Fatalf("send tx error, err: %v\n", err)
 	}
@@ -129,6 +133,7 @@ or you can create raw message then fill signatures by yourself.
 package main
 
 import (
+	"context"
 	"crypto/ed25519"
 	"log"
 
@@ -141,7 +146,7 @@ import (
 func main() {
 	c := client.NewClient(client.TestnetRPCEndpoint)
 
-	res, err := c.GetRecentBlockhash()
+	res, err := c.GetRecentBlockhash(context.Background())
 	if err != nil {
 		log.Fatalf("get recent block hash error, err: %v\n", err)
 	}
@@ -180,7 +185,7 @@ func main() {
 		log.Fatalf("serialize tx error, err: %v\n", err)
 	}
 
-	txSig, err := c.SendRawTransaction(rawTx)
+	txSig, err := c.SendRawTransaction(context.Background(), rawTx)
 	if err != nil {
 		log.Fatalf("send tx error, err: %v\n", err)
 	}

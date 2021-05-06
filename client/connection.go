@@ -2,6 +2,7 @@ package client
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -30,7 +31,7 @@ func NewClient(endpoint string) *Client {
 	return &Client{endpoint: endpoint}
 }
 
-func (s *Client) request(method string, params []interface{}, response interface{}) error {
+func (s *Client) request(ctx context.Context, method string, params []interface{}, response interface{}) error {
 	// post data
 	j, err := json.Marshal(map[string]interface{}{
 		"jsonrpc": "2.0",
@@ -43,7 +44,7 @@ func (s *Client) request(method string, params []interface{}, response interface
 	}
 
 	// post request
-	req, err := http.NewRequest("POST", s.endpoint, bytes.NewBuffer(j))
+	req, err := http.NewRequestWithContext(ctx, "POST", s.endpoint, bytes.NewBuffer(j))
 	if err != nil {
 		return err
 	}

@@ -1,6 +1,7 @@
 package client
 
 import (
+	"context"
 	"encoding/base64"
 	"errors"
 )
@@ -12,12 +13,14 @@ type SendTransactionConfig struct {
 }
 
 // SendRawTransaction is a quick way to send the serialize tx
-func (s *Client) SendRawTransaction(tx []byte) (string, error) {
+func (s *Client) SendRawTransaction(ctx context.Context, tx []byte) (string, error) {
 	res := struct {
 		GeneralResponse
 		Result string `json:"result"`
 	}{}
-	err := s.request("sendTransaction",
+	err := s.request(
+		ctx,
+		"sendTransaction",
 		[]interface{}{
 			base64.StdEncoding.EncodeToString([]byte(tx)),
 			SendTransactionConfig{
@@ -37,12 +40,12 @@ func (s *Client) SendRawTransaction(tx []byte) (string, error) {
 	return res.Result, nil
 }
 
-func (s *Client) SendTransaction(tx string, cfg SendTransactionConfig) (string, error) {
+func (s *Client) SendTransaction(ctx context.Context, tx string, cfg SendTransactionConfig) (string, error) {
 	res := struct {
 		GeneralResponse
 		Result string `json:"result"`
 	}{}
-	err := s.request("sendTransaction", []interface{}{tx, cfg}, &res)
+	err := s.request(ctx, "sendTransaction", []interface{}{tx, cfg}, &res)
 	if err != nil {
 		return "", err
 	}
