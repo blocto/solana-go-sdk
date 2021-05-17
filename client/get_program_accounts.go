@@ -14,10 +14,12 @@ type GetProgramAccountsConfigDataSize struct {
 }
 
 type GetProgramAccountsConfigMemCmpFilter struct {
-	MemCmp struct {
-		Offset int    `json:"offset"`
-		Bytes  string `json:"bytes"`
-	} `json:"memcmp"`
+	MemCmp GetProgramAccountsConfigMemCmp `json:"memcmp"`
+}
+
+type GetProgramAccountsConfigMemCmp struct {
+	Offset int    `json:"offset"`
+	Bytes  string `json:"bytes"`
 }
 
 type GetProgramAccountsResponse struct {
@@ -32,17 +34,18 @@ type GetProgramAccountsResponse struct {
 }
 
 const (
-	getProgramAccountDataSizeAllTokenAccounts = 165 // The dataSize 165 filter selects all Token Accounts
-	getProgramAccountOffsetMintAddress        = 0
-	getProgramAccountOffsetWalletAddress      = 32
+	GetProgramAccountDataSizeAllTokenAccounts = 165 // The dataSize 165 filter selects all Token Accounts
+	GetProgramAccountOffsetMintAddress        = 0
+	GetProgramAccountOffsetWalletAddress      = 32
 )
 
-// GetProgramAccounts get all token sub accounts of specified program address
+// GetProgramAccounts get token sub accounts of specified program address
 // for a public token, the programAddress is generally common.TokenProgramID
-// mintAddress and walletAddress can be empty
-// if you fill them, they will be used as filters
+// filters can be used to filter mint address, wallet address or program address
+// simply use GetProgramAccountsConfigMemCmpFilter to filter them
+// if you don't pass any filter, a dataSize 165 filter will be added to get all token accounts
 func (s *Client) GetProgramAccounts(
-	ctx context.Context, programAddress, mintAddress, walletAddress string) ([]GetProgramAccountsResponse, error) {
+	ctx context.Context, programAddress string, filters ...interface{}) ([]GetProgramAccountsResponse, error) {
 
 	res := struct {
 		GeneralResponse
@@ -50,30 +53,11 @@ func (s *Client) GetProgramAccounts(
 	}{}
 
 	cfg := GetProgramAccountsConfig{}
-	cfg.Filters = append(cfg.Filters,
-		GetProgramAccountsConfigDataSize{DataSize: getProgramAccountDataSizeAllTokenAccounts})
-	if mintAddress != "" { // this filter is based on the mint address within each token account
-		cfg.Filters = append(cfg.Filters, GetProgramAccountsConfigMemCmpFilter{
-			struct {
-				Offset int    `json:"offset"`
-				Bytes  string `json:"bytes"`
-			}{
-				Offset: getProgramAccountOffsetMintAddress,
-				Bytes:  mintAddress,
-			},
-		})
+	if len(filters) == 0 {
+		cfg.Filters = append(cfg.Filters,
+			GetProgramAccountsConfigDataSize{DataSize: GetProgramAccountDataSizeAllTokenAccounts})
 	}
-	if walletAddress != "" { // this filter is based on the owner address within each token account
-		cfg.Filters = append(cfg.Filters, GetProgramAccountsConfigMemCmpFilter{
-			struct {
-				Offset int    `json:"offset"`
-				Bytes  string `json:"bytes"`
-			}{
-				Offset: getProgramAccountOffsetWalletAddress,
-				Bytes:  walletAddress,
-			},
-		})
-	}
+	cfg.Filters = append(cfg.Filters, filters...)
 
 	err := s.request(ctx, "getProgramAccounts",
 		[]interface{}{
