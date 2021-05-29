@@ -36,3 +36,11 @@ type Transaction struct {
 	Signatures []string `json:"signatures"`
 	Message    Message  `json:"message"`
 }
+
+type Encoding string
+
+const (
+	EncodingBase58     Encoding = "base58" // limited to Account data of less than 128 bytes
+	EncodingBase64     Encoding = "base64"
+	EncodingBase64Zstd Encoding = "base64+zstd"
+)
