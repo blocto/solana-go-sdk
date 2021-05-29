@@ -10,12 +10,12 @@ type GetInflationRate struct {
 }
 
 // GetInflationRate returns the specific inflation values for the current epoch
-func (s *Client) GetInflationRate(ctx context.Context, commitment Commitment) (GetInflationRate, error) {
+func (s *Client) GetInflationRate(ctx context.Context) (GetInflationRate, error) {
 	res := struct {
 		GeneralResponse
 		Result GetInflationRate `json:"result"`
 	}{}
-	err := s.request(ctx, "getEpochInfo", []interface{}{}, &res)
+	err := s.request(ctx, "getInflationRate", []interface{}{}, &res)
 	if err != nil {
 		return GetInflationRate{}, err
 	}
