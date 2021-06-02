@@ -4,6 +4,8 @@
 
 Solana Golang SDK
 
+More example: [Gitbook](https://app.gitbook.com/@yihau/s/solana-development-with-go/)
+
 ## Getting Started
 
 ### Installing
