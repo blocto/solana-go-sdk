@@ -197,8 +197,45 @@ func Revoke(srcPubkey, authPubkey common.PublicKey, signerPubkeys []common.Publi
 	}
 }
 
-func SetAuthority() types.Instruction {
-	panic("not implement yet")
+type AuthorityType uint8
+
+const (
+	AuthorityTypeMintTokens AuthorityType = iota
+	AuthorityTypeFreezeAccount
+	AuthorityTypeAccountOwner
+	AuthorityTypeCloseAccount
+)
+
+func SetAuthority(accountPubkey, newAuthPubkey common.PublicKey, authType AuthorityType, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) types.Instruction {
+	data, err := common.SerializeData(struct {
+		Instruction   Instruction
+		AuthorityType AuthorityType
+		Option        bool
+		NewAuthPubkey common.PublicKey
+	}{
+		Instruction:   InstructionSetAuthority,
+		AuthorityType: authType,
+		Option:        newAuthPubkey != common.PublicKey{},
+		NewAuthPubkey: newAuthPubkey,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	accounts := make([]types.AccountMeta, 0, 2+len(signerPubkeys))
+	accounts = append(accounts,
+		types.AccountMeta{PubKey: accountPubkey, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: authPubkey, IsSigner: len(signerPubkeys) == 0, IsWritable: false},
+	)
+	for _, signerPubkey := range signerPubkeys {
+		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
+	}
+
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts:  accounts,
+		Data:      data,
+	}
 }
 
 func MintTo(mintPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) types.Instruction {
