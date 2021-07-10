@@ -20,6 +20,7 @@ type GetConfirmedSignaturesForAddressConfig struct {
 	Commitment Commitment `json:"commitment,omitempty"`
 }
 
+// DEPRECATED: Please use getSignaturesForAddress instead This method is expected to be removed in solana-core v1.8
 // GetConfirmedSignaturesForAddress returns confirmed signatures for transactions involving an address
 // backwards in time from the provided signature or most recent confirmed block
 func (s *Client) GetConfirmedSignaturesForAddress(ctx context.Context, base58Addr string, config GetConfirmedSignaturesForAddressConfig) ([]GetConfirmedSignaturesForAddress, error) {
