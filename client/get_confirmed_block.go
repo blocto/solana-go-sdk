@@ -19,6 +19,8 @@ type GetConfirmBlockResponse struct {
 	} `json:"rewards"`
 }
 
+// DEPRECATED: Please use getBlock instead This method is expected to be removed in solana-core v1.8
+// GetConfirmedBlock returns identity and transaction information about a confirmed block in the ledger
 func (s *Client) GetConfirmedBlock(ctx context.Context, slot uint64) (GetConfirmBlockResponse, error) {
 	res := struct {
 		GeneralResponse

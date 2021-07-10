@@ -8,6 +8,7 @@ type GetTokenAccountBalance struct {
 	UIAmountString string `json:"uiAmountString"`
 }
 
+// GetTokenAccountBalance returns the token balance of an SPL Token account.
 func (s *Client) GetTokenAccountBalance(ctx context.Context, base58Addr string, commitment Commitment) (GetTokenAccountBalance, error) {
 	res := struct {
 		GeneralResponse

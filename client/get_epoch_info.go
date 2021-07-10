@@ -3,13 +3,14 @@ package client
 import "context"
 
 type GetEpochInfoResponse struct {
-	AbsoluteSlot int `json:"absoluteSlot"`
-	BlockHeight  int `json:"blockHeight"`
-	Epoch        int `json:"epoch"`
-	SlotIndex    int `json:"slotIndex"`
-	SlotsInEpoch int `json:"slotsInEpoch"`
+	AbsoluteSlot uint64 `json:"absoluteSlot"`
+	BlockHeight  uint64 `json:"blockHeight"`
+	Epoch        uint64 `json:"epoch"`
+	SlotIndex    uint64 `json:"slotIndex"`
+	SlotsInEpoch uint64 `json:"slotsInEpoch"`
 }
 
+// GetEpochInfo returns information about the current epoch
 func (s *Client) GetEpochInfo(ctx context.Context, commitment Commitment) (GetEpochInfoResponse, error) {
 	res := struct {
 		GeneralResponse

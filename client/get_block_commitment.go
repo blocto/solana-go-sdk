@@ -10,6 +10,7 @@ type GetBlockCommitmentResponse struct {
 	TotalStake uint64   `json:"totalStake"`
 }
 
+// GetBlockCommitment returns commitment for particular block
 func (s *Client) GetBlockCommitment(ctx context.Context, slot uint64) (GetBlockCommitmentResponse, error) {
 	res := struct {
 		GeneralResponse

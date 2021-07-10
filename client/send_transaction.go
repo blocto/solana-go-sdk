@@ -40,6 +40,7 @@ func (s *Client) SendRawTransaction(ctx context.Context, tx []byte) (string, err
 	return res.Result, nil
 }
 
+// SendTransaction submits a signed transaction to the cluster for processing
 func (s *Client) SendTransaction(ctx context.Context, tx string, cfg SendTransactionConfig) (string, error) {
 	res := struct {
 		GeneralResponse

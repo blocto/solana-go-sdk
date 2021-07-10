@@ -5,6 +5,7 @@ import (
 	"errors"
 )
 
+// GetBlockTime returns the estimated production time of a block.
 func (s *Client) GetBlockTime(ctx context.Context, slot uint64) (int64, error) {
 	res := struct {
 		GeneralResponse
