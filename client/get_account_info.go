@@ -48,6 +48,7 @@ type GetAccountInfoResponse struct {
 	Data      interface{} `json:"data"`
 }
 
+// GetAccountInfo returns all information associated with the account of provided Pubkey
 func (s *Client) GetAccountInfo(ctx context.Context, account string, cfg GetAccountInfoConfig) (GetAccountInfoResponse, error) {
 	res := struct {
 		GeneralResponse

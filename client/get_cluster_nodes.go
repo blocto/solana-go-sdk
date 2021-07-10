@@ -15,6 +15,7 @@ type GetClusterNodesResponse struct {
 	Version      *string `json:"version"`
 }
 
+// GetClusterNodes returns information about all the nodes participating in the cluster
 func (s *Client) GetClusterNodes(ctx context.Context) ([]GetClusterNodesResponse, error) {
 	res := struct {
 		GeneralResponse

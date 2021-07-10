@@ -7,6 +7,7 @@ type GetVersionResponse struct {
 	FeatureSet uint64 `json:"feature-set"`
 }
 
+// GetVersion returns the current solana versions running on the node
 func (s *Client) GetVersion(ctx context.Context) (GetVersionResponse, error) {
 	res := struct {
 		GeneralResponse

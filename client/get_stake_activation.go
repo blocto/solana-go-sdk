@@ -25,6 +25,7 @@ type GetStakeActivationResponse struct {
 	Inactive uint64               `json:"inactive"`
 }
 
+// GetStakeActivation returns epoch activation information for a stake account
 func (s *Client) GetStakeActivation(ctx context.Context, address string, cfg GetStakeActivationConfig) (GetStakeActivationResponse, error) {
 	res := struct {
 		GeneralResponse

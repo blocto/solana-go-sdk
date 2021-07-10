@@ -5,6 +5,7 @@ import (
 	"errors"
 )
 
+// GetMinimumBalanceForRentExemption returns minimum balance required to make account rent exempt.
 func (s *Client) GetMinimumBalanceForRentExemption(ctx context.Context, accountDataLen uint64) (uint64, error) {
 	res := struct {
 		GeneralResponse

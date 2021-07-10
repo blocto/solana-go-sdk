@@ -5,6 +5,7 @@ import (
 	"errors"
 )
 
+// GetBalance returns the balance of the account of provided Pubkey
 func (s *Client) GetBalance(ctx context.Context, base58Addr string) (uint64, error) {
 	res := struct {
 		GeneralResponse
