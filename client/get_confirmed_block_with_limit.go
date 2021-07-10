@@ -2,6 +2,8 @@ package client
 
 import "context"
 
+// DEPRECATED: Please use getBlocksWithLimit instead This method is expected to be removed in solana-core v1.8
+// GetConfirmedBlocksWithLimit returns a list of confirmed blocks starting at the given slot
 func (s *Client) GetConfirmedBlocksWithLimit(ctx context.Context, startSlot uint64, limit uint64) ([]uint64, error) {
 	res := struct {
 		GeneralResponse
