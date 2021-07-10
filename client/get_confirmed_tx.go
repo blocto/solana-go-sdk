@@ -8,6 +8,8 @@ type GetConfirmedTransactionResponse struct {
 	Transaction Transaction     `json:"transaction"`
 }
 
+// DEPRECATED: Please use getTransaction instead This method is expected to be removed in solana-core v1.8
+// GetConfirmedTransaction returns transaction details for a confirmed transaction
 func (s *Client) GetConfirmedTransaction(ctx context.Context, txhash string) (GetConfirmedTransactionResponse, error) {
 	res := struct {
 		GeneralResponse
