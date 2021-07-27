@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 
+	"filippo.io/edwards25519"
 	"github.com/mr-tron/base58"
-	"github.com/teserakt-io/golang-ed25519/edwards25519"
 )
 
 const (
@@ -46,14 +46,13 @@ func CreateProgramAddress(seeds [][]byte, programId PublicKey) (PublicKey, error
 	buf = append(buf, programId[:]...)
 	buf = append(buf, []byte("ProgramDerivedAddress")...)
 	h := sha256.Sum256(buf)
-	pubKey := PublicKeyFromBytes(h[:])
 
-	// public key is on curve
-	var A edwards25519.ExtendedGroupElement
-	if A.FromBytes((*[32]byte)(&pubKey)) {
+	_, err := new(edwards25519.Point).SetBytes(h[:])
+	if err == nil {
 		return PublicKey{}, errors.New("Invalid seeds, address must fall off the curve")
 	}
-	return pubKey, nil
+
+	return PublicKeyFromBytes(h[:]), nil
 }
 
 func (p PublicKey) ToBase58() string {

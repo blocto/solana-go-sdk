@@ -97,6 +97,22 @@ func TestCreateProgramAddress(t *testing.T) {
 		},
 		{
 			args: args{
+				seeds:     [][]byte{{0x1}, {0x1}},
+				ProgramID: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
+			},
+			want:    PublicKeyFromString("87iRKybFEYbomHS1fhkRC7piBqVBq48KiaXXmVtiHWH"),
+			wantErr: nil,
+		},
+		{
+			args: args{
+				seeds:     [][]byte{{0x1}, {0x2}},
+				ProgramID: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
+			},
+			want:    PublicKey{},
+			wantErr: errors.New("Invalid seeds, address must fall off the curve"),
+		},
+		{
+			args: args{
 				seeds:     [][]byte{[]byte("123456789012345678901234567890123")},
 				ProgramID: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
 			},
@@ -112,7 +128,7 @@ func TestCreateProgramAddress(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreateProgramAddress() = %v, want %v", got, tt.want)
+				t.Errorf("CreateProgramAddress() = %v, want %v", got.ToBase58(), tt.want.ToBase58())
 			}
 		})
 	}
