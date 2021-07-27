@@ -93,7 +93,7 @@ func TestCreateProgramAddress(t *testing.T) {
 				ProgramID: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
 			},
 			want:    PublicKey{},
-			wantErr: errors.New("Invalid seeds, address must fall off the curve"),
+			wantErr: errors.New("invalid seeds, address must fall off the curve"),
 		},
 		{
 			args: args{
@@ -109,7 +109,7 @@ func TestCreateProgramAddress(t *testing.T) {
 				ProgramID: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
 			},
 			want:    PublicKey{},
-			wantErr: errors.New("Invalid seeds, address must fall off the curve"),
+			wantErr: errors.New("invalid seeds, address must fall off the curve"),
 		},
 		{
 			args: args{
@@ -117,7 +117,7 @@ func TestCreateProgramAddress(t *testing.T) {
 				ProgramID: PublicKeyFromString("EmPaWGCw48Sxu9Mu9pVrxe4XL2JeXUNTfoTXLuLz31gv"),
 			},
 			want:    PublicKey{},
-			wantErr: errors.New("Max seed length exceeded"),
+			wantErr: errors.New("max seed length exceeded"),
 		},
 	}
 	for _, tt := range tests {

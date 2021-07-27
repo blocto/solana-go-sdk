@@ -90,6 +90,9 @@ func MessageDeserialize(messageData []byte) (Message, error) {
 	}
 
 	accountCount, err := parseUvarint(&messageData)
+	if err != nil {
+		return Message{}, fmt.Errorf("falied to parse count of account, err: %v", err)
+	}
 	if len(messageData) < int(accountCount)*32 {
 		return Message{}, errors.New("parse account error")
 	}

@@ -19,8 +19,8 @@ type Commitment string
 
 const (
 	CommitmentFinalized Commitment = "finalized"
-	CommitmentConfirmed            = "confirmed"
-	CommitmentProcessed            = "processed"
+	CommitmentConfirmed Commitment = "confirmed"
+	CommitmentProcessed Commitment = "processed"
 )
 
 type Client struct {

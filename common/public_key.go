@@ -33,13 +33,13 @@ func PublicKeyFromBytes(b []byte) PublicKey {
 
 func CreateProgramAddress(seeds [][]byte, programId PublicKey) (PublicKey, error) {
 	if len(seeds) > MaxSeed {
-		return PublicKey{}, errors.New("Length of the seed is too long for address generation")
+		return PublicKey{}, errors.New("length of the seed is too long for address generation")
 	}
 
 	buf := []byte{}
 	for _, seed := range seeds {
 		if len(seed) > MaxSeedLength {
-			return PublicKey{}, errors.New("Length of the seed is too long for address generation")
+			return PublicKey{}, errors.New("length of the seed is too long for address generation")
 		}
 		buf = append(buf, seed...)
 	}
@@ -49,7 +49,7 @@ func CreateProgramAddress(seeds [][]byte, programId PublicKey) (PublicKey, error
 
 	_, err := new(edwards25519.Point).SetBytes(h[:])
 	if err == nil {
-		return PublicKey{}, errors.New("Invalid seeds, address must fall off the curve")
+		return PublicKey{}, errors.New("invalid seeds, address must fall off the curve")
 	}
 
 	return PublicKeyFromBytes(h[:]), nil
