@@ -6,11 +6,23 @@ type Instruction struct {
 	Data           string   `json:"data"`
 }
 
+type TransactionMetaTokenBalance struct {
+	AccountIndex  int    `json:"accountIndex"`
+	Mint          string `json:"mint"`
+	UITokenAmount struct {
+		Amount         string `json:"amount"`
+		Decimals       int64  `json:"decimals"`
+		UIAmountString string `json:"uiAmountString"`
+	} `json:"uiTokenAmount"`
+}
+
 type TransactionMeta struct {
-	Fee               uint64   `json:"fee"`
-	PreBalances       []int64  `json:"preBalances"`
-	PostBalances      []int64  `json:"postBalances"`
-	LogMessages       []string `json:"logMesssages"`
+	Fee               uint64                        `json:"fee"`
+	PreBalances       []int64                       `json:"preBalances"`
+	PostBalances      []int64                       `json:"postBalances"`
+	PreTokenBalances  []TransactionMetaTokenBalance `json:"preTokenBalances"`
+	PostTokenBalances []TransactionMetaTokenBalance `json:"postTokenBalances"`
+	LogMessages       []string                      `json:"logMesssages"`
 	InnerInstructions []struct {
 		Index        uint64        `json:"index"`
 		Instructions []Instruction `json:"instructions"`
