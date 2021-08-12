@@ -54,7 +54,10 @@ func serializeData(v reflect.Value) ([]byte, error) {
 		}
 		return nil, fmt.Errorf("unsupport type: %v, elem: %v", v.Kind(), v.Elem().Kind())
 	case reflect.String:
-		return []byte(v.String()), nil
+		b := make([]byte, 8+len(v.String()))
+		binary.LittleEndian.PutUint64(b, uint64(len(v.String())))
+		copy(b[8:], []byte(v.String()))
+		return b, nil
 	case reflect.Struct:
 		data := make([]byte, 0, 1024)
 		for i := 0; i < v.NumField(); i++ {

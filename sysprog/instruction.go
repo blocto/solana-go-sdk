@@ -95,7 +95,6 @@ func CreateAccountWithSeed(fromPubkey, newAccountPubkey, basePubkey, programID c
 	data, err := common.SerializeData(struct {
 		Instruction Instruction
 		Base        common.PublicKey
-		SeedLen     uint64
 		Seed        string
 		Lamports    uint64
 		Space       uint64
@@ -103,7 +102,6 @@ func CreateAccountWithSeed(fromPubkey, newAccountPubkey, basePubkey, programID c
 	}{
 		Instruction: InstructionCreateAccountWithSeed,
 		Base:        basePubkey,
-		SeedLen:     uint64(len(seed)),
 		Seed:        seed,
 		Lamports:    lamports,
 		Space:       space,
@@ -245,14 +243,12 @@ func AllocateWithSeed(accountPubkey, basePubkey, programID common.PublicKey, see
 	data, err := common.SerializeData(struct {
 		Instruction Instruction
 		Base        common.PublicKey
-		SeedLen     uint64
 		Seed        string
 		Space       uint64
 		ProgramID   common.PublicKey
 	}{
 		Instruction: InstructionAllocateWithSeed,
 		Base:        basePubkey,
-		SeedLen:     uint64(len(seed)),
 		Seed:        seed,
 		Space:       space,
 		ProgramID:   programID,
@@ -274,13 +270,11 @@ func AssignWithSeed(accountPubkey, assignToProgramID, basePubkey common.PublicKe
 	data, err := common.SerializeData(struct {
 		Instruction       Instruction
 		Base              common.PublicKey
-		SeedLen           uint64
 		Seed              string
 		AssignToProgramID common.PublicKey
 	}{
 		Instruction:       InstructionAssignWithSeed,
 		Base:              basePubkey,
-		SeedLen:           uint64(len(seed)),
 		Seed:              seed,
 		AssignToProgramID: assignToProgramID,
 	})
@@ -302,13 +296,11 @@ func TransferWithSeed(from, to, base, programID common.PublicKey, seed string, l
 	data, err := common.SerializeData(struct {
 		Instruction Instruction
 		Lamports    uint64
-		SeedLen     uint64
 		Seed        string
 		ProgramID   common.PublicKey
 	}{
 		Instruction: InstructionTransferWithSeed,
 		Lamports:    lamports,
-		SeedLen:     uint64(len(seed)),
 		Seed:        seed,
 		ProgramID:   programID,
 	})

@@ -233,14 +233,12 @@ func AuthorizeWithSeed(
 		Instruction            Instruction
 		NewAuthorized          common.PublicKey
 		StakeAuthorizationType StakeAuthorizationType
-		AuthSeedLen            uint64
 		AuthSeed               string
 		AuthOwner              common.PublicKey
 	}{
 		Instruction:            InstructionAuthorizeWithSeed,
 		NewAuthorized:          newAuthPubkey,
 		StakeAuthorizationType: authType,
-		AuthSeedLen:            uint64(len(authSeed)),
 		AuthSeed:               authSeed,
 		AuthOwner:              authOwnerPubkey,
 	})
