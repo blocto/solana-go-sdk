@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/portto/solana-go-sdk/common"
+	"github.com/portto/solana-go-sdk/pkg/bincode"
 )
 
 type Signature []byte
@@ -47,7 +48,7 @@ func (tx *Transaction) Serialize() ([]byte, error) {
 		return nil, errors.New("Signature verification failed")
 	}
 
-	signatureCount := common.UintToVarLenBytes(uint64(len(tx.Signatures)))
+	signatureCount := bincode.UintToVarLenBytes(uint64(len(tx.Signatures)))
 	messageData, err := tx.Message.Serialize()
 	if err != nil {
 		return nil, err

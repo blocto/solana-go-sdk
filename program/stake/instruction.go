@@ -2,6 +2,7 @@ package stakeprog
 
 import (
 	"github.com/portto/solana-go-sdk/common"
+	"github.com/portto/solana-go-sdk/pkg/bincode"
 	"github.com/portto/solana-go-sdk/types"
 )
 
@@ -40,7 +41,7 @@ type Authorized struct {
 }
 
 func Initialize(initAccount common.PublicKey, auth Authorized, lockup Lockup) types.Instruction {
-	data, err := common.SerializeData(struct {
+	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Auth        Authorized
 		Lockup      Lockup
@@ -64,7 +65,7 @@ func Initialize(initAccount common.PublicKey, auth Authorized, lockup Lockup) ty
 }
 
 func Authorize(stakePubkey, authPubkey, newAuthPubkey common.PublicKey, authType StakeAuthorizationType, custodianPubkey common.PublicKey) types.Instruction {
-	data, err := common.SerializeData(struct {
+	data, err := bincode.SerializeData(struct {
 		Instruction            Instruction
 		NewAuthorized          common.PublicKey
 		StakeAuthorizationType StakeAuthorizationType
@@ -95,7 +96,7 @@ func Authorize(stakePubkey, authPubkey, newAuthPubkey common.PublicKey, authType
 }
 
 func DelegateStake(stakePubkey, authPubkey, votePubkey common.PublicKey) types.Instruction {
-	data, err := common.SerializeData(struct {
+	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 	}{
 		Instruction: InstructionDelegateStake,
@@ -119,7 +120,7 @@ func DelegateStake(stakePubkey, authPubkey, votePubkey common.PublicKey) types.I
 }
 
 func Split(stakePubkey, authPubkey, splitStakePubkey common.PublicKey, lamports uint64) types.Instruction {
-	data, err := common.SerializeData(struct {
+	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Lamports    uint64
 	}{
@@ -142,7 +143,7 @@ func Split(stakePubkey, authPubkey, splitStakePubkey common.PublicKey, lamports 
 }
 
 func Withdraw(stakePubkey, authPubkey, toPubkey common.PublicKey, lamports uint64, custodianPubkey common.PublicKey) types.Instruction {
-	data, err := common.SerializeData(struct {
+	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Lamports    uint64
 	}{
@@ -173,7 +174,7 @@ func Withdraw(stakePubkey, authPubkey, toPubkey common.PublicKey, lamports uint6
 }
 
 func Deactivate(stakePubkey, authPubkey common.PublicKey) types.Instruction {
-	data, err := common.SerializeData(struct {
+	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 	}{
 		Instruction: InstructionDeactivate,
@@ -198,7 +199,7 @@ func SetLockup() types.Instruction {
 }
 
 func Merge(dest, src, auth common.PublicKey) types.Instruction {
-	data, err := common.SerializeData(struct {
+	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 	}{
 		Instruction: InstructionMerge,
@@ -229,7 +230,7 @@ func AuthorizeWithSeed(
 	authType StakeAuthorizationType,
 	custodianPubkey common.PublicKey) types.Instruction {
 
-	data, err := common.SerializeData(struct {
+	data, err := bincode.SerializeData(struct {
 		Instruction            Instruction
 		NewAuthorized          common.PublicKey
 		StakeAuthorizationType StakeAuthorizationType
