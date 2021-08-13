@@ -8,6 +8,20 @@ import (
 	"github.com/portto/solana-go-sdk/common"
 )
 
+const MultisigAccountSize uint64 = 355
+
+const MintAccountSize = 82
+
+type MintAccount struct {
+	MintAuthorityOption   uint32
+	MintAuthority         common.PublicKey
+	Supply                uint64
+	Decimals              uint8
+	IsInitialized         bool
+	FreezeAuthorityOption uint32
+	FreezeAuthority       common.PublicKey
+}
+
 const TokenAccountSize = 165
 
 type TokenAccountState uint8
