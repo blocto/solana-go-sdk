@@ -15,14 +15,6 @@ const (
 	MainnetRPCEndpoint = "https://api.mainnet-beta.solana.com"
 )
 
-type Commitment string
-
-const (
-	CommitmentFinalized Commitment = "finalized"
-	CommitmentConfirmed Commitment = "confirmed"
-	CommitmentProcessed Commitment = "processed"
-)
-
 type RpcClient struct {
 	endpoint string
 }
@@ -74,19 +66,4 @@ func (s *RpcClient) request(ctx context.Context, method string, params []interfa
 		return fmt.Errorf("get status code: %d", res.StatusCode)
 	}
 	return nil
-}
-
-type ErrorResponse struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-}
-
-type Context struct {
-	Slot uint64 `json:"slot"`
-}
-
-type GeneralResponse struct {
-	JsonRPC string        `json:"jsonrpc"`
-	ID      uint64        `json:"id"`
-	Error   ErrorResponse `json:"error"`
 }
