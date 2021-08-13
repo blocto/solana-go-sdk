@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/mr-tron/base58"
 	"github.com/portto/solana-go-sdk/common"
+	"github.com/portto/solana-go-sdk/pkg/bincode"
+
+	"github.com/mr-tron/base58"
 )
 
 type MessageHeader struct {
@@ -29,7 +31,7 @@ func (m *Message) Serialize() ([]byte, error) {
 	b = append(b, m.Header.NumReadonlySignedAccounts)
 	b = append(b, m.Header.NumReadonlyUnsignedAccounts)
 
-	b = append(b, common.UintToVarLenBytes(uint64(len(m.Accounts)))...)
+	b = append(b, bincode.UintToVarLenBytes(uint64(len(m.Accounts)))...)
 	for _, key := range m.Accounts {
 		b = append(b, key[:]...)
 	}
@@ -40,15 +42,15 @@ func (m *Message) Serialize() ([]byte, error) {
 	}
 	b = append(b, blockHash...)
 
-	b = append(b, common.UintToVarLenBytes(uint64(len(m.Instructions)))...)
+	b = append(b, bincode.UintToVarLenBytes(uint64(len(m.Instructions)))...)
 	for _, instruction := range m.Instructions {
 		b = append(b, byte(instruction.ProgramIDIndex))
-		b = append(b, common.UintToVarLenBytes(uint64(len(instruction.Accounts)))...)
+		b = append(b, bincode.UintToVarLenBytes(uint64(len(instruction.Accounts)))...)
 		for _, accountIdx := range instruction.Accounts {
 			b = append(b, byte(accountIdx))
 		}
 
-		b = append(b, common.UintToVarLenBytes(uint64(len(instruction.Data)))...)
+		b = append(b, bincode.UintToVarLenBytes(uint64(len(instruction.Data)))...)
 		b = append(b, instruction.Data...)
 	}
 	return b, nil

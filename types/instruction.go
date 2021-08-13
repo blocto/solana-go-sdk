@@ -13,3 +13,9 @@ type Instruction struct {
 	Accounts  []AccountMeta
 	Data      []byte
 }
+
+type AccountMeta struct {
+	PubKey     common.PublicKey
+	IsSigner   bool
+	IsWritable bool
+}
