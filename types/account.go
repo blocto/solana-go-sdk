@@ -23,9 +23,3 @@ func AccountFromPrivateKeyBytes(privateKey []byte) Account {
 		PrivateKey: sk,
 	}
 }
-
-type AccountMeta struct {
-	PubKey     common.PublicKey
-	IsSigner   bool
-	IsWritable bool
-}
