@@ -5,7 +5,7 @@
 	<img src="https://goreportcard.com/badge/github.com/portto/solana-go-sdk"></img>
 	<img alt="GitHub go.mod Go version" src="https://img.shields.io/github/go-mod/go-version/portto/solana-go-sdk">
 	<img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/portto/solana-go-sdk">
-	<a href="https://app.gitbook.com/@yihau/s/solana-development-with-go">
+	<a href="https://yihau.gitbook.io/solana-development-with-go/">
 		<img src="https://img.shields.io/badge/docs-gitbook-green"></img>
 	</a>
 </div>
@@ -14,7 +14,7 @@
 
 ## Tutorial
 
-There is a little tour in the [gitbook](https://app.gitbook.com/@yihau/s/solana-development-with-go) for newer to acquaint with Solana
+There is a little tour in the [gitbook](https://yihau.gitbook.io/solana-development-with-go/) for newer to acquaint with Solana
 
 ## Getting Started
 
