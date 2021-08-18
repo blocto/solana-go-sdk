@@ -17,6 +17,10 @@ const (
 
 type PublicKey [PublicKeyLength]byte
 
+func (p PublicKey) String() string {
+	return p.ToBase58()
+}
+
 func PublicKeyFromString(s string) PublicKey {
 	d, _ := base58.Decode(s)
 	return PublicKeyFromBytes(d)
