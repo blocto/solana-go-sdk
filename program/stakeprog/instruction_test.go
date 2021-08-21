@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/portto/solana-go-sdk/common"
+	"github.com/portto/solana-go-sdk/pkg/pointer"
 	"github.com/portto/solana-go-sdk/types"
 )
 
@@ -126,6 +127,125 @@ func TestAuthorizeWithSeed(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := AuthorizeWithSeed(tt.args.stakePubkey, tt.args.authBasePubkey, tt.args.authSeed, tt.args.authOwnerPubkey, tt.args.newAuthPubkey, tt.args.authType, tt.args.custodianPubkey); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AuthorizeWithSeed() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSetLockup(t *testing.T) {
+	type args struct {
+		src    common.PublicKey
+		auth   common.PublicKey
+		lockup LockupParam
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				src:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				auth:   common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+				lockup: LockupParam{},
+			},
+			want: types.Instruction{
+				ProgramID: common.StakeProgramID,
+				Accounts: []types.AccountMeta{
+					{
+						PubKey:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+						IsSigner:   false,
+						IsWritable: true,
+					},
+					{
+						PubKey:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+						IsSigner:   true,
+						IsWritable: false,
+					},
+				},
+				Data: []byte{6, 0, 0, 0, 0, 0, 0},
+			},
+		},
+		{
+			args: args{
+				src:  common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				auth: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+				lockup: LockupParam{
+					UnixTimestamp: pointer.Int64(1),
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.StakeProgramID,
+				Accounts: []types.AccountMeta{
+					{
+						PubKey:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+						IsSigner:   false,
+						IsWritable: true,
+					},
+					{
+						PubKey:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+						IsSigner:   true,
+						IsWritable: false,
+					},
+				},
+				Data: []byte{6, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			},
+		},
+		{
+			args: args{
+				src:  common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				auth: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+				lockup: LockupParam{
+					Epoch: pointer.Uint64(1),
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.StakeProgramID,
+				Accounts: []types.AccountMeta{
+					{
+						PubKey:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+						IsSigner:   false,
+						IsWritable: true,
+					},
+					{
+						PubKey:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+						IsSigner:   true,
+						IsWritable: false,
+					},
+				},
+				Data: []byte{6, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+			},
+		},
+		{
+			args: args{
+				src:  common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				auth: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+				lockup: LockupParam{
+					Cusodian: pointer.Pubkey(common.PublicKeyFromString("DTA7FmUNYuQs2mScj2Lx8gQV63SEL1zGtzCSvPxtijbi")),
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.StakeProgramID,
+				Accounts: []types.AccountMeta{
+					{
+						PubKey:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+						IsSigner:   false,
+						IsWritable: true,
+					},
+					{
+						PubKey:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+						IsSigner:   true,
+						IsWritable: false,
+					},
+				},
+				Data: []byte{6, 0, 0, 0, 0, 0, 1, 184, 255, 164, 117, 118, 144, 60, 115, 73, 97, 27, 182, 246, 34, 53, 198, 220, 186, 65, 56, 58, 57, 174, 141, 147, 215, 61, 242, 136, 190, 88, 189},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := SetLockup(tt.args.src, tt.args.auth, tt.args.lockup); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SetLockup() = %v, want %v", got, tt.want)
 			}
 		})
 	}

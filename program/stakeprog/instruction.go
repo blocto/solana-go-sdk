@@ -35,6 +35,12 @@ type Lockup struct {
 	Cusodian      common.PublicKey
 }
 
+type LockupParam struct {
+	UnixTimestamp *int64
+	Epoch         *uint64
+	Cusodian      *common.PublicKey
+}
+
 type Authorized struct {
 	Staker     common.PublicKey
 	Withdrawer common.PublicKey
@@ -194,8 +200,30 @@ func Deactivate(stakePubkey, authPubkey common.PublicKey) types.Instruction {
 	}
 }
 
-func SetLockup() types.Instruction {
-	panic("not implement yet")
+func SetLockup(src, auth common.PublicKey, lockup LockupParam) types.Instruction {
+	data, err := bincode.SerializeData(struct {
+		Instruction   Instruction
+		UnixTimestamp *int64
+		Epoch         *uint64
+		Cusodian      *common.PublicKey
+	}{
+		Instruction:   InstructionSetLockup,
+		UnixTimestamp: lockup.UnixTimestamp,
+		Epoch:         lockup.Epoch,
+		Cusodian:      lockup.Cusodian,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.StakeProgramID,
+		Accounts: []types.AccountMeta{
+			{PubKey: src, IsSigner: false, IsWritable: true},
+			{PubKey: auth, IsSigner: true, IsWritable: false},
+		},
+		Data: data,
+	}
 }
 
 func Merge(dest, src, auth common.PublicKey) types.Instruction {

@@ -58,6 +58,18 @@ func serializeData(v reflect.Value) ([]byte, error) {
 		binary.LittleEndian.PutUint64(b, uint64(len(v.String())))
 		copy(b[8:], []byte(v.String()))
 		return b, nil
+	case reflect.Ptr:
+		if v.IsNil() {
+			return []byte{0}, nil
+		}
+		d, err := serializeData(v.Elem())
+		if err != nil {
+			return nil, err
+		}
+		b := make([]byte, 1+len(d))
+		b[0] = 1
+		copy(b[1:], d[:])
+		return b, nil
 	case reflect.Struct:
 		data := make([]byte, 0, 1024)
 		for i := 0; i < v.NumField(); i++ {
