@@ -36,7 +36,7 @@ func (c *RpcClient) GetBalance(ctx context.Context, base58Addr string, cfg GetBa
 	var res GetBalanceResponse
 	err = json.Unmarshal(body, &res)
 	if err != nil {
-		return GetBalanceResponse{}, fmt.Errorf("rpc: failed to unamrshal body, err: %v", err)
+		return GetBalanceResponse{}, fmt.Errorf("rpc: failed to json decode body, err: %v", err)
 	}
 	return res, nil
 }
