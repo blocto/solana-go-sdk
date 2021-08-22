@@ -29,11 +29,11 @@ func (c *RpcClient) GetBalance(ctx context.Context, base58Addr string, cfg GetBa
 	} else {
 		body, err = c.Call(ctx, "getBalance", base58Addr, cfg)
 	}
-
-	var res GetBalanceResponse
 	if err != nil {
 		return GetBalanceResponse{}, fmt.Errorf("rpc: call error, err: %v", err)
 	}
+
+	var res GetBalanceResponse
 	err = json.Unmarshal(body, &res)
 	if err != nil {
 		return GetBalanceResponse{}, fmt.Errorf("rpc: failed to unamrshal body, err: %v", err)
