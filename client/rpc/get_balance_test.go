@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestClient_GetBalance(t *testing.T) {
+func TestGetBalance(t *testing.T) {
 	tests := []testRpcCallParam{
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBalance", "params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"]}`,
