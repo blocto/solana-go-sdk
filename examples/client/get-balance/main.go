@@ -39,7 +39,6 @@ func main() {
 	res, err := c.RpcClient.GetBalance(
 		context.TODO(),
 		"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
-		rpc.GetBalanceConfig{},
 	)
 	if err != nil {
 		log.Fatalf("failed to get balance via rpc client, err: %v", err)
