@@ -580,3 +580,34 @@ func TestInitializeMultisig(t *testing.T) {
 		})
 	}
 }
+
+func TestSyncNative(t *testing.T) {
+	type args struct {
+		accountPubkey common.PublicKey
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				accountPubkey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+			},
+			want: types.Instruction{
+				ProgramID: common.TokenProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"), IsSigner: false, IsWritable: true},
+				},
+				Data: []byte{17},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := SyncNative(tt.args.accountPubkey); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SyncNative() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

@@ -26,6 +26,7 @@ const (
 	InstructionMintToChecked
 	InstructionBurnChecked
 	InstructionInitializeAccount2
+	InstructionSyncNative
 )
 
 // InitializeMint init a mint, if you don't need to freeze, pass the empty pubKey common.PublicKey{}
@@ -513,6 +514,26 @@ func InitializeAccount2(accountPubkey, mintPubkey, ownerPubkey common.PublicKey)
 			{PubKey: accountPubkey, IsSigner: false, IsWritable: true},
 			{PubKey: mintPubkey, IsSigner: false, IsWritable: false},
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
+		},
+		Data: data,
+	}
+}
+
+// SyncNative will update your wrapped SOL balance
+func SyncNative(accountPubkey common.PublicKey) types.Instruction {
+	data, err := bincode.SerializeData(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionSyncNative,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts: []types.AccountMeta{
+			{PubKey: accountPubkey, IsSigner: false, IsWritable: true},
 		},
 		Data: data,
 	}
