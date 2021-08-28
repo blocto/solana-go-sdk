@@ -27,6 +27,9 @@ const (
 	InstructionBurnChecked
 	InstructionInitializeAccount2
 	InstructionSyncNative
+	InitializeAccount3
+	InitializeMultisig2
+	InitializeMint2
 )
 
 // InitializeMint init a mint, if you don't need to freeze, pass the empty pubKey common.PublicKey{}
