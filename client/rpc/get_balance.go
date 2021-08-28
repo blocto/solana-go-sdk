@@ -18,7 +18,7 @@ type GetBalanceResult struct {
 	Value   uint64  `json:"value"`
 }
 
-// GetBalanceConfig is a option
+// GetBalanceConfig is a option config for `getBalance`
 type GetBalanceConfig struct {
 	Commitment Commitment `json:"commitment,omitempty"`
 }
