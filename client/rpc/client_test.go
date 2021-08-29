@@ -1,8 +1,9 @@
 package rpc
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_preparePayload(t *testing.T) {
@@ -10,43 +11,45 @@ func Test_preparePayload(t *testing.T) {
 		params []interface{}
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    []byte
-		wantErr bool
+		name string
+		args args
+		want string
+		err  error
 	}{
 		{
 			args: args{
 				params: []interface{}{"getBalance", "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7", nil},
 			},
-			want:    []byte(`{"id":1,"jsonrpc":"2.0","method":"getBalance","params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",null]}`),
-			wantErr: false,
+			want: `{"id":1,"jsonrpc":"2.0","method":"getBalance","params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",null]}`,
+			err:  nil,
 		},
 		{
 			args: args{
 				params: []interface{}{"getBalance", "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7", GetBalanceConfig{}},
 			},
-			want:    []byte(`{"id":1,"jsonrpc":"2.0","method":"getBalance","params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",{}]}`),
-			wantErr: false,
+			want: `{"id":1,"jsonrpc":"2.0","method":"getBalance","params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",{}]}`,
+			err:  nil,
 		},
 		{
 			args: args{
 				params: []interface{}{"getBalance", "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7", GetBalanceConfig{Commitment: CommitmentFinalized}},
 			},
-			want:    []byte(`{"id":1,"jsonrpc":"2.0","method":"getBalance","params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",{"commitment":"finalized"}]}`),
-			wantErr: false,
+			want: `{"id":1,"jsonrpc":"2.0","method":"getBalance","params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",{"commitment":"finalized"}]}`,
+			err:  nil,
+		},
+		{
+			args: args{
+				params: []interface{}{"getBalance"},
+			},
+			want: `{"id":1,"jsonrpc":"2.0","method":"getBalance"}`,
+			err:  nil,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := preparePayload(tt.args.params)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("preparePayload() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("preparePayload() = %v, want %v", string(got), string(tt.want))
-			}
+			assert.Equal(t, err, tt.err)
+			assert.JSONEq(t, string(got), string(tt.want))
 		})
 	}
 }

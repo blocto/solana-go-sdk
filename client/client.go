@@ -77,3 +77,12 @@ func (c *Client) GetAccountInfo(ctx context.Context, base58Addr string) (Account
 		Data:      rawData,
 	}, nil
 }
+
+// GetRecentBlockhash return recent blockhash information
+func (c *Client) GetRecentBlockhash(ctx context.Context) (rpc.GetRecentBlockHashResultValue, error) {
+	res, err := c.RpcClient.GetRecentBlockhash(ctx)
+	if err != nil {
+		return rpc.GetRecentBlockHashResultValue{}, err
+	}
+	return res.Result.Value, nil
+}

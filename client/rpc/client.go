@@ -60,13 +60,20 @@ func (c *RpcClient) Call(ctx context.Context, params ...interface{}) ([]byte, er
 	return body, nil
 }
 
+type jsonRpcRequest struct {
+	JsonRpc string        `json:"jsonrpc"`
+	Id      uint64        `json:"id"`
+	Method  string        `json:"method"`
+	Params  []interface{} `json:"params,omitempty"`
+}
+
 func preparePayload(params []interface{}) ([]byte, error) {
 	// prepare payload
-	j, err := json.Marshal(map[string]interface{}{
-		"jsonrpc": "2.0",
-		"id":      1,
-		"method":  params[0],
-		"params":  params[1:],
+	j, err := json.Marshal(jsonRpcRequest{
+		JsonRpc: "2.0",
+		Id:      1,
+		Method:  params[0].(string),
+		Params:  params[1:],
 	})
 	if err != nil {
 		return nil, err
