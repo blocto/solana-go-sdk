@@ -37,22 +37,16 @@ type GetRecentBlockhashConfig struct {
 // getRecentBlockhash returns a recent block hash from the ledger, and a fee schedule that can be used to compute
 // the cost of submitting a transaction using it.
 func (c *RpcClient) GetRecentBlockhash(ctx context.Context) (GetRecentBlockHashResponse, error) {
-	body, err := c.Call(ctx, "getRecentBlockhash")
-	if err != nil {
-		return GetRecentBlockHashResponse{}, fmt.Errorf("rpc: call error, err: %v", err)
-	}
-	var res GetRecentBlockHashResponse
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		return GetRecentBlockHashResponse{}, fmt.Errorf("rpc: failed to json decode body, err: %v", err)
-	}
-	return res, nil
+	return c.processGetRecentBlockhash(c.Call(ctx, "getRecentBlockhash"))
 }
 
 // getRecentBlockhash returns a recent block hash from the ledger, and a fee schedule that can be used to compute
 // the cost of submitting a transaction using it.
 func (c *RpcClient) GetRecentBlockhashWithConfig(ctx context.Context, cfg GetRecentBlockhashConfig) (GetRecentBlockHashResponse, error) {
-	body, err := c.Call(ctx, "getRecentBlockhash", cfg)
+	return c.processGetRecentBlockhash(c.Call(ctx, "getRecentBlockhash", cfg))
+}
+
+func (c *RpcClient) processGetRecentBlockhash(body []byte, err error) (GetRecentBlockHashResponse, error) {
 	if err != nil {
 		return GetRecentBlockHashResponse{}, fmt.Errorf("rpc: call error, err: %v", err)
 	}
