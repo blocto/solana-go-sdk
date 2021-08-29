@@ -20,7 +20,7 @@ type Context struct {
 type GeneralResponse struct {
 	JsonRPC string         `json:"jsonrpc"`
 	ID      uint64         `json:"id"`
-	Error   *ErrorResponse `json:"error"`
+	Error   *ErrorResponse `json:"error,omitempty"`
 }
 
 type Instruction struct {
