@@ -157,13 +157,12 @@ func main() {
 
 #### Send Transaction
 
-There are two ways to compose transaction
-
 ```go
 package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/portto/solana-go-sdk/client"
@@ -180,99 +179,21 @@ func main() {
 	// create a random receiver
 	to := types.NewAccount()
 
-	res, err := c.GetRecentBlockhash(context.Background())
-	if err != nil {
-		log.Fatalf("get recent block hash error, err: %v\n", err)
-	}
-	rawTx, err := types.CreateRawTransaction(types.CreateRawTransactionParam{
+	sig, err := c.SendTransaction(context.Background(), client.SendTransactionParam{
 		Instructions: []types.Instruction{
-			// use system program's instruction, transfer
 			sysprog.Transfer(
 				feePayer.PublicKey,
 				to.PublicKey,
 				1, // 1 lamports
 			),
 		},
-		Signers:         []types.Account{feePayer},
-		FeePayer:        feePayer.PublicKey,
-		RecentBlockHash: res.Blockhash,
+		Signers:  []types.Account{feePayer},
+		FeePayer: feePayer.PublicKey,
 	})
 	if err != nil {
-		log.Fatalf("generate tx error, err: %v\n", err)
+		log.Fatalf("failed to send tx, err: %v", err)
 	}
-
-	txSig, err := c.SendRawTransaction(context.Background(), rawTx)
-	if err != nil {
-		log.Fatalf("send tx error, err: %v\n", err)
-	}
-
-	log.Println("txHash:", txSig)
-}
-```
-
-or you can create raw message then fill signatures by yourself.
-
-```go
-package main
-
-import (
-	"context"
-	"crypto/ed25519"
-	"log"
-
-	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/client/rpc"
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/sysprog"
-	"github.com/portto/solana-go-sdk/types"
-)
-
-func main() {
-	c := client.NewClient(rpc.DevnetRPCEndpoint)
-
-	feePayer := types.AccountFromPrivateKeyBytes([]byte{128, 146, 1, 80, 86, 97, 143, 62, 20, 136, 245, 33, 79, 63, 34, 54, 115, 6, 9, 77, 99, 157, 156, 100, 177, 229, 245, 8, 25, 25, 68, 165, 38, 28, 93, 198, 46, 101, 158, 208, 135, 126, 226, 94, 66, 153, 164, 162, 19, 231, 38, 240, 114, 74, 116, 32, 178, 61, 64, 95, 187, 211, 239, 180})
-
-	// create a random receiver
-	to := types.NewAccount()
-
-	// prepare message
-	res, err := c.GetRecentBlockhash(context.Background())
-	if err != nil {
-		log.Fatalf("get recent block hash error, err: %v\n", err)
-	}
-	message := types.NewMessage(
-		feePayer.PublicKey,
-		[]types.Instruction{
-			sysprog.Transfer(feePayer.PublicKey, to.PublicKey, 1),
-		},
-		res.Blockhash,
-	)
-	serializeMessage, err := message.Serialize()
-	if err != nil {
-		log.Fatalf("serialize message error, err: %v\n", err)
-	}
-
-	// message + signature = tx
-	tx, err := types.CreateTransaction(
-		message,
-		map[common.PublicKey]types.Signature{
-			feePayer.PublicKey: ed25519.Sign(feePayer.PrivateKey, serializeMessage),
-		},
-	)
-	if err != nil {
-		log.Fatalf("generate tx error, err: %v\n", err)
-	}
-	rawTx, err := tx.Serialize()
-	if err != nil {
-		log.Fatalf("serialize tx error, err: %v\n", err)
-	}
-
-	txSig, err := c.SendRawTransaction(context.Background(), rawTx)
-	if err != nil {
-		log.Fatalf("send tx error, err: %v\n", err)
-	}
-
-	log.Println("txHash:", txSig)
+	fmt.Println(sig)
 }
 
 ```
