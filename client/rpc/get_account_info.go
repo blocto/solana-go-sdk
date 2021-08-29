@@ -53,26 +53,18 @@ type GetAccountInfoResultValue struct {
 
 // GetAccountInfo returns all information associated with the account of provided Pubkey
 func (c *RpcClient) GetAccountInfo(ctx context.Context, base58Addr string) (GetAccountInfoResponse, error) {
-	body, err := c.Call(ctx, "getAccountInfo", base58Addr)
-	if err != nil {
-		return GetAccountInfoResponse{}, fmt.Errorf("rpc: call error, err: %v", err)
-	}
-
-	var res GetAccountInfoResponse
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		return GetAccountInfoResponse{}, fmt.Errorf("rpc: failed to json decode body, err: %v", err)
-	}
-	return res, nil
+	return c.processGetAccountInfo(c.Call(ctx, "getAccountInfo", base58Addr))
 }
 
 // GetAccountInfo returns all information associated with the account of provided Pubkey
 func (c *RpcClient) GetAccountInfoWithCfg(ctx context.Context, base58Addr string, cfg GetAccountInfoConfig) (GetAccountInfoResponse, error) {
-	body, err := c.Call(ctx, "getAccountInfo", base58Addr, cfg)
+	return c.processGetAccountInfo(c.Call(ctx, "getAccountInfo", base58Addr, cfg))
+}
+
+func (c *RpcClient) processGetAccountInfo(body []byte, err error) (GetAccountInfoResponse, error) {
 	if err != nil {
 		return GetAccountInfoResponse{}, fmt.Errorf("rpc: call error, err: %v", err)
 	}
-
 	var res GetAccountInfoResponse
 	err = json.Unmarshal(body, &res)
 	if err != nil {
