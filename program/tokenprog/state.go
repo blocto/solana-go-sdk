@@ -13,13 +13,52 @@ const MultisigAccountSize uint64 = 355
 const MintAccountSize = 82
 
 type MintAccount struct {
-	MintAuthorityOption   uint32
-	MintAuthority         common.PublicKey
-	Supply                uint64
-	Decimals              uint8
-	IsInitialized         bool
-	FreezeAuthorityOption uint32
-	FreezeAuthority       common.PublicKey
+	// MintAuthorityOption   uint32
+	MintAuthority *common.PublicKey
+	Supply        uint64
+	Decimals      uint8
+	IsInitialized bool
+	// FreezeAuthorityOption uint32
+	FreezeAuthority *common.PublicKey
+}
+
+const (
+	mintMintAuthorityOptionOffset   = 0
+	mintMintAuthorityOffset         = mintMintAuthorityOptionOffset + 4
+	mintSupplyOffset                = mintMintAuthorityOffset + 32
+	mintDecimalsOffset              = mintSupplyOffset + 8
+	mintIsInitializedOffset         = mintDecimalsOffset + 1
+	mintFreezeAuthorityOptionOffset = mintIsInitializedOffset + 1
+	mintFreezeAuthorityOffset       = mintFreezeAuthorityOptionOffset + 4
+)
+
+func isSome(option []byte) bool {
+	return bytes.Equal(option, Some)
+}
+
+func MintAccountFromData(data []byte) (*MintAccount, error) {
+	if len(data) != MintAccountSize {
+		return nil, fmt.Errorf("mint account data length mismatch")
+	}
+
+	var mint MintAccount
+
+	mintAuthorityOption := data[0:4]
+	if isSome(mintAuthorityOption) {
+		key := common.PublicKeyFromBytes(data[mintMintAuthorityOffset : mintSupplyOffset+32])
+		mint.MintAuthority = &key
+	}
+
+	mint.Supply = binary.LittleEndian.Uint64(data[mintSupplyOffset : mintSupplyOffset+8])
+	mint.Decimals = uint8(data[mintDecimalsOffset])
+	mint.IsInitialized = data[mintIsInitializedOffset] == 1
+
+	if isSome(data[mintFreezeAuthorityOptionOffset:mintFreezeAuthorityOptionOffset+4]) {
+		key := common.PublicKeyFromBytes(data[mintFreezeAuthorityOffset : mintFreezeAuthorityOffset+32])
+		mint.FreezeAuthority = &key
+	}
+
+	return &mint, nil
 }
 
 const TokenAccountSize = 165
