@@ -31,6 +31,8 @@ func (c *RpcClient) Call(ctx context.Context, params ...interface{}) ([]byte, er
 		return nil, fmt.Errorf("failed to prepare payload, err: %v", err)
 	}
 
+	fmt.Println(string(j))
+
 	// prepare request
 	req, err := http.NewRequestWithContext(ctx, "POST", c.endpoint, bytes.NewBuffer(j))
 	if err != nil {
@@ -51,6 +53,8 @@ func (c *RpcClient) Call(ctx context.Context, params ...interface{}) ([]byte, er
 	if err != nil {
 		return nil, fmt.Errorf("failed to read body, err: %v", err)
 	}
+
+	fmt.Println(string(body))
 
 	// check response code
 	if res.StatusCode < 200 || res.StatusCode > 300 {
