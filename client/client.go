@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 
 	"github.com/portto/solana-go-sdk/client/rpc"
@@ -21,6 +22,7 @@ func NewClient(endpoint string) *Client {
 // GetBalance fetch users lamports(SOL) balance
 func (c *Client) GetBalance(ctx context.Context, base58Addr string) (uint64, error) {
 	res, err := c.RpcClient.GetBalance(ctx, base58Addr)
+	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
 		return 0, err
 	}
@@ -30,6 +32,7 @@ func (c *Client) GetBalance(ctx context.Context, base58Addr string) (uint64, err
 // GetBalance fetch users lamports(SOL) balance with specific commitment
 func (c *Client) GetBalanceWithCfg(ctx context.Context, base58Addr string, cfg rpc.GetBalanceConfig) (uint64, error) {
 	res, err := c.RpcClient.GetBalanceWithCfg(ctx, base58Addr, cfg)
+	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
 		return 0, err
 	}
@@ -49,12 +52,9 @@ func (c *Client) GetAccountInfo(ctx context.Context, base58Addr string) (Account
 	res, err := c.RpcClient.GetAccountInfoWithCfg(ctx, base58Addr, rpc.GetAccountInfoConfig{
 		Encoding: rpc.GetAccountInfoConfigEncodingBase64,
 	})
+	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
 		return AccountInfo{}, err
-	}
-
-	if res.Error != nil {
-		return AccountInfo{}, fmt.Errorf("%v", res.Error)
 	}
 	if res.Result.Value == (rpc.GetAccountInfoResultValue{}) {
 		return AccountInfo{}, nil
@@ -83,6 +83,7 @@ func (c *Client) GetAccountInfo(ctx context.Context, base58Addr string) (Account
 // GetRecentBlockhash return recent blockhash information
 func (c *Client) GetRecentBlockhash(ctx context.Context) (rpc.GetRecentBlockHashResultValue, error) {
 	res, err := c.RpcClient.GetRecentBlockhash(ctx)
+	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
 		return rpc.GetRecentBlockHashResultValue{}, err
 	}
@@ -98,6 +99,7 @@ func (c *Client) SendRawTransaction(ctx context.Context, tx []byte) (string, err
 			Encoding: rpc.SendTransactionConfigEncodingBase64,
 		},
 	)
+	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
 		return "", err
 	}
@@ -130,8 +132,23 @@ func (c *Client) SendTransaction(ctx context.Context, param SendTransactionParam
 		base64.StdEncoding.EncodeToString(rawTx),
 		rpc.SendTransactionConfig{Encoding: rpc.SendTransactionConfigEncodingBase64},
 	)
+	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
 		return "", err
 	}
 	return res.Result, nil
+}
+
+func checkRpcResult(res rpc.GeneralResponse, err error) error {
+	if err != nil {
+		return err
+	}
+	if res.Error != nil {
+		errRes, err := json.Marshal(res.Error)
+		if err != nil {
+			return fmt.Errorf("rpc response error: %v", res.Error)
+		}
+		return fmt.Errorf("rpc response error: %v", string(errRes))
+	}
+	return nil
 }
