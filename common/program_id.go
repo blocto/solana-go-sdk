@@ -9,4 +9,5 @@ var (
 	Secp256k1ProgramID                 = PublicKeyFromString("KeccakSecp256k11111111111111111111111111111")
 	TokenProgramID                     = PublicKeyFromString("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
 	SPLAssociatedTokenAccountProgramID = PublicKeyFromString("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL")
+	SPLNameServiceProgramID            = PublicKeyFromString("namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX")
 )
