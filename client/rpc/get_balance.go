@@ -2,8 +2,6 @@ package rpc
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 )
 
 // GetBalanceResponse is a full raw rpc response of `getBalance`
@@ -33,14 +31,7 @@ func (c *RpcClient) GetBalanceWithCfg(ctx context.Context, base58Addr string, cf
 	return c.processGetBalance(c.Call(ctx, "getBalance", base58Addr, cfg))
 }
 
-func (c *RpcClient) processGetBalance(body []byte, err error) (GetBalanceResponse, error) {
-	if err != nil {
-		return GetBalanceResponse{}, fmt.Errorf("rpc: call error, err: %v", err)
-	}
-	var res GetBalanceResponse
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		return GetBalanceResponse{}, fmt.Errorf("rpc: failed to json decode body, err: %v", err)
-	}
-	return res, nil
+func (c *RpcClient) processGetBalance(body []byte, rpcErr error) (res GetBalanceResponse, err error) {
+	err = c.processRpcCall(body, rpcErr, &res)
+	return
 }

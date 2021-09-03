@@ -2,8 +2,6 @@ package rpc
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 )
 
 type SendTransactionResponse struct {
@@ -35,14 +33,7 @@ func (c *RpcClient) SendTransactionWithConfig(ctx context.Context, tx string, cf
 	return c.processSendTransaction(c.Call(ctx, "sendTransaction", tx, cfg))
 }
 
-func (c *RpcClient) processSendTransaction(body []byte, err error) (SendTransactionResponse, error) {
-	if err != nil {
-		return SendTransactionResponse{}, fmt.Errorf("rpc: call error, err: %v", err)
-	}
-	var res SendTransactionResponse
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		return SendTransactionResponse{}, fmt.Errorf("rpc: failed to json decode body, err: %v", err)
-	}
-	return res, nil
+func (c *RpcClient) processSendTransaction(body []byte, rpcErr error) (res SendTransactionResponse, err error) {
+	err = c.processRpcCall(body, rpcErr, &res)
+	return
 }

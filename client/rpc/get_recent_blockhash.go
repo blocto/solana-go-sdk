@@ -2,8 +2,6 @@ package rpc
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 )
 
 // GetRecentBlockHashResponse is full raw response of `getRecentBlockhash`
@@ -46,14 +44,7 @@ func (c *RpcClient) GetRecentBlockhashWithConfig(ctx context.Context, cfg GetRec
 	return c.processGetRecentBlockhash(c.Call(ctx, "getRecentBlockhash", cfg))
 }
 
-func (c *RpcClient) processGetRecentBlockhash(body []byte, err error) (GetRecentBlockHashResponse, error) {
-	if err != nil {
-		return GetRecentBlockHashResponse{}, fmt.Errorf("rpc: call error, err: %v", err)
-	}
-	var res GetRecentBlockHashResponse
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		return GetRecentBlockHashResponse{}, fmt.Errorf("rpc: failed to json decode body, err: %v", err)
-	}
-	return res, nil
+func (c *RpcClient) processGetRecentBlockhash(body []byte, rpcErr error) (res GetRecentBlockHashResponse, err error) {
+	err = c.processRpcCall(body, rpcErr, &res)
+	return
 }

@@ -126,3 +126,14 @@ func (s *RpcClient) request(ctx context.Context, method string, params []interfa
 	}
 	return nil
 }
+
+func (c *RpcClient) processRpcCall(body []byte, rpcErr error, res interface{}) error {
+	if rpcErr != nil {
+		return fmt.Errorf("rpc: call error, err: %v", rpcErr)
+	}
+	err := json.Unmarshal(body, &res)
+	if err != nil {
+		return fmt.Errorf("rpc: failed to json decode body, err: %v", err)
+	}
+	return nil
+}

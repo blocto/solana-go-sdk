@@ -2,8 +2,6 @@ package rpc
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 )
 
 // GetAccountInfoConfigEncoding is account's data encode format
@@ -61,14 +59,7 @@ func (c *RpcClient) GetAccountInfoWithCfg(ctx context.Context, base58Addr string
 	return c.processGetAccountInfo(c.Call(ctx, "getAccountInfo", base58Addr, cfg))
 }
 
-func (c *RpcClient) processGetAccountInfo(body []byte, err error) (GetAccountInfoResponse, error) {
-	if err != nil {
-		return GetAccountInfoResponse{}, fmt.Errorf("rpc: call error, err: %v", err)
-	}
-	var res GetAccountInfoResponse
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		return GetAccountInfoResponse{}, fmt.Errorf("rpc: failed to json decode body, err: %v", err)
-	}
-	return res, nil
+func (c *RpcClient) processGetAccountInfo(body []byte, rpcErr error) (res GetAccountInfoResponse, err error) {
+	err = c.processRpcCall(body, rpcErr, &res)
+	return
 }
