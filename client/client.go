@@ -139,6 +139,26 @@ func (c *Client) SendTransaction(ctx context.Context, param SendTransactionParam
 	return res.Result, nil
 }
 
+// GetSlot get current slot (finalized)
+func (c *Client) GetSlot(ctx context.Context) (uint64, error) {
+	res, err := c.RpcClient.GetSlot(ctx)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return 0, err
+	}
+	return res.Result, nil
+}
+
+// GetSlotWithCfg get slot by commitment
+func (c *Client) GetSlotWithCfg(ctx context.Context, cfg rpc.GetSlotConfig) (uint64, error) {
+	res, err := c.RpcClient.GetSlotWithCfg(ctx, cfg)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return 0, err
+	}
+	return res.Result, nil
+}
+
 func checkRpcResult(res rpc.GeneralResponse, err error) error {
 	if err != nil {
 		return err
