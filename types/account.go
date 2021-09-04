@@ -65,3 +65,7 @@ func AccountFromHex(key string) (Account, error) {
 	}
 	return AccountFromBytes(b)
 }
+
+func (a Account) Sign(message []byte) []byte {
+	return ed25519.Sign(a.PrivateKey, message)
+}
