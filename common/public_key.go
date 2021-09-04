@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"filippo.io/edwards25519"
 	"github.com/mr-tron/base58"
@@ -16,6 +17,21 @@ const (
 )
 
 type PublicKey [PublicKeyLength]byte
+
+func (pk *PublicKey) UnmarshalJSON(b []byte) error {
+	buf, err := base58.Decode(string(b[1 : len(b)-1]))
+	if err != nil {
+		return fmt.Errorf("invalid public key: %w", err)
+	}
+
+	if len(buf) != PublicKeyLength {
+		return errors.New("invalid public key length")
+	}
+
+	copy(pk[:], buf)
+
+	return nil
+}
 
 func (p PublicKey) String() string {
 	return p.ToBase58()
