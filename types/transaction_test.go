@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/portto/solana-go-sdk/common"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTransaction_Serialize(t *testing.T) {
@@ -340,6 +341,220 @@ func TestCreateTransaction(t *testing.T) {
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("CreateTransaction() = %v, want %v", got, tt.want)
 			}
+		})
+	}
+}
+
+func TestNewTransaction(t *testing.T) {
+	testAccount1 := NewAccount()
+	testAccount2 := NewAccount()
+	testAccount3 := NewAccount()
+
+	emptySig := make([]byte, 64)
+
+	msg := []Message{
+		NewMessage(
+			testAccount1.PublicKey,
+			[]Instruction{
+				{
+					ProgramID: common.PublicKeyFromString("CustomProgram111111111111111111111111111111"),
+					Accounts: []AccountMeta{
+						{
+							PubKey:     testAccount2.PublicKey,
+							IsSigner:   false,
+							IsWritable: false,
+						},
+						{
+							PubKey:     testAccount3.PublicKey,
+							IsSigner:   false,
+							IsWritable: false,
+						},
+					},
+					Data: []byte{},
+				},
+			},
+			"FwRYtTPRk5N4wUeP87rTw9kQVSwigB6kbikGzzeCMrW5",
+		),
+		NewMessage(
+			testAccount1.PublicKey,
+			[]Instruction{
+				{
+					ProgramID: common.PublicKeyFromString("CustomProgram111111111111111111111111111111"),
+					Accounts: []AccountMeta{
+						{
+							PubKey:     testAccount2.PublicKey,
+							IsSigner:   true,
+							IsWritable: false,
+						},
+						{
+							PubKey:     testAccount3.PublicKey,
+							IsSigner:   false,
+							IsWritable: false,
+						},
+					},
+					Data: []byte{},
+				},
+			},
+			"FwRYtTPRk5N4wUeP87rTw9kQVSwigB6kbikGzzeCMrW5",
+		),
+		NewMessage(
+			testAccount1.PublicKey,
+			[]Instruction{
+				{
+					ProgramID: common.PublicKeyFromString("CustomProgram111111111111111111111111111111"),
+					Accounts: []AccountMeta{
+						{
+							PubKey:     testAccount2.PublicKey,
+							IsSigner:   true,
+							IsWritable: true,
+						},
+						{
+							PubKey:     testAccount3.PublicKey,
+							IsSigner:   true,
+							IsWritable: false,
+						},
+					},
+					Data: []byte{},
+				},
+			},
+			"FwRYtTPRk5N4wUeP87rTw9kQVSwigB6kbikGzzeCMrW5",
+		),
+	}
+	serMsg := make([][]byte, 0, len(msg))
+	for _, m := range msg {
+		sm, _ := m.Serialize()
+		serMsg = append(serMsg, sm)
+	}
+
+	type args struct {
+		message Message
+		signers []Account
+	}
+	tests := []struct {
+		name string
+		args args
+		want Transaction
+		err  error
+	}{
+		{
+			args: args{
+				message: msg[0],
+				signers: []Account{},
+			},
+			want: Transaction{
+				Signatures: []Signature{
+					emptySig,
+				},
+				Message: msg[0],
+			},
+		},
+		{
+			args: args{
+				message: msg[0],
+				signers: []Account{testAccount2},
+			},
+			want: Transaction{},
+			err:  ErrTransactionAddNotNecessarySignatures,
+		},
+		{
+			args: args{
+				message: msg[0],
+				signers: []Account{
+					testAccount1,
+				},
+			},
+			want: Transaction{
+				Signatures: []Signature{
+					testAccount1.Sign(serMsg[0]),
+				},
+				Message: msg[0],
+			},
+		},
+		{
+			args: args{
+				message: msg[1],
+				signers: []Account{},
+			},
+			want: Transaction{
+				Signatures: []Signature{
+					emptySig,
+					emptySig,
+				},
+				Message: msg[1],
+			},
+		},
+		{
+			args: args{
+				message: msg[1],
+				signers: []Account{testAccount1},
+			},
+			want: Transaction{
+				Signatures: []Signature{
+					testAccount1.Sign(serMsg[1]),
+					emptySig,
+				},
+				Message: msg[1],
+			},
+		},
+		{
+			args: args{
+				message: msg[1],
+				signers: []Account{testAccount2},
+			},
+			want: Transaction{
+				Signatures: []Signature{
+					emptySig,
+					testAccount2.Sign(serMsg[1]),
+				},
+				Message: msg[1],
+			},
+		},
+		{
+			args: args{
+				message: msg[1],
+				signers: []Account{testAccount2, testAccount1},
+			},
+			want: Transaction{
+				Signatures: []Signature{
+					testAccount1.Sign(serMsg[1]),
+					testAccount2.Sign(serMsg[1]),
+				},
+				Message: msg[1],
+			},
+		},
+		{
+			args: args{
+				message: msg[1],
+				signers: []Account{testAccount1, testAccount2},
+			},
+			want: Transaction{
+				Signatures: []Signature{
+					testAccount1.Sign(serMsg[1]),
+					testAccount2.Sign(serMsg[1]),
+				},
+				Message: msg[1],
+			},
+		},
+		{
+			args: args{
+				message: msg[2],
+				signers: []Account{testAccount2},
+			},
+			want: Transaction{
+				Signatures: []Signature{
+					emptySig,
+					testAccount2.Sign(serMsg[2]),
+					emptySig,
+				},
+				Message: msg[2],
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := NewTransaction(tt.args.message, tt.args.signers)
+			assert.ErrorIs(t, err, tt.err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

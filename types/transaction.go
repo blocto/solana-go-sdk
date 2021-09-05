@@ -10,11 +10,44 @@ import (
 	"github.com/portto/solana-go-sdk/pkg/bincode"
 )
 
+var (
+	ErrTransactionAddNotNecessarySignatures = errors.New("add not necessary signatures")
+)
+
 type Signature []byte
 
 type Transaction struct {
 	Signatures []Signature
 	Message    Message
+}
+
+func NewTransaction(message Message, signers []Account) (Transaction, error) {
+	signatures := make([]Signature, 0, message.Header.NumRequireSignatures)
+	for i := uint8(0); i < message.Header.NumRequireSignatures; i++ {
+		signatures = append(signatures, make([]byte, 64))
+	}
+
+	m := map[common.PublicKey]uint8{}
+	for i := uint8(0); i < message.Header.NumRequireSignatures; i++ {
+		m[message.Accounts[i]] = i
+	}
+
+	data, err := message.Serialize()
+	if err != nil {
+		return Transaction{}, fmt.Errorf("failed to serialize message, err: %v", err)
+	}
+	for _, signer := range signers {
+		idx, ok := m[signer.PublicKey]
+		if !ok {
+			return Transaction{}, fmt.Errorf("%w, %v is not a signer", ErrTransactionAddNotNecessarySignatures, signer.PublicKey)
+		}
+		signatures[idx] = signer.Sign(data)
+	}
+
+	return Transaction{
+		Signatures: signatures,
+		Message:    message,
+	}, nil
 }
 
 func (tx *Transaction) sign(accounts []Account) (*Transaction, error) {
