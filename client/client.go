@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/mr-tron/base58"
 	"github.com/portto/solana-go-sdk/client/rpc"
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/types"
@@ -132,6 +133,20 @@ func (c *Client) SendTransaction(ctx context.Context, param SendTransactionParam
 		base64.StdEncoding.EncodeToString(rawTx),
 		rpc.SendTransactionConfig{Encoding: rpc.SendTransactionConfigEncodingBase64},
 	)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return "", err
+	}
+	return res.Result, nil
+}
+
+// SendTransaction2 send transaction struct directly
+func (c *Client) SendTransaction2(ctx context.Context, tx types.Transaction) (string, error) {
+	rawTx, err := tx.Serialize()
+	if err != nil {
+		return "", fmt.Errorf("failed to serialize tx, err: %v", err)
+	}
+	res, err := c.RpcClient.SendTransaction(ctx, base58.Encode(rawTx))
 	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
 		return "", err
