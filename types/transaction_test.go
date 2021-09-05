@@ -558,3 +558,122 @@ func TestNewTransaction(t *testing.T) {
 		})
 	}
 }
+
+func TestTransaction_AddSignature(t *testing.T) {
+	testAccount1 := NewAccount()
+	testAccount2 := NewAccount()
+	testAccount3 := NewAccount()
+	testAccount4 := NewAccount()
+
+	emptySig := make([]byte, 64)
+	msg := NewMessage(
+		testAccount1.PublicKey,
+		[]Instruction{
+			{
+				ProgramID: common.PublicKeyFromString("CustomProgram111111111111111111111111111111"),
+				Accounts: []AccountMeta{
+					{
+						PubKey:     testAccount2.PublicKey,
+						IsSigner:   true,
+						IsWritable: true,
+					},
+					{
+						PubKey:     testAccount3.PublicKey,
+						IsSigner:   true,
+						IsWritable: false,
+					},
+				},
+				Data: []byte{},
+			},
+		},
+		"FwRYtTPRk5N4wUeP87rTw9kQVSwigB6kbikGzzeCMrW5",
+	)
+	serMsg, _ := msg.Serialize()
+
+	type args struct {
+		sig []byte
+	}
+	tests := []struct {
+		name string
+		args args
+		tx   Transaction
+		want Transaction
+		err  error
+	}{
+		{
+			name: "add",
+			tx: Transaction{
+				Signatures: []Signature{
+					emptySig,
+					emptySig,
+					emptySig,
+				},
+				Message: msg,
+			},
+			args: args{
+				sig: testAccount1.Sign(serMsg),
+			},
+			want: Transaction{
+				Signatures: []Signature{
+					testAccount1.Sign(serMsg),
+					emptySig,
+					emptySig,
+				},
+				Message: msg,
+			},
+		},
+		{
+			name: "add duplicate",
+			tx: Transaction{
+				Signatures: []Signature{
+					testAccount1.Sign(serMsg),
+					emptySig,
+					emptySig,
+				},
+				Message: msg,
+			},
+			args: args{
+				sig: testAccount1.Sign(serMsg),
+			},
+			want: Transaction{
+				Signatures: []Signature{
+					testAccount1.Sign(serMsg),
+					emptySig,
+					emptySig,
+				},
+				Message: msg,
+			},
+		},
+		{
+			name: "add no match",
+			tx: Transaction{
+				Signatures: []Signature{
+					testAccount1.Sign(serMsg),
+					emptySig,
+					emptySig,
+				},
+				Message: msg,
+			},
+			args: args{
+				sig: testAccount4.Sign(serMsg),
+			},
+			want: Transaction{
+				Signatures: []Signature{
+					testAccount1.Sign(serMsg),
+					emptySig,
+					emptySig,
+				},
+				Message: msg,
+			},
+			err: ErrTransactionAddNotNecessarySignatures,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tx := tt.tx
+			err := tx.AddSignature(tt.args.sig)
+			assert.Equal(t, tt.want, tx)
+			assert.ErrorIs(t, err, tt.err)
+		})
+	}
+}

@@ -50,6 +50,21 @@ func NewTransaction(message Message, signers []Account) (Transaction, error) {
 	}, nil
 }
 
+func (tx *Transaction) AddSignature(sig []byte) error {
+	data, err := tx.Message.Serialize()
+	if err != nil {
+		return fmt.Errorf("failed to serialize message, err: %v", err)
+	}
+	for i := uint8(0); i < tx.Message.Header.NumRequireSignatures; i++ {
+		a := tx.Message.Accounts[i]
+		if ed25519.Verify(a.Bytes(), data, sig) {
+			tx.Signatures[i] = sig
+			return nil
+		}
+	}
+	return fmt.Errorf("%w, no match signer", ErrTransactionAddNotNecessarySignatures)
+}
+
 func (tx *Transaction) sign(accounts []Account) (*Transaction, error) {
 	if int(tx.Message.Header.NumRequireSignatures) != len(accounts) {
 		return nil, errors.New("signer's num not match")
