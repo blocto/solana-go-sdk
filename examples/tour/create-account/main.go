@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -13,8 +14,11 @@ func main() {
 	fmt.Println(newAccount.PrivateKey)
 
 	// recover account by its private key
-	recoverAccount := types.AccountFromPrivateKeyBytes(
+	recoverAccount, err := types.AccountFromBytes(
 		newAccount.PrivateKey,
 	)
+	if err != nil {
+		log.Fatalf("failed to retrieve account from bytes, err: %v", err)
+	}
 	fmt.Println(recoverAccount.PublicKey.ToBase58())
 }
