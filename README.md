@@ -5,16 +5,20 @@
 	<img src="https://goreportcard.com/badge/github.com/portto/solana-go-sdk"></img>
 	<img alt="GitHub go.mod Go version" src="https://img.shields.io/github/go-mod/go-version/portto/solana-go-sdk">
 	<img alt="GitHub release (latest SemVer)" src="https://img.shields.io/github/v/release/portto/solana-go-sdk">
-	<a href="https://yihau.gitbook.io/solana-development-with-go/">
+	<a href="https://yihau.gitbook.io/solana-go/">
 		<img src="https://img.shields.io/badge/docs-gitbook-green"></img>
 	</a>
 </div>
 
 # Guide
 
-## Tutorial
+## Document
 
-There is a little tour in the [gitbook](https://yihau.gitbook.io/solana-development-with-go/) for newer to acquaint with Solana
+I have wrote a [gitbook](https://yihau.gitbook.io/solana-go). It includes many examples like, create account, create token, transfer SOL/Token, fetch NFT ...
+
+You will find more info in the book!
+
+Also feel free to post a issue for missing content.
 
 ## Getting Started
 
