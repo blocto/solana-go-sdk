@@ -1,29 +1,5 @@
 package rpc
 
-type Commitment string
-
-const (
-	CommitmentFinalized Commitment = "finalized"
-	CommitmentConfirmed Commitment = "confirmed"
-	CommitmentProcessed Commitment = "processed"
-)
-
-type ErrorResponse struct {
-	Code    int                    `json:"code"`
-	Message string                 `json:"message"`
-	Data    map[string]interface{} `json:"data,omitempty"`
-}
-
-type Context struct {
-	Slot uint64 `json:"slot"`
-}
-
-type GeneralResponse struct {
-	JsonRPC string         `json:"jsonrpc"`
-	ID      uint64         `json:"id"`
-	Error   *ErrorResponse `json:"error,omitempty"`
-}
-
 type Instruction struct {
 	ProgramIDIndex uint64   `json:"programIdIndex"`
 	Accounts       []uint64 `json:"accounts"`

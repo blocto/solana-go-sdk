@@ -25,7 +25,7 @@ type SimulateTransactionResponseResultValue struct {
 
 type SimulateTransactionConfig struct {
 	SigVerify              bool                               `json:"sigVerify,omitempty"`              // default: false, conflicts with replace blockhash
-	PreflightCommitment    Commitment                         `json:"preflightCommitment,omitempty"`    // default: finalized
+	Commitment             Commitment                         `json:"commitment,omitempty"`             // default: finalized
 	Encoding               SimulateTransactionConfigEncoding  `json:"encoding,omitempty"`               // default: "base58"
 	ReplaceRecentBlockhash bool                               `json:"replaceRecentBlockhash,omitempty"` // default: false, conflicts with sigVerify
 	Accounts               *SimulateTransactionConfigAccounts `json:"accounts,omitempty"`

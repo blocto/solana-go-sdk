@@ -15,6 +15,33 @@ const (
 	MainnetRPCEndpoint = "https://api.mainnet-beta.solana.com"
 )
 
+// Commitment describes how finalized a block is at that point in time
+type Commitment string
+
+const (
+	CommitmentFinalized Commitment = "finalized"
+	CommitmentConfirmed Commitment = "confirmed"
+	CommitmentProcessed Commitment = "processed"
+)
+
+// ErrorResponse is a error rpc response
+type ErrorResponse struct {
+	Code    int                    `json:"code"`
+	Message string                 `json:"message"`
+	Data    map[string]interface{} `json:"data,omitempty"`
+}
+
+type Context struct {
+	Slot uint64 `json:"slot"`
+}
+
+// GeneralResponse is a general rpc response
+type GeneralResponse struct {
+	JsonRPC string         `json:"jsonrpc"`
+	ID      uint64         `json:"id"`
+	Error   *ErrorResponse `json:"error,omitempty"`
+}
+
 type RpcClient struct {
 	endpoint string
 }
