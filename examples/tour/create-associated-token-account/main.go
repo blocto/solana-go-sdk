@@ -6,9 +6,9 @@ import (
 	"log"
 
 	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/client/rpc"
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/program/assotokenprog"
+	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
 
