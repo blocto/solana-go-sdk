@@ -7,13 +7,14 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/mr-tron/base58"
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
 
 type Client struct {
-	rpc.RpcClient
+	RpcClient rpc.RpcClient
 }
 
 func NewClient(endpoint string) *Client {
@@ -206,6 +207,123 @@ func (c *Client) GetSlotWithCfg(ctx context.Context, cfg rpc.GetSlotConfig) (uin
 		return 0, err
 	}
 	return res.Result, nil
+}
+
+type GetTransactionResponse struct {
+	Slot        uint64
+	Meta        *TransactionMeta
+	Transaction types.Transaction
+	BlockTime   *int64
+}
+
+type TransactionMeta struct {
+	Err               interface{}
+	Fee               uint64
+	PreBalances       []int64
+	PostBalances      []int64
+	PreTokenBalances  []rpc.TransactionMetaTokenBalance
+	PostTokenBalances []rpc.TransactionMetaTokenBalance
+	LogMessages       []string
+	InnerInstructions []TransactionMetaInnerInstruction
+}
+
+type TransactionMetaInnerInstruction struct {
+	Index        uint64
+	Instructions []types.CompiledInstruction
+}
+
+// NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedTransaction for solana-core v1.6
+// GetTransaction returns transaction details for a confirmed transaction
+func (c *Client) GetTransaction(ctx context.Context, txhash string) (GetTransactionResponse, error) {
+	res, err := c.RpcClient.GetTransactionWithCfg(
+		ctx,
+		txhash,
+		rpc.GetTransactionConfig{
+			Encoding: rpc.GetTransactionConfigEncodingBase64,
+		},
+	)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return GetTransactionResponse{}, err
+	}
+	return getTransaction(res)
+}
+
+// NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedTransaction for solana-core v1.6
+// GetTransactionWithCfg returns transaction details for a confirmed transaction
+// will ignore encoding
+func (c *Client) GetTransactionWithCfg(ctx context.Context, txhash string, cfg rpc.GetTransactionConfig) (GetTransactionResponse, error) {
+	res, err := c.RpcClient.GetTransactionWithCfg(
+		ctx,
+		txhash,
+		rpc.GetTransactionConfig{
+			Encoding:   rpc.GetTransactionConfigEncodingBase64,
+			Commitment: cfg.Commitment,
+		},
+	)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return GetTransactionResponse{}, err
+	}
+	return getTransaction(res)
+}
+
+func getTransaction(res rpc.GetTransactionResponse) (GetTransactionResponse, error) {
+	data, ok := res.Result.Transaction.([]interface{})
+	if !ok {
+		return GetTransactionResponse{}, fmt.Errorf("failed to cast raw response to []interface{}")
+	}
+	if data[1] != string(rpc.GetTransactionConfigEncodingBase64) {
+		return GetTransactionResponse{}, fmt.Errorf("encoding mistmatch")
+	}
+	rawTx, err := base64.StdEncoding.DecodeString(data[0].(string))
+	if err != nil {
+		return GetTransactionResponse{}, fmt.Errorf("failed to base64 decode data, err: %v", err)
+	}
+	tx, err := types.TransactionDeserialize(rawTx)
+	if err != nil {
+		return GetTransactionResponse{}, fmt.Errorf("failed to deserialize transaction, err: %v", err)
+	}
+
+	var transactionMeta *TransactionMeta
+	if res.Result.Meta != nil {
+		innerInstructions := make([]TransactionMetaInnerInstruction, 0, len(res.Result.Meta.InnerInstructions))
+		for _, metaInnerInstruction := range res.Result.Meta.InnerInstructions {
+			compiledInstructions := make([]types.CompiledInstruction, 0, len(metaInnerInstruction.Instructions))
+			for _, innerInstruction := range metaInnerInstruction.Instructions {
+				data, err := base58.Decode(innerInstruction.Data)
+				if err != nil {
+					return GetTransactionResponse{}, fmt.Errorf("failed to base58 decode data, data: %v, err: %v", innerInstruction.Data, err)
+				}
+				compiledInstructions = append(compiledInstructions, types.CompiledInstruction{
+					ProgramIDIndex: innerInstruction.ProgramIDIndex,
+					Accounts:       innerInstruction.Accounts,
+					Data:           data,
+				})
+			}
+			innerInstructions = append(innerInstructions, TransactionMetaInnerInstruction{
+				Index:        metaInnerInstruction.Index,
+				Instructions: compiledInstructions,
+			})
+		}
+		transactionMeta = &TransactionMeta{
+			Err:               res.Result.Meta.Err,
+			Fee:               res.Result.Meta.Fee,
+			PreBalances:       res.Result.Meta.PreBalances,
+			PostBalances:      res.Result.Meta.PostBalances,
+			PreTokenBalances:  res.Result.Meta.PreTokenBalances,
+			PostTokenBalances: res.Result.Meta.PostTokenBalances,
+			LogMessages:       res.Result.Meta.LogMessages,
+			InnerInstructions: innerInstructions,
+		}
+	}
+
+	return GetTransactionResponse{
+		Slot:        res.Result.Slot,
+		BlockTime:   res.Result.BlockTime,
+		Transaction: tx,
+		Meta:        transactionMeta,
+	}, nil
 }
 
 func checkRpcResult(res rpc.GeneralResponse, err error) error {
