@@ -166,3 +166,46 @@ func TestGetTransaction(t *testing.T) {
 		})
 	}
 }
+
+func TestGetMinimumBalanceForRentExemption(t *testing.T) {
+	type args struct {
+		ctx     context.Context
+		dataLen uint64
+	}
+	tests := []struct {
+		name         string
+		requestBody  string
+		responseBody string
+		args         args
+		want         uint64
+		err          error
+	}{
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getMinimumBalanceForRentExemption", "params":[100]}`,
+			responseBody: `{"jsonrpc":"2.0","result":1586880,"id":1}`,
+			args: args{
+				context.Background(),
+				100,
+			},
+			want: 1586880,
+			err:  nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+				body, err := ioutil.ReadAll(req.Body)
+				assert.Nil(t, err)
+				assert.JSONEq(t, tt.requestBody, string(body))
+				n, err := rw.Write([]byte(tt.responseBody))
+				assert.Nil(t, err)
+				assert.Equal(t, len([]byte(tt.responseBody)), n)
+			}))
+			c := NewClient(server.URL)
+			got, err := c.GetMinimumBalanceForRentExemption(tt.args.ctx, tt.args.dataLen)
+			assert.Equal(t, tt.err, err)
+			assert.Equal(t, tt.want, got)
+			server.Close()
+		})
+	}
+}
