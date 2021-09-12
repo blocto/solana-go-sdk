@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/portto/solana-go-sdk/client/rpc"
 	"github.com/portto/solana-go-sdk/common"
@@ -37,6 +38,34 @@ func (c *Client) GetBalanceWithCfg(ctx context.Context, base58Addr string, cfg r
 		return 0, err
 	}
 	return res.Result.Value, nil
+}
+
+// GetTokenAccountBalance returns the token balance of an SPL Token account
+func (c *Client) GetTokenAccountBalance(ctx context.Context, base58Addr string) (uint64, uint8, error) {
+	res, err := c.RpcClient.GetTokenAccountBalance(ctx, base58Addr)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return 0, 0, err
+	}
+	balance, err := strconv.ParseUint(res.Result.Value.Amount, 10, 64)
+	if err != nil {
+		return 0, 0, fmt.Errorf("failed to cast token amount, err: %v", err)
+	}
+	return balance, res.Result.Value.Decimals, nil
+}
+
+// GetTokenAccountBalance returns the token balance of an SPL Token account
+func (c *Client) GetTokenAccountBalanceWithCfg(ctx context.Context, base58Addr string, cfg rpc.GetTokenAccountBalanceConfig) (uint64, uint8, error) {
+	res, err := c.RpcClient.GetTokenAccountBalanceWithCfg(ctx, base58Addr, cfg)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return 0, 0, err
+	}
+	balance, err := strconv.ParseUint(res.Result.Value.Amount, 10, 64)
+	if err != nil {
+		return 0, 0, fmt.Errorf("failed to cast token amount, err: %v", err)
+	}
+	return balance, res.Result.Value.Decimals, nil
 }
 
 type AccountInfo struct {
