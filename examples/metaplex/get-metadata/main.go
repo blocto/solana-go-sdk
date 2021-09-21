@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
+
+	"github.com/davecgh/go-spew/spew"
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/client/rpc"
@@ -36,5 +37,5 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to parse metaAccount, err: %v", err)
 	}
-	fmt.Printf("%+v\n", metadata)
+	spew.Dump(metadata)
 }

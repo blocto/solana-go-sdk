@@ -2,6 +2,10 @@ package pointer
 
 import "github.com/portto/solana-go-sdk/common"
 
+func Uint8(v uint8) *uint8 {
+	return &v
+}
+
 func Uint64(v uint64) *uint64 {
 	return &v
 }

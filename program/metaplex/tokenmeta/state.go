@@ -2,6 +2,7 @@ package tokenmeta
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/near/borsh-go"
 	"github.com/portto/solana-go-sdk/common"
@@ -50,5 +51,9 @@ func MetadataDeserialize(data []byte) (Metadata, error) {
 	if err != nil {
 		return Metadata{}, fmt.Errorf("failed to deserialize data, err: %v", err)
 	}
+	// trim null byte
+	metadata.Data.Name = strings.TrimRight(metadata.Data.Name, "\x00")
+	metadata.Data.Symbol = strings.TrimRight(metadata.Data.Symbol, "\x00")
+	metadata.Data.Uri = strings.TrimRight(metadata.Data.Uri, "\x00")
 	return metadata, nil
 }
