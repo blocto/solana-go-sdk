@@ -22,7 +22,7 @@ type TransactionMeta struct {
 	PostBalances      []int64                       `json:"postBalances"`
 	PreTokenBalances  []TransactionMetaTokenBalance `json:"preTokenBalances"`
 	PostTokenBalances []TransactionMetaTokenBalance `json:"postTokenBalances"`
-	LogMessages       []string                      `json:"logMesssages"`
+	LogMessages       []string                      `json:"logMessages"`
 	InnerInstructions []struct {
 		Index        uint64        `json:"index"`
 		Instructions []Instruction `json:"instructions"`
