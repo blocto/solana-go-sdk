@@ -326,6 +326,109 @@ func getTransaction(res rpc.GetTransactionResponse) (GetTransactionResponse, err
 	}, nil
 }
 
+type GetBlockResponse struct {
+	Blockhash         string
+	BlockTime         *int64
+	BlockHeight       *int64
+	PreviousBlockhash string
+	ParentSLot        uint64
+	Transactions      []GetBlockTransaction
+	Rewards           []rpc.GetBlockReward
+}
+
+type GetBlockTransaction struct {
+	Meta        *TransactionMeta
+	Transaction types.Transaction
+}
+
+// NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedBlock for solana-core v1.6
+// GetBlock returns identity and transaction information about a confirmed block in the ledger
+func (c *Client) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, error) {
+	res, err := c.RpcClient.GetBlockWithCfg(
+		ctx,
+		slot,
+		rpc.GetBlockConfig{
+			Encoding: rpc.GetBlockConfigEncodingBase64,
+		},
+	)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return GetBlockResponse{}, err
+	}
+	return getBlock(res)
+}
+
+// add test and get block
+func getBlock(res rpc.GetBlockResponse) (GetBlockResponse, error) {
+	txs := make([]GetBlockTransaction, 0, len(res.Result.Transactions))
+	for _, rTx := range res.Result.Transactions {
+		data, ok := rTx.Transaction.([]interface{})
+		if !ok {
+			return GetBlockResponse{}, fmt.Errorf("failed to cast raw response to []interface{}")
+		}
+		if data[1] != string(rpc.GetTransactionConfigEncodingBase64) {
+			return GetBlockResponse{}, fmt.Errorf("encoding mistmatch")
+		}
+		rawTx, err := base64.StdEncoding.DecodeString(data[0].(string))
+		if err != nil {
+			return GetBlockResponse{}, fmt.Errorf("failed to base64 decode data, err: %v", err)
+		}
+		tx, err := types.TransactionDeserialize(rawTx)
+		if err != nil {
+			return GetBlockResponse{}, fmt.Errorf("failed to deserialize transaction, err: %v", err)
+		}
+
+		var transactionMeta *TransactionMeta
+		if rTx.Meta != nil {
+			innerInstructions := make([]TransactionMetaInnerInstruction, 0, len(rTx.Meta.InnerInstructions))
+			for _, metaInnerInstruction := range rTx.Meta.InnerInstructions {
+				compiledInstructions := make([]types.CompiledInstruction, 0, len(metaInnerInstruction.Instructions))
+				for _, innerInstruction := range metaInnerInstruction.Instructions {
+					data, err := base58.Decode(innerInstruction.Data)
+					if err != nil {
+						return GetBlockResponse{}, fmt.Errorf("failed to base58 decode data, data: %v, err: %v", innerInstruction.Data, err)
+					}
+					compiledInstructions = append(compiledInstructions, types.CompiledInstruction{
+						ProgramIDIndex: innerInstruction.ProgramIDIndex,
+						Accounts:       innerInstruction.Accounts,
+						Data:           data,
+					})
+				}
+				innerInstructions = append(innerInstructions, TransactionMetaInnerInstruction{
+					Index:        metaInnerInstruction.Index,
+					Instructions: compiledInstructions,
+				})
+			}
+			transactionMeta = &TransactionMeta{
+				Err:               rTx.Meta.Err,
+				Fee:               rTx.Meta.Fee,
+				PreBalances:       rTx.Meta.PreBalances,
+				PostBalances:      rTx.Meta.PostBalances,
+				PreTokenBalances:  rTx.Meta.PreTokenBalances,
+				PostTokenBalances: rTx.Meta.PostTokenBalances,
+				LogMessages:       rTx.Meta.LogMessages,
+				InnerInstructions: innerInstructions,
+			}
+		}
+
+		txs = append(txs,
+			GetBlockTransaction{
+				Meta:        transactionMeta,
+				Transaction: tx,
+			},
+		)
+	}
+	return GetBlockResponse{
+		Blockhash:         res.Result.Blockhash,
+		BlockTime:         res.Result.BlockTime,
+		BlockHeight:       res.Result.BlockHeight,
+		PreviousBlockhash: res.Result.PreviousBlockhash,
+		ParentSLot:        res.Result.ParentSLot,
+		Rewards:           res.Result.Rewards,
+		Transactions:      txs,
+	}, nil
+}
+
 // GetMinimumBalanceForRentExemption returns minimum balance required to make account rent exempt
 func (c *Client) GetMinimumBalanceForRentExemption(ctx context.Context, dataLen uint64) (uint64, error) {
 	res, err := c.RpcClient.GetMinimumBalanceForRentExemption(ctx, dataLen)
