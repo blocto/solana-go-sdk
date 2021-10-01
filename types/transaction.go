@@ -7,7 +7,6 @@ import (
 	"fmt"
 
 	"github.com/olegfomenko/solana-go-sdk/common"
-	"github.com/olegfomenko/solana-go-sdk/pkg/bincode"
 )
 
 var (
@@ -96,7 +95,7 @@ func (tx *Transaction) Serialize() ([]byte, error) {
 		return nil, errors.New("Signature verification failed")
 	}
 
-	signatureCount := bincode.UintToVarLenBytes(uint64(len(tx.Signatures)))
+	signatureCount := UintToVarLenBytes(uint64(len(tx.Signatures)))
 	messageData, err := tx.Message.Serialize()
 	if err != nil {
 		return nil, err

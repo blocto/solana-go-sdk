@@ -4,12 +4,10 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"sort"
-
-	"github.com/olegfomenko/solana-go-sdk/common"
-	"github.com/olegfomenko/solana-go-sdk/pkg/bincode"
-
 	"github.com/mr-tron/base58"
+	"github.com/olegfomenko/solana-go-sdk/common"
+	"github.com/portto/solana-go-sdk/pkg/bincode"
+	"sort"
 )
 
 type MessageHeader struct {
@@ -31,7 +29,7 @@ func (m *Message) Serialize() ([]byte, error) {
 	b = append(b, m.Header.NumReadonlySignedAccounts)
 	b = append(b, m.Header.NumReadonlyUnsignedAccounts)
 
-	b = append(b, bincode.UintToVarLenBytes(uint64(len(m.Accounts)))...)
+	b = append(b, UintToVarLenBytes(uint64(len(m.Accounts)))...)
 	for _, key := range m.Accounts {
 		b = append(b, key[:]...)
 	}
