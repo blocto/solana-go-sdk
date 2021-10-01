@@ -18,17 +18,39 @@ type TokenData struct {
 	Uri                  string
 	SellerFeeBasisPoints uint16
 	OptionsCreator       bool
-	Creators             []Creator
+	Creators             []uint8
 }
 
-func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority common.PublicKey, updateAuthorityIsSigner, isMutable bool, mintData TokenData) types.Instruction {
+func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority common.PublicKey, updateAuthorityIsSigner, isMutable bool, mintData Data) types.Instruction {
+	var creators []uint8
+
+	if mintData.Creators != nil {
+		for _, creator := range *mintData.Creators {
+			data, err := bincode.SerializeData(creator)
+			if err != nil {
+				panic(err)
+			}
+
+			creators = append(creators, data...)
+		}
+	}
+
+	tokenData := TokenData{
+		Name:                 mintData.Name,
+		Symbol:               mintData.Symbol,
+		Uri:                  mintData.Uri,
+		SellerFeeBasisPoints: mintData.SellerFeeBasisPoints,
+		OptionsCreator:       len(creators) > 0,
+		Creators:             creators,
+	}
+
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Data        TokenData
 		IsMutable   bool
 	}{
 		Instruction: InstructionCreateMetadataAccount,
-		Data:        mintData,
+		Data:        tokenData,
 		IsMutable:   isMutable,
 	})
 
