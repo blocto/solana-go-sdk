@@ -21,10 +21,10 @@ type TokenData struct {
 	Creators             []Creator
 }
 
-func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority common.PublicKey, updateAuthorityIsSigner, isMutable bool, mintData TokenData) types.Instruction {
+func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority common.PublicKey, updateAuthorityIsSigner, isMutable bool, mintData Data) types.Instruction {
 	data, err := borsh.Serialize(struct {
 		Instruction Instruction
-		Data        TokenData
+		Data        Data
 		IsMutable   bool
 	}{
 		Instruction: InstructionCreateMetadataAccount,
