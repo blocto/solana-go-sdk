@@ -1,8 +1,9 @@
 package sysprog
 
 import (
+	"github.com/near/borsh-go"
+	"github.com/pkg/errors"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/pkg/bincode"
 	"github.com/portto/solana-go-sdk/types"
 )
 
@@ -23,8 +24,8 @@ const (
 	InstructionTransferWithSeed
 )
 
-func CreateAccount(fromAccount, newAccount, owner common.PublicKey, initLamports, accountSpace uint64) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func CreateAccount(fromAccount, newAccount, owner common.PublicKey, initLamports, accountSpace uint64) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Lamports    uint64
 		Space       uint64
@@ -36,7 +37,7 @@ func CreateAccount(fromAccount, newAccount, owner common.PublicKey, initLamports
 		Owner:       owner,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -46,11 +47,11 @@ func CreateAccount(fromAccount, newAccount, owner common.PublicKey, initLamports
 		},
 		ProgramID: common.SystemProgramID,
 		Data:      data,
-	}
+	}, nil
 }
 
-func Assign(accountPubkey, assignToProgramID common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func Assign(accountPubkey, assignToProgramID common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction       Instruction
 		AssignToProgramID common.PublicKey
 	}{
@@ -58,7 +59,7 @@ func Assign(accountPubkey, assignToProgramID common.PublicKey) types.Instruction
 		AssignToProgramID: assignToProgramID,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -67,11 +68,11 @@ func Assign(accountPubkey, assignToProgramID common.PublicKey) types.Instruction
 			{PubKey: accountPubkey, IsSigner: true, IsWritable: true},
 		},
 		Data: data,
-	}
+	}, nil
 }
 
-func Transfer(from, to common.PublicKey, lamports uint64) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func Transfer(from, to common.PublicKey, lamports uint64) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Lamports    uint64
 	}{
@@ -79,7 +80,7 @@ func Transfer(from, to common.PublicKey, lamports uint64) types.Instruction {
 		Lamports:    lamports,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -89,11 +90,11 @@ func Transfer(from, to common.PublicKey, lamports uint64) types.Instruction {
 		},
 		ProgramID: common.SystemProgramID,
 		Data:      data,
-	}
+	}, nil
 }
 
-func CreateAccountWithSeed(fromPubkey, newAccountPubkey, basePubkey, programID common.PublicKey, seed string, lamports, space uint64) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func CreateAccountWithSeed(fromPubkey, newAccountPubkey, basePubkey, programID common.PublicKey, seed string, lamports, space uint64) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Base        common.PublicKey
 		Seed        string
@@ -109,7 +110,7 @@ func CreateAccountWithSeed(fromPubkey, newAccountPubkey, basePubkey, programID c
 		ProgramID:   programID,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 3)
@@ -125,17 +126,17 @@ func CreateAccountWithSeed(fromPubkey, newAccountPubkey, basePubkey, programID c
 		ProgramID: common.SystemProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func AdvanceNonceAccount(noncePubkey, authPubkey common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func AdvanceNonceAccount(noncePubkey, authPubkey common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 	}{
 		Instruction: InstructionAdvanceNonceAccount,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -146,11 +147,11 @@ func AdvanceNonceAccount(noncePubkey, authPubkey common.PublicKey) types.Instruc
 		},
 		ProgramID: common.SystemProgramID,
 		Data:      data,
-	}
+	}, nil
 }
 
-func WithdrawNonceAccount(noncePubkey, authPubkey, toPubkey common.PublicKey, lamports uint64) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func WithdrawNonceAccount(noncePubkey, authPubkey, toPubkey common.PublicKey, lamports uint64) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Lamports    uint64
 	}{
@@ -158,7 +159,7 @@ func WithdrawNonceAccount(noncePubkey, authPubkey, toPubkey common.PublicKey, la
 		Lamports:    lamports,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -171,11 +172,11 @@ func WithdrawNonceAccount(noncePubkey, authPubkey, toPubkey common.PublicKey, la
 		},
 		ProgramID: common.SystemProgramID,
 		Data:      data,
-	}
+	}, nil
 }
 
-func InitializeNonceAccount(noncePubkey, authPubkey common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func InitializeNonceAccount(noncePubkey, authPubkey common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Auth        common.PublicKey
 	}{
@@ -183,7 +184,7 @@ func InitializeNonceAccount(noncePubkey, authPubkey common.PublicKey) types.Inst
 		Auth:        authPubkey,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -194,11 +195,11 @@ func InitializeNonceAccount(noncePubkey, authPubkey common.PublicKey) types.Inst
 		},
 		ProgramID: common.SystemProgramID,
 		Data:      data,
-	}
+	}, nil
 }
 
-func AuthorizeNonceAccount(noncePubkey, oriAuthPubkey, newAuthPubkey common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func AuthorizeNonceAccount(noncePubkey, oriAuthPubkey, newAuthPubkey common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Auth        common.PublicKey
 	}{
@@ -206,7 +207,7 @@ func AuthorizeNonceAccount(noncePubkey, oriAuthPubkey, newAuthPubkey common.Publ
 		Auth:        newAuthPubkey,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -216,11 +217,11 @@ func AuthorizeNonceAccount(noncePubkey, oriAuthPubkey, newAuthPubkey common.Publ
 		},
 		ProgramID: common.SystemProgramID,
 		Data:      data,
-	}
+	}, nil
 }
 
-func Allocate(accountPubkey common.PublicKey, space uint64) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func Allocate(accountPubkey common.PublicKey, space uint64) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Space       uint64
 	}{
@@ -228,7 +229,7 @@ func Allocate(accountPubkey common.PublicKey, space uint64) types.Instruction {
 		Space:       space,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -237,11 +238,11 @@ func Allocate(accountPubkey common.PublicKey, space uint64) types.Instruction {
 			{PubKey: accountPubkey, IsSigner: true, IsWritable: true},
 		},
 		Data: data,
-	}
+	}, nil
 }
 
-func AllocateWithSeed(accountPubkey, basePubkey, programID common.PublicKey, seed string, space uint64) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func AllocateWithSeed(accountPubkey, basePubkey, programID common.PublicKey, seed string, space uint64) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Base        common.PublicKey
 		Seed        string
@@ -255,7 +256,7 @@ func AllocateWithSeed(accountPubkey, basePubkey, programID common.PublicKey, see
 		ProgramID:   programID,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -265,10 +266,10 @@ func AllocateWithSeed(accountPubkey, basePubkey, programID common.PublicKey, see
 			{PubKey: basePubkey, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
-	}
+	}, nil
 }
-func AssignWithSeed(accountPubkey, assignToProgramID, basePubkey common.PublicKey, seed string) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func AssignWithSeed(accountPubkey, assignToProgramID, basePubkey common.PublicKey, seed string) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction       Instruction
 		Base              common.PublicKey
 		Seed              string
@@ -280,7 +281,7 @@ func AssignWithSeed(accountPubkey, assignToProgramID, basePubkey common.PublicKe
 		AssignToProgramID: assignToProgramID,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -290,11 +291,11 @@ func AssignWithSeed(accountPubkey, assignToProgramID, basePubkey common.PublicKe
 			{PubKey: basePubkey, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
-	}
+	}, nil
 }
 
-func TransferWithSeed(from, to, base, programID common.PublicKey, seed string, lamports uint64) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func TransferWithSeed(from, to, base, programID common.PublicKey, seed string, lamports uint64) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Lamports    uint64
 		Seed        string
@@ -306,7 +307,7 @@ func TransferWithSeed(from, to, base, programID common.PublicKey, seed string, l
 		ProgramID:   programID,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -317,5 +318,5 @@ func TransferWithSeed(from, to, base, programID common.PublicKey, seed string, l
 			{PubKey: to, IsSigner: false, IsWritable: true},
 		},
 		Data: data,
-	}
+	}, nil
 }

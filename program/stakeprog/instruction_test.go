@@ -1,6 +1,7 @@
 package stakeprog
 
 import (
+	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
 
@@ -41,7 +42,10 @@ func TestSplit(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Split(tt.args.stakePubkey, tt.args.authPubkey, tt.args.splitStakePubkey, tt.args.lamports); !reflect.DeepEqual(got, tt.want) {
+			got, err := Split(tt.args.stakePubkey, tt.args.authPubkey, tt.args.splitStakePubkey, tt.args.lamports)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Split() = %v, want %v", got, tt.want)
 			}
 		})
@@ -80,7 +84,9 @@ func TestMerge(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Merge(tt.args.dest, tt.args.src, tt.args.auth); !reflect.DeepEqual(got, tt.want) {
+			got, err := Merge(tt.args.dest, tt.args.src, tt.args.auth)
+			assert.NoError(t, err)
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Merge() = %v, want %v", got, tt.want)
 			}
 		})
@@ -125,7 +131,9 @@ func TestAuthorizeWithSeed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AuthorizeWithSeed(tt.args.stakePubkey, tt.args.authBasePubkey, tt.args.authSeed, tt.args.authOwnerPubkey, tt.args.newAuthPubkey, tt.args.authType, tt.args.custodianPubkey); !reflect.DeepEqual(got, tt.want) {
+			got, err := AuthorizeWithSeed(tt.args.stakePubkey, tt.args.authBasePubkey, tt.args.authSeed, tt.args.authOwnerPubkey, tt.args.newAuthPubkey, tt.args.authType, tt.args.custodianPubkey)
+			assert.NoError(t, err)
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AuthorizeWithSeed() = %v, want %v", got, tt.want)
 			}
 		})
@@ -244,7 +252,10 @@ func TestSetLockup(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SetLockup(tt.args.src, tt.args.auth, tt.args.lockup); !reflect.DeepEqual(got, tt.want) {
+			got, err := SetLockup(tt.args.src, tt.args.auth, tt.args.lockup)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("SetLockup() = %v, want %v", got, tt.want)
 			}
 		})

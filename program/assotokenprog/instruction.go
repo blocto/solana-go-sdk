@@ -6,7 +6,7 @@ import (
 )
 
 // CreateAssociatedTokenAccount is the only instruction in associated token program
-func CreateAssociatedTokenAccount(funder, wallet, tokenMint common.PublicKey) types.Instruction {
+func CreateAssociatedTokenAccount(funder, wallet, tokenMint common.PublicKey) (types.Instruction, error) {
 	assosiatedAccount, _, _ := common.FindAssociatedTokenAddress(wallet, tokenMint)
 	return types.Instruction{
 		ProgramID: common.SPLAssociatedTokenAccountProgramID,
@@ -20,5 +20,5 @@ func CreateAssociatedTokenAccount(funder, wallet, tokenMint common.PublicKey) ty
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 		},
 		Data: []byte{},
-	}
+	}, nil
 }
