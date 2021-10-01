@@ -1,8 +1,8 @@
 package tokenmeta
 
 import (
+	borsh "github.com/near/borsh-go"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/pkg/bincode"
 	"github.com/portto/solana-go-sdk/types"
 )
 
@@ -18,39 +18,17 @@ type TokenData struct {
 	Uri                  string
 	SellerFeeBasisPoints uint16
 	OptionsCreator       bool
-	Creators             []uint8
+	Creators             []Creator
 }
 
-func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority common.PublicKey, updateAuthorityIsSigner, isMutable bool, mintData Data) types.Instruction {
-	var creators []uint8
-
-	if mintData.Creators != nil {
-		for _, creator := range *mintData.Creators {
-			data, err := bincode.SerializeData(creator)
-			if err != nil {
-				panic(err)
-			}
-
-			creators = append(creators, data...)
-		}
-	}
-
-	tokenData := TokenData{
-		Name:                 mintData.Name,
-		Symbol:               mintData.Symbol,
-		Uri:                  mintData.Uri,
-		SellerFeeBasisPoints: mintData.SellerFeeBasisPoints,
-		OptionsCreator:       len(creators) > 0,
-		Creators:             creators,
-	}
-
-	data, err := bincode.SerializeData(struct {
+func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority common.PublicKey, updateAuthorityIsSigner, isMutable bool, mintData TokenData) types.Instruction {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Data        TokenData
 		IsMutable   bool
 	}{
 		Instruction: InstructionCreateMetadataAccount,
-		Data:        tokenData,
+		Data:        mintData,
 		IsMutable:   isMutable,
 	})
 
