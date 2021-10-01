@@ -81,6 +81,8 @@ func (tx *Transaction) sign(accounts []Account) (*Transaction, error) {
 		privateKey, exist := accountMap[tx.Message.Accounts[i]]
 		if exist {
 			tx.Signatures[i] = ed25519.Sign(privateKey, message)
+		} else {
+			tx.Signatures[i] = make([]byte, ed25519.SignatureSize)
 		}
 	}
 
