@@ -65,10 +65,6 @@ func (tx *Transaction) AddSignature(sig []byte) error {
 }
 
 func (tx *Transaction) sign(accounts []Account) (*Transaction, error) {
-	if int(tx.Message.Header.NumRequireSignatures) != len(accounts) {
-		return nil, errors.New("signer's num not match")
-	}
-
 	message, err := tx.Message.Serialize()
 	if err != nil {
 		return nil, err
@@ -79,14 +75,15 @@ func (tx *Transaction) sign(accounts []Account) (*Transaction, error) {
 		accountMap[account.PublicKey] = account.PrivateKey
 	}
 
-	for i := 0; i < int(tx.Message.Header.NumRequireSignatures); i++ {
+	tx.Signatures = make([]Signature, len(tx.Message.Accounts))
+
+	for i := 0; i < len(tx.Message.Accounts); i++ {
 		privateKey, exist := accountMap[tx.Message.Accounts[i]]
-		if !exist {
-			return nil, fmt.Errorf("lack %s's private key", tx.Message.Accounts[i].ToBase58())
+		if exist {
+			tx.Signatures[i] = ed25519.Sign(privateKey, message)
 		}
-		signature := ed25519.Sign(privateKey, message)
-		tx.Signatures = append(tx.Signatures, signature)
 	}
+
 	return tx, nil
 }
 
