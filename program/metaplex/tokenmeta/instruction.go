@@ -12,10 +12,19 @@ const (
 	InstructionCreateMetadataAccount Instruction = iota
 )
 
-func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority common.PublicKey, updateAuthorityIsSigner, isMutable bool, mintData Data) types.Instruction {
+type TokenData struct {
+	Name                 string
+	Symbol               string
+	Uri                  string
+	SellerFeeBasisPoints uint16
+	OptionsCreator       bool
+	Creators             []Creator
+}
+
+func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority common.PublicKey, updateAuthorityIsSigner, isMutable bool, mintData TokenData) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
-		Data        Data
+		Data        TokenData
 		IsMutable   bool
 	}{
 		Instruction: InstructionCreateMetadataAccount,
