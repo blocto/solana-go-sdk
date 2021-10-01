@@ -1,6 +1,7 @@
 package sysprog
 
 import (
+	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
 
@@ -65,7 +66,10 @@ func TestCreateAccountWithSeed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CreateAccountWithSeed(tt.args.fromPubkey, tt.args.newAccountPubkey, tt.args.basePubkey, tt.args.programID, tt.args.seed, tt.args.lamports, tt.args.space); !reflect.DeepEqual(got, tt.want) {
+			got, err := CreateAccountWithSeed(tt.args.fromPubkey, tt.args.newAccountPubkey, tt.args.basePubkey, tt.args.programID, tt.args.seed, tt.args.lamports, tt.args.space)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("CreateAccountWithSeed() = %v, want %v", got, tt.want)
 			}
 		})
@@ -105,7 +109,9 @@ func TestAllocateWithSeed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AllocateWithSeed(tt.args.accountPubkey, tt.args.basePubkey, tt.args.programID, tt.args.seed, tt.args.space); !reflect.DeepEqual(got, tt.want) {
+			got, err := AllocateWithSeed(tt.args.accountPubkey, tt.args.basePubkey, tt.args.programID, tt.args.seed, tt.args.space)
+			assert.NoError(t, err)
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AllocateWithSeed() = %v, want %v", got, tt.want)
 			}
 		})
@@ -143,7 +149,10 @@ func TestAssignWithSeed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AssignWithSeed(tt.args.accountPubkey, tt.args.assignToProgramID, tt.args.basePubkey, tt.args.seed); !reflect.DeepEqual(got, tt.want) {
+			got, err := AssignWithSeed(tt.args.accountPubkey, tt.args.assignToProgramID, tt.args.basePubkey, tt.args.seed)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AssignWithSeed() = %v, want %v", got, tt.want)
 			}
 		})
@@ -176,7 +185,10 @@ func TestAllocate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Allocate(tt.args.accountPubkey, tt.args.space); !reflect.DeepEqual(got, tt.want) {
+			got, err := Allocate(tt.args.accountPubkey, tt.args.space)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Allocate() = %v, want %v", got, tt.want)
 			}
 		})
@@ -209,7 +221,10 @@ func TestAssign(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Assign(tt.args.accountPubkey, tt.args.assignToProgramID); !reflect.DeepEqual(got, tt.want) {
+			got, err := Assign(tt.args.accountPubkey, tt.args.assignToProgramID)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Assign() = %v, want %v", got, tt.want)
 			}
 		})
@@ -252,7 +267,10 @@ func TestTransferWithSeed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := TransferWithSeed(tt.args.from, tt.args.to, tt.args.base, tt.args.programID, tt.args.seed, tt.args.lamports); !reflect.DeepEqual(got, tt.want) {
+			got, err := TransferWithSeed(tt.args.from, tt.args.to, tt.args.base, tt.args.programID, tt.args.seed, tt.args.lamports)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("TransferWithSeed() = %v, want %v", got, tt.want)
 			}
 		})
@@ -292,7 +310,10 @@ func TestCreateAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CreateAccount(tt.args.fromAccount, tt.args.newAccount, tt.args.owner, tt.args.initLamports, tt.args.accountSpace); !reflect.DeepEqual(got, tt.want) {
+			got, err := CreateAccount(tt.args.fromAccount, tt.args.newAccount, tt.args.owner, tt.args.initLamports, tt.args.accountSpace)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("CreateAccount() = %v, want %v", got, tt.want)
 			}
 		})
@@ -336,7 +357,10 @@ func TestTransfer(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Transfer(tt.args.from, tt.args.to, tt.args.number); !reflect.DeepEqual(got, tt.want) {
+			got, err := Transfer(tt.args.from, tt.args.to, tt.args.number)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Transfer() = %v, want %v", got, tt.want)
 			}
 		})
@@ -371,7 +395,10 @@ func TestAdvanceNonceAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AdvanceNonceAccount(tt.args.noncePubkey, tt.args.authPubkey); !reflect.DeepEqual(got, tt.want) {
+			got, err := AdvanceNonceAccount(tt.args.noncePubkey, tt.args.authPubkey)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AdvanceNonceAccount() = %v, want %v", got, tt.want)
 			}
 		})
@@ -406,7 +433,10 @@ func TestInitializeNonceAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := InitializeNonceAccount(tt.args.noncePubkey, tt.args.authPubkey); !reflect.DeepEqual(got, tt.want) {
+			got, err := InitializeNonceAccount(tt.args.noncePubkey, tt.args.authPubkey)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("InitializeNonceAccount() = %v, want %v", got, tt.want)
 			}
 		})
@@ -447,7 +477,10 @@ func TestWithdrawNonceAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := WithdrawNonceAccount(tt.args.noncePubkey, tt.args.authPubkey, tt.args.toPubkey, tt.args.lamports); !reflect.DeepEqual(got, tt.want) {
+			got, err := WithdrawNonceAccount(tt.args.noncePubkey, tt.args.authPubkey, tt.args.toPubkey, tt.args.lamports)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("WithdrawNonceAccount() = %v, want %v", got, tt.want)
 			}
 		})
@@ -483,7 +516,10 @@ func TestAuthorizeNonceAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AuthorizeNonceAccount(tt.args.noncePubkey, tt.args.oriAuthPubkey, tt.args.newAuthPubkey); !reflect.DeepEqual(got, tt.want) {
+			got, err := AuthorizeNonceAccount(tt.args.noncePubkey, tt.args.oriAuthPubkey, tt.args.newAuthPubkey)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AuthorizeNonceAccount() = %v, want %v", got, tt.want)
 			}
 		})

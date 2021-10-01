@@ -1,6 +1,7 @@
 package assotokenprog
 
 import (
+	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
 
@@ -42,7 +43,10 @@ func TestCreateAssociatedTokenAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CreateAssociatedTokenAccount(tt.args.funder, tt.args.wallet, tt.args.tokenMint); !reflect.DeepEqual(got, tt.want) {
+			got, err := CreateAssociatedTokenAccount(tt.args.funder, tt.args.wallet, tt.args.tokenMint)
+			assert.NoError(t, err)
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("CreateAssociatedTokenAccount() = %v, want %v", got, tt.want)
 			}
 		})

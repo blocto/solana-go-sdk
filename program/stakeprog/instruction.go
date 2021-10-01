@@ -1,8 +1,9 @@
 package stakeprog
 
 import (
+	"github.com/near/borsh-go"
+	"github.com/pkg/errors"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/pkg/bincode"
 	"github.com/portto/solana-go-sdk/types"
 )
 
@@ -46,8 +47,8 @@ type Authorized struct {
 	Withdrawer common.PublicKey
 }
 
-func Initialize(initAccount common.PublicKey, auth Authorized, lockup Lockup) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func Initialize(initAccount common.PublicKey, auth Authorized, lockup Lockup) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Auth        Authorized
 		Lockup      Lockup
@@ -57,7 +58,7 @@ func Initialize(initAccount common.PublicKey, auth Authorized, lockup Lockup) ty
 		Lockup:      lockup,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -67,11 +68,11 @@ func Initialize(initAccount common.PublicKey, auth Authorized, lockup Lockup) ty
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 		},
 		Data: data,
-	}
+	}, nil
 }
 
-func Authorize(stakePubkey, authPubkey, newAuthPubkey common.PublicKey, authType StakeAuthorizationType, custodianPubkey common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func Authorize(stakePubkey, authPubkey, newAuthPubkey common.PublicKey, authType StakeAuthorizationType, custodianPubkey common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction            Instruction
 		NewAuthorized          common.PublicKey
 		StakeAuthorizationType StakeAuthorizationType
@@ -81,7 +82,7 @@ func Authorize(stakePubkey, authPubkey, newAuthPubkey common.PublicKey, authType
 		StakeAuthorizationType: authType,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 4)
@@ -98,17 +99,17 @@ func Authorize(stakePubkey, authPubkey, newAuthPubkey common.PublicKey, authType
 		ProgramID: common.StakeProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func DelegateStake(stakePubkey, authPubkey, votePubkey common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func DelegateStake(stakePubkey, authPubkey, votePubkey common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 	}{
 		Instruction: InstructionDelegateStake,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -122,11 +123,11 @@ func DelegateStake(stakePubkey, authPubkey, votePubkey common.PublicKey) types.I
 			{PubKey: authPubkey, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
-	}
+	}, nil
 }
 
-func Split(stakePubkey, authPubkey, splitStakePubkey common.PublicKey, lamports uint64) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func Split(stakePubkey, authPubkey, splitStakePubkey common.PublicKey, lamports uint64) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Lamports    uint64
 	}{
@@ -134,7 +135,7 @@ func Split(stakePubkey, authPubkey, splitStakePubkey common.PublicKey, lamports 
 		Lamports:    lamports,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -145,11 +146,11 @@ func Split(stakePubkey, authPubkey, splitStakePubkey common.PublicKey, lamports 
 			{PubKey: authPubkey, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
-	}
+	}, nil
 }
 
-func Withdraw(stakePubkey, authPubkey, toPubkey common.PublicKey, lamports uint64, custodianPubkey common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func Withdraw(stakePubkey, authPubkey, toPubkey common.PublicKey, lamports uint64, custodianPubkey common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Lamports    uint64
 	}{
@@ -157,7 +158,7 @@ func Withdraw(stakePubkey, authPubkey, toPubkey common.PublicKey, lamports uint6
 		Lamports:    lamports,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 6)
@@ -176,17 +177,17 @@ func Withdraw(stakePubkey, authPubkey, toPubkey common.PublicKey, lamports uint6
 		ProgramID: common.StakeProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func Deactivate(stakePubkey, authPubkey common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func Deactivate(stakePubkey, authPubkey common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 	}{
 		Instruction: InstructionDeactivate,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -197,11 +198,11 @@ func Deactivate(stakePubkey, authPubkey common.PublicKey) types.Instruction {
 			{PubKey: authPubkey, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
-	}
+	}, nil
 }
 
-func SetLockup(src, auth common.PublicKey, lockup LockupParam) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func SetLockup(src, auth common.PublicKey, lockup LockupParam) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction   Instruction
 		UnixTimestamp *int64
 		Epoch         *uint64
@@ -213,7 +214,7 @@ func SetLockup(src, auth common.PublicKey, lockup LockupParam) types.Instruction
 		Cusodian:      lockup.Cusodian,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -223,17 +224,17 @@ func SetLockup(src, auth common.PublicKey, lockup LockupParam) types.Instruction
 			{PubKey: auth, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
-	}
+	}, nil
 }
 
-func Merge(dest, src, auth common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func Merge(dest, src, auth common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 	}{
 		Instruction: InstructionMerge,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -246,7 +247,7 @@ func Merge(dest, src, auth common.PublicKey) types.Instruction {
 			{PubKey: auth, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
-	}
+	}, nil
 }
 
 func AuthorizeWithSeed(
@@ -256,9 +257,8 @@ func AuthorizeWithSeed(
 	authOwnerPubkey common.PublicKey,
 	newAuthPubkey common.PublicKey,
 	authType StakeAuthorizationType,
-	custodianPubkey common.PublicKey) types.Instruction {
-
-	data, err := bincode.SerializeData(struct {
+	custodianPubkey common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction            Instruction
 		NewAuthorized          common.PublicKey
 		StakeAuthorizationType StakeAuthorizationType
@@ -272,7 +272,7 @@ func AuthorizeWithSeed(
 		AuthOwner:              authOwnerPubkey,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 4)
@@ -289,5 +289,5 @@ func AuthorizeWithSeed(
 		ProgramID: common.StakeProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }

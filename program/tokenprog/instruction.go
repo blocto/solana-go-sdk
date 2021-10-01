@@ -1,8 +1,9 @@
 package tokenprog
 
 import (
+	"github.com/near/borsh-go"
+	"github.com/pkg/errors"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/pkg/bincode"
 	"github.com/portto/solana-go-sdk/types"
 )
 
@@ -33,8 +34,8 @@ const (
 )
 
 // InitializeMint init a mint, if you don't need to freeze, pass the empty pubKey common.PublicKey{}
-func InitializeMint(decimals uint8, mint, mintAuthority common.PublicKey, freezeAuthority common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func InitializeMint(decimals uint8, mint, mintAuthority common.PublicKey, freezeAuthority common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction     Instruction
 		Decimals        uint8
 		MintAuthority   common.PublicKey
@@ -47,8 +48,9 @@ func InitializeMint(decimals uint8, mint, mintAuthority common.PublicKey, freeze
 		Option:          freezeAuthority != common.PublicKey{},
 		FreezeAuthority: freezeAuthority,
 	})
+
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	return types.Instruction{
@@ -58,18 +60,19 @@ func InitializeMint(decimals uint8, mint, mintAuthority common.PublicKey, freeze
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 		},
 		Data: data,
-	}
+	}, nil
 }
 
 // InitializeAccount init a token account which can receive token
-func InitializeAccount(accountPublicKey, mintPublicKey, ownerPublickey common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func InitializeAccount(accountPublicKey, mintPublicKey, ownerPublickey common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 	}{
 		Instruction: InstructionInitializeAccount,
 	})
+
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := []types.AccountMeta{
@@ -82,10 +85,10 @@ func InitializeAccount(accountPublicKey, mintPublicKey, ownerPublickey common.Pu
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func InitializeMultisig(authPubkey common.PublicKey, signerPubkeys []common.PublicKey, miniRequired uint8) types.Instruction {
+func InitializeMultisig(authPubkey common.PublicKey, signerPubkeys []common.PublicKey, miniRequired uint8) (types.Instruction, error) {
 	if len(signerPubkeys) < 1 {
 		panic("minimum of signer is 1")
 	}
@@ -96,7 +99,7 @@ func InitializeMultisig(authPubkey common.PublicKey, signerPubkeys []common.Publ
 		panic("required number too big")
 	}
 
-	data, err := bincode.SerializeData(struct {
+	data, err := borsh.Serialize(struct {
 		Instruction     Instruction
 		MinimumRequired uint8
 	}{
@@ -104,7 +107,7 @@ func InitializeMultisig(authPubkey common.PublicKey, signerPubkeys []common.Publ
 		MinimumRequired: miniRequired,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 2+len(signerPubkeys))
@@ -120,11 +123,11 @@ func InitializeMultisig(authPubkey common.PublicKey, signerPubkeys []common.Publ
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func Transfer(srcPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func Transfer(srcPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Amount      uint64
 	}{
@@ -132,7 +135,7 @@ func Transfer(srcPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys 
 		Amount:      amount,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
@@ -146,11 +149,11 @@ func Transfer(srcPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys 
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func Approve(sourcePubkey, delegatePubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func Approve(sourcePubkey, delegatePubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Amount      uint64
 	}{
@@ -158,7 +161,7 @@ func Approve(sourcePubkey, delegatePubkey, authPubkey common.PublicKey, signerPu
 		Amount:      amount,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
@@ -173,17 +176,17 @@ func Approve(sourcePubkey, delegatePubkey, authPubkey common.PublicKey, signerPu
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func Revoke(srcPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func Revoke(srcPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 	}{
 		Instruction: InstructionRevoke,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 2+len(signerPubkeys))
@@ -199,7 +202,7 @@ func Revoke(srcPubkey, authPubkey common.PublicKey, signerPubkeys []common.Publi
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
 type AuthorityType uint8
@@ -211,8 +214,8 @@ const (
 	AuthorityTypeCloseAccount
 )
 
-func SetAuthority(accountPubkey, newAuthPubkey common.PublicKey, authType AuthorityType, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func SetAuthority(accountPubkey, newAuthPubkey common.PublicKey, authType AuthorityType, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction   Instruction
 		AuthorityType AuthorityType
 		Option        bool
@@ -224,7 +227,7 @@ func SetAuthority(accountPubkey, newAuthPubkey common.PublicKey, authType Author
 		NewAuthPubkey: newAuthPubkey,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 2+len(signerPubkeys))
@@ -240,11 +243,11 @@ func SetAuthority(accountPubkey, newAuthPubkey common.PublicKey, authType Author
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func MintTo(mintPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func MintTo(mintPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Amount      uint64
 	}{
@@ -252,7 +255,7 @@ func MintTo(mintPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys [
 		Amount:      amount,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
@@ -269,11 +272,11 @@ func MintTo(mintPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys [
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func Burn(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func Burn(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Amount      uint64
 	}{
@@ -281,7 +284,7 @@ func Burn(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys 
 		Amount:      amount,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
@@ -298,18 +301,18 @@ func Burn(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys 
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-// Close an account and transfer its all SOL to dest, only account's token balance is zero can be closed.
-func CloseAccount(accountPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+//CloseAccount will close an account and transfer its all SOL to dest, only account's token balance is zero can be closed.
+func CloseAccount(accountPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 	}{
 		Instruction: InstructionCloseAccount,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
@@ -324,17 +327,17 @@ func CloseAccount(accountPubkey, destPubkey, authPubkey common.PublicKey, signer
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func FreezeAccount(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func FreezeAccount(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 	}{
 		Instruction: InstructionFreezeAccount,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
@@ -349,17 +352,17 @@ func FreezeAccount(accountPubkey, mintPubkey, authPubkey common.PublicKey, signe
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func ThawAccount(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func ThawAccount(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 	}{
 		Instruction: InstructionThawAccount,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
@@ -374,11 +377,11 @@ func ThawAccount(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerP
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func TransferChecked(srcPubkey, destPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64, decimals uint8) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func TransferChecked(srcPubkey, destPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64, decimals uint8) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Amount      uint64
 		Decimals    uint8
@@ -388,7 +391,7 @@ func TransferChecked(srcPubkey, destPubkey, mintPubkey, authPubkey common.Public
 		Decimals:    decimals,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 4+len(signerPubkeys))
@@ -404,11 +407,11 @@ func TransferChecked(srcPubkey, destPubkey, mintPubkey, authPubkey common.Public
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func ApproveChecked(sourcePubkey, mintPubkey, delegatePubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64, decimals uint8) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func ApproveChecked(sourcePubkey, mintPubkey, delegatePubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64, decimals uint8) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Amount      uint64
 		Decimals    uint8
@@ -418,7 +421,7 @@ func ApproveChecked(sourcePubkey, mintPubkey, delegatePubkey, authPubkey common.
 		Decimals:    decimals,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 4+len(signerPubkeys))
@@ -434,11 +437,11 @@ func ApproveChecked(sourcePubkey, mintPubkey, delegatePubkey, authPubkey common.
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func MintToChecked(mintPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64, decimals uint8) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func MintToChecked(mintPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64, decimals uint8) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Amount      uint64
 		Decimals    uint8
@@ -448,7 +451,7 @@ func MintToChecked(mintPubkey, destPubkey, authPubkey common.PublicKey, signerPu
 		Decimals:    decimals,
 	})
 	if err != nil {
-		panic(err)
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
 	}
 
 	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
@@ -465,11 +468,11 @@ func MintToChecked(mintPubkey, destPubkey, authPubkey common.PublicKey, signerPu
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func BurnChecked(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64, decimals uint8) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func BurnChecked(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64, decimals uint8) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Amount      uint64
 		Decimals    uint8
@@ -496,11 +499,11 @@ func BurnChecked(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerP
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
-	}
+	}, nil
 }
 
-func InitializeAccount2(accountPubkey, mintPubkey, ownerPubkey common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func InitializeAccount2(accountPubkey, mintPubkey, ownerPubkey common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Owner       common.PublicKey
 	}{
@@ -519,12 +522,12 @@ func InitializeAccount2(accountPubkey, mintPubkey, ownerPubkey common.PublicKey)
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 		},
 		Data: data,
-	}
+	}, nil
 }
 
 // SyncNative will update your wrapped SOL balance
-func SyncNative(accountPubkey common.PublicKey) types.Instruction {
-	data, err := bincode.SerializeData(struct {
+func SyncNative(accountPubkey common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 	}{
 		Instruction: InstructionSyncNative,
@@ -539,5 +542,5 @@ func SyncNative(accountPubkey common.PublicKey) types.Instruction {
 			{PubKey: accountPubkey, IsSigner: false, IsWritable: true},
 		},
 		Data: data,
-	}
+	}, nil
 }
