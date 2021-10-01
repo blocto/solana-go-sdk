@@ -75,9 +75,9 @@ func (tx *Transaction) sign(accounts []Account) (*Transaction, error) {
 		accountMap[account.PublicKey] = account.PrivateKey
 	}
 
-	tx.Signatures = make([]Signature, len(tx.Message.Accounts))
+	tx.Signatures = make([]Signature, int(tx.Message.Header.NumRequireSignatures))
 
-	for i := 0; i < len(tx.Message.Accounts); i++ {
+	for i := 0; i < int(tx.Message.Header.NumRequireSignatures); i++ {
 		privateKey, exist := accountMap[tx.Message.Accounts[i]]
 		if exist {
 			tx.Signatures[i] = ed25519.Sign(privateKey, message)
