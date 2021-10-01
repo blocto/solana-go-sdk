@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/types"
+	"github.com/olegfomenko/solana-go-sdk/common"
+	"github.com/olegfomenko/solana-go-sdk/types"
 )
 
 func TestCreateAccountWithSeed(t *testing.T) {

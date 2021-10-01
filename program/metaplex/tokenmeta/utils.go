@@ -1,7 +1,7 @@
 package tokenmeta
 
 import (
-	"github.com/portto/solana-go-sdk/common"
+	"github.com/olegfomenko/solana-go-sdk/common"
 )
 
 func GetTokenMetaPubkey(mint common.PublicKey) (common.PublicKey, error) {

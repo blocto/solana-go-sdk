@@ -1,8 +1,8 @@
 package assotokenprog
 
 import (
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/types"
+	"github.com/olegfomenko/solana-go-sdk/common"
+	"github.com/olegfomenko/solana-go-sdk/types"
 )
 
 // CreateAssociatedTokenAccount is the only instruction in associated token program

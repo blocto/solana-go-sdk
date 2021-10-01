@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/portto/solana-go-sdk/common"
+	"github.com/olegfomenko/solana-go-sdk/common"
 )
 
 const MultisigAccountSize uint64 = 355

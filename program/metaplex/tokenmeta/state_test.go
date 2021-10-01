@@ -3,8 +3,8 @@ package tokenmeta
 import (
 	"testing"
 
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/pkg/pointer"
+	"github.com/olegfomenko/solana-go-sdk/common"
+	"github.com/olegfomenko/solana-go-sdk/pkg/pointer"
 	"github.com/stretchr/testify/assert"
 )
 

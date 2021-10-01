@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/near/borsh-go"
-	"github.com/portto/solana-go-sdk/common"
+	"github.com/olegfomenko/solana-go-sdk/common"
 )
 
 type Key borsh.Enum

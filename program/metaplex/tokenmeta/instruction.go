@@ -2,9 +2,9 @@ package tokenmeta
 
 import (
 	"github.com/near/borsh-go"
+	"github.com/olegfomenko/solana-go-sdk/common"
+	"github.com/olegfomenko/solana-go-sdk/types"
 	"github.com/pkg/errors"
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/types"
 )
 
 type Instruction uint8

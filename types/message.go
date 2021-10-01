@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/pkg/bincode"
+	"github.com/olegfomenko/solana-go-sdk/common"
+	"github.com/olegfomenko/solana-go-sdk/pkg/bincode"
 
 	"github.com/mr-tron/base58"
 )
