@@ -38,13 +38,11 @@ func InitializeMint(decimals uint8, mint, mintAuthority common.PublicKey, freeze
 		Instruction     Instruction
 		Decimals        uint8
 		MintAuthority   common.PublicKey
-		Option          bool
 		FreezeAuthority common.PublicKey
 	}{
 		Instruction:     InstructionInitializeMint,
 		Decimals:        decimals,
 		MintAuthority:   mintAuthority,
-		Option:          freezeAuthority != common.PublicKey{},
 		FreezeAuthority: freezeAuthority,
 	})
 	if err != nil {
