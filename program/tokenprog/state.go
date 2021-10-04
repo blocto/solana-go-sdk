@@ -80,9 +80,9 @@ type TokenAccount struct {
 	CloseAuthority  *common.PublicKey
 }
 
-func TokenAccountFromData(data []byte) (*TokenAccount, error) {
+func TokenAccountFromData(data []byte) (TokenAccount, error) {
 	if len(data) != TokenAccountSize {
-		return nil, fmt.Errorf("data length not match")
+		return TokenAccount{}, fmt.Errorf("data length not match")
 	}
 
 	mint := common.PublicKeyFromBytes(data[:32])
@@ -113,7 +113,7 @@ func TokenAccountFromData(data []byte) (*TokenAccount, error) {
 		closeAuthority = &key
 	}
 
-	return &TokenAccount{
+	return TokenAccount{
 		Mint:            mint,
 		Owner:           owner,
 		Amount:          amount,
