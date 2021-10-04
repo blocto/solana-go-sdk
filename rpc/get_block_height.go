@@ -2,25 +2,30 @@ package rpc
 
 import (
 	"context"
-	"errors"
 )
 
+// GetBlockHeightResponse is a rpc response of `getBlockHeight`
+type GetBlockHeightResponse struct {
+	GeneralResponse
+	Result uint64 `json:"result"`
+}
+
+// GetBlockHeightConfig is a option config for `getBlockHeight`
 type GetBlockHeightConfig struct {
 	Commitment Commitment `json:"commitment,omitempty"`
 }
 
 // GetBlockHeight returns the current block height of the node
-func (s *RpcClient) GetBlockHeight(ctx context.Context, cfg GetBlockHeightConfig) (uint64, error) {
-	res := struct {
-		GeneralResponse
-		Result uint64 `json:"result"`
-	}{}
-	err := s.request(ctx, "getBlockHeight", []interface{}{cfg}, &res)
-	if err != nil {
-		return 0, err
-	}
-	if res.Error != nil {
-		return 0, errors.New(res.Error.Message)
-	}
-	return res.Result, nil
+func (c *RpcClient) GetBlockHeight(ctx context.Context) (GetBlockHeightResponse, error) {
+	return c.processGetBlockHeight(c.Call(ctx, "getBlockHeight"))
+}
+
+// GetBlockHeightWithCfg returns the current block height of the node
+func (c *RpcClient) GetBlockHeightWithCfg(ctx context.Context, cfg GetBlockHeightConfig) (GetBlockHeightResponse, error) {
+	return c.processGetBlockHeight(c.Call(ctx, "getBlockHeight", cfg))
+}
+
+func (c *RpcClient) processGetBlockHeight(body []byte, rpcErr error) (res GetBlockHeightResponse, err error) {
+	err = c.processRpcCall(body, rpcErr, &res)
+	return
 }
