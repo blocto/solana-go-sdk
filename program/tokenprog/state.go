@@ -13,7 +13,46 @@ var (
 	None = []byte{0, 0, 0, 0}
 )
 
-const MultisigAccountSize uint64 = 355
+const MaxSigners = 11
+
+const MultisigAccountSize = 355
+
+type MultisigAccount struct {
+	M             uint8 // Number of signers required
+	N             uint8 // Number of valid signers
+	IsInitialized bool
+	Signers       []common.PublicKey
+}
+
+func MultisigAccountFromData(data []byte) (MultisigAccount, error) {
+	if len(data) != MultisigAccountSize {
+		return MultisigAccount{}, fmt.Errorf("data length not match")
+	}
+
+	m := uint8(data[0])
+
+	n := uint8(data[1])
+
+	isInitialized := data[2] == 1
+
+	signers := make([]common.PublicKey, 0, MaxSigners)
+	current := 3
+	for current < MultisigAccountSize {
+		pubkey := common.PublicKeyFromBytes(data[current : current+32])
+		if pubkey == (common.PublicKey{}) {
+			break
+		}
+		signers = append(signers, pubkey)
+		current += 32
+	}
+
+	return MultisigAccount{
+		M:             m,
+		N:             n,
+		IsInitialized: isInitialized,
+		Signers:       signers,
+	}, nil
+}
 
 const MintAccountSize = 82
 
