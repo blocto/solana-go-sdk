@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/mr-tron/base58"
 	"github.com/olegfomenko/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/pkg/bincode"
 	"sort"
 )
 
@@ -40,15 +39,15 @@ func (m *Message) Serialize() ([]byte, error) {
 	}
 	b = append(b, blockHash...)
 
-	b = append(b, bincode.UintToVarLenBytes(uint64(len(m.Instructions)))...)
+	b = append(b, UintToVarLenBytes(uint64(len(m.Instructions)))...)
 	for _, instruction := range m.Instructions {
 		b = append(b, byte(instruction.ProgramIDIndex))
-		b = append(b, bincode.UintToVarLenBytes(uint64(len(instruction.Accounts)))...)
+		b = append(b, UintToVarLenBytes(uint64(len(instruction.Accounts)))...)
 		for _, accountIdx := range instruction.Accounts {
 			b = append(b, byte(accountIdx))
 		}
 
-		b = append(b, bincode.UintToVarLenBytes(uint64(len(instruction.Data)))...)
+		b = append(b, UintToVarLenBytes(uint64(len(instruction.Data)))...)
 		b = append(b, instruction.Data...)
 	}
 	return b, nil

@@ -16,18 +16,6 @@ github.com/near/borsh-go
 github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
-# github.com/portto/solana-go-sdk v1.8.1
-## explicit
-github.com/portto/solana-go-sdk/client
-github.com/portto/solana-go-sdk/client/rpc
-github.com/portto/solana-go-sdk/common
-github.com/portto/solana-go-sdk/pkg/bincode
-github.com/portto/solana-go-sdk/pkg/pointer
-github.com/portto/solana-go-sdk/program/assotokenprog
-github.com/portto/solana-go-sdk/program/metaplex/tokenmeta
-github.com/portto/solana-go-sdk/program/sysprog
-github.com/portto/solana-go-sdk/program/tokenprog
-github.com/portto/solana-go-sdk/types
 # github.com/stretchr/testify v1.7.0
 ## explicit
 github.com/stretchr/testify/assert
