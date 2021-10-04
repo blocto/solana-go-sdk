@@ -8,18 +8,53 @@ import (
 	"github.com/portto/solana-go-sdk/common"
 )
 
+var (
+	Some = []byte{1, 0, 0, 0}
+	None = []byte{0, 0, 0, 0}
+)
+
 const MultisigAccountSize uint64 = 355
 
 const MintAccountSize = 82
 
 type MintAccount struct {
-	MintAuthorityOption   uint32
-	MintAuthority         common.PublicKey
-	Supply                uint64
-	Decimals              uint8
-	IsInitialized         bool
-	FreezeAuthorityOption uint32
-	FreezeAuthority       common.PublicKey
+	MintAuthority   *common.PublicKey
+	Supply          uint64
+	Decimals        uint8
+	IsInitialized   bool
+	FreezeAuthority *common.PublicKey
+}
+
+func MintAccountFromData(data []byte) (MintAccount, error) {
+	if len(data) != MintAccountSize {
+		return MintAccount{}, fmt.Errorf("data length not match")
+	}
+
+	var mint *common.PublicKey
+	if bytes.Equal(data[:4], Some) {
+		key := common.PublicKeyFromBytes(data[4:36])
+		mint = &key
+	}
+
+	supply := binary.LittleEndian.Uint64(data[36:44])
+
+	decimals := uint8(data[44])
+
+	isInitialized := data[45] == 1
+
+	var freezeAuthority *common.PublicKey
+	if bytes.Equal(data[46:50], Some) {
+		key := common.PublicKeyFromBytes(data[50:82])
+		freezeAuthority = &key
+	}
+
+	return MintAccount{
+		MintAuthority:   mint,
+		Supply:          supply,
+		Decimals:        decimals,
+		IsInitialized:   isInitialized,
+		FreezeAuthority: freezeAuthority,
+	}, nil
 }
 
 const TokenAccountSize = 165
@@ -30,11 +65,6 @@ const (
 	TokenAccountStateUninitialized TokenAccountState = iota
 	TokenAccountStateInitialized
 	TokenAccountFrozen
-)
-
-var (
-	Some = []byte{1, 0, 0, 0}
-	None = []byte{0, 0, 0, 0}
 )
 
 // TokenAccount is token program account
