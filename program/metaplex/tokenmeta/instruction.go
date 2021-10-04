@@ -2,7 +2,6 @@ package tokenmeta
 
 import (
 	"github.com/near/borsh-go"
-	"github.com/pkg/errors"
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -13,7 +12,7 @@ const (
 	InstructionCreateMetadataAccount Instruction = iota
 )
 
-func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority common.PublicKey, updateAuthorityIsSigner, isMutable bool, mintData Data) (types.Instruction, error) {
+func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority common.PublicKey, updateAuthorityIsSigner, isMutable bool, mintData Data) types.Instruction {
 	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Data        Data
@@ -25,7 +24,7 @@ func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority
 	})
 
 	if err != nil {
-		return types.Instruction{}, errors.Wrap(err, "failed serialize")
+		panic(err)
 	}
 
 	return types.Instruction{
@@ -68,5 +67,5 @@ func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority
 			},
 		},
 		Data: data,
-	}, nil
+	}
 }
