@@ -1,12 +1,12 @@
 package stakeprog
 
 import (
+	"github.com/olegfomenko/solana-go-sdk/common/pointer"
 	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
 
 	"github.com/olegfomenko/solana-go-sdk/common"
-	"github.com/olegfomenko/solana-go-sdk/pkg/pointer"
 	"github.com/olegfomenko/solana-go-sdk/types"
 )
 

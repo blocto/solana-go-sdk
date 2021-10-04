@@ -6,7 +6,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/olegfomenko/solana-go-sdk/common"
+	"github.com/portto/solana-go-sdk/common"
+	"github.com/portto/solana-go-sdk/pkg/bincode"
 )
 
 var (
@@ -65,6 +66,10 @@ func (tx *Transaction) AddSignature(sig []byte) error {
 }
 
 func (tx *Transaction) sign(accounts []Account) (*Transaction, error) {
+	if int(tx.Message.Header.NumRequireSignatures) != len(accounts) {
+		return nil, errors.New("signer's num not match")
+	}
+
 	message, err := tx.Message.Serialize()
 	if err != nil {
 		return nil, err
@@ -75,17 +80,14 @@ func (tx *Transaction) sign(accounts []Account) (*Transaction, error) {
 		accountMap[account.PublicKey] = account.PrivateKey
 	}
 
-	tx.Signatures = make([]Signature, int(tx.Message.Header.NumRequireSignatures))
-
 	for i := 0; i < int(tx.Message.Header.NumRequireSignatures); i++ {
 		privateKey, exist := accountMap[tx.Message.Accounts[i]]
-		if exist {
-			tx.Signatures[i] = ed25519.Sign(privateKey, message)
-		} else {
-			tx.Signatures[i] = make([]byte, ed25519.SignatureSize)
+		if !exist {
+			return nil, fmt.Errorf("lack %s's private key", tx.Message.Accounts[i].ToBase58())
 		}
+		signature := ed25519.Sign(privateKey, message)
+		tx.Signatures = append(tx.Signatures, signature)
 	}
-
 	return tx, nil
 }
 
@@ -94,7 +96,7 @@ func (tx *Transaction) Serialize() ([]byte, error) {
 		return nil, errors.New("Signature verification failed")
 	}
 
-	signatureCount := UintToVarLenBytes(uint64(len(tx.Signatures)))
+	signatureCount := bincode.UintToVarLenBytes(uint64(len(tx.Signatures)))
 	messageData, err := tx.Message.Serialize()
 	if err != nil {
 		return nil, err
