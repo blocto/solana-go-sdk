@@ -39,11 +39,12 @@ var (
 
 // TokenAccount is token program account
 type TokenAccount struct {
-	Mint            common.PublicKey
-	Owner           common.PublicKey
-	Amount          uint64
-	Delegate        *common.PublicKey
-	State           TokenAccountState
+	Mint     common.PublicKey
+	Owner    common.PublicKey
+	Amount   uint64
+	Delegate *common.PublicKey
+	State    TokenAccountState
+	// if is wrapped SOL, IsNative is the rent-exempt value
 	IsNative        *uint64
 	DelegatedAmount uint64
 	CloseAuthority  *common.PublicKey
