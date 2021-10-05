@@ -49,7 +49,7 @@ func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority
 			{
 				PubKey:     payer,
 				IsSigner:   true,
-				IsWritable: false,
+				IsWritable: true,
 			},
 			{
 				PubKey:     updateAuthority,
