@@ -69,6 +69,34 @@ func (c *Client) GetTokenAccountBalanceWithConfig(ctx context.Context, base58Add
 	return balance, res.Result.Value.Decimals, nil
 }
 
+// GetTokenSupply returns the total supply of an SPL Token type.
+func (c *Client) GetTokenSupply(ctx context.Context, mintAddr string) (uint64, uint8, error) {
+	res, err := c.RpcClient.GetTokenSupply(ctx, mintAddr)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return 0, 0, err
+	}
+	balance, err := strconv.ParseUint(res.Result.Value.Amount, 10, 64)
+	if err != nil {
+		return 0, 0, fmt.Errorf("failed to cast token amount, err: %v", err)
+	}
+	return balance, res.Result.Value.Decimals, nil
+}
+
+// GetTokenSupply returns the total supply of an SPL Token type.
+func (c *Client) GetTokenSupplyWithConfig(ctx context.Context, mintAddr string, cfg rpc.GetTokenSupplyConfig) (uint64, uint8, error) {
+	res, err := c.RpcClient.GetTokenSupplyWithConfig(ctx, mintAddr, cfg)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return 0, 0, err
+	}
+	balance, err := strconv.ParseUint(res.Result.Value.Amount, 10, 64)
+	if err != nil {
+		return 0, 0, fmt.Errorf("failed to cast token amount, err: %v", err)
+	}
+	return balance, res.Result.Value.Decimals, nil
+}
+
 type AccountInfo struct {
 	Lamports  uint64
 	Owner     string
