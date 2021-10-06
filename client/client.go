@@ -479,6 +479,16 @@ func (c *Client) GetFirstAvailableBlock(ctx context.Context) (uint64, error) {
 	return res.Result, nil
 }
 
+// GetVersion returns the current solana versions running on the node
+func (c *Client) GetVersion(ctx context.Context) (rpc.GetVersionResult, error) {
+	res, err := c.RpcClient.GetVersion(ctx)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return rpc.GetVersionResult{}, err
+	}
+	return res.Result, nil
+}
+
 func checkRpcResult(res rpc.GeneralResponse, err error) error {
 	if err != nil {
 		return err
