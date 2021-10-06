@@ -510,6 +510,26 @@ func (c *Client) MinimumLedgerSlot(ctx context.Context) (uint64, error) {
 	return res.Result, nil
 }
 
+// GetTransactionCount returns the current Transaction count from the ledger
+func (c *Client) GetTransactionCount(ctx context.Context) (uint64, error) {
+	res, err := c.RpcClient.GetTransactionCount(ctx)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return 0, err
+	}
+	return res.Result, nil
+}
+
+// GetTransactionCountWithConfig returns the current Transaction count from the ledger
+func (c *Client) GetTransactionCountWithConfig(ctx context.Context, cfg rpc.GetTransactionCountConfig) (uint64, error) {
+	res, err := c.RpcClient.GetTransactionCountWithConfig(ctx, cfg)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return 0, err
+	}
+	return res.Result, nil
+}
+
 func checkRpcResult(res rpc.GeneralResponse, err error) error {
 	if err != nil {
 		return err
