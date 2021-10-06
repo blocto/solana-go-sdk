@@ -469,6 +469,16 @@ func (c *Client) GetGenesisHash(ctx context.Context) (string, error) {
 	return res.Result, nil
 }
 
+// GetFirstAvailableBlock returns the slot of the lowest confirmed block that has not been purged from the ledger
+func (c *Client) GetFirstAvailableBlock(ctx context.Context) (uint64, error) {
+	res, err := c.RpcClient.GetFirstAvailableBlock(ctx)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return 0, err
+	}
+	return res.Result, nil
+}
+
 func checkRpcResult(res rpc.GeneralResponse, err error) error {
 	if err != nil {
 		return err
