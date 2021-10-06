@@ -67,6 +67,11 @@ func (p *PublicKey) MarshalJSON() ([]byte, error) {
 	return json.Marshal(p.ToBase58())
 }
 
+func IsOnCurve(p PublicKey) bool {
+	_, err := new(edwards25519.Point).SetBytes(p.Bytes())
+	return err == nil
+}
+
 func CreateWithSeed(from PublicKey, seed string, programID PublicKey) PublicKey {
 	b := make([]byte, 0, 64+len(seed))
 	b = append(b, from[:]...)
