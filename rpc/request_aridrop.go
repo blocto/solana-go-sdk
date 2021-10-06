@@ -2,21 +2,30 @@ package rpc
 
 import (
 	"context"
-	"errors"
 )
 
-// RequestAirdrop Requests an airdrop of lamports to a Pubkey, return string is Transaction Signature of airdrop, as base-58 encoded
-func (s *RpcClient) RequestAirdrop(ctx context.Context, base58Addr string, lamport uint64) (string, error) {
-	res := struct {
-		GeneralResponse
-		Result string `json:"result"`
-	}{}
-	err := s.request(ctx, "requestAirdrop", []interface{}{base58Addr, lamport}, &res)
-	if err != nil {
-		return "", err
-	}
-	if res.Error != nil {
-		return "", errors.New(res.Error.Message)
-	}
-	return res.Result, nil
+// RequestAirdropResponse is a full raw rpc response of `requestAirdrop`
+type RequestAirdropResponse struct {
+	GeneralResponse
+	Result string `json:"result"`
+}
+
+// RequestAirdropConfig is a option config for `requestAirdrop`
+type RequestAirdropConfig struct {
+	Commitment Commitment `json:"commitment,omitempty"`
+}
+
+// RequestAirdrop requests an airdrop of lamports to a Pubkey
+func (c *RpcClient) RequestAirdrop(ctx context.Context, base58Addr string, lamports uint64) (RequestAirdropResponse, error) {
+	return c.processRequestAirdrop(c.Call(ctx, "requestAirdrop", base58Addr, lamports))
+}
+
+// RequestAirdropWithConfig requests an airdrop of lamports to a Pubkey
+func (c *RpcClient) RequestAirdropWithConfig(ctx context.Context, base58Addr string, lamports uint64, cfg RequestAirdropConfig) (RequestAirdropResponse, error) {
+	return c.processRequestAirdrop(c.Call(ctx, "requestAirdrop", base58Addr, lamports, cfg))
+}
+
+func (c *RpcClient) processRequestAirdrop(body []byte, rpcErr error) (res RequestAirdropResponse, err error) {
+	err = c.processRpcCall(body, rpcErr, &res)
+	return
 }
