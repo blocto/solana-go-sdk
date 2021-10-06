@@ -449,6 +449,16 @@ func (c *Client) GetBlockTime(ctx context.Context, slot uint64) (int64, error) {
 	return res.Result, nil
 }
 
+// GetIdentity returns the identity pubkey for the current node
+func (c *Client) GetIdentity(ctx context.Context) (string, error) {
+	res, err := c.RpcClient.GetIdentity(ctx)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return "", err
+	}
+	return res.Result.Identity, nil
+}
+
 func checkRpcResult(res rpc.GeneralResponse, err error) error {
 	if err != nil {
 		return err

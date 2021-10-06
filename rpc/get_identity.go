@@ -2,23 +2,25 @@ package rpc
 
 import (
 	"context"
-	"errors"
 )
 
+// GetIdentityResponse is a full raw rpc response of `getIdentity`
+type GetIdentityResponse struct {
+	GeneralResponse
+	Result GetIdentityResult `json:"result"`
+}
+
+// GetIdentityResult is a part of raw rpc response of `getIdentity`
+type GetIdentityResult struct {
+	Identity string `json:"identity"`
+}
+
 // GetIdentity returns the identity pubkey for the current node
-func (s *RpcClient) GetIdentity(ctx context.Context) (string, error) {
-	res := struct {
-		GeneralResponse
-		Result struct {
-			Identity string `json:"identity"`
-		} `json:"result"`
-	}{}
-	err := s.request(ctx, "getIdentity", []interface{}{}, &res)
-	if err != nil {
-		return "", err
-	}
-	if res.Error != nil {
-		return "", errors.New(res.Error.Message)
-	}
-	return res.Result.Identity, nil
+func (c *RpcClient) GetIdentity(ctx context.Context) (GetIdentityResponse, error) {
+	return c.processGetIdentity(c.Call(ctx, "getIdentity"))
+}
+
+func (c *RpcClient) processGetIdentity(body []byte, rpcErr error) (res GetIdentityResponse, err error) {
+	err = c.processRpcCall(body, rpcErr, &res)
+	return
 }
