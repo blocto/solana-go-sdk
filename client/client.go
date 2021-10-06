@@ -499,6 +499,17 @@ func (c *Client) RequestAirdrop(ctx context.Context, base58Addr string, lamports
 	return res.Result, nil
 }
 
+// MinimumLedgerSlot returns the lowest slot that the node has information about in its ledger.
+// This value may increase over time if the node is configured to purge older ledger data
+func (c *Client) MinimumLedgerSlot(ctx context.Context) (uint64, error) {
+	res, err := c.RpcClient.MinimumLedgerSlot(ctx)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return 0, err
+	}
+	return res.Result, nil
+}
+
 func checkRpcResult(res rpc.GeneralResponse, err error) error {
 	if err != nil {
 		return err
