@@ -1,11 +1,12 @@
 package tokenmeta
 
 import (
+	"testing"
+
 	"github.com/near/borsh-go"
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/types"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestCreateMetadataAccount(t *testing.T) {
@@ -80,7 +81,7 @@ func TestCreateMetadataAccount(t *testing.T) {
 						{PubKey: common.PublicKeyFromString("DC2mkgwhy56w3viNtHDjJQmc7SGu2QX785bS4aexojwX"), IsSigner: false, IsWritable: true},
 						{PubKey: common.PublicKeyFromString("GphF2vTuzhwhLWBWWvD8y5QLCPp1aQC5EnzrWsnbiWPx"), IsSigner: false, IsWritable: false},
 						{PubKey: common.PublicKeyFromString("9BKWqDHfHZh9j39xakYVMdr6hXmCLHH5VfCpeq2idU9L"), IsSigner: true, IsWritable: false},
-						{PubKey: common.PublicKeyFromString("9FYsKrNuEweb55Wa2jaj8wTKYDBvuCG3huhakEj96iN9"), IsSigner: true, IsWritable: false},
+						{PubKey: common.PublicKeyFromString("9FYsKrNuEweb55Wa2jaj8wTKYDBvuCG3huhakEj96iN9"), IsSigner: true, IsWritable: true},
 						{PubKey: common.PublicKeyFromString("HNGVuL5kqjDehw7KR63w9gxow32sX6xzRNgLb8GkbwCM"), IsSigner: true, IsWritable: false},
 						{PubKey: common.SystemProgramID, IsSigner: false, IsWritable: false},
 						{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
