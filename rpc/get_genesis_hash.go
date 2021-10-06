@@ -2,21 +2,20 @@ package rpc
 
 import (
 	"context"
-	"errors"
 )
 
+// GetGenesisHashResponse is a full raw rpc response of `getGenesisHash`
+type GetGenesisHashResponse struct {
+	GeneralResponse
+	Result string `json:"result"`
+}
+
 // GetGenesisHash returns the genesis hash
-func (s *RpcClient) GetGenesisHash(ctx context.Context) (string, error) {
-	res := struct {
-		GeneralResponse
-		Result string `json:"result"`
-	}{}
-	err := s.request(ctx, "getGenesisHash", []interface{}{}, &res)
-	if err != nil {
-		return "", err
-	}
-	if res.Error != nil {
-		return "", errors.New(res.Error.Message)
-	}
-	return res.Result, nil
+func (c *RpcClient) GetGenesisHash(ctx context.Context) (GetGenesisHashResponse, error) {
+	return c.processGetGenesisHash(c.Call(ctx, "getGenesisHash"))
+}
+
+func (c *RpcClient) processGetGenesisHash(body []byte, rpcErr error) (res GetGenesisHashResponse, err error) {
+	err = c.processRpcCall(body, rpcErr, &res)
+	return
 }

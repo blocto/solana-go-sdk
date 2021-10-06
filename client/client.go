@@ -459,6 +459,16 @@ func (c *Client) GetIdentity(ctx context.Context) (string, error) {
 	return res.Result.Identity, nil
 }
 
+// GetGenesisHash returns the genesis hash
+func (c *Client) GetGenesisHash(ctx context.Context) (string, error) {
+	res, err := c.RpcClient.GetGenesisHash(ctx)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return "", err
+	}
+	return res.Result, nil
+}
+
 func checkRpcResult(res rpc.GeneralResponse, err error) error {
 	if err != nil {
 		return err
