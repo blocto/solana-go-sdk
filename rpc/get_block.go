@@ -72,7 +72,7 @@ func (c *RpcClient) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse
 }
 
 // GetAccountInfo returns all information associated with the account of provided Pubkey
-func (c *RpcClient) GetBlockWithCfg(ctx context.Context, slot uint64, cfg GetBlockConfig) (GetBlockResponse, error) {
+func (c *RpcClient) GetBlockWithConfig(ctx context.Context, slot uint64, cfg GetBlockConfig) (GetBlockResponse, error) {
 	return c.processGetBlock(c.Call(ctx, "getBlock", slot, cfg))
 }
 

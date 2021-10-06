@@ -32,8 +32,8 @@ func (c *Client) GetBalance(ctx context.Context, base58Addr string) (uint64, err
 }
 
 // GetBalance fetch users lamports(SOL) balance with specific commitment
-func (c *Client) GetBalanceWithCfg(ctx context.Context, base58Addr string, cfg rpc.GetBalanceConfig) (uint64, error) {
-	res, err := c.RpcClient.GetBalanceWithCfg(ctx, base58Addr, cfg)
+func (c *Client) GetBalanceWithConfig(ctx context.Context, base58Addr string, cfg rpc.GetBalanceConfig) (uint64, error) {
+	res, err := c.RpcClient.GetBalanceWithConfig(ctx, base58Addr, cfg)
 	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
 		return 0, err
@@ -56,8 +56,8 @@ func (c *Client) GetTokenAccountBalance(ctx context.Context, base58Addr string) 
 }
 
 // GetTokenAccountBalance returns the token balance of an SPL Token account
-func (c *Client) GetTokenAccountBalanceWithCfg(ctx context.Context, base58Addr string, cfg rpc.GetTokenAccountBalanceConfig) (uint64, uint8, error) {
-	res, err := c.RpcClient.GetTokenAccountBalanceWithCfg(ctx, base58Addr, cfg)
+func (c *Client) GetTokenAccountBalanceWithConfig(ctx context.Context, base58Addr string, cfg rpc.GetTokenAccountBalanceConfig) (uint64, uint8, error) {
+	res, err := c.RpcClient.GetTokenAccountBalanceWithConfig(ctx, base58Addr, cfg)
 	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
 		return 0, 0, err
@@ -79,7 +79,7 @@ type AccountInfo struct {
 
 // GetAccountInfo return account's info
 func (c *Client) GetAccountInfo(ctx context.Context, base58Addr string) (AccountInfo, error) {
-	res, err := c.RpcClient.GetAccountInfoWithCfg(ctx, base58Addr, rpc.GetAccountInfoConfig{
+	res, err := c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, rpc.GetAccountInfoConfig{
 		Encoding: rpc.GetAccountInfoConfigEncodingBase64,
 	})
 	err = checkRpcResult(res.GeneralResponse, err)
@@ -199,9 +199,9 @@ func (c *Client) GetSlot(ctx context.Context) (uint64, error) {
 	return res.Result, nil
 }
 
-// GetSlotWithCfg get slot by commitment
-func (c *Client) GetSlotWithCfg(ctx context.Context, cfg rpc.GetSlotConfig) (uint64, error) {
-	res, err := c.RpcClient.GetSlotWithCfg(ctx, cfg)
+// GetSlotWithConfig get slot by commitment
+func (c *Client) GetSlotWithConfig(ctx context.Context, cfg rpc.GetSlotConfig) (uint64, error) {
+	res, err := c.RpcClient.GetSlotWithConfig(ctx, cfg)
 	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
 		return 0, err
@@ -235,7 +235,7 @@ type TransactionMetaInnerInstruction struct {
 // NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedTransaction for solana-core v1.6
 // GetTransaction returns transaction details for a confirmed transaction
 func (c *Client) GetTransaction(ctx context.Context, txhash string) (GetTransactionResponse, error) {
-	res, err := c.RpcClient.GetTransactionWithCfg(
+	res, err := c.RpcClient.GetTransactionWithConfig(
 		ctx,
 		txhash,
 		rpc.GetTransactionConfig{
@@ -250,10 +250,10 @@ func (c *Client) GetTransaction(ctx context.Context, txhash string) (GetTransact
 }
 
 // NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedTransaction for solana-core v1.6
-// GetTransactionWithCfg returns transaction details for a confirmed transaction
+// GetTransactionWithConfig returns transaction details for a confirmed transaction
 // will ignore encoding
-func (c *Client) GetTransactionWithCfg(ctx context.Context, txhash string, cfg rpc.GetTransactionConfig) (GetTransactionResponse, error) {
-	res, err := c.RpcClient.GetTransactionWithCfg(
+func (c *Client) GetTransactionWithConfig(ctx context.Context, txhash string, cfg rpc.GetTransactionConfig) (GetTransactionResponse, error) {
+	res, err := c.RpcClient.GetTransactionWithConfig(
 		ctx,
 		txhash,
 		rpc.GetTransactionConfig{
@@ -344,7 +344,7 @@ type GetBlockTransaction struct {
 // NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedBlock for solana-core v1.6
 // GetBlock returns identity and transaction information about a confirmed block in the ledger
 func (c *Client) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, error) {
-	res, err := c.RpcClient.GetBlockWithCfg(
+	res, err := c.RpcClient.GetBlockWithConfig(
 		ctx,
 		slot,
 		rpc.GetBlockConfig{

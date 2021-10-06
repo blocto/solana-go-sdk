@@ -88,8 +88,8 @@ func (c *RpcClient) GetTransaction(ctx context.Context, txhash string) (GetTrans
 }
 
 // NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedTransaction for solana-core v1.6
-// GetTransactionWithCfg returns transaction details for a confirmed transaction
-func (c *RpcClient) GetTransactionWithCfg(ctx context.Context, txhash string, cfg GetTransactionConfig) (GetTransactionResponse, error) {
+// GetTransactionWithConfig returns transaction details for a confirmed transaction
+func (c *RpcClient) GetTransactionWithConfig(ctx context.Context, txhash string, cfg GetTransactionConfig) (GetTransactionResponse, error) {
 	return c.processGetTransaction(c.Call(ctx, "getTransaction", txhash, cfg))
 }
 

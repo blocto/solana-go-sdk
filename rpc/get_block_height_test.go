@@ -27,7 +27,7 @@ func TestGetBlockHeight(t *testing.T) {
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlockHeight", "params":[{"commitment": "confirmed"}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":83518231,"id":1}`,
 			RpcCall: func(rc RpcClient) (interface{}, error) {
-				return rc.GetBlockHeightWithCfg(
+				return rc.GetBlockHeightWithConfig(
 					context.Background(),
 					GetBlockHeightConfig{
 						Commitment: CommitmentConfirmed,

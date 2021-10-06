@@ -50,7 +50,7 @@ func (c *RpcClient) SimulateTransaction(ctx context.Context, rawTx string) (Simu
 }
 
 // SimulateTransaction simulate sending a transaction
-func (c *RpcClient) SimulateTransactionWithCfg(ctx context.Context, rawTx string, cfg SimulateTransactionConfig) (SimulateTransactionResponse, error) {
+func (c *RpcClient) SimulateTransactionWithConfig(ctx context.Context, rawTx string, cfg SimulateTransactionConfig) (SimulateTransactionResponse, error) {
 	return c.processSimulateTransaction(c.Call(ctx, "simulateTransaction", rawTx, cfg))
 }
 

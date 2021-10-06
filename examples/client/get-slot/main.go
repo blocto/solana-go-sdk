@@ -23,11 +23,11 @@ func main() {
 	fmt.Println("GetSlot", slot)
 
 	// get slot by commitment
-	slot, err = c.GetSlotWithCfg(context.TODO(), rpc.GetSlotConfig{Commitment: rpc.CommitmentProcessed})
+	slot, err = c.GetSlotWithConfig(context.TODO(), rpc.GetSlotConfig{Commitment: rpc.CommitmentProcessed})
 	if err != nil {
-		log.Fatalf("failed to GetSlotWithCfg, err: %v", err)
+		log.Fatalf("failed to GetSlotWithConfig, err: %v", err)
 	}
-	fmt.Println("GetSlotWithCfg", slot)
+	fmt.Println("GetSlotWithConfig", slot)
 
 	rpcRes, err := c.RpcClient.GetSlot(context.TODO())
 	if err != nil {
@@ -35,9 +35,9 @@ func main() {
 	}
 	fmt.Printf("res: %+v\n", rpcRes)
 
-	rpcRes, err = c.RpcClient.GetSlotWithCfg(context.TODO(), rpc.GetSlotConfig{Commitment: rpc.CommitmentProcessed})
+	rpcRes, err = c.RpcClient.GetSlotWithConfig(context.TODO(), rpc.GetSlotConfig{Commitment: rpc.CommitmentProcessed})
 	if err != nil {
-		log.Fatalf("failed to RpcClient.GetSlotWithCfg, err: %v", err)
+		log.Fatalf("failed to RpcClient.GetSlotWithConfig, err: %v", err)
 	}
 	fmt.Printf("res: %+v\n", rpcRes)
 }

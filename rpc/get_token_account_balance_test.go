@@ -39,7 +39,7 @@ func TestGetTokenBalance(t *testing.T) {
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getTokenAccountBalance", "params":["AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ", {"commitment":"processed"}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":80219466},"value":{"amount":"10000000000","decimals":9,"uiAmount":10.0,"uiAmountString":"10"}},"id":1}`,
 			RpcCall: func(rc RpcClient) (interface{}, error) {
-				return rc.GetTokenAccountBalanceWithCfg(
+				return rc.GetTokenAccountBalanceWithConfig(
 					context.TODO(),
 					"AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
 					GetTokenAccountBalanceConfig{

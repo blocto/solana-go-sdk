@@ -18,8 +18,8 @@ func (c *RpcClient) GetMinimumBalanceForRentExemption(ctx context.Context, dataL
 	return c.processGetMinimumBalanceForRentExemption(c.Call(ctx, "getMinimumBalanceForRentExemption", dataLen))
 }
 
-// GetMinimumBalanceForRentExemptionWithCfg returns minimum balance required to make account rent exempt
-func (c *RpcClient) GetMinimumBalanceForRentExemptionWithCfg(ctx context.Context, dataLen uint64, cfg GetMinimumBalanceForRentExemptionConfig) (GetMinimumBalanceForRentExemptionResponse, error) {
+// GetMinimumBalanceForRentExemptionWithConfig returns minimum balance required to make account rent exempt
+func (c *RpcClient) GetMinimumBalanceForRentExemptionWithConfig(ctx context.Context, dataLen uint64, cfg GetMinimumBalanceForRentExemptionConfig) (GetMinimumBalanceForRentExemptionResponse, error) {
 	return c.processGetMinimumBalanceForRentExemption(c.Call(ctx, "getMinimumBalanceForRentExemption", dataLen, cfg))
 }
 

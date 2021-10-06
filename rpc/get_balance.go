@@ -26,8 +26,8 @@ func (c *RpcClient) GetBalance(ctx context.Context, base58Addr string) (GetBalan
 	return c.processGetBalance(c.Call(ctx, "getBalance", base58Addr))
 }
 
-// GetBalanceWithCfg returns the SOL balance
-func (c *RpcClient) GetBalanceWithCfg(ctx context.Context, base58Addr string, cfg GetBalanceConfig) (GetBalanceResponse, error) {
+// GetBalanceWithConfig returns the SOL balance
+func (c *RpcClient) GetBalanceWithConfig(ctx context.Context, base58Addr string, cfg GetBalanceConfig) (GetBalanceResponse, error) {
 	return c.processGetBalance(c.Call(ctx, "getBalance", base58Addr, cfg))
 }
 

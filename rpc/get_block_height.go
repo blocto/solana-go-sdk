@@ -20,8 +20,8 @@ func (c *RpcClient) GetBlockHeight(ctx context.Context) (GetBlockHeightResponse,
 	return c.processGetBlockHeight(c.Call(ctx, "getBlockHeight"))
 }
 
-// GetBlockHeightWithCfg returns the current block height of the node
-func (c *RpcClient) GetBlockHeightWithCfg(ctx context.Context, cfg GetBlockHeightConfig) (GetBlockHeightResponse, error) {
+// GetBlockHeightWithConfig returns the current block height of the node
+func (c *RpcClient) GetBlockHeightWithConfig(ctx context.Context, cfg GetBlockHeightConfig) (GetBlockHeightResponse, error) {
 	return c.processGetBlockHeight(c.Call(ctx, "getBlockHeight", cfg))
 }
 

@@ -55,7 +55,7 @@ func (c *RpcClient) GetAccountInfo(ctx context.Context, base58Addr string) (GetA
 }
 
 // GetAccountInfo returns all information associated with the account of provided Pubkey
-func (c *RpcClient) GetAccountInfoWithCfg(ctx context.Context, base58Addr string, cfg GetAccountInfoConfig) (GetAccountInfoResponse, error) {
+func (c *RpcClient) GetAccountInfoWithConfig(ctx context.Context, base58Addr string, cfg GetAccountInfoConfig) (GetAccountInfoResponse, error) {
 	return c.processGetAccountInfo(c.Call(ctx, "getAccountInfo", base58Addr, cfg))
 }
 

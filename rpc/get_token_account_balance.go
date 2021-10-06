@@ -28,7 +28,7 @@ func (c *RpcClient) GetTokenAccountBalance(ctx context.Context, base58Addr strin
 }
 
 // GetTokenAccountBalance returns the token balance of an SPL Token account
-func (c *RpcClient) GetTokenAccountBalanceWithCfg(ctx context.Context, base58Addr string, cfg GetTokenAccountBalanceConfig) (GetTokenAccountBalanceResponse, error) {
+func (c *RpcClient) GetTokenAccountBalanceWithConfig(ctx context.Context, base58Addr string, cfg GetTokenAccountBalanceConfig) (GetTokenAccountBalanceResponse, error) {
 	return c.processGetTokenAccountBalance(c.Call(ctx, "getTokenAccountBalance", base58Addr, cfg))
 }
 

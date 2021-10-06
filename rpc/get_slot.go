@@ -20,8 +20,8 @@ func (c *RpcClient) GetSlot(ctx context.Context) (GetSlotResponse, error) {
 	return c.processGetSlot(c.Call(ctx, "getSlot"))
 }
 
-// GetSlotWithCfg returns the SOL balance
-func (c *RpcClient) GetSlotWithCfg(ctx context.Context, cfg GetSlotConfig) (GetSlotResponse, error) {
+// GetSlotWithConfig returns the SOL balance
+func (c *RpcClient) GetSlotWithConfig(ctx context.Context, cfg GetSlotConfig) (GetSlotResponse, error) {
 	return c.processGetSlot(c.Call(ctx, "getSlot", cfg))
 }
 

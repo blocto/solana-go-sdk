@@ -23,7 +23,7 @@ func main() {
 	fmt.Printf("balance: %v\n", balance)
 
 	// get balance with sepcific commitment
-	balance, err = c.GetBalanceWithCfg(
+	balance, err = c.GetBalanceWithConfig(
 		context.TODO(),
 		"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
 		rpc.GetBalanceConfig{
