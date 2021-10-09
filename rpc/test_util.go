@@ -10,6 +10,7 @@ import (
 )
 
 type testRpcCallParam struct {
+	Name             string
 	RequestBody      string
 	ResponseBody     string
 	RpcCall          func(RpcClient) (interface{}, error)

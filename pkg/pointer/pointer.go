@@ -1,6 +1,8 @@
 package pointer
 
-import "github.com/portto/solana-go-sdk/common"
+import (
+	"github.com/portto/solana-go-sdk/common"
+)
 
 func Bool(v bool) *bool {
 	return &v
@@ -19,5 +21,9 @@ func Int64(v int64) *int64 {
 }
 
 func Pubkey(v common.PublicKey) *common.PublicKey {
+	return &v
+}
+
+func String(v string) *string {
 	return &v
 }
