@@ -2,26 +2,26 @@ package rpc
 
 import (
 	"context"
-	"errors"
 )
 
+// GetBlockCommitmentResponse is a full raw rpc response of `getBlockCommitment`
 type GetBlockCommitmentResponse struct {
-	Commitment []uint64 `json:"commitment"`
-	TotalStake uint64   `json:"totalStake"`
+	GeneralResponse
+	Result GetBlockCommitmentResult `json:"result"`
+}
+
+// GetBlockCommitmentResult is a part of raw rpc response of `getBlockCommitment`
+type GetBlockCommitmentResult struct {
+	Commitment *[]uint64 `json:"commitment"`
+	TotalStake uint64    `json:"totalStake"`
 }
 
 // GetBlockCommitment returns commitment for particular block
-func (s *RpcClient) GetBlockCommitment(ctx context.Context, slot uint64) (GetBlockCommitmentResponse, error) {
-	res := struct {
-		GeneralResponse
-		Result GetBlockCommitmentResponse `json:"result"`
-	}{}
-	err := s.request(ctx, "getBlockCommitment", []interface{}{slot}, &res)
-	if err != nil {
-		return GetBlockCommitmentResponse{}, err
-	}
-	if res.Error != nil {
-		return GetBlockCommitmentResponse{}, errors.New(res.Error.Message)
-	}
-	return res.Result, nil
+func (c *RpcClient) GetBlockCommitment(ctx context.Context, slot uint64) (GetBlockCommitmentResponse, error) {
+	return c.processGetBlockCommitment(c.Call(ctx, "getBlockCommitment", slot))
+}
+
+func (c *RpcClient) processGetBlockCommitment(body []byte, rpcErr error) (res GetBlockCommitmentResponse, err error) {
+	err = c.processRpcCall(body, rpcErr, &res)
+	return
 }
