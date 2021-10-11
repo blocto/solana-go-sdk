@@ -2,22 +2,26 @@ package rpc
 
 import "context"
 
-type GetInflationRate struct {
-	Epoch      int64   `json:"epoch"`
+// GetInflationRateResponse is a full raw rpc response of `getInflationRate`
+type GetInflationRateResponse struct {
+	GeneralResponse
+	Result GetInflationRateResult `json:"result"`
+}
+
+// GetInflationRateResult is a part of raw rpc response of `getInflationRate`
+type GetInflationRateResult struct {
+	Epoch      uint64  `json:"epoch"`
 	Foundation float64 `json:"foundation"`
 	Total      float64 `json:"total"`
 	Validator  float64 `json:"validator"`
 }
 
 // GetInflationRate returns the specific inflation values for the current epoch
-func (s *RpcClient) GetInflationRate(ctx context.Context) (GetInflationRate, error) {
-	res := struct {
-		GeneralResponse
-		Result GetInflationRate `json:"result"`
-	}{}
-	err := s.request(ctx, "getInflationRate", []interface{}{}, &res)
-	if err != nil {
-		return GetInflationRate{}, err
-	}
-	return res.Result, nil
+func (c *RpcClient) GetInflationRate(ctx context.Context) (GetInflationRateResponse, error) {
+	return c.processGetInflationRate(c.Call(ctx, "getInflationRate"))
+}
+
+func (c *RpcClient) processGetInflationRate(body []byte, rpcErr error) (res GetInflationRateResponse, err error) {
+	err = c.processRpcCall(body, rpcErr, &res)
+	return
 }
