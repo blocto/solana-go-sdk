@@ -46,7 +46,7 @@ func main() {
 	}
 
 	// send tx
-	txhash, err := c.SendTransaction2(context.Background(), tx)
+	txhash, err := c.SendTransaction(context.Background(), tx)
 	if err != nil {
 		log.Fatalf("failed to send tx, err: %v", err)
 	}

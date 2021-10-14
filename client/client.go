@@ -197,8 +197,8 @@ func (c *Client) QuickSendTransaction(ctx context.Context, param QuickSendTransa
 	return res.Result, nil
 }
 
-// SendTransaction2 send transaction struct directly
-func (c *Client) SendTransaction2(ctx context.Context, tx types.Transaction) (string, error) {
+// SendTransaction send transaction struct directly
+func (c *Client) SendTransaction(ctx context.Context, tx types.Transaction) (string, error) {
 	rawTx, err := tx.Serialize()
 	if err != nil {
 		return "", fmt.Errorf("failed to serialize tx, err: %v", err)
