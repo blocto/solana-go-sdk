@@ -164,14 +164,14 @@ func (c *Client) SendRawTransaction(ctx context.Context, tx []byte) (string, err
 	return res.Result, nil
 }
 
-type SendTransactionParam struct {
+type QuickSendTransactionParam struct {
 	Instructions []types.Instruction
 	Signers      []types.Account
 	FeePayer     common.PublicKey
 }
 
-// SendTransaction is a quick way to send tx
-func (c *Client) SendTransaction(ctx context.Context, param SendTransactionParam) (string, error) {
+// QuickSendTransaction is a quick way to send tx
+func (c *Client) QuickSendTransaction(ctx context.Context, param QuickSendTransactionParam) (string, error) {
 	recentBlockhashRes, err := c.GetRecentBlockhash(ctx)
 	if err != nil {
 		return "", fmt.Errorf("failed to get recent blockhash, err: %v", err)

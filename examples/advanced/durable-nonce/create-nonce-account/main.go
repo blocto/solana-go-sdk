@@ -27,9 +27,9 @@ func main() {
 	nonceAccount := types.NewAccount()
 	fmt.Println("nonce account:", nonceAccount.PublicKey)
 
-	sig, err := c.SendTransaction(
+	sig, err := c.QuickSendTransaction(
 		context.Background(),
-		client.SendTransactionParam{
+		client.QuickSendTransactionParam{
 			FeePayer: feePayer.PublicKey,
 			Instructions: []types.Instruction{
 				sysprog.CreateAccount(

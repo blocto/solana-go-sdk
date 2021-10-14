@@ -18,7 +18,7 @@ func main() {
 	c := client.NewClient(rpc.DevnetRPCEndpoint)
 
 	// 1. use wrapped client to send tx (pros: easy to get started, cons: cannot use durable nonce machanism)
-	sig, err := c.SendTransaction(context.Background(), client.SendTransactionParam{
+	sig, err := c.QuickSendTransaction(context.Background(), client.QuickSendTransactionParam{
 		Instructions: []types.Instruction{
 			// your instruction here
 		},
