@@ -509,11 +509,7 @@ func TestThawAccount(t *testing.T) {
 
 func TestApprove(t *testing.T) {
 	type args struct {
-		sourcePubkey   common.PublicKey
-		delegatePubkey common.PublicKey
-		authPubkey     common.PublicKey
-		signerPubkeys  []common.PublicKey
-		amount         uint64
+		param ApproveParam
 	}
 	tests := []struct {
 		name string
@@ -522,11 +518,13 @@ func TestApprove(t *testing.T) {
 	}{
 		{
 			args: args{
-				sourcePubkey:   common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				delegatePubkey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				authPubkey:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				signerPubkeys:  []common.PublicKey{},
-				amount:         99999,
+				param: ApproveParam{
+					From:    common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					To:      common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Auth:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Signers: []common.PublicKey{},
+					Amount:  99999,
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.TokenProgramID,
@@ -541,7 +539,7 @@ func TestApprove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Approve(tt.args.sourcePubkey, tt.args.delegatePubkey, tt.args.authPubkey, tt.args.signerPubkeys, tt.args.amount); !reflect.DeepEqual(got, tt.want) {
+			if got := Approve(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Approve() = %v, want %v", got, tt.want)
 			}
 		})
