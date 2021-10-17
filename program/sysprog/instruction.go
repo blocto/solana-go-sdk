@@ -271,13 +271,18 @@ func AuthorizeNonceAccount(param AuthorizeNonceAccountParam) types.Instruction {
 	}
 }
 
-func Allocate(accountPubkey common.PublicKey, space uint64) types.Instruction {
+type AllocateParam struct {
+	Account common.PublicKey
+	Space   uint64
+}
+
+func Allocate(param AllocateParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Space       uint64
 	}{
 		Instruction: InstructionAllocate,
-		Space:       space,
+		Space:       param.Space,
 	})
 	if err != nil {
 		panic(err)
@@ -286,7 +291,7 @@ func Allocate(accountPubkey common.PublicKey, space uint64) types.Instruction {
 	return types.Instruction{
 		ProgramID: common.SystemProgramID,
 		Accounts: []types.AccountMeta{
-			{PubKey: accountPubkey, IsSigner: true, IsWritable: true},
+			{PubKey: param.Account, IsSigner: true, IsWritable: true},
 		},
 		Data: data,
 	}

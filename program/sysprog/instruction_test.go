@@ -334,6 +334,40 @@ func TestAuthorizeNonceAccount(t *testing.T) {
 	}
 }
 
+func TestAllocate(t *testing.T) {
+	type args struct {
+		param AllocateParam
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				param: AllocateParam{
+					Account: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Space:   500,
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.SystemProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: true, IsWritable: true},
+				},
+				Data: []byte{8, 0, 0, 0, 244, 1, 0, 0, 0, 0, 0, 0},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Allocate(tt.args.param); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Allocate() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestAllocateWithSeed(t *testing.T) {
 	type args struct {
 		accountPubkey common.PublicKey
@@ -407,39 +441,6 @@ func TestAssignWithSeed(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := AssignWithSeed(tt.args.accountPubkey, tt.args.assignToProgramID, tt.args.basePubkey, tt.args.seed); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AssignWithSeed() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestAllocate(t *testing.T) {
-	type args struct {
-		accountPubkey common.PublicKey
-		space         uint64
-	}
-	tests := []struct {
-		name string
-		args args
-		want types.Instruction
-	}{
-		{
-			args: args{
-				accountPubkey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				space:         500,
-			},
-			want: types.Instruction{
-				ProgramID: common.SystemProgramID,
-				Accounts: []types.AccountMeta{
-					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: true, IsWritable: true},
-				},
-				Data: []byte{8, 0, 0, 0, 244, 1, 0, 0, 0, 0, 0, 0},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Allocate(tt.args.accountPubkey, tt.args.space); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Allocate() = %v, want %v", got, tt.want)
 			}
 		})
 	}
