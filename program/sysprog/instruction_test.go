@@ -408,10 +408,7 @@ func TestAllocateWithSeed(t *testing.T) {
 
 func TestAssignWithSeed(t *testing.T) {
 	type args struct {
-		accountPubkey     common.PublicKey
-		assignToProgramID common.PublicKey
-		basePubkey        common.PublicKey
-		seed              string
+		param AssignWithSeedParam
 	}
 	tests := []struct {
 		name string
@@ -420,10 +417,12 @@ func TestAssignWithSeed(t *testing.T) {
 	}{
 		{
 			args: args{
-				accountPubkey:     common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				basePubkey:        common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				assignToProgramID: common.StakeProgramID,
-				seed:              "0",
+				param: AssignWithSeedParam{
+					Account: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Base:    common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Owner:   common.StakeProgramID,
+					Seed:    "0",
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.SystemProgramID,
@@ -437,7 +436,7 @@ func TestAssignWithSeed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AssignWithSeed(tt.args.accountPubkey, tt.args.assignToProgramID, tt.args.basePubkey, tt.args.seed); !reflect.DeepEqual(got, tt.want) {
+			if got := AssignWithSeed(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AssignWithSeed() = %v, want %v", got, tt.want)
 			}
 		})

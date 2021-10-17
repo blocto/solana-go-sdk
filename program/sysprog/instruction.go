@@ -333,7 +333,14 @@ func AllocateWithSeed(param AllocateWithSeedParam) types.Instruction {
 	}
 }
 
-func AssignWithSeed(accountPubkey, assignToProgramID, basePubkey common.PublicKey, seed string) types.Instruction {
+type AssignWithSeedParam struct {
+	Account common.PublicKey
+	Owner   common.PublicKey
+	Base    common.PublicKey
+	Seed    string
+}
+
+func AssignWithSeed(param AssignWithSeedParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction       Instruction
 		Base              common.PublicKey
@@ -341,9 +348,9 @@ func AssignWithSeed(accountPubkey, assignToProgramID, basePubkey common.PublicKe
 		AssignToProgramID common.PublicKey
 	}{
 		Instruction:       InstructionAssignWithSeed,
-		Base:              basePubkey,
-		Seed:              seed,
-		AssignToProgramID: assignToProgramID,
+		Base:              param.Base,
+		Seed:              param.Seed,
+		AssignToProgramID: param.Owner,
 	})
 	if err != nil {
 		panic(err)
@@ -352,8 +359,8 @@ func AssignWithSeed(accountPubkey, assignToProgramID, basePubkey common.PublicKe
 	return types.Instruction{
 		ProgramID: common.SystemProgramID,
 		Accounts: []types.AccountMeta{
-			{PubKey: accountPubkey, IsSigner: false, IsWritable: true},
-			{PubKey: basePubkey, IsSigner: true, IsWritable: false},
+			{PubKey: param.Account, IsSigner: false, IsWritable: true},
+			{PubKey: param.Base, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
 	}
