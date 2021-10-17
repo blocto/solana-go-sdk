@@ -146,23 +146,31 @@ func InitializeMultisig(param InitializeMultisigParam) types.Instruction {
 	}
 }
 
-func Transfer(srcPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64) types.Instruction {
+type TransferParam struct {
+	From    common.PublicKey
+	To      common.PublicKey
+	Auth    common.PublicKey
+	Signers []common.PublicKey
+	Amount  uint64
+}
+
+func Transfer(param TransferParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Amount      uint64
 	}{
 		Instruction: InstructionTransfer,
-		Amount:      amount,
+		Amount:      param.Amount,
 	})
 	if err != nil {
 		panic(err)
 	}
 
-	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
-	accounts = append(accounts, types.AccountMeta{PubKey: srcPubkey, IsSigner: false, IsWritable: true})
-	accounts = append(accounts, types.AccountMeta{PubKey: destPubkey, IsSigner: false, IsWritable: true})
-	accounts = append(accounts, types.AccountMeta{PubKey: authPubkey, IsSigner: len(signerPubkeys) == 0, IsWritable: false})
-	for _, signerPubkey := range signerPubkeys {
+	accounts := make([]types.AccountMeta, 0, 3+len(param.Signers))
+	accounts = append(accounts, types.AccountMeta{PubKey: param.From, IsSigner: false, IsWritable: true})
+	accounts = append(accounts, types.AccountMeta{PubKey: param.To, IsSigner: false, IsWritable: true})
+	accounts = append(accounts, types.AccountMeta{PubKey: param.Auth, IsSigner: len(param.Signers) == 0, IsWritable: false})
+	for _, signerPubkey := range param.Signers {
 		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
 	}
 	return types.Instruction{

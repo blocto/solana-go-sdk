@@ -188,11 +188,7 @@ func TestMintToChecked(t *testing.T) {
 
 func TestTransfer(t *testing.T) {
 	type args struct {
-		srcPubkey     common.PublicKey
-		destPubkey    common.PublicKey
-		authPubkey    common.PublicKey
-		signerPubkeys []common.PublicKey
-		amount        uint64
+		param TransferParam
 	}
 	tests := []struct {
 		name string
@@ -201,11 +197,13 @@ func TestTransfer(t *testing.T) {
 	}{
 		{
 			args: args{
-				srcPubkey:     common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				destPubkey:    common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				authPubkey:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				signerPubkeys: []common.PublicKey{},
-				amount:        99999,
+				param: TransferParam{
+					From:    common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					To:      common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Auth:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Signers: []common.PublicKey{},
+					Amount:  99999,
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.TokenProgramID,
@@ -220,7 +218,7 @@ func TestTransfer(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Transfer(tt.args.srcPubkey, tt.args.destPubkey, tt.args.authPubkey, tt.args.signerPubkeys, tt.args.amount); !reflect.DeepEqual(got, tt.want) {
+			if got := Transfer(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Transfer() = %v, want %v", got, tt.want)
 			}
 		})
