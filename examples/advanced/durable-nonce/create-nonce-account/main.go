@@ -32,13 +32,13 @@ func main() {
 		client.QuickSendTransactionParam{
 			FeePayer: feePayer.PublicKey,
 			Instructions: []types.Instruction{
-				sysprog.CreateAccount(
-					feePayer.PublicKey,
-					nonceAccount.PublicKey,
-					common.SystemProgramID,
-					nonceAccountRentFreeBalance,
-					sysprog.NonceAccountSize,
-				),
+				sysprog.CreateAccount(sysprog.CreateAccountParam{
+					From:     feePayer.PublicKey,
+					New:      nonceAccount.PublicKey,
+					Owner:    common.SystemProgramID,
+					Lamports: nonceAccountRentFreeBalance,
+					Space:    sysprog.NonceAccountSize,
+				}),
 				sysprog.InitializeNonceAccount(
 					// nonce account
 					nonceAccount.PublicKey,

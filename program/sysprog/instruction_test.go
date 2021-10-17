@@ -8,6 +8,44 @@ import (
 	"github.com/portto/solana-go-sdk/types"
 )
 
+func TestCreateAccount(t *testing.T) {
+	type args struct {
+		param CreateAccountParam
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				param: CreateAccountParam{
+					From:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					New:      common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Owner:    common.StakeProgramID,
+					Lamports: 1,
+					Space:    200,
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.SystemProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: true, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: true, IsWritable: true},
+				},
+				Data: []byte{0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 200, 0, 0, 0, 0, 0, 0, 0, 6, 161, 216, 23, 145, 55, 84, 42, 152, 52, 55, 189, 254, 42, 122, 178, 85, 127, 83, 92, 138, 120, 114, 43, 104, 164, 157, 192, 0, 0, 0, 0},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := CreateAccount(tt.args.param); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("CreateAccount() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestCreateAccountWithSeed(t *testing.T) {
 	type args struct {
 		fromPubkey       common.PublicKey
@@ -254,46 +292,6 @@ func TestTransferWithSeed(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := TransferWithSeed(tt.args.from, tt.args.to, tt.args.base, tt.args.programID, tt.args.seed, tt.args.lamports); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("TransferWithSeed() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestCreateAccount(t *testing.T) {
-	type args struct {
-		fromAccount  common.PublicKey
-		newAccount   common.PublicKey
-		owner        common.PublicKey
-		initLamports uint64
-		accountSpace uint64
-	}
-	tests := []struct {
-		name string
-		args args
-		want types.Instruction
-	}{
-		{
-			args: args{
-				fromAccount:  common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				newAccount:   common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				owner:        common.StakeProgramID,
-				initLamports: 1,
-				accountSpace: 200,
-			},
-			want: types.Instruction{
-				ProgramID: common.SystemProgramID,
-				Accounts: []types.AccountMeta{
-					{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: true, IsWritable: true},
-					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: true, IsWritable: true},
-				},
-				Data: []byte{0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 200, 0, 0, 0, 0, 0, 0, 0, 6, 161, 216, 23, 145, 55, 84, 42, 152, 52, 55, 189, 254, 42, 122, 178, 85, 127, 83, 92, 138, 120, 114, 43, 104, 164, 157, 192, 0, 0, 0, 0},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := CreateAccount(tt.args.fromAccount, tt.args.newAccount, tt.args.owner, tt.args.initLamports, tt.args.accountSpace); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CreateAccount() = %v, want %v", got, tt.want)
 			}
 		})
 	}

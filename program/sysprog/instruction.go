@@ -23,7 +23,15 @@ const (
 	InstructionTransferWithSeed
 )
 
-func CreateAccount(fromAccount, newAccount, owner common.PublicKey, initLamports, accountSpace uint64) types.Instruction {
+type CreateAccountParam struct {
+	From     common.PublicKey
+	New      common.PublicKey
+	Owner    common.PublicKey
+	Lamports uint64
+	Space    uint64
+}
+
+func CreateAccount(param CreateAccountParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Lamports    uint64
@@ -31,9 +39,9 @@ func CreateAccount(fromAccount, newAccount, owner common.PublicKey, initLamports
 		Owner       common.PublicKey
 	}{
 		Instruction: InstructionCreateAccount,
-		Lamports:    initLamports,
-		Space:       accountSpace,
-		Owner:       owner,
+		Lamports:    param.Lamports,
+		Space:       param.Space,
+		Owner:       param.Owner,
 	})
 	if err != nil {
 		panic(err)
@@ -41,8 +49,8 @@ func CreateAccount(fromAccount, newAccount, owner common.PublicKey, initLamports
 
 	return types.Instruction{
 		Accounts: []types.AccountMeta{
-			{PubKey: fromAccount, IsSigner: true, IsWritable: true},
-			{PubKey: newAccount, IsSigner: true, IsWritable: true},
+			{PubKey: param.From, IsSigner: true, IsWritable: true},
+			{PubKey: param.New, IsSigner: true, IsWritable: true},
 		},
 		ProgramID: common.SystemProgramID,
 		Data:      data,

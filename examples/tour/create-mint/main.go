@@ -39,13 +39,13 @@ func main() {
 	}
 	rawTx, err := types.CreateRawTransaction(types.CreateRawTransactionParam{
 		Instructions: []types.Instruction{
-			sysprog.CreateAccount(
-				feePayer.PublicKey,
-				mint.PublicKey,
-				common.TokenProgramID,
-				rentExemptionBalance,
-				tokenprog.MintAccountSize,
-			),
+			sysprog.CreateAccount(sysprog.CreateAccountParam{
+				From:     feePayer.PublicKey,
+				New:      mint.PublicKey,
+				Owner:    common.TokenProgramID,
+				Lamports: rentExemptionBalance,
+				Space:    tokenprog.MintAccountSize,
+			}),
 			tokenprog.InitializeMint(
 				8,
 				mint.PublicKey,
