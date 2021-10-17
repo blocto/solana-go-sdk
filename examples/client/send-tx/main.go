@@ -37,7 +37,11 @@ func main() {
 	}
 	rawTx, err := types.CreateRawTransaction(types.CreateRawTransactionParam{
 		Instructions: []types.Instruction{
-			sysprog.Transfer(feePayer.PublicKey, feePayer.PublicKey, 1),
+			sysprog.Transfer(sysprog.TransferParam{
+				From:   feePayer.PublicKey,
+				To:     feePayer.PublicKey,
+				Amount: 1,
+			}),
 		},
 		Signers:         []types.Account{feePayer},
 		FeePayer:        feePayer.PublicKey,

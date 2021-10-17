@@ -80,6 +80,50 @@ func TestAssign(t *testing.T) {
 	}
 }
 
+func TestTransfer(t *testing.T) {
+	type args struct {
+		param TransferParam
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				param: TransferParam{
+					From:   common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					To:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Amount: 1,
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.SystemProgramID,
+				Accounts: []types.AccountMeta{
+					{
+						PubKey:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+						IsSigner:   true,
+						IsWritable: true,
+					},
+					{
+						PubKey:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+						IsSigner:   false,
+						IsWritable: true,
+					},
+				},
+				Data: []byte{2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Transfer(tt.args.param); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Transfer() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestCreateAccountWithSeed(t *testing.T) {
 	type args struct {
 		fromPubkey       common.PublicKey
@@ -293,50 +337,6 @@ func TestTransferWithSeed(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := TransferWithSeed(tt.args.from, tt.args.to, tt.args.base, tt.args.programID, tt.args.seed, tt.args.lamports); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("TransferWithSeed() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestTransfer(t *testing.T) {
-	type args struct {
-		from   common.PublicKey
-		to     common.PublicKey
-		number uint64
-	}
-	tests := []struct {
-		name string
-		args args
-		want types.Instruction
-	}{
-		{
-			args: args{
-				from:   common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				to:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				number: 1,
-			},
-			want: types.Instruction{
-				ProgramID: common.SystemProgramID,
-				Accounts: []types.AccountMeta{
-					{
-						PubKey:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-						IsSigner:   true,
-						IsWritable: true,
-					},
-					{
-						PubKey:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-						IsSigner:   false,
-						IsWritable: true,
-					},
-				},
-				Data: []byte{2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Transfer(tt.args.from, tt.args.to, tt.args.number); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Transfer() = %v, want %v", got, tt.want)
 			}
 		})
 	}

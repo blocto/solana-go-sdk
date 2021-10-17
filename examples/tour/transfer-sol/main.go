@@ -30,11 +30,11 @@ func main() {
 	message := types.NewMessage(
 		feePayer.PublicKey,
 		[]types.Instruction{
-			sysprog.Transfer(
-				alice.PublicKey, // from
-				common.PublicKeyFromString("2xNweLHLqrbx4zo1waDvgWJHgsUpPj8Y8icbAFeR4a8i"), // to
-				1e9, // 1 SOL
-			),
+			sysprog.Transfer(sysprog.TransferParam{
+				From:   alice.PublicKey,                                                            // from
+				To:     common.PublicKeyFromString("2xNweLHLqrbx4zo1waDvgWJHgsUpPj8Y8icbAFeR4a8i"), // to
+				Amount: 1e9,                                                                        // 1 SOL
+			}),
 		},
 		res.Blockhash, // recent blockhash
 	)

@@ -44,11 +44,11 @@ func main() {
 			),
 			// now put the instrucitons you really want to do
 			// here I use transfer as a example
-			sysprog.Transfer(
-				feePayer.PublicKey,
-				to.PublicKey,
-				1e9,
-			),
+			sysprog.Transfer(sysprog.TransferParam{
+				From:   feePayer.PublicKey,
+				To:     to.PublicKey,
+				Amount: 1e9,
+			}),
 		},
 		Signers:  []types.Account{feePayer},
 		FeePayer: feePayer.PublicKey,

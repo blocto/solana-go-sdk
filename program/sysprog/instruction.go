@@ -83,13 +83,19 @@ func Assign(param AssignParam) types.Instruction {
 	}
 }
 
-func Transfer(from, to common.PublicKey, lamports uint64) types.Instruction {
+type TransferParam struct {
+	From   common.PublicKey
+	To     common.PublicKey
+	Amount uint64
+}
+
+func Transfer(param TransferParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Lamports    uint64
 	}{
 		Instruction: InstructionTransfer,
-		Lamports:    lamports,
+		Lamports:    param.Amount,
 	})
 	if err != nil {
 		panic(err)
@@ -97,8 +103,8 @@ func Transfer(from, to common.PublicKey, lamports uint64) types.Instruction {
 
 	return types.Instruction{
 		Accounts: []types.AccountMeta{
-			{PubKey: from, IsSigner: true, IsWritable: true},
-			{PubKey: to, IsSigner: false, IsWritable: true},
+			{PubKey: param.From, IsSigner: true, IsWritable: true},
+			{PubKey: param.To, IsSigner: false, IsWritable: true},
 		},
 		ProgramID: common.SystemProgramID,
 		Data:      data,
