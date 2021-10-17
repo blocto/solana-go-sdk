@@ -439,7 +439,14 @@ func FreezeAccount(param FreezeAccountParam) types.Instruction {
 	}
 }
 
-func ThawAccount(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) types.Instruction {
+type ThawAccountParam struct {
+	Account common.PublicKey
+	Mint    common.PublicKey
+	Auth    common.PublicKey
+	Signers []common.PublicKey
+}
+
+func ThawAccount(param ThawAccountParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 	}{
@@ -449,11 +456,11 @@ func ThawAccount(accountPubkey, mintPubkey, authPubkey common.PublicKey, signerP
 		panic(err)
 	}
 
-	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
-	accounts = append(accounts, types.AccountMeta{PubKey: accountPubkey, IsSigner: false, IsWritable: true})
-	accounts = append(accounts, types.AccountMeta{PubKey: mintPubkey, IsSigner: false, IsWritable: false})
-	accounts = append(accounts, types.AccountMeta{PubKey: authPubkey, IsSigner: len(signerPubkeys) == 0, IsWritable: false})
-	for _, signerPubkey := range signerPubkeys {
+	accounts := make([]types.AccountMeta, 0, 3+len(param.Signers))
+	accounts = append(accounts, types.AccountMeta{PubKey: param.Account, IsSigner: false, IsWritable: true})
+	accounts = append(accounts, types.AccountMeta{PubKey: param.Mint, IsSigner: false, IsWritable: false})
+	accounts = append(accounts, types.AccountMeta{PubKey: param.Auth, IsSigner: len(param.Signers) == 0, IsWritable: false})
+	for _, signerPubkey := range param.Signers {
 		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
 	}
 
