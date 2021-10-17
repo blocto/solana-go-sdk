@@ -11,10 +11,7 @@ import (
 
 func TestSplit(t *testing.T) {
 	type args struct {
-		stakePubkey      common.PublicKey
-		authPubkey       common.PublicKey
-		splitStakePubkey common.PublicKey
-		lamports         uint64
+		param SplitParam
 	}
 	tests := []struct {
 		name string
@@ -23,10 +20,12 @@ func TestSplit(t *testing.T) {
 	}{
 		{
 			args: args{
-				stakePubkey:      common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				authPubkey:       common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				splitStakePubkey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				lamports:         1,
+				param: SplitParam{
+					Stake:      common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Auth:       common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					SplitStake: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Lamports:   1,
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.StakeProgramID,
@@ -41,7 +40,7 @@ func TestSplit(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Split(tt.args.stakePubkey, tt.args.authPubkey, tt.args.splitStakePubkey, tt.args.lamports); !reflect.DeepEqual(got, tt.want) {
+			if got := Split(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Split() = %v, want %v", got, tt.want)
 			}
 		})
@@ -50,9 +49,7 @@ func TestSplit(t *testing.T) {
 
 func TestMerge(t *testing.T) {
 	type args struct {
-		dest common.PublicKey
-		src  common.PublicKey
-		auth common.PublicKey
+		param MergeParam
 	}
 	tests := []struct {
 		name string
@@ -61,9 +58,11 @@ func TestMerge(t *testing.T) {
 	}{
 		{
 			args: args{
-				dest: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				src:  common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				auth: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				param: MergeParam{
+					From: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					To:   common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Auth: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.StakeProgramID,
@@ -80,7 +79,7 @@ func TestMerge(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Merge(tt.args.dest, tt.args.src, tt.args.auth); !reflect.DeepEqual(got, tt.want) {
+			if got := Merge(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Merge() = %v, want %v", got, tt.want)
 			}
 		})
@@ -89,13 +88,7 @@ func TestMerge(t *testing.T) {
 
 func TestAuthorizeWithSeed(t *testing.T) {
 	type args struct {
-		stakePubkey     common.PublicKey
-		authBasePubkey  common.PublicKey
-		authSeed        string
-		authOwnerPubkey common.PublicKey
-		newAuthPubkey   common.PublicKey
-		authType        StakeAuthorizationType
-		custodianPubkey common.PublicKey
+		param AuthorizeWithSeedParam
 	}
 	tests := []struct {
 		name string
@@ -104,13 +97,15 @@ func TestAuthorizeWithSeed(t *testing.T) {
 	}{
 		{
 			args: args{
-				stakePubkey:     common.PublicKeyFromString("6JNQUmE1MdB4E1Caj2A443Za15ju2XFCyjumnddjeNrP"),
-				authBasePubkey:  common.PublicKeyFromString("Gx6FKjrt1EbBKsA8DFSgkj6egv8R5AoATBk1j2J3GHxU"),
-				authSeed:        "any seed here",
-				authOwnerPubkey: common.PublicKeyFromString("Stake11111111111111111111111111111111111111"),
-				newAuthPubkey:   common.PublicKeyFromString("RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"),
-				authType:        0,
-				custodianPubkey: common.PublicKey{},
+				param: AuthorizeWithSeedParam{
+					Stake:     common.PublicKeyFromString("6JNQUmE1MdB4E1Caj2A443Za15ju2XFCyjumnddjeNrP"),
+					AuthBase:  common.PublicKeyFromString("Gx6FKjrt1EbBKsA8DFSgkj6egv8R5AoATBk1j2J3GHxU"),
+					AuthSeed:  "any seed here",
+					AuthOwner: common.PublicKeyFromString("Stake11111111111111111111111111111111111111"),
+					NewAuth:   common.PublicKeyFromString("RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"),
+					AuthType:  StakeAuthorizationTypeStaker,
+					Custodian: nil,
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.StakeProgramID,
@@ -125,7 +120,7 @@ func TestAuthorizeWithSeed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AuthorizeWithSeed(tt.args.stakePubkey, tt.args.authBasePubkey, tt.args.authSeed, tt.args.authOwnerPubkey, tt.args.newAuthPubkey, tt.args.authType, tt.args.custodianPubkey); !reflect.DeepEqual(got, tt.want) {
+			if got := AuthorizeWithSeed(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AuthorizeWithSeed() = %v, want %v", got, tt.want)
 			}
 		})
@@ -134,9 +129,7 @@ func TestAuthorizeWithSeed(t *testing.T) {
 
 func TestSetLockup(t *testing.T) {
 	type args struct {
-		src    common.PublicKey
-		auth   common.PublicKey
-		lockup LockupParam
+		param SetLockupParam
 	}
 	tests := []struct {
 		name string
@@ -145,9 +138,11 @@ func TestSetLockup(t *testing.T) {
 	}{
 		{
 			args: args{
-				src:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				auth:   common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				lockup: LockupParam{},
+				param: SetLockupParam{
+					Stake:  common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Auth:   common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Lockup: LockupParam{},
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.StakeProgramID,
@@ -168,10 +163,12 @@ func TestSetLockup(t *testing.T) {
 		},
 		{
 			args: args{
-				src:  common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				auth: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				lockup: LockupParam{
-					UnixTimestamp: pointer.Int64(1),
+				param: SetLockupParam{
+					Stake: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Auth:  common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Lockup: LockupParam{
+						UnixTimestamp: pointer.Int64(1),
+					},
 				},
 			},
 			want: types.Instruction{
@@ -193,10 +190,12 @@ func TestSetLockup(t *testing.T) {
 		},
 		{
 			args: args{
-				src:  common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				auth: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				lockup: LockupParam{
-					Epoch: pointer.Uint64(1),
+				param: SetLockupParam{
+					Stake: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Auth:  common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Lockup: LockupParam{
+						Epoch: pointer.Uint64(1),
+					},
 				},
 			},
 			want: types.Instruction{
@@ -218,10 +217,12 @@ func TestSetLockup(t *testing.T) {
 		},
 		{
 			args: args{
-				src:  common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				auth: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				lockup: LockupParam{
-					Cusodian: pointer.Pubkey(common.PublicKeyFromString("DTA7FmUNYuQs2mScj2Lx8gQV63SEL1zGtzCSvPxtijbi")),
+				param: SetLockupParam{
+					Stake: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Auth:  common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Lockup: LockupParam{
+						Cusodian: pointer.Pubkey(common.PublicKeyFromString("DTA7FmUNYuQs2mScj2Lx8gQV63SEL1zGtzCSvPxtijbi")),
+					},
 				},
 			},
 			want: types.Instruction{
@@ -244,7 +245,7 @@ func TestSetLockup(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SetLockup(tt.args.src, tt.args.auth, tt.args.lockup); !reflect.DeepEqual(got, tt.want) {
+			if got := SetLockup(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("SetLockup() = %v, want %v", got, tt.want)
 			}
 		})

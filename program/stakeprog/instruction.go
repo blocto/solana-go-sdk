@@ -46,15 +46,21 @@ type Authorized struct {
 	Withdrawer common.PublicKey
 }
 
-func Initialize(initAccount common.PublicKey, auth Authorized, lockup Lockup) types.Instruction {
+type InitializeParam struct {
+	Stake  common.PublicKey
+	Auth   Authorized
+	Lockup Lockup
+}
+
+func Initialize(param InitializeParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Auth        Authorized
 		Lockup      Lockup
 	}{
 		Instruction: InstructionInitialize,
-		Auth:        auth,
-		Lockup:      lockup,
+		Auth:        param.Auth,
+		Lockup:      param.Lockup,
 	})
 	if err != nil {
 		panic(err)
@@ -63,22 +69,30 @@ func Initialize(initAccount common.PublicKey, auth Authorized, lockup Lockup) ty
 	return types.Instruction{
 		ProgramID: common.StakeProgramID,
 		Accounts: []types.AccountMeta{
-			{PubKey: initAccount, IsSigner: false, IsWritable: true},
+			{PubKey: param.Stake, IsSigner: false, IsWritable: true},
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 		},
 		Data: data,
 	}
 }
 
-func Authorize(stakePubkey, authPubkey, newAuthPubkey common.PublicKey, authType StakeAuthorizationType, custodianPubkey common.PublicKey) types.Instruction {
+type AuthorizeParam struct {
+	Stake     common.PublicKey
+	Auth      common.PublicKey
+	NewAuth   common.PublicKey
+	AuthType  StakeAuthorizationType
+	Custodian *common.PublicKey
+}
+
+func Authorize(param AuthorizeParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction            Instruction
 		NewAuthorized          common.PublicKey
 		StakeAuthorizationType StakeAuthorizationType
 	}{
 		Instruction:            InstructionAuthorize,
-		NewAuthorized:          newAuthPubkey,
-		StakeAuthorizationType: authType,
+		NewAuthorized:          param.NewAuth,
+		StakeAuthorizationType: param.AuthType,
 	})
 	if err != nil {
 		panic(err)
@@ -86,12 +100,12 @@ func Authorize(stakePubkey, authPubkey, newAuthPubkey common.PublicKey, authType
 
 	accounts := make([]types.AccountMeta, 0, 4)
 	accounts = append(accounts,
-		types.AccountMeta{PubKey: stakePubkey, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: param.Stake, IsSigner: false, IsWritable: true},
 		types.AccountMeta{PubKey: common.SysVarClockPubkey, IsSigner: false, IsWritable: false},
-		types.AccountMeta{PubKey: authPubkey, IsSigner: true, IsWritable: false},
+		types.AccountMeta{PubKey: param.Auth, IsSigner: true, IsWritable: false},
 	)
-	if custodianPubkey != (common.PublicKey{}) {
-		accounts = append(accounts, types.AccountMeta{PubKey: custodianPubkey, IsSigner: true, IsWritable: false})
+	if param.Custodian != nil {
+		accounts = append(accounts, types.AccountMeta{PubKey: *param.Custodian, IsSigner: true, IsWritable: false})
 	}
 
 	return types.Instruction{
@@ -101,7 +115,13 @@ func Authorize(stakePubkey, authPubkey, newAuthPubkey common.PublicKey, authType
 	}
 }
 
-func DelegateStake(stakePubkey, authPubkey, votePubkey common.PublicKey) types.Instruction {
+type DelegateStakeParam struct {
+	Stake common.PublicKey
+	Auth  common.PublicKey
+	Vote  common.PublicKey
+}
+
+func DelegateStake(param DelegateStakeParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 	}{
@@ -114,24 +134,31 @@ func DelegateStake(stakePubkey, authPubkey, votePubkey common.PublicKey) types.I
 	return types.Instruction{
 		ProgramID: common.StakeProgramID,
 		Accounts: []types.AccountMeta{
-			{PubKey: stakePubkey, IsSigner: false, IsWritable: true},
-			{PubKey: votePubkey, IsSigner: false, IsWritable: false},
+			{PubKey: param.Stake, IsSigner: false, IsWritable: true},
+			{PubKey: param.Vote, IsSigner: false, IsWritable: false},
 			{PubKey: common.SysVarClockPubkey, IsSigner: false, IsWritable: false},
 			{PubKey: common.SysVarStakeHistoryPubkey, IsSigner: false, IsWritable: false},
 			{PubKey: common.StakeConfigPubkey, IsSigner: false, IsWritable: false},
-			{PubKey: authPubkey, IsSigner: true, IsWritable: false},
+			{PubKey: param.Auth, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
 	}
 }
 
-func Split(stakePubkey, authPubkey, splitStakePubkey common.PublicKey, lamports uint64) types.Instruction {
+type SplitParam struct {
+	Stake      common.PublicKey
+	Auth       common.PublicKey
+	SplitStake common.PublicKey
+	Lamports   uint64
+}
+
+func Split(param SplitParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Lamports    uint64
 	}{
 		Instruction: InstructionSplit,
-		Lamports:    lamports,
+		Lamports:    param.Lamports,
 	})
 	if err != nil {
 		panic(err)
@@ -140,21 +167,29 @@ func Split(stakePubkey, authPubkey, splitStakePubkey common.PublicKey, lamports 
 	return types.Instruction{
 		ProgramID: common.StakeProgramID,
 		Accounts: []types.AccountMeta{
-			{PubKey: stakePubkey, IsSigner: false, IsWritable: true},
-			{PubKey: splitStakePubkey, IsSigner: false, IsWritable: true},
-			{PubKey: authPubkey, IsSigner: true, IsWritable: false},
+			{PubKey: param.Stake, IsSigner: false, IsWritable: true},
+			{PubKey: param.SplitStake, IsSigner: false, IsWritable: true},
+			{PubKey: param.Auth, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
 	}
 }
 
-func Withdraw(stakePubkey, authPubkey, toPubkey common.PublicKey, lamports uint64, custodianPubkey common.PublicKey) types.Instruction {
+type WithdrawParam struct {
+	Stake     common.PublicKey
+	Auth      common.PublicKey
+	To        common.PublicKey
+	Lamports  uint64
+	Custodian *common.PublicKey
+}
+
+func Withdraw(param WithdrawParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Lamports    uint64
 	}{
 		Instruction: InstructionWithdraw,
-		Lamports:    lamports,
+		Lamports:    param.Lamports,
 	})
 	if err != nil {
 		panic(err)
@@ -162,14 +197,14 @@ func Withdraw(stakePubkey, authPubkey, toPubkey common.PublicKey, lamports uint6
 
 	accounts := make([]types.AccountMeta, 0, 6)
 	accounts = append(accounts,
-		types.AccountMeta{PubKey: stakePubkey, IsSigner: false, IsWritable: true},
-		types.AccountMeta{PubKey: toPubkey, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: param.Stake, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: param.To, IsSigner: false, IsWritable: true},
 		types.AccountMeta{PubKey: common.SysVarClockPubkey, IsSigner: false, IsWritable: false},
 		types.AccountMeta{PubKey: common.SysVarStakeHistoryPubkey, IsSigner: false, IsWritable: false},
-		types.AccountMeta{PubKey: authPubkey, IsSigner: true, IsWritable: false},
+		types.AccountMeta{PubKey: param.Auth, IsSigner: true, IsWritable: false},
 	)
-	if custodianPubkey != (common.PublicKey{}) {
-		accounts = append(accounts, types.AccountMeta{PubKey: custodianPubkey, IsSigner: true, IsWritable: false})
+	if param.Custodian != nil {
+		accounts = append(accounts, types.AccountMeta{PubKey: *param.Custodian, IsSigner: true, IsWritable: false})
 	}
 
 	return types.Instruction{
@@ -179,7 +214,12 @@ func Withdraw(stakePubkey, authPubkey, toPubkey common.PublicKey, lamports uint6
 	}
 }
 
-func Deactivate(stakePubkey, authPubkey common.PublicKey) types.Instruction {
+type DeactivateParam struct {
+	Stake common.PublicKey
+	Auth  common.PublicKey
+}
+
+func Deactivate(param DeactivateParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 	}{
@@ -192,15 +232,21 @@ func Deactivate(stakePubkey, authPubkey common.PublicKey) types.Instruction {
 	return types.Instruction{
 		ProgramID: common.StakeProgramID,
 		Accounts: []types.AccountMeta{
-			{PubKey: stakePubkey, IsSigner: false, IsWritable: true},
+			{PubKey: param.Stake, IsSigner: false, IsWritable: true},
 			{PubKey: common.SysVarClockPubkey, IsSigner: false, IsWritable: false},
-			{PubKey: authPubkey, IsSigner: true, IsWritable: false},
+			{PubKey: param.Auth, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
 	}
 }
 
-func SetLockup(src, auth common.PublicKey, lockup LockupParam) types.Instruction {
+type SetLockupParam struct {
+	Stake  common.PublicKey
+	Auth   common.PublicKey
+	Lockup LockupParam
+}
+
+func SetLockup(param SetLockupParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction   Instruction
 		UnixTimestamp *int64
@@ -208,9 +254,9 @@ func SetLockup(src, auth common.PublicKey, lockup LockupParam) types.Instruction
 		Cusodian      *common.PublicKey
 	}{
 		Instruction:   InstructionSetLockup,
-		UnixTimestamp: lockup.UnixTimestamp,
-		Epoch:         lockup.Epoch,
-		Cusodian:      lockup.Cusodian,
+		UnixTimestamp: param.Lockup.UnixTimestamp,
+		Epoch:         param.Lockup.Epoch,
+		Cusodian:      param.Lockup.Cusodian,
 	})
 	if err != nil {
 		panic(err)
@@ -219,14 +265,20 @@ func SetLockup(src, auth common.PublicKey, lockup LockupParam) types.Instruction
 	return types.Instruction{
 		ProgramID: common.StakeProgramID,
 		Accounts: []types.AccountMeta{
-			{PubKey: src, IsSigner: false, IsWritable: true},
-			{PubKey: auth, IsSigner: true, IsWritable: false},
+			{PubKey: param.Stake, IsSigner: false, IsWritable: true},
+			{PubKey: param.Auth, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
 	}
 }
 
-func Merge(dest, src, auth common.PublicKey) types.Instruction {
+type MergeParam struct {
+	From common.PublicKey
+	Auth common.PublicKey
+	To   common.PublicKey
+}
+
+func Merge(param MergeParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 	}{
@@ -239,24 +291,27 @@ func Merge(dest, src, auth common.PublicKey) types.Instruction {
 	return types.Instruction{
 		ProgramID: common.StakeProgramID,
 		Accounts: []types.AccountMeta{
-			{PubKey: dest, IsSigner: false, IsWritable: true},
-			{PubKey: src, IsSigner: false, IsWritable: true},
+			{PubKey: param.To, IsSigner: false, IsWritable: true},
+			{PubKey: param.From, IsSigner: false, IsWritable: true},
 			{PubKey: common.SysVarClockPubkey, IsSigner: false, IsWritable: false},
 			{PubKey: common.SysVarStakeHistoryPubkey, IsSigner: false, IsWritable: false},
-			{PubKey: auth, IsSigner: true, IsWritable: false},
+			{PubKey: param.Auth, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
 	}
 }
 
-func AuthorizeWithSeed(
-	stakePubkey common.PublicKey,
-	authBasePubkey common.PublicKey,
-	authSeed string,
-	authOwnerPubkey common.PublicKey,
-	newAuthPubkey common.PublicKey,
-	authType StakeAuthorizationType,
-	custodianPubkey common.PublicKey) types.Instruction {
+type AuthorizeWithSeedParam struct {
+	Stake     common.PublicKey
+	AuthBase  common.PublicKey
+	AuthSeed  string
+	AuthOwner common.PublicKey
+	NewAuth   common.PublicKey
+	AuthType  StakeAuthorizationType
+	Custodian *common.PublicKey
+}
+
+func AuthorizeWithSeed(param AuthorizeWithSeedParam) types.Instruction {
 
 	data, err := bincode.SerializeData(struct {
 		Instruction            Instruction
@@ -266,10 +321,10 @@ func AuthorizeWithSeed(
 		AuthOwner              common.PublicKey
 	}{
 		Instruction:            InstructionAuthorizeWithSeed,
-		NewAuthorized:          newAuthPubkey,
-		StakeAuthorizationType: authType,
-		AuthSeed:               authSeed,
-		AuthOwner:              authOwnerPubkey,
+		NewAuthorized:          param.NewAuth,
+		StakeAuthorizationType: param.AuthType,
+		AuthSeed:               param.AuthSeed,
+		AuthOwner:              param.AuthOwner,
 	})
 	if err != nil {
 		panic(err)
@@ -277,12 +332,12 @@ func AuthorizeWithSeed(
 
 	accounts := make([]types.AccountMeta, 0, 4)
 	accounts = append(accounts,
-		types.AccountMeta{PubKey: stakePubkey, IsSigner: false, IsWritable: true},
-		types.AccountMeta{PubKey: authBasePubkey, IsSigner: true, IsWritable: false},
+		types.AccountMeta{PubKey: param.Stake, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: param.AuthBase, IsSigner: true, IsWritable: false},
 		types.AccountMeta{PubKey: common.SysVarClockPubkey, IsSigner: false, IsWritable: false},
 	)
-	if custodianPubkey != (common.PublicKey{}) {
-		accounts = append(accounts, types.AccountMeta{PubKey: custodianPubkey, IsSigner: true, IsWritable: false})
+	if param.Custodian != nil {
+		accounts = append(accounts, types.AccountMeta{PubKey: *param.Custodian, IsSigner: true, IsWritable: false})
 	}
 
 	return types.Instruction{
