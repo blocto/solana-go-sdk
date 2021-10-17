@@ -12,15 +12,26 @@ const (
 	InstructionCreateMetadataAccount Instruction = iota
 )
 
-func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority common.PublicKey, updateAuthorityIsSigner, isMutable bool, mintData Data) types.Instruction {
+type CreateMetadataAccountParam struct {
+	Metadata                common.PublicKey
+	Mint                    common.PublicKey
+	MintAuthority           common.PublicKey
+	Payer                   common.PublicKey
+	UpdateAuthority         common.PublicKey
+	UpdateAuthorityIsSigner bool
+	IsMutable               bool
+	MintData                Data
+}
+
+func CreateMetadataAccount(param CreateMetadataAccountParam) types.Instruction {
 	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 		Data        Data
 		IsMutable   bool
 	}{
 		Instruction: InstructionCreateMetadataAccount,
-		Data:        mintData,
-		IsMutable:   isMutable,
+		Data:        param.MintData,
+		IsMutable:   param.IsMutable,
 	})
 
 	if err != nil {
@@ -31,28 +42,28 @@ func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority
 		ProgramID: common.MetaplexTokenMetaProgramID,
 		Accounts: []types.AccountMeta{
 			{
-				PubKey:     metadata,
+				PubKey:     param.Metadata,
 				IsSigner:   false,
 				IsWritable: true,
 			},
 			{
-				PubKey:     mint,
+				PubKey:     param.Mint,
 				IsSigner:   false,
 				IsWritable: false,
 			},
 			{
-				PubKey:     mintAuthority,
+				PubKey:     param.MintAuthority,
 				IsSigner:   true,
 				IsWritable: false,
 			},
 			{
-				PubKey:     payer,
+				PubKey:     param.Payer,
 				IsSigner:   true,
 				IsWritable: true,
 			},
 			{
-				PubKey:     updateAuthority,
-				IsSigner:   updateAuthorityIsSigner,
+				PubKey:     param.UpdateAuthority,
+				IsSigner:   param.UpdateAuthorityIsSigner,
 				IsWritable: false,
 			},
 			{

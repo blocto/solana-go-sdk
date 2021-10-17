@@ -11,14 +11,7 @@ import (
 
 func TestCreateMetadataAccount(t *testing.T) {
 	type args struct {
-		metadata                common.PublicKey
-		mint                    common.PublicKey
-		mintAuthority           common.PublicKey
-		payer                   common.PublicKey
-		updateAuthority         common.PublicKey
-		updateAuthorityIsSigner bool
-		isMutable               bool
-		mintData                Data
+		param CreateMetadataAccountParam
 	}
 
 	tests := []struct {
@@ -29,23 +22,25 @@ func TestCreateMetadataAccount(t *testing.T) {
 		{
 			name: "Positive test creating metadata instruction",
 			args: args{
-				metadata:                common.PublicKeyFromString("DC2mkgwhy56w3viNtHDjJQmc7SGu2QX785bS4aexojwX"),
-				mint:                    common.PublicKeyFromString("GphF2vTuzhwhLWBWWvD8y5QLCPp1aQC5EnzrWsnbiWPx"),
-				mintAuthority:           common.PublicKeyFromString("9BKWqDHfHZh9j39xakYVMdr6hXmCLHH5VfCpeq2idU9L"),
-				payer:                   common.PublicKeyFromString("9FYsKrNuEweb55Wa2jaj8wTKYDBvuCG3huhakEj96iN9"),
-				updateAuthority:         common.PublicKeyFromString("HNGVuL5kqjDehw7KR63w9gxow32sX6xzRNgLb8GkbwCM"),
-				updateAuthorityIsSigner: true,
-				isMutable:               true,
-				mintData: Data{
-					Name:                 "Test NFT",
-					Symbol:               "TST",
-					Uri:                  "https://test.com/metadata",
-					SellerFeeBasisPoints: 10,
-					Creators: &[]Creator{
-						{
-							Address:  common.PublicKeyFromString("7FzXBBPjzrNJbm9MrZKZcyvP3ojVeYPUG2XkBPVZvuBu"),
-							Verified: true,
-							Share:    100,
+				param: CreateMetadataAccountParam{
+					Metadata:                common.PublicKeyFromString("DC2mkgwhy56w3viNtHDjJQmc7SGu2QX785bS4aexojwX"),
+					Mint:                    common.PublicKeyFromString("GphF2vTuzhwhLWBWWvD8y5QLCPp1aQC5EnzrWsnbiWPx"),
+					MintAuthority:           common.PublicKeyFromString("9BKWqDHfHZh9j39xakYVMdr6hXmCLHH5VfCpeq2idU9L"),
+					Payer:                   common.PublicKeyFromString("9FYsKrNuEweb55Wa2jaj8wTKYDBvuCG3huhakEj96iN9"),
+					UpdateAuthority:         common.PublicKeyFromString("HNGVuL5kqjDehw7KR63w9gxow32sX6xzRNgLb8GkbwCM"),
+					UpdateAuthorityIsSigner: true,
+					IsMutable:               true,
+					MintData: Data{
+						Name:                 "Test NFT",
+						Symbol:               "TST",
+						Uri:                  "https://test.com/metadata",
+						SellerFeeBasisPoints: 10,
+						Creators: &[]Creator{
+							{
+								Address:  common.PublicKeyFromString("7FzXBBPjzrNJbm9MrZKZcyvP3ojVeYPUG2XkBPVZvuBu"),
+								Verified: true,
+								Share:    100,
+							},
 						},
 					},
 				},
@@ -96,16 +91,7 @@ func TestCreateMetadataAccount(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := CreateMetadataAccount(
-				tt.args.metadata,
-				tt.args.mint,
-				tt.args.mintAuthority,
-				tt.args.payer,
-				tt.args.updateAuthority,
-				tt.args.updateAuthorityIsSigner,
-				tt.args.isMutable,
-				tt.args.mintData)
-
+			got := CreateMetadataAccount(tt.args.param)
 			tt.check(t, got)
 		})
 	}
