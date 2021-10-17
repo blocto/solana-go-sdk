@@ -882,7 +882,7 @@ func TestInitializeMultisig(t *testing.T) {
 
 func TestSyncNative(t *testing.T) {
 	type args struct {
-		accountPubkey common.PublicKey
+		param SyncNativeParam
 	}
 	tests := []struct {
 		name string
@@ -891,7 +891,9 @@ func TestSyncNative(t *testing.T) {
 	}{
 		{
 			args: args{
-				accountPubkey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+				param: SyncNativeParam{
+					Account: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.TokenProgramID,
@@ -904,7 +906,7 @@ func TestSyncNative(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SyncNative(tt.args.accountPubkey); !reflect.DeepEqual(got, tt.want) {
+			if got := SyncNative(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("SyncNative() = %v, want %v", got, tt.want)
 			}
 		})

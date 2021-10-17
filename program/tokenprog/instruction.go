@@ -660,8 +660,12 @@ func InitializeAccount2(param InitializeAccount2Param) types.Instruction {
 	}
 }
 
+type SyncNativeParam struct {
+	Account common.PublicKey
+}
+
 // SyncNative will update your wrapped SOL balance
-func SyncNative(accountPubkey common.PublicKey) types.Instruction {
+func SyncNative(param SyncNativeParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 	}{
@@ -674,7 +678,7 @@ func SyncNative(accountPubkey common.PublicKey) types.Instruction {
 	return types.Instruction{
 		ProgramID: common.TokenProgramID,
 		Accounts: []types.AccountMeta{
-			{PubKey: accountPubkey, IsSigner: false, IsWritable: true},
+			{PubKey: param.Account, IsSigner: false, IsWritable: true},
 		},
 		Data: data,
 	}
