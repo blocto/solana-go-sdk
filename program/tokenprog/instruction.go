@@ -27,7 +27,7 @@ const (
 	InstructionBurnChecked
 	InstructionInitializeAccount2
 	InstructionSyncNative
-	InitializeAccount3
+	InstructionInitializeAccount3
 	InitializeMultisig2
 	InitializeMint2
 )
@@ -679,6 +679,34 @@ func SyncNative(param SyncNativeParam) types.Instruction {
 		ProgramID: common.TokenProgramID,
 		Accounts: []types.AccountMeta{
 			{PubKey: param.Account, IsSigner: false, IsWritable: true},
+		},
+		Data: data,
+	}
+}
+
+type InitializeAccount3Param struct {
+	Account common.PublicKey
+	Mint    common.PublicKey
+	Owner   common.PublicKey
+}
+
+func InitializeAccount3(param InitializeAccount3Param) types.Instruction {
+	data, err := bincode.SerializeData(struct {
+		Instruction Instruction
+		Owner       common.PublicKey
+	}{
+		Instruction: InstructionInitializeAccount3,
+		Owner:       param.Owner,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts: []types.AccountMeta{
+			{PubKey: param.Account, IsSigner: false, IsWritable: true},
+			{PubKey: param.Mint, IsSigner: false, IsWritable: false},
 		},
 		Data: data,
 	}
