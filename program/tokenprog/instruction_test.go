@@ -403,10 +403,7 @@ func TestBurnChecked(t *testing.T) {
 
 func TestCloseAccount(t *testing.T) {
 	type args struct {
-		accountPubkey common.PublicKey
-		destPubkey    common.PublicKey
-		authPubkey    common.PublicKey
-		signerPubkeys []common.PublicKey
+		param CloseAccountParam
 	}
 	tests := []struct {
 		name string
@@ -415,10 +412,12 @@ func TestCloseAccount(t *testing.T) {
 	}{
 		{
 			args: args{
-				accountPubkey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				destPubkey:    common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				authPubkey:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				signerPubkeys: []common.PublicKey{},
+				param: CloseAccountParam{
+					Account: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Auth:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Signers: []common.PublicKey{},
+					To:      common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.TokenProgramID,
@@ -430,10 +429,34 @@ func TestCloseAccount(t *testing.T) {
 				Data: []byte{9},
 			},
 		},
+		{
+			args: args{
+				param: CloseAccountParam{
+					Account: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Auth:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Signers: []common.PublicKey{
+						common.PublicKeyFromString("S1gner1111111111111111111111111111111111111"),
+						common.PublicKeyFromString("S1gner2111111111111111111111111111111111111"),
+					},
+					To: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.TokenProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("S1gner1111111111111111111111111111111111111"), IsSigner: true, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("S1gner2111111111111111111111111111111111111"), IsSigner: true, IsWritable: false},
+				},
+				Data: []byte{9},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CloseAccount(tt.args.accountPubkey, tt.args.destPubkey, tt.args.authPubkey, tt.args.signerPubkeys); !reflect.DeepEqual(got, tt.want) {
+			if got := CloseAccount(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("CloseAccount() = %v, want %v", got, tt.want)
 			}
 		})
