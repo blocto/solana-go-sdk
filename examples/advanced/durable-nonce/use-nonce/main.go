@@ -38,10 +38,10 @@ func main() {
 	rawTx, err := types.CreateRawTransaction(types.CreateRawTransactionParam{
 		Instructions: []types.Instruction{
 			// you need to put this instruction in the first
-			sysprog.AdvanceNonceAccount(
-				nonceAccountPubkey,
-				feePayer.PublicKey, // nonce account's owner
-			),
+			sysprog.AdvanceNonceAccount(sysprog.AdvanceNonceAccountParam{
+				Nonce: nonceAccountPubkey,
+				Auth:  feePayer.PublicKey, // nonce account's owner
+			}),
 			// now put the instrucitons you really want to do
 			// here I use transfer as a example
 			sysprog.Transfer(sysprog.TransferParam{

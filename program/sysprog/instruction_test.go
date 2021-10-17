@@ -186,6 +186,42 @@ func TestCreateAccountWithSeed(t *testing.T) {
 	}
 }
 
+func TestAdvanceNonceAccount(t *testing.T) {
+	type args struct {
+		param AdvanceNonceAccountParam
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				param: AdvanceNonceAccountParam{
+					Nonce: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Auth:  common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.SystemProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: false, IsWritable: true},
+					{PubKey: common.SysVarRecentBlockhashsPubkey, IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: true, IsWritable: false},
+				},
+				Data: []byte{4, 0, 0, 0},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := AdvanceNonceAccount(tt.args.param); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("AdvanceNonceAccount() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestAllocateWithSeed(t *testing.T) {
 	type args struct {
 		accountPubkey common.PublicKey
@@ -335,41 +371,6 @@ func TestTransferWithSeed(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := TransferWithSeed(tt.args.from, tt.args.to, tt.args.base, tt.args.programID, tt.args.seed, tt.args.lamports); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("TransferWithSeed() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestAdvanceNonceAccount(t *testing.T) {
-	type args struct {
-		noncePubkey common.PublicKey
-		authPubkey  common.PublicKey
-	}
-	tests := []struct {
-		name string
-		args args
-		want types.Instruction
-	}{
-		{
-			args: args{
-				noncePubkey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				authPubkey:  common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-			},
-			want: types.Instruction{
-				ProgramID: common.SystemProgramID,
-				Accounts: []types.AccountMeta{
-					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: false, IsWritable: true},
-					{PubKey: common.SysVarRecentBlockhashsPubkey, IsSigner: false, IsWritable: false},
-					{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: true, IsWritable: false},
-				},
-				Data: []byte{4, 0, 0, 0},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := AdvanceNonceAccount(tt.args.noncePubkey, tt.args.authPubkey); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("AdvanceNonceAccount() = %v, want %v", got, tt.want)
 			}
 		})
 	}

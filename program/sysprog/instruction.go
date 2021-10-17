@@ -157,7 +157,12 @@ func CreateAccountWithSeed(param CreateAccountWithSeedParam) types.Instruction {
 	}
 }
 
-func AdvanceNonceAccount(noncePubkey, authPubkey common.PublicKey) types.Instruction {
+type AdvanceNonceAccountParam struct {
+	Nonce common.PublicKey
+	Auth  common.PublicKey
+}
+
+func AdvanceNonceAccount(param AdvanceNonceAccountParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 	}{
@@ -169,9 +174,9 @@ func AdvanceNonceAccount(noncePubkey, authPubkey common.PublicKey) types.Instruc
 
 	return types.Instruction{
 		Accounts: []types.AccountMeta{
-			{PubKey: noncePubkey, IsSigner: false, IsWritable: true},
+			{PubKey: param.Nonce, IsSigner: false, IsWritable: true},
 			{PubKey: common.SysVarRecentBlockhashsPubkey, IsSigner: false, IsWritable: false},
-			{PubKey: authPubkey, IsSigner: true, IsWritable: false},
+			{PubKey: param.Auth, IsSigner: true, IsWritable: false},
 		},
 		ProgramID: common.SystemProgramID,
 		Data:      data,
