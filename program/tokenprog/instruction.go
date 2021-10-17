@@ -32,8 +32,19 @@ const (
 	InitializeMint2
 )
 
+type InitializeMintParam struct {
+	Decimals   uint8
+	Mint       common.PublicKey
+	MintAuth   common.PublicKey
+	FreezeAuth *common.PublicKey
+}
+
 // InitializeMint init a mint, if you don't need to freeze, pass the empty pubKey common.PublicKey{}
-func InitializeMint(decimals uint8, mint, mintAuthority common.PublicKey, freezeAuthority common.PublicKey) types.Instruction {
+func InitializeMint(param InitializeMintParam) types.Instruction {
+	var freezeAuth common.PublicKey
+	if param.FreezeAuth != nil {
+		freezeAuth = *param.FreezeAuth
+	}
 	data, err := bincode.SerializeData(struct {
 		Instruction     Instruction
 		Decimals        uint8
@@ -42,10 +53,10 @@ func InitializeMint(decimals uint8, mint, mintAuthority common.PublicKey, freeze
 		FreezeAuthority common.PublicKey
 	}{
 		Instruction:     InstructionInitializeMint,
-		Decimals:        decimals,
-		MintAuthority:   mintAuthority,
-		Option:          freezeAuthority != common.PublicKey{},
-		FreezeAuthority: freezeAuthority,
+		Decimals:        param.Decimals,
+		MintAuthority:   param.MintAuth,
+		Option:          param.FreezeAuth != nil,
+		FreezeAuthority: freezeAuth,
 	})
 	if err != nil {
 		panic(err)
@@ -54,7 +65,7 @@ func InitializeMint(decimals uint8, mint, mintAuthority common.PublicKey, freeze
 	return types.Instruction{
 		ProgramID: common.TokenProgramID,
 		Accounts: []types.AccountMeta{
-			{PubKey: mint, IsSigner: false, IsWritable: true},
+			{PubKey: param.Mint, IsSigner: false, IsWritable: true},
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 		},
 		Data: data,

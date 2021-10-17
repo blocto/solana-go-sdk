@@ -46,12 +46,12 @@ func main() {
 				Lamports: rentExemptionBalance,
 				Space:    tokenprog.MintAccountSize,
 			}),
-			tokenprog.InitializeMint(
-				8,
-				mint.PublicKey,
-				alice.PublicKey,
-				common.PublicKey{},
-			),
+			tokenprog.InitializeMint(tokenprog.InitializeMintParam{
+				Decimals:   8,
+				Mint:       mint.PublicKey,
+				MintAuth:   alice.PublicKey,
+				FreezeAuth: nil,
+			}),
 		},
 		Signers:         []types.Account{feePayer, mint},
 		FeePayer:        feePayer.PublicKey,
