@@ -10,9 +10,7 @@ import (
 
 func TestCreateAssociatedTokenAccount(t *testing.T) {
 	type args struct {
-		funder    common.PublicKey
-		wallet    common.PublicKey
-		tokenMint common.PublicKey
+		param CreateAssociatedTokenAccountParam
 	}
 	tests := []struct {
 		name string
@@ -21,9 +19,12 @@ func TestCreateAssociatedTokenAccount(t *testing.T) {
 	}{
 		{
 			args: args{
-				funder:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				wallet:    common.PublicKeyFromString("5JksDo879mvhxnBPLKPQLvgemxi4et75ipWC9BaLTHBK"),
-				tokenMint: common.PublicKeyFromString("G1dYC47buM23b4kdWsa7utfEGM95t2LL3fZn535W5pYC"),
+				param: CreateAssociatedTokenAccountParam{
+					Funder:                 common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Owner:                  common.PublicKeyFromString("5JksDo879mvhxnBPLKPQLvgemxi4et75ipWC9BaLTHBK"),
+					Mint:                   common.PublicKeyFromString("G1dYC47buM23b4kdWsa7utfEGM95t2LL3fZn535W5pYC"),
+					AssociatedTokenAccount: common.PublicKeyFromString("8qJdAUsYNCRDDfs7ANyCoLPUj9CfnTM1aJU6Sndbviro"),
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.SPLAssociatedTokenAccountProgramID,
@@ -42,7 +43,7 @@ func TestCreateAssociatedTokenAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CreateAssociatedTokenAccount(tt.args.funder, tt.args.wallet, tt.args.tokenMint); !reflect.DeepEqual(got, tt.want) {
+			if got := CreateAssociatedTokenAccount(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("CreateAssociatedTokenAccount() = %v, want %v", got, tt.want)
 			}
 		})

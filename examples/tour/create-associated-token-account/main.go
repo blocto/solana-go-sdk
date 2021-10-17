@@ -33,11 +33,12 @@ func main() {
 	}
 	rawTx, err := types.CreateRawTransaction(types.CreateRawTransactionParam{
 		Instructions: []types.Instruction{
-			assotokenprog.CreateAssociatedTokenAccount(
-				feePayer.PublicKey,
-				alice.PublicKey,
-				mintPubkey,
-			),
+			assotokenprog.CreateAssociatedTokenAccount(assotokenprog.CreateAssociatedTokenAccountParam{
+				Funder:                 feePayer.PublicKey,
+				Owner:                  alice.PublicKey,
+				Mint:                   mintPubkey,
+				AssociatedTokenAccount: ata,
+			}),
 		},
 		Signers:         []types.Account{feePayer},
 		FeePayer:        feePayer.PublicKey,
