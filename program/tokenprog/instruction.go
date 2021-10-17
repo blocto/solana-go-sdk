@@ -511,26 +511,36 @@ func TransferChecked(param TransferCheckedParam) types.Instruction {
 	}
 }
 
-func ApproveChecked(sourcePubkey, mintPubkey, delegatePubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64, decimals uint8) types.Instruction {
+type ApproveCheckedParam struct {
+	From     common.PublicKey
+	Mint     common.PublicKey
+	To       common.PublicKey
+	Auth     common.PublicKey
+	Signers  []common.PublicKey
+	Amount   uint64
+	Decimals uint8
+}
+
+func ApproveChecked(param ApproveCheckedParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Amount      uint64
 		Decimals    uint8
 	}{
 		Instruction: InstructionApproveChecked,
-		Amount:      amount,
-		Decimals:    decimals,
+		Amount:      param.Amount,
+		Decimals:    param.Decimals,
 	})
 	if err != nil {
 		panic(err)
 	}
 
-	accounts := make([]types.AccountMeta, 0, 4+len(signerPubkeys))
-	accounts = append(accounts, types.AccountMeta{PubKey: sourcePubkey, IsSigner: false, IsWritable: true})
-	accounts = append(accounts, types.AccountMeta{PubKey: mintPubkey, IsSigner: false, IsWritable: false})
-	accounts = append(accounts, types.AccountMeta{PubKey: delegatePubkey, IsSigner: false, IsWritable: false})
-	accounts = append(accounts, types.AccountMeta{PubKey: authPubkey, IsSigner: len(signerPubkeys) == 0, IsWritable: false})
-	for _, signerPubkey := range signerPubkeys {
+	accounts := make([]types.AccountMeta, 0, 4+len(param.Signers))
+	accounts = append(accounts, types.AccountMeta{PubKey: param.From, IsSigner: false, IsWritable: true})
+	accounts = append(accounts, types.AccountMeta{PubKey: param.Mint, IsSigner: false, IsWritable: false})
+	accounts = append(accounts, types.AccountMeta{PubKey: param.To, IsSigner: false, IsWritable: false})
+	accounts = append(accounts, types.AccountMeta{PubKey: param.Auth, IsSigner: len(param.Signers) == 0, IsWritable: false})
+	for _, signerPubkey := range param.Signers {
 		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
 	}
 
