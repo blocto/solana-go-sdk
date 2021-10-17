@@ -502,10 +502,7 @@ func TestInitializeAccount2(t *testing.T) {
 
 func TestFreezeAccount(t *testing.T) {
 	type args struct {
-		accountPubkey common.PublicKey
-		mintPubkey    common.PublicKey
-		authPubkey    common.PublicKey
-		signerPubkeys []common.PublicKey
+		param FreezeAccountParam
 	}
 	tests := []struct {
 		name string
@@ -514,9 +511,11 @@ func TestFreezeAccount(t *testing.T) {
 	}{
 		{
 			args: args{
-				accountPubkey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				mintPubkey:    common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				authPubkey:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				param: FreezeAccountParam{
+					Account: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Mint:    common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Auth:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.TokenProgramID,
@@ -528,10 +527,34 @@ func TestFreezeAccount(t *testing.T) {
 				Data: []byte{10},
 			},
 		},
+		{
+			args: args{
+				param: FreezeAccountParam{
+					Account: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Mint:    common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Auth:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Signers: []common.PublicKey{
+						common.PublicKeyFromString("S1gner1111111111111111111111111111111111111"),
+						common.PublicKeyFromString("S1gner2111111111111111111111111111111111111"),
+					},
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.TokenProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("S1gner1111111111111111111111111111111111111"), IsSigner: true, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("S1gner2111111111111111111111111111111111111"), IsSigner: true, IsWritable: false},
+				},
+				Data: []byte{10},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FreezeAccount(tt.args.accountPubkey, tt.args.mintPubkey, tt.args.authPubkey, tt.args.signerPubkeys); !reflect.DeepEqual(got, tt.want) {
+			if got := FreezeAccount(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("FreezeAccount() = %v, want %v", got, tt.want)
 			}
 		})
