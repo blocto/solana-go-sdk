@@ -548,9 +548,7 @@ func TestApprove(t *testing.T) {
 
 func TestRevoke(t *testing.T) {
 	type args struct {
-		srcPubkey     common.PublicKey
-		authPubkey    common.PublicKey
-		signerPubkeys []common.PublicKey
+		param RevokeParam
 	}
 	tests := []struct {
 		name string
@@ -559,8 +557,10 @@ func TestRevoke(t *testing.T) {
 	}{
 		{
 			args: args{
-				srcPubkey:  common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				authPubkey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				param: RevokeParam{
+					From: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Auth: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.TokenProgramID,
@@ -574,7 +574,7 @@ func TestRevoke(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Revoke(tt.args.srcPubkey, tt.args.authPubkey, tt.args.signerPubkeys); !reflect.DeepEqual(got, tt.want) {
+			if got := Revoke(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Revoke() = %v, want %v", got, tt.want)
 			}
 		})

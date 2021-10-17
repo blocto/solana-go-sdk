@@ -215,7 +215,13 @@ func Approve(param ApproveParam) types.Instruction {
 	}
 }
 
-func Revoke(srcPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) types.Instruction {
+type RevokeParam struct {
+	From    common.PublicKey
+	Auth    common.PublicKey
+	Signers []common.PublicKey
+}
+
+func Revoke(param RevokeParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 	}{
@@ -225,12 +231,12 @@ func Revoke(srcPubkey, authPubkey common.PublicKey, signerPubkeys []common.Publi
 		panic(err)
 	}
 
-	accounts := make([]types.AccountMeta, 0, 2+len(signerPubkeys))
+	accounts := make([]types.AccountMeta, 0, 2+len(param.Signers))
 	accounts = append(accounts,
-		types.AccountMeta{PubKey: srcPubkey, IsSigner: false, IsWritable: true},
-		types.AccountMeta{PubKey: authPubkey, IsSigner: len(signerPubkeys) == 0, IsWritable: false},
+		types.AccountMeta{PubKey: param.From, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: param.Auth, IsSigner: len(param.Signers) == 0, IsWritable: false},
 	)
-	for _, signerPubkey := range signerPubkeys {
+	for _, signerPubkey := range param.Signers {
 		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
 	}
 
