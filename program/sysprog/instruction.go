@@ -243,13 +243,19 @@ func InitializeNonceAccount(param InitializeNonceAccountParam) types.Instruction
 	}
 }
 
-func AuthorizeNonceAccount(noncePubkey, oriAuthPubkey, newAuthPubkey common.PublicKey) types.Instruction {
+type AuthorizeNonceAccountParam struct {
+	Nonce   common.PublicKey
+	Auth    common.PublicKey
+	NewAuth common.PublicKey
+}
+
+func AuthorizeNonceAccount(param AuthorizeNonceAccountParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Auth        common.PublicKey
 	}{
 		Instruction: InstructionAuthorizeNonceAccount,
-		Auth:        newAuthPubkey,
+		Auth:        param.NewAuth,
 	})
 	if err != nil {
 		panic(err)
@@ -257,8 +263,8 @@ func AuthorizeNonceAccount(noncePubkey, oriAuthPubkey, newAuthPubkey common.Publ
 
 	return types.Instruction{
 		Accounts: []types.AccountMeta{
-			{PubKey: noncePubkey, IsSigner: false, IsWritable: true},
-			{PubKey: oriAuthPubkey, IsSigner: true, IsWritable: false},
+			{PubKey: param.Nonce, IsSigner: false, IsWritable: true},
+			{PubKey: param.Auth, IsSigner: true, IsWritable: false},
 		},
 		ProgramID: common.SystemProgramID,
 		Data:      data,
