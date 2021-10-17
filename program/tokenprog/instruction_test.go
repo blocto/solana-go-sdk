@@ -1129,3 +1129,56 @@ func TestInitializeMultisig2(t *testing.T) {
 		})
 	}
 }
+
+func TestInitializeMint2(t *testing.T) {
+	type args struct {
+		param InitializeMint2Param
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				param: InitializeMint2Param{
+					Decimals:   1,
+					Mint:       common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					MintAuth:   common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					FreezeAuth: nil,
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.TokenProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"), IsSigner: false, IsWritable: true},
+				},
+				Data: []byte{20, 1, 159, 186, 247, 199, 172, 215, 195, 31, 127, 42, 207, 18, 192, 64, 156, 59, 98, 1, 180, 8, 69, 70, 199, 127, 220, 159, 6, 40, 64, 117, 246, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			},
+		},
+		{
+			args: args{
+				param: InitializeMint2Param{
+					Decimals:   5,
+					Mint:       common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					MintAuth:   common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					FreezeAuth: pointer.Pubkey(common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7")),
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.TokenProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"), IsSigner: false, IsWritable: true},
+				},
+				Data: []byte{20, 5, 159, 186, 247, 199, 172, 215, 195, 31, 127, 42, 207, 18, 192, 64, 156, 59, 98, 1, 180, 8, 69, 70, 199, 127, 220, 159, 6, 40, 64, 117, 246, 19, 1, 206, 211, 135, 230, 195, 111, 87, 254, 147, 239, 143, 81, 110, 159, 49, 140, 109, 137, 224, 197, 24, 49, 223, 61, 123, 8, 78, 109, 110, 136, 228, 240},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := InitializeMint2(tt.args.param); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("InitializeMint2() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

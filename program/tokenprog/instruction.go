@@ -29,7 +29,7 @@ const (
 	InstructionSyncNative
 	InstructionInitializeAccount3
 	InstructionInitializeMultisig2
-	InitializeMint2
+	InstructionInitializeMint2
 )
 
 type InitializeMintParam struct {
@@ -752,5 +752,43 @@ func InitializeMultisig2(param InitializeMultisig2Param) types.Instruction {
 		ProgramID: common.TokenProgramID,
 		Accounts:  accounts,
 		Data:      data,
+	}
+}
+
+type InitializeMint2Param struct {
+	Decimals   uint8
+	Mint       common.PublicKey
+	MintAuth   common.PublicKey
+	FreezeAuth *common.PublicKey
+}
+
+func InitializeMint2(param InitializeMint2Param) types.Instruction {
+	var freezeAuth common.PublicKey
+	if param.FreezeAuth != nil {
+		freezeAuth = *param.FreezeAuth
+	}
+	data, err := bincode.SerializeData(struct {
+		Instruction     Instruction
+		Decimals        uint8
+		MintAuthority   common.PublicKey
+		Option          bool
+		FreezeAuthority common.PublicKey
+	}{
+		Instruction:     InstructionInitializeMint2,
+		Decimals:        param.Decimals,
+		MintAuthority:   param.MintAuth,
+		Option:          param.FreezeAuth != nil,
+		FreezeAuthority: freezeAuth,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts: []types.AccountMeta{
+			{PubKey: param.Mint, IsSigner: false, IsWritable: true},
+		},
+		Data: data,
 	}
 }
