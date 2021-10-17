@@ -30,15 +30,15 @@ func main() {
 	}
 	rawTx, err := types.CreateRawTransaction(types.CreateRawTransactionParam{
 		Instructions: []types.Instruction{
-			tokenprog.TransferChecked(
-				aliceTokenRandomTokenPubkey,
-				aliceTokenATAPubkey,
-				mintPubkey,
-				alice.PublicKey,
-				[]common.PublicKey{},
-				1e8,
-				8,
-			),
+			tokenprog.TransferChecked(tokenprog.TransferCheckedParam{
+				From:     aliceTokenRandomTokenPubkey,
+				To:       aliceTokenATAPubkey,
+				Mint:     mintPubkey,
+				Auth:     alice.PublicKey,
+				Signers:  []common.PublicKey{},
+				Amount:   1e8,
+				Decimals: 8,
+			}),
 		},
 		Signers:         []types.Account{feePayer, alice},
 		FeePayer:        feePayer.PublicKey,

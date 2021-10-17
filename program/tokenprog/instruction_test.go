@@ -250,13 +250,7 @@ func TestTransfer(t *testing.T) {
 
 func TestTransferChecked(t *testing.T) {
 	type args struct {
-		srcPubkey     common.PublicKey
-		destPubkey    common.PublicKey
-		mintPubkey    common.PublicKey
-		authPubkey    common.PublicKey
-		signerPubkeys []common.PublicKey
-		amount        uint64
-		decimals      uint8
+		param TransferCheckedParam
 	}
 	tests := []struct {
 		name string
@@ -265,13 +259,15 @@ func TestTransferChecked(t *testing.T) {
 	}{
 		{
 			args: args{
-				srcPubkey:     common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				destPubkey:    common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				mintPubkey:    common.PublicKeyFromString("HFCNHUwPxRqqW6gaLd3uUjJcEUfjnRptJzh4xvnNmavv"),
-				authPubkey:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				signerPubkeys: []common.PublicKey{},
-				amount:        99999,
-				decimals:      4,
+				param: TransferCheckedParam{
+					From:     common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					To:       common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Mint:     common.PublicKeyFromString("HFCNHUwPxRqqW6gaLd3uUjJcEUfjnRptJzh4xvnNmavv"),
+					Auth:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Signers:  []common.PublicKey{},
+					Amount:   99999,
+					Decimals: 4,
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.TokenProgramID,
@@ -284,10 +280,38 @@ func TestTransferChecked(t *testing.T) {
 				Data: []byte{12, 159, 134, 1, 0, 0, 0, 0, 0, 4},
 			},
 		},
+		{
+			args: args{
+				param: TransferCheckedParam{
+					From: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					To:   common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Mint: common.PublicKeyFromString("HFCNHUwPxRqqW6gaLd3uUjJcEUfjnRptJzh4xvnNmavv"),
+					Auth: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Signers: []common.PublicKey{
+						common.PublicKeyFromString("S1gner1111111111111111111111111111111111111"),
+						common.PublicKeyFromString("S1gner2111111111111111111111111111111111111"),
+					},
+					Amount:   99999,
+					Decimals: 4,
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.TokenProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("HFCNHUwPxRqqW6gaLd3uUjJcEUfjnRptJzh4xvnNmavv"), IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("S1gner1111111111111111111111111111111111111"), IsSigner: true, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("S1gner2111111111111111111111111111111111111"), IsSigner: true, IsWritable: false},
+				},
+				Data: []byte{12, 159, 134, 1, 0, 0, 0, 0, 0, 4},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := TransferChecked(tt.args.srcPubkey, tt.args.destPubkey, tt.args.mintPubkey, tt.args.authPubkey, tt.args.signerPubkeys, tt.args.amount, tt.args.decimals); !reflect.DeepEqual(got, tt.want) {
+			if got := TransferChecked(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("TransferChecked() = %v, want %v", got, tt.want)
 			}
 		})
