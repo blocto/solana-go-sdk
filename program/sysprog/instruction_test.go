@@ -370,11 +370,7 @@ func TestAllocate(t *testing.T) {
 
 func TestAllocateWithSeed(t *testing.T) {
 	type args struct {
-		accountPubkey common.PublicKey
-		basePubkey    common.PublicKey
-		programID     common.PublicKey
-		seed          string
-		space         uint64
+		param AllocateWithSeedParam
 	}
 	tests := []struct {
 		name string
@@ -383,11 +379,13 @@ func TestAllocateWithSeed(t *testing.T) {
 	}{
 		{
 			args: args{
-				accountPubkey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				basePubkey:    common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				programID:     common.SystemProgramID,
-				seed:          "0",
-				space:         256,
+				param: AllocateWithSeedParam{
+					Account: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Base:    common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Owner:   common.SystemProgramID,
+					Seed:    "0",
+					Space:   256,
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.SystemProgramID,
@@ -401,7 +399,7 @@ func TestAllocateWithSeed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := AllocateWithSeed(tt.args.accountPubkey, tt.args.basePubkey, tt.args.programID, tt.args.seed, tt.args.space); !reflect.DeepEqual(got, tt.want) {
+			if got := AllocateWithSeed(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AllocateWithSeed() = %v, want %v", got, tt.want)
 			}
 		})
