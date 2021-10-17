@@ -183,13 +183,20 @@ func AdvanceNonceAccount(param AdvanceNonceAccountParam) types.Instruction {
 	}
 }
 
-func WithdrawNonceAccount(noncePubkey, authPubkey, toPubkey common.PublicKey, lamports uint64) types.Instruction {
+type WithdrawNonceAccountParam struct {
+	Nonce  common.PublicKey
+	Auth   common.PublicKey
+	To     common.PublicKey
+	Amount uint64
+}
+
+func WithdrawNonceAccount(param WithdrawNonceAccountParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Lamports    uint64
 	}{
 		Instruction: InstructionWithdrawNonceAccount,
-		Lamports:    lamports,
+		Lamports:    param.Amount,
 	})
 	if err != nil {
 		panic(err)
@@ -197,11 +204,11 @@ func WithdrawNonceAccount(noncePubkey, authPubkey, toPubkey common.PublicKey, la
 
 	return types.Instruction{
 		Accounts: []types.AccountMeta{
-			{PubKey: noncePubkey, IsSigner: false, IsWritable: true},
-			{PubKey: toPubkey, IsSigner: false, IsWritable: true},
+			{PubKey: param.Nonce, IsSigner: false, IsWritable: true},
+			{PubKey: param.To, IsSigner: false, IsWritable: true},
 			{PubKey: common.SysVarRecentBlockhashsPubkey, IsSigner: false, IsWritable: false},
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
-			{PubKey: authPubkey, IsSigner: true, IsWritable: false},
+			{PubKey: param.Auth, IsSigner: true, IsWritable: false},
 		},
 		ProgramID: common.SystemProgramID,
 		Data:      data,

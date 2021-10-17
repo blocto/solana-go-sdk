@@ -222,6 +222,46 @@ func TestAdvanceNonceAccount(t *testing.T) {
 	}
 }
 
+func TestWithdrawNonceAccount(t *testing.T) {
+	type args struct {
+		param WithdrawNonceAccountParam
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				param: WithdrawNonceAccountParam{
+					Nonce:  common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Auth:   common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					To:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Amount: 1,
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.SystemProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: false, IsWritable: true},
+					{PubKey: common.SysVarRecentBlockhashsPubkey, IsSigner: false, IsWritable: false},
+					{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: true, IsWritable: false},
+				},
+				Data: []byte{5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := WithdrawNonceAccount(tt.args.param); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("WithdrawNonceAccount() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestAllocateWithSeed(t *testing.T) {
 	type args struct {
 		accountPubkey common.PublicKey
@@ -406,47 +446,6 @@ func TestInitializeNonceAccount(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := InitializeNonceAccount(tt.args.noncePubkey, tt.args.authPubkey); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("InitializeNonceAccount() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestWithdrawNonceAccount(t *testing.T) {
-	type args struct {
-		noncePubkey common.PublicKey
-		authPubkey  common.PublicKey
-		toPubkey    common.PublicKey
-		lamports    uint64
-	}
-	tests := []struct {
-		name string
-		args args
-		want types.Instruction
-	}{
-		{
-			args: args{
-				noncePubkey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				authPubkey:  common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				toPubkey:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				lamports:    1,
-			},
-			want: types.Instruction{
-				ProgramID: common.SystemProgramID,
-				Accounts: []types.AccountMeta{
-					{PubKey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"), IsSigner: false, IsWritable: true},
-					{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: false, IsWritable: true},
-					{PubKey: common.SysVarRecentBlockhashsPubkey, IsSigner: false, IsWritable: false},
-					{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
-					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: true, IsWritable: false},
-				},
-				Data: []byte{5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := WithdrawNonceAccount(tt.args.noncePubkey, tt.args.authPubkey, tt.args.toPubkey, tt.args.lamports); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("WithdrawNonceAccount() = %v, want %v", got, tt.want)
 			}
 		})
 	}
