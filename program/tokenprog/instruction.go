@@ -72,8 +72,14 @@ func InitializeMint(param InitializeMintParam) types.Instruction {
 	}
 }
 
+type InitializeAccountParam struct {
+	Account common.PublicKey
+	Mint    common.PublicKey
+	Owner   common.PublicKey
+}
+
 // InitializeAccount init a token account which can receive token
-func InitializeAccount(accountPublicKey, mintPublicKey, ownerPublickey common.PublicKey) types.Instruction {
+func InitializeAccount(param InitializeAccountParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 	}{
@@ -84,9 +90,9 @@ func InitializeAccount(accountPublicKey, mintPublicKey, ownerPublickey common.Pu
 	}
 
 	accounts := []types.AccountMeta{
-		{PubKey: accountPublicKey, IsSigner: false, IsWritable: true},
-		{PubKey: mintPublicKey, IsSigner: false, IsWritable: false},
-		{PubKey: ownerPublickey, IsSigner: false, IsWritable: false},
+		{PubKey: param.Account, IsSigner: false, IsWritable: true},
+		{PubKey: param.Mint, IsSigner: false, IsWritable: false},
+		{PubKey: param.Owner, IsSigner: false, IsWritable: false},
 		{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 	}
 	return types.Instruction{

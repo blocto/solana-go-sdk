@@ -43,11 +43,11 @@ func main() {
 				Lamports: rentExemptionBalance,
 				Space:    tokenprog.TokenAccountSize,
 			}),
-			tokenprog.InitializeAccount(
-				aliceTokenAccount.PublicKey,
-				mintPubkey,
-				alice.PublicKey,
-			),
+			tokenprog.InitializeAccount(tokenprog.InitializeAccountParam{
+				Account: aliceTokenAccount.PublicKey,
+				Mint:    mintPubkey,
+				Owner:   alice.PublicKey,
+			}),
 		},
 		Signers:         []types.Account{feePayer, aliceTokenAccount},
 		FeePayer:        feePayer.PublicKey,
