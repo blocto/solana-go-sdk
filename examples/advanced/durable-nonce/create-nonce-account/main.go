@@ -39,12 +39,12 @@ func main() {
 					Lamports: nonceAccountRentFreeBalance,
 					Space:    sysprog.NonceAccountSize,
 				}),
-				sysprog.InitializeNonceAccount(
+				sysprog.InitializeNonceAccount(sysprog.InitializeNonceAccountParam{
 					// nonce account
-					nonceAccount.PublicKey,
+					Nonce: nonceAccount.PublicKey,
 					// nonce account's owner
-					feePayer.PublicKey,
-				),
+					Auth: feePayer.PublicKey,
+				}),
 			},
 			Signers: []types.Account{feePayer, nonceAccount},
 		},

@@ -215,13 +215,18 @@ func WithdrawNonceAccount(param WithdrawNonceAccountParam) types.Instruction {
 	}
 }
 
-func InitializeNonceAccount(noncePubkey, authPubkey common.PublicKey) types.Instruction {
+type InitializeNonceAccountParam struct {
+	Nonce common.PublicKey
+	Auth  common.PublicKey
+}
+
+func InitializeNonceAccount(param InitializeNonceAccountParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Auth        common.PublicKey
 	}{
 		Instruction: InstructionInitializeNonceAccount,
-		Auth:        authPubkey,
+		Auth:        param.Auth,
 	})
 	if err != nil {
 		panic(err)
@@ -229,7 +234,7 @@ func InitializeNonceAccount(noncePubkey, authPubkey common.PublicKey) types.Inst
 
 	return types.Instruction{
 		Accounts: []types.AccountMeta{
-			{PubKey: noncePubkey, IsSigner: false, IsWritable: true},
+			{PubKey: param.Nonce, IsSigner: false, IsWritable: true},
 			{PubKey: common.SysVarRecentBlockhashsPubkey, IsSigner: false, IsWritable: false},
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 		},
