@@ -535,9 +535,7 @@ func TestCloseAccount(t *testing.T) {
 
 func TestInitializeAccount2(t *testing.T) {
 	type args struct {
-		accountPubkey common.PublicKey
-		mintPubkey    common.PublicKey
-		ownerPubkey   common.PublicKey
+		param InitializeAccount2Param
 	}
 	tests := []struct {
 		name string
@@ -546,9 +544,11 @@ func TestInitializeAccount2(t *testing.T) {
 	}{
 		{
 			args: args{
-				accountPubkey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				mintPubkey:    common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				ownerPubkey:   common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				param: InitializeAccount2Param{
+					Account: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Mint:    common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Owner:   common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.TokenProgramID,
@@ -563,7 +563,7 @@ func TestInitializeAccount2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := InitializeAccount2(tt.args.accountPubkey, tt.args.mintPubkey, tt.args.ownerPubkey); !reflect.DeepEqual(got, tt.want) {
+			if got := InitializeAccount2(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("InitializeAccount2() = %v, want %v", got, tt.want)
 			}
 		})

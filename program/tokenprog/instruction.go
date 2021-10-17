@@ -631,13 +631,19 @@ func BurnChecked(param BurnCheckedParam) types.Instruction {
 	}
 }
 
-func InitializeAccount2(accountPubkey, mintPubkey, ownerPubkey common.PublicKey) types.Instruction {
+type InitializeAccount2Param struct {
+	Account common.PublicKey
+	Mint    common.PublicKey
+	Owner   common.PublicKey
+}
+
+func InitializeAccount2(param InitializeAccount2Param) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Owner       common.PublicKey
 	}{
 		Instruction: InstructionInitializeAccount2,
-		Owner:       ownerPubkey,
+		Owner:       param.Owner,
 	})
 	if err != nil {
 		panic(err)
@@ -646,8 +652,8 @@ func InitializeAccount2(accountPubkey, mintPubkey, ownerPubkey common.PublicKey)
 	return types.Instruction{
 		ProgramID: common.TokenProgramID,
 		Accounts: []types.AccountMeta{
-			{PubKey: accountPubkey, IsSigner: false, IsWritable: true},
-			{PubKey: mintPubkey, IsSigner: false, IsWritable: false},
+			{PubKey: param.Account, IsSigner: false, IsWritable: true},
+			{PubKey: param.Mint, IsSigner: false, IsWritable: false},
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 		},
 		Data: data,
