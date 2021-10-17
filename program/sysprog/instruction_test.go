@@ -126,13 +126,7 @@ func TestTransfer(t *testing.T) {
 
 func TestCreateAccountWithSeed(t *testing.T) {
 	type args struct {
-		fromPubkey       common.PublicKey
-		newAccountPubkey common.PublicKey
-		basePubkey       common.PublicKey
-		programID        common.PublicKey
-		seed             string
-		lamports         uint64
-		space            uint64
+		param CreateAccountWithSeedParam
 	}
 	tests := []struct {
 		name string
@@ -141,13 +135,15 @@ func TestCreateAccountWithSeed(t *testing.T) {
 	}{
 		{
 			args: args{
-				fromPubkey:       common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				newAccountPubkey: common.PublicKeyFromString("DTA7FmUNYuQs2mScj2Lx8gQV63SEL1zGtzCSvPxtijbi"),
-				basePubkey:       common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				programID:        common.SystemProgramID,
-				seed:             "0",
-				lamports:         0,
-				space:            0,
+				param: CreateAccountWithSeedParam{
+					From:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					New:      common.PublicKeyFromString("DTA7FmUNYuQs2mScj2Lx8gQV63SEL1zGtzCSvPxtijbi"),
+					Base:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Owner:    common.SystemProgramID,
+					Seed:     "0",
+					Lamports: 0,
+					Space:    0,
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.SystemProgramID,
@@ -160,13 +156,15 @@ func TestCreateAccountWithSeed(t *testing.T) {
 		},
 		{
 			args: args{
-				fromPubkey:       common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				newAccountPubkey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				basePubkey:       common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				programID:        common.SystemProgramID,
-				seed:             "0",
-				lamports:         0,
-				space:            0,
+				param: CreateAccountWithSeedParam{
+					From:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					New:      common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Base:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Owner:    common.SystemProgramID,
+					Seed:     "0",
+					Lamports: 0,
+					Space:    0,
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.SystemProgramID,
@@ -181,7 +179,7 @@ func TestCreateAccountWithSeed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CreateAccountWithSeed(tt.args.fromPubkey, tt.args.newAccountPubkey, tt.args.basePubkey, tt.args.programID, tt.args.seed, tt.args.lamports, tt.args.space); !reflect.DeepEqual(got, tt.want) {
+			if got := CreateAccountWithSeed(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("CreateAccountWithSeed() = %v, want %v", got, tt.want)
 			}
 		})

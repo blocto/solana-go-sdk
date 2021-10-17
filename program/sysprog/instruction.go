@@ -111,7 +111,17 @@ func Transfer(param TransferParam) types.Instruction {
 	}
 }
 
-func CreateAccountWithSeed(fromPubkey, newAccountPubkey, basePubkey, programID common.PublicKey, seed string, lamports, space uint64) types.Instruction {
+type CreateAccountWithSeedParam struct {
+	From     common.PublicKey
+	New      common.PublicKey
+	Base     common.PublicKey
+	Owner    common.PublicKey
+	Seed     string
+	Lamports uint64
+	Space    uint64
+}
+
+func CreateAccountWithSeed(param CreateAccountWithSeedParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Base        common.PublicKey
@@ -121,11 +131,11 @@ func CreateAccountWithSeed(fromPubkey, newAccountPubkey, basePubkey, programID c
 		ProgramID   common.PublicKey
 	}{
 		Instruction: InstructionCreateAccountWithSeed,
-		Base:        basePubkey,
-		Seed:        seed,
-		Lamports:    lamports,
-		Space:       space,
-		ProgramID:   programID,
+		Base:        param.Base,
+		Seed:        param.Seed,
+		Lamports:    param.Lamports,
+		Space:       param.Space,
+		ProgramID:   param.Owner,
 	})
 	if err != nil {
 		panic(err)
@@ -133,11 +143,11 @@ func CreateAccountWithSeed(fromPubkey, newAccountPubkey, basePubkey, programID c
 
 	accounts := make([]types.AccountMeta, 0, 3)
 	accounts = append(accounts,
-		types.AccountMeta{PubKey: fromPubkey, IsSigner: true, IsWritable: true},
-		types.AccountMeta{PubKey: newAccountPubkey, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: param.From, IsSigner: true, IsWritable: true},
+		types.AccountMeta{PubKey: param.New, IsSigner: false, IsWritable: true},
 	)
-	if basePubkey != fromPubkey {
-		accounts = append(accounts, types.AccountMeta{PubKey: basePubkey, IsSigner: true, IsWritable: false})
+	if param.Base != param.From {
+		accounts = append(accounts, types.AccountMeta{PubKey: param.Base, IsSigner: true, IsWritable: false})
 	}
 
 	return types.Instruction{
