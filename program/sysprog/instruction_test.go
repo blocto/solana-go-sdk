@@ -46,6 +46,40 @@ func TestCreateAccount(t *testing.T) {
 	}
 }
 
+func TestAssign(t *testing.T) {
+	type args struct {
+		param AssignParam
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				param: AssignParam{
+					From:  common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Owner: common.StakeProgramID,
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.SystemProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: true, IsWritable: true},
+				},
+				Data: []byte{1, 0, 0, 0, 6, 161, 216, 23, 145, 55, 84, 42, 152, 52, 55, 189, 254, 42, 122, 178, 85, 127, 83, 92, 138, 120, 114, 43, 104, 164, 157, 192, 0, 0, 0, 0},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Assign(tt.args.param); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Assign() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestCreateAccountWithSeed(t *testing.T) {
 	type args struct {
 		fromPubkey       common.PublicKey
@@ -216,39 +250,6 @@ func TestAllocate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := Allocate(tt.args.accountPubkey, tt.args.space); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Allocate() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestAssign(t *testing.T) {
-	type args struct {
-		accountPubkey     common.PublicKey
-		assignToProgramID common.PublicKey
-	}
-	tests := []struct {
-		name string
-		args args
-		want types.Instruction
-	}{
-		{
-			args: args{
-				accountPubkey:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				assignToProgramID: common.StakeProgramID,
-			},
-			want: types.Instruction{
-				ProgramID: common.SystemProgramID,
-				Accounts: []types.AccountMeta{
-					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: true, IsWritable: true},
-				},
-				Data: []byte{1, 0, 0, 0, 6, 161, 216, 23, 145, 55, 84, 42, 152, 52, 55, 189, 254, 42, 122, 178, 85, 127, 83, 92, 138, 120, 114, 43, 104, 164, 157, 192, 0, 0, 0, 0},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Assign(tt.args.accountPubkey, tt.args.assignToProgramID); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Assign() = %v, want %v", got, tt.want)
 			}
 		})
 	}

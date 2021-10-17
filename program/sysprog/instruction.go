@@ -57,13 +57,18 @@ func CreateAccount(param CreateAccountParam) types.Instruction {
 	}
 }
 
-func Assign(accountPubkey, assignToProgramID common.PublicKey) types.Instruction {
+type AssignParam struct {
+	From  common.PublicKey
+	Owner common.PublicKey
+}
+
+func Assign(param AssignParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction       Instruction
 		AssignToProgramID common.PublicKey
 	}{
 		Instruction:       InstructionAssign,
-		AssignToProgramID: assignToProgramID,
+		AssignToProgramID: param.Owner,
 	})
 	if err != nil {
 		panic(err)
@@ -72,7 +77,7 @@ func Assign(accountPubkey, assignToProgramID common.PublicKey) types.Instruction
 	return types.Instruction{
 		ProgramID: common.SystemProgramID,
 		Accounts: []types.AccountMeta{
-			{PubKey: accountPubkey, IsSigner: true, IsWritable: true},
+			{PubKey: param.From, IsSigner: true, IsWritable: true},
 		},
 		Data: data,
 	}
