@@ -102,14 +102,20 @@ func InitializeAccount(param InitializeAccountParam) types.Instruction {
 	}
 }
 
-func InitializeMultisig(authPubkey common.PublicKey, signerPubkeys []common.PublicKey, miniRequired uint8) types.Instruction {
-	if len(signerPubkeys) < 1 {
+type InitializeMultisigParam struct {
+	Account     common.PublicKey
+	Signers     []common.PublicKey
+	MinRequired uint8
+}
+
+func InitializeMultisig(param InitializeMultisigParam) types.Instruction {
+	if len(param.Signers) < 1 {
 		panic("minimum of signer is 1")
 	}
-	if len(signerPubkeys) > 11 {
+	if len(param.Signers) > 11 {
 		panic("maximum of signer is 11")
 	}
-	if miniRequired > uint8(len(signerPubkeys)) {
+	if param.MinRequired > uint8(len(param.Signers)) {
 		panic("required number too big")
 	}
 
@@ -118,18 +124,18 @@ func InitializeMultisig(authPubkey common.PublicKey, signerPubkeys []common.Publ
 		MinimumRequired uint8
 	}{
 		Instruction:     InstructionInitializeMultisig,
-		MinimumRequired: miniRequired,
+		MinimumRequired: param.MinRequired,
 	})
 	if err != nil {
 		panic(err)
 	}
 
-	accounts := make([]types.AccountMeta, 0, 2+len(signerPubkeys))
+	accounts := make([]types.AccountMeta, 0, 2+len(param.Signers))
 	accounts = append(accounts,
-		types.AccountMeta{PubKey: authPubkey, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: param.Account, IsSigner: false, IsWritable: true},
 		types.AccountMeta{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 	)
-	for _, signerPubkey := range signerPubkeys {
+	for _, signerPubkey := range param.Signers {
 		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
 	}
 

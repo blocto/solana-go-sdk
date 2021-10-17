@@ -633,9 +633,7 @@ func TestApproveChecked(t *testing.T) {
 
 func TestInitializeMultisig(t *testing.T) {
 	type args struct {
-		authPubkey    common.PublicKey
-		signerPubkeys []common.PublicKey
-		miniRequired  uint8
+		param InitializeMultisigParam
 	}
 	tests := []struct {
 		name string
@@ -644,13 +642,15 @@ func TestInitializeMultisig(t *testing.T) {
 	}{
 		{
 			args: args{
-				authPubkey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				signerPubkeys: []common.PublicKey{
-					common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-					common.PublicKeyFromString("DuNVVSmxNkXZvzT7fEDAWhfDvEgBYohuCGYB9AQzrctY"),
-					common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				param: InitializeMultisigParam{
+					Account: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Signers: []common.PublicKey{
+						common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+						common.PublicKeyFromString("DuNVVSmxNkXZvzT7fEDAWhfDvEgBYohuCGYB9AQzrctY"),
+						common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					},
+					MinRequired: 2,
 				},
-				miniRequired: 2,
 			},
 			want: types.Instruction{
 				ProgramID: common.TokenProgramID,
@@ -668,7 +668,7 @@ func TestInitializeMultisig(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := InitializeMultisig(tt.args.authPubkey, tt.args.signerPubkeys, tt.args.miniRequired); !reflect.DeepEqual(got, tt.want) {
+			if got := InitializeMultisig(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("InitializeMultisig() = %v, want %v", got, tt.want)
 			}
 		})
