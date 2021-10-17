@@ -256,7 +256,19 @@ const (
 	AuthorityTypeCloseAccount
 )
 
-func SetAuthority(accountPubkey, newAuthPubkey common.PublicKey, authType AuthorityType, authPubkey common.PublicKey, signerPubkeys []common.PublicKey) types.Instruction {
+type SetAuthorityParam struct {
+	Account  common.PublicKey
+	NewAuth  *common.PublicKey
+	AuthType AuthorityType
+	Auth     common.PublicKey
+	Signers  []common.PublicKey
+}
+
+func SetAuthority(param SetAuthorityParam) types.Instruction {
+	var newAuth common.PublicKey
+	if param.NewAuth != nil {
+		newAuth = *param.NewAuth
+	}
 	data, err := bincode.SerializeData(struct {
 		Instruction   Instruction
 		AuthorityType AuthorityType
@@ -264,20 +276,20 @@ func SetAuthority(accountPubkey, newAuthPubkey common.PublicKey, authType Author
 		NewAuthPubkey common.PublicKey
 	}{
 		Instruction:   InstructionSetAuthority,
-		AuthorityType: authType,
-		Option:        newAuthPubkey != common.PublicKey{},
-		NewAuthPubkey: newAuthPubkey,
+		AuthorityType: param.AuthType,
+		Option:        param.NewAuth != nil,
+		NewAuthPubkey: newAuth,
 	})
 	if err != nil {
 		panic(err)
 	}
 
-	accounts := make([]types.AccountMeta, 0, 2+len(signerPubkeys))
+	accounts := make([]types.AccountMeta, 0, 2+len(param.Signers))
 	accounts = append(accounts,
-		types.AccountMeta{PubKey: accountPubkey, IsSigner: false, IsWritable: true},
-		types.AccountMeta{PubKey: authPubkey, IsSigner: len(signerPubkeys) == 0, IsWritable: false},
+		types.AccountMeta{PubKey: param.Account, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: param.Auth, IsSigner: len(param.Signers) == 0, IsWritable: false},
 	)
-	for _, signerPubkey := range signerPubkeys {
+	for _, signerPubkey := range param.Signers {
 		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
 	}
 
