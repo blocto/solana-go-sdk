@@ -407,12 +407,7 @@ func TestBurn(t *testing.T) {
 
 func TestBurnChecked(t *testing.T) {
 	type args struct {
-		accountPubkey common.PublicKey
-		mintPubkey    common.PublicKey
-		authPubkey    common.PublicKey
-		signerPubkeys []common.PublicKey
-		amount        uint64
-		decimals      uint8
+		param BurnCheckedParam
 	}
 	tests := []struct {
 		name string
@@ -421,12 +416,14 @@ func TestBurnChecked(t *testing.T) {
 	}{
 		{
 			args: args{
-				accountPubkey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				mintPubkey:    common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				authPubkey:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				signerPubkeys: []common.PublicKey{},
-				amount:        99999,
-				decimals:      9,
+				param: BurnCheckedParam{
+					Account:  common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Auth:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Signers:  []common.PublicKey{},
+					Mint:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Amount:   99999,
+					Decimals: 9,
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.TokenProgramID,
@@ -438,10 +435,36 @@ func TestBurnChecked(t *testing.T) {
 				Data: []byte{15, 159, 134, 1, 0, 0, 0, 0, 0, 9},
 			},
 		},
+		{
+			args: args{
+				param: BurnCheckedParam{
+					Account: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					Auth:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Signers: []common.PublicKey{
+						common.PublicKeyFromString("S1gner1111111111111111111111111111111111111"),
+						common.PublicKeyFromString("S1gner2111111111111111111111111111111111111"),
+					},
+					Mint:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Amount:   99999,
+					Decimals: 9,
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.TokenProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("S1gner1111111111111111111111111111111111111"), IsSigner: true, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("S1gner2111111111111111111111111111111111111"), IsSigner: true, IsWritable: false},
+				},
+				Data: []byte{15, 159, 134, 1, 0, 0, 0, 0, 0, 9},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := BurnChecked(tt.args.accountPubkey, tt.args.mintPubkey, tt.args.authPubkey, tt.args.signerPubkeys, tt.args.amount, tt.args.decimals); !reflect.DeepEqual(got, tt.want) {
+			if got := BurnChecked(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("BurnChecked() = %v, want %v", got, tt.want)
 			}
 		})
