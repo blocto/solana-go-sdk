@@ -28,7 +28,7 @@ const (
 	InstructionInitializeAccount2
 	InstructionSyncNative
 	InstructionInitializeAccount3
-	InitializeMultisig2
+	InstructionInitializeMultisig2
 	InitializeMint2
 )
 
@@ -709,5 +709,48 @@ func InitializeAccount3(param InitializeAccount3Param) types.Instruction {
 			{PubKey: param.Mint, IsSigner: false, IsWritable: false},
 		},
 		Data: data,
+	}
+}
+
+type InitializeMultisig2Param struct {
+	Account     common.PublicKey
+	Signers     []common.PublicKey
+	MinRequired uint8
+}
+
+func InitializeMultisig2(param InitializeMultisig2Param) types.Instruction {
+	if len(param.Signers) < 1 {
+		panic("minimum of signer is 1")
+	}
+	if len(param.Signers) > 11 {
+		panic("maximum of signer is 11")
+	}
+	if param.MinRequired > uint8(len(param.Signers)) {
+		panic("required number too big")
+	}
+
+	data, err := bincode.SerializeData(struct {
+		Instruction     Instruction
+		MinimumRequired uint8
+	}{
+		Instruction:     InstructionInitializeMultisig2,
+		MinimumRequired: param.MinRequired,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	accounts := make([]types.AccountMeta, 0, 2+len(param.Signers))
+	accounts = append(accounts,
+		types.AccountMeta{PubKey: param.Account, IsSigner: false, IsWritable: true},
+	)
+	for _, signerPubkey := range param.Signers {
+		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
+	}
+
+	return types.Instruction{
+		ProgramID: common.TokenProgramID,
+		Accounts:  accounts,
+		Data:      data,
 	}
 }
