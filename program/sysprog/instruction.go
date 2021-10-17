@@ -366,7 +366,16 @@ func AssignWithSeed(param AssignWithSeedParam) types.Instruction {
 	}
 }
 
-func TransferWithSeed(from, to, base, programID common.PublicKey, seed string, lamports uint64) types.Instruction {
+type TransferWithSeedParam struct {
+	From   common.PublicKey
+	To     common.PublicKey
+	Base   common.PublicKey
+	Owner  common.PublicKey
+	Seed   string
+	Amount uint64
+}
+
+func TransferWithSeed(param TransferWithSeedParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Lamports    uint64
@@ -374,9 +383,9 @@ func TransferWithSeed(from, to, base, programID common.PublicKey, seed string, l
 		ProgramID   common.PublicKey
 	}{
 		Instruction: InstructionTransferWithSeed,
-		Lamports:    lamports,
-		Seed:        seed,
-		ProgramID:   programID,
+		Lamports:    param.Amount,
+		Seed:        param.Seed,
+		ProgramID:   param.Owner,
 	})
 	if err != nil {
 		panic(err)
@@ -385,9 +394,9 @@ func TransferWithSeed(from, to, base, programID common.PublicKey, seed string, l
 	return types.Instruction{
 		ProgramID: common.SystemProgramID,
 		Accounts: []types.AccountMeta{
-			{PubKey: from, IsSigner: false, IsWritable: true},
-			{PubKey: base, IsSigner: true, IsWritable: false},
-			{PubKey: to, IsSigner: false, IsWritable: true},
+			{PubKey: param.From, IsSigner: false, IsWritable: true},
+			{PubKey: param.Base, IsSigner: true, IsWritable: false},
+			{PubKey: param.To, IsSigner: false, IsWritable: true},
 		},
 		Data: data,
 	}

@@ -445,12 +445,7 @@ func TestAssignWithSeed(t *testing.T) {
 
 func TestTransferWithSeed(t *testing.T) {
 	type args struct {
-		from      common.PublicKey
-		to        common.PublicKey
-		base      common.PublicKey
-		programID common.PublicKey
-		seed      string
-		lamports  uint64
+		param TransferWithSeedParam
 	}
 	tests := []struct {
 		name string
@@ -459,12 +454,14 @@ func TestTransferWithSeed(t *testing.T) {
 	}{
 		{
 			args: args{
-				from:      common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				to:        common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				base:      common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				programID: common.SystemProgramID,
-				seed:      "0",
-				lamports:  99999,
+				param: TransferWithSeedParam{
+					From:   common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					To:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Base:   common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Owner:  common.SystemProgramID,
+					Seed:   "0",
+					Amount: 99999,
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.SystemProgramID,
@@ -479,7 +476,7 @@ func TestTransferWithSeed(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := TransferWithSeed(tt.args.from, tt.args.to, tt.args.base, tt.args.programID, tt.args.seed, tt.args.lamports); !reflect.DeepEqual(got, tt.want) {
+			if got := TransferWithSeed(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("TransferWithSeed() = %v, want %v", got, tt.want)
 			}
 		})
