@@ -551,27 +551,36 @@ func ApproveChecked(param ApproveCheckedParam) types.Instruction {
 	}
 }
 
-func MintToChecked(mintPubkey, destPubkey, authPubkey common.PublicKey, signerPubkeys []common.PublicKey, amount uint64, decimals uint8) types.Instruction {
+type MintToCheckedParam struct {
+	Mint     common.PublicKey
+	Auth     common.PublicKey
+	Signers  []common.PublicKey
+	To       common.PublicKey
+	Amount   uint64
+	Decimals uint8
+}
+
+func MintToChecked(param MintToCheckedParam) types.Instruction {
 	data, err := bincode.SerializeData(struct {
 		Instruction Instruction
 		Amount      uint64
 		Decimals    uint8
 	}{
 		Instruction: InstructionMintToChecked,
-		Amount:      amount,
-		Decimals:    decimals,
+		Amount:      param.Amount,
+		Decimals:    param.Decimals,
 	})
 	if err != nil {
 		panic(err)
 	}
 
-	accounts := make([]types.AccountMeta, 0, 3+len(signerPubkeys))
+	accounts := make([]types.AccountMeta, 0, 3+len(param.Signers))
 	accounts = append(accounts,
-		types.AccountMeta{PubKey: mintPubkey, IsSigner: false, IsWritable: true},
-		types.AccountMeta{PubKey: destPubkey, IsSigner: false, IsWritable: true},
-		types.AccountMeta{PubKey: authPubkey, IsSigner: len(signerPubkeys) == 0, IsWritable: false},
+		types.AccountMeta{PubKey: param.Mint, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: param.To, IsSigner: false, IsWritable: true},
+		types.AccountMeta{PubKey: param.Auth, IsSigner: len(param.Signers) == 0, IsWritable: false},
 	)
-	for _, signerPubkey := range signerPubkeys {
+	for _, signerPubkey := range param.Signers {
 		accounts = append(accounts, types.AccountMeta{PubKey: signerPubkey, IsSigner: true, IsWritable: false})
 	}
 

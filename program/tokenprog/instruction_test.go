@@ -168,12 +168,7 @@ func TestMintTo(t *testing.T) {
 
 func TestMintToChecked(t *testing.T) {
 	type args struct {
-		mintPubkey    common.PublicKey
-		destPubkey    common.PublicKey
-		authPubkey    common.PublicKey
-		signerPubkeys []common.PublicKey
-		decimals      uint8
-		amount        uint64
+		param MintToCheckedParam
 	}
 	tests := []struct {
 		name string
@@ -182,12 +177,14 @@ func TestMintToChecked(t *testing.T) {
 	}{
 		{
 			args: args{
-				mintPubkey:    common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-				destPubkey:    common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-				authPubkey:    common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
-				signerPubkeys: []common.PublicKey{},
-				decimals:      5,
-				amount:        99999,
+				param: MintToCheckedParam{
+					Mint:     common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					To:       common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Auth:     common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Signers:  []common.PublicKey{},
+					Amount:   99999,
+					Decimals: 5,
+				},
 			},
 			want: types.Instruction{
 				ProgramID: common.TokenProgramID,
@@ -199,10 +196,36 @@ func TestMintToChecked(t *testing.T) {
 				Data: []byte{14, 159, 134, 1, 0, 0, 0, 0, 0, 5},
 			},
 		},
+		{
+			args: args{
+				param: MintToCheckedParam{
+					Mint: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
+					To:   common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+					Auth: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					Signers: []common.PublicKey{
+						common.PublicKeyFromString("S1gner1111111111111111111111111111111111111"),
+						common.PublicKeyFromString("S1gner2111111111111111111111111111111111111"),
+					},
+					Amount:   99999,
+					Decimals: 5,
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.TokenProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("S1gner1111111111111111111111111111111111111"), IsSigner: true, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("S1gner2111111111111111111111111111111111111"), IsSigner: true, IsWritable: false},
+				},
+				Data: []byte{14, 159, 134, 1, 0, 0, 0, 0, 0, 5},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MintToChecked(tt.args.mintPubkey, tt.args.destPubkey, tt.args.authPubkey, tt.args.signerPubkeys, tt.args.amount, tt.args.decimals); !reflect.DeepEqual(got, tt.want) {
+			if got := MintToChecked(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("MintToChecked() = %v, want %v", got, tt.want)
 			}
 		})
