@@ -12,7 +12,7 @@ import (
 )
 
 // There are many ways you can send tx
-var feePayer = types.AccountFromPrivateKeyBytes([]byte{}) // fill your private key here (u8 array)
+var feePayer, _ = types.AccountFromBytes([]byte{}) // fill your private key here (u8 array)
 
 func main() {
 	c := client.NewClient(rpc.DevnetRPCEndpoint)

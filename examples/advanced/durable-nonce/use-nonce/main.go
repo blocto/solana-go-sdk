@@ -66,5 +66,5 @@ func main() {
 		log.Fatalf("failed to send transaction, err: %v", err)
 	}
 
-	fmt.Println(sig)
+	fmt.Println("txhash", sig)
 }

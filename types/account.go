@@ -23,16 +23,8 @@ type Account struct {
 
 func NewAccount() Account {
 	_, X, _ := ed25519.GenerateKey(nil)
-	return AccountFromPrivateKeyBytes(X)
-}
-
-// AccountFromPrivateKeyBytes DEPRECATED, use AccountFromBytes instead. it will be removed in v2.0.0
-func AccountFromPrivateKeyBytes(privateKey []byte) Account {
-	sk := ed25519.PrivateKey(privateKey)
-	return Account{
-		PublicKey:  common.PublicKeyFromBytes(sk.Public().(ed25519.PublicKey)),
-		PrivateKey: sk,
-	}
+	account, _ := AccountFromBytes(X)
+	return account
 }
 
 // AccountFromBytes generate a account by bytes private key
