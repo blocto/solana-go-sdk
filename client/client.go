@@ -148,22 +148,6 @@ func (c *Client) GetRecentBlockhash(ctx context.Context) (rpc.GetRecentBlockHash
 	return res.Result.Value, nil
 }
 
-// SendRawTransaction will send your raw tx
-func (c *Client) SendRawTransaction(ctx context.Context, tx []byte) (string, error) {
-	res, err := c.RpcClient.SendTransactionWithConfig(
-		ctx,
-		base64.StdEncoding.EncodeToString(tx),
-		rpc.SendTransactionConfig{
-			Encoding: rpc.SendTransactionConfigEncodingBase64,
-		},
-	)
-	err = checkRpcResult(res.GeneralResponse, err)
-	if err != nil {
-		return "", err
-	}
-	return res.Result, nil
-}
-
 type QuickSendTransactionParam struct {
 	Instructions []types.Instruction
 	Signers      []types.Account
