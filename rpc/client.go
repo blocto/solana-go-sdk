@@ -10,9 +10,10 @@ import (
 )
 
 const (
-	DevnetRPCEndpoint  = "https://api.devnet.solana.com"
-	TestnetRPCEndpoint = "https://api.testnet.solana.com"
-	MainnetRPCEndpoint = "https://api.mainnet-beta.solana.com"
+	LocalnetRPCEndpoint = "http://localhost:8899"
+	DevnetRPCEndpoint   = "https://api.devnet.solana.com"
+	TestnetRPCEndpoint  = "https://api.testnet.solana.com"
+	MainnetRPCEndpoint  = "https://api.mainnet-beta.solana.com"
 )
 
 // Commitment describes how finalized a block is at that point in time

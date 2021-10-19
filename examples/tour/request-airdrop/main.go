@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	c := client.NewClient(rpc.DevnetRPCEndpoint)
+	c := client.NewClient(rpc.LocalnetRPCEndpoint)
 
 	newAccount := types.NewAccount()
 	fmt.Println(newAccount.PublicKey.ToBase58())

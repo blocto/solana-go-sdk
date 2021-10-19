@@ -18,7 +18,7 @@ var feePayer = types.AccountFromPrivateKeyBytes([]byte{178, 244, 76, 4, 247, 41,
 var alice = types.AccountFromPrivateKeyBytes([]byte{196, 114, 86, 165, 59, 177, 63, 87, 43, 10, 176, 101, 225, 42, 129, 158, 167, 43, 81, 214, 254, 28, 196, 158, 159, 64, 55, 123, 48, 211, 78, 166, 127, 96, 107, 250, 152, 133, 208, 224, 73, 251, 113, 151, 128, 139, 86, 80, 101, 70, 138, 50, 141, 153, 218, 110, 56, 39, 122, 181, 120, 55, 86, 185})
 
 func main() {
-	c := client.NewClient(rpc.DevnetRPCEndpoint)
+	c := client.NewClient(rpc.LocalnetRPCEndpoint)
 
 	// create an mint account
 	mint := types.NewAccount()

@@ -7,13 +7,14 @@ import (
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/program/sysprog"
+	"github.com/portto/solana-go-sdk/rpc"
 )
 
 func main() {
-	c := client.NewClient("http://localhost:8899")
+	c := client.NewClient(rpc.LocalnetRPCEndpoint)
 	accountInfo, err := c.GetAccountInfo(
 		context.Background(),
-		"CjJWxNi3j8PyxSuTwSiJnLSbKuzV5JgRi8WpdPz1LzPX",
+		"CJBP7wJcYbPqfhvtSmLBUf4VzBqJbgC776Wr7CzUCd1m",
 	)
 	if err != nil {
 		log.Fatalf("failed to get account info, err: %v", err)

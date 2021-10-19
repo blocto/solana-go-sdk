@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	c := client.NewClient(rpc.DevnetRPCEndpoint)
+	c := client.NewClient(rpc.LocalnetRPCEndpoint)
 	balance, err := c.GetBalance(
 		context.Background(),
 		"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",

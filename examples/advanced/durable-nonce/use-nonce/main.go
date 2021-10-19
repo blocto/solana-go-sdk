@@ -15,14 +15,14 @@ var feePayer, _ = types.AccountFromBytes([]byte{178, 244, 76, 4, 247, 41, 113, 4
 
 func main() {
 	// you created before
-	nonceAccountPubkey := common.PublicKeyFromString("CjJWxNi3j8PyxSuTwSiJnLSbKuzV5JgRi8WpdPz1LzPX")
+	nonceAccountPubkey := common.PublicKeyFromString("CJBP7wJcYbPqfhvtSmLBUf4VzBqJbgC776Wr7CzUCd1m")
 
 	c := client.NewClient("http://localhost:8899")
 
 	// fetch nonce
 	accountInfo, err := c.GetAccountInfo(
 		context.Background(),
-		"CjJWxNi3j8PyxSuTwSiJnLSbKuzV5JgRi8WpdPz1LzPX",
+		nonceAccountPubkey.ToBase58(),
 	)
 	if err != nil {
 		log.Fatalf("failed to get account info, err: %v", err)

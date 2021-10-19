@@ -10,10 +10,10 @@ import (
 )
 
 func main() {
-	c := client.NewClient(rpc.DevnetRPCEndpoint)
+	c := client.NewClient(rpc.LocalnetRPCEndpoint)
 	balance, decimals, err := c.GetTokenAccountBalance(
 		context.Background(),
-		"AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
+		"BSqFxVXT9FtFuHDCDgm6aUW1NHMwYGTCiYc9aoSc4atw",
 	)
 	if err != nil {
 		log.Fatalln("get balance error", err)
