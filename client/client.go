@@ -14,7 +14,7 @@ import (
 )
 
 type Client struct {
-	rpc.RpcClient
+	RpcClient rpc.RpcClient
 }
 
 func NewClient(endpoint string) *Client {
