@@ -35,31 +35,33 @@ func main() {
 	// create a random account
 	to := types.NewAccount()
 
-	rawTx, err := types.CreateRawTransaction(types.CreateRawTransactionParam{
-		Instructions: []types.Instruction{
-			// you need to put this instruction in the first
-			sysprog.AdvanceNonceAccount(sysprog.AdvanceNonceAccountParam{
-				Nonce: nonceAccountPubkey,
-				Auth:  feePayer.PublicKey, // nonce account's owner
-			}),
-			// now put the instrucitons you really want to do
-			// here I use transfer as a example
-			sysprog.Transfer(sysprog.TransferParam{
-				From:   feePayer.PublicKey,
-				To:     to.PublicKey,
-				Amount: 1e9,
-			}),
-		},
-		Signers:  []types.Account{feePayer},
-		FeePayer: feePayer.PublicKey,
-		// here must use the nonce account's nonce as a recent blockhash
-		RecentBlockHash: nonceAccount.Nonce.ToBase58(),
+	tx, err := types.NewTransaction(types.NewTransactionParam{
+		Message: types.NewMessage(types.NewMessageParam{
+			FeePayer: feePayer.PublicKey,
+			// here must use the nonce account's nonce as a recent blockhash
+			RecentBlockhash: nonceAccount.Nonce.ToBase58(),
+			Instructions: []types.Instruction{
+				// you need to put this instruction in the first
+				sysprog.AdvanceNonceAccount(sysprog.AdvanceNonceAccountParam{
+					Nonce: nonceAccountPubkey,
+					Auth:  feePayer.PublicKey, // nonce account's owner
+				}),
+				// now put the instrucitons you really want to do
+				// here I use transfer as a example
+				sysprog.Transfer(sysprog.TransferParam{
+					From:   feePayer.PublicKey,
+					To:     to.PublicKey,
+					Amount: 1e9,
+				}),
+			},
+		}),
+		Signers: []types.Account{feePayer},
 	})
 	if err != nil {
 		log.Fatalf("failed to create raw transaction, err: %v", err)
 	}
 
-	sig, err := c.SendRawTransaction(context.Background(), rawTx)
+	sig, err := c.SendTransaction(context.Background(), tx)
 	if err != nil {
 		log.Fatalf("failed to send transaction, err: %v", err)
 	}

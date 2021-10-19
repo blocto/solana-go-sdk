@@ -21,22 +21,28 @@ type Transaction struct {
 	Message    Message
 }
 
-func NewTransaction(message Message, signers []Account) (Transaction, error) {
-	signatures := make([]Signature, 0, message.Header.NumRequireSignatures)
-	for i := uint8(0); i < message.Header.NumRequireSignatures; i++ {
+type NewTransactionParam struct {
+	Message Message
+	Signers []Account
+}
+
+// NewTransaction create a new tx by message and signer. it will reserve signatures slot.
+func NewTransaction(param NewTransactionParam) (Transaction, error) {
+	signatures := make([]Signature, 0, param.Message.Header.NumRequireSignatures)
+	for i := uint8(0); i < param.Message.Header.NumRequireSignatures; i++ {
 		signatures = append(signatures, make([]byte, 64))
 	}
 
 	m := map[common.PublicKey]uint8{}
-	for i := uint8(0); i < message.Header.NumRequireSignatures; i++ {
-		m[message.Accounts[i]] = i
+	for i := uint8(0); i < param.Message.Header.NumRequireSignatures; i++ {
+		m[param.Message.Accounts[i]] = i
 	}
 
-	data, err := message.Serialize()
+	data, err := param.Message.Serialize()
 	if err != nil {
 		return Transaction{}, fmt.Errorf("failed to serialize message, err: %v", err)
 	}
-	for _, signer := range signers {
+	for _, signer := range param.Signers {
 		idx, ok := m[signer.PublicKey]
 		if !ok {
 			return Transaction{}, fmt.Errorf("%w, %v is not a signer", ErrTransactionAddNotNecessarySignatures, signer.PublicKey)
@@ -46,10 +52,11 @@ func NewTransaction(message Message, signers []Account) (Transaction, error) {
 
 	return Transaction{
 		Signatures: signatures,
-		Message:    message,
+		Message:    param.Message,
 	}, nil
 }
 
+// AddSignature will add or replace signature into the correct order signature's slot.
 func (tx *Transaction) AddSignature(sig []byte) error {
 	data, err := tx.Message.Serialize()
 	if err != nil {
@@ -65,32 +72,7 @@ func (tx *Transaction) AddSignature(sig []byte) error {
 	return fmt.Errorf("%w, no match signer", ErrTransactionAddNotNecessarySignatures)
 }
 
-func (tx *Transaction) sign(accounts []Account) (*Transaction, error) {
-	if int(tx.Message.Header.NumRequireSignatures) != len(accounts) {
-		return nil, errors.New("signer's num not match")
-	}
-
-	message, err := tx.Message.Serialize()
-	if err != nil {
-		return nil, err
-	}
-
-	accountMap := map[common.PublicKey]ed25519.PrivateKey{}
-	for _, account := range accounts {
-		accountMap[account.PublicKey] = account.PrivateKey
-	}
-
-	for i := 0; i < int(tx.Message.Header.NumRequireSignatures); i++ {
-		privateKey, exist := accountMap[tx.Message.Accounts[i]]
-		if !exist {
-			return nil, fmt.Errorf("lack %s's private key", tx.Message.Accounts[i].ToBase58())
-		}
-		signature := ed25519.Sign(privateKey, message)
-		tx.Signatures = append(tx.Signatures, signature)
-	}
-	return tx, nil
-}
-
+// Serialize pack tx into byte array
 func (tx *Transaction) Serialize() ([]byte, error) {
 	if len(tx.Signatures) == 0 || len(tx.Signatures) != int(tx.Message.Header.NumRequireSignatures) {
 		return nil, errors.New("Signature verification failed")
@@ -112,6 +94,7 @@ func (tx *Transaction) Serialize() ([]byte, error) {
 	return output, nil
 }
 
+// TransactionDeserialize can deserialize a tx from byte array
 func TransactionDeserialize(tx []byte) (Transaction, error) {
 	signatureCount, err := parseUvarint(&tx)
 	if err != nil {
@@ -144,40 +127,13 @@ func TransactionDeserialize(tx []byte) (Transaction, error) {
 	}, nil
 }
 
+// MustTransactionDeserialize can deserialize a tx from byte array, it panic if error ocour
 func MustTransactionDeserialize(data []byte) Transaction {
 	tx, err := TransactionDeserialize(data)
 	if err != nil {
 		panic(err)
 	}
 	return tx
-}
-
-type CreateRawTransactionParam struct {
-	Instructions    []Instruction
-	Signers         []Account
-	FeePayer        common.PublicKey
-	RecentBlockHash string
-}
-
-func CreateRawTransaction(param CreateRawTransactionParam) ([]byte, error) {
-	if param.RecentBlockHash == "" {
-		return nil, errors.New("recent block hash is required")
-	}
-	if len(param.Instructions) < 1 {
-		return nil, errors.New("no instructions provided")
-	}
-
-	tx := Transaction{
-		Signatures: []Signature{},
-		Message:    NewMessage(param.FeePayer, param.Instructions, param.RecentBlockHash),
-	}
-
-	signTx, err := tx.sign(param.Signers)
-	if err != nil {
-		return nil, err
-	}
-
-	return signTx.Serialize()
 }
 
 func parseUvarint(tx *[]byte) (uint64, error) {
@@ -190,21 +146,4 @@ func parseUvarint(tx *[]byte) (uint64, error) {
 	}
 	*tx = (*tx)[n:]
 	return u, nil
-}
-
-func CreateTransaction(message Message, signaturePairs map[common.PublicKey]Signature) (Transaction, error) {
-	signatures := make([]Signature, 0, len(signaturePairs))
-	for i := 0; i < int(message.Header.NumRequireSignatures); i++ {
-		account := message.Accounts[i]
-		signature, exist := signaturePairs[account]
-		if !exist {
-			return Transaction{}, fmt.Errorf("lack %s's signature", account.ToBase58())
-		}
-		signatures = append(signatures, signature)
-	}
-
-	return Transaction{
-		Signatures: signatures,
-		Message:    message,
-	}, nil
 }

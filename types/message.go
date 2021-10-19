@@ -167,9 +167,15 @@ func MustMessageDeserialize(messageData []byte) Message {
 	return message
 }
 
-func NewMessage(feePayer common.PublicKey, instructions []Instruction, recentBlockHash string) Message {
+type NewMessageParam struct {
+	FeePayer        common.PublicKey
+	Instructions    []Instruction
+	RecentBlockhash string
+}
+
+func NewMessage(param NewMessageParam) Message {
 	accountMap := map[common.PublicKey]*AccountMeta{}
-	for _, instruction := range instructions {
+	for _, instruction := range param.Instructions {
 		// program is a readonly unsigned account
 		_, exist := accountMap[instruction.ProgramID]
 		if !exist {
@@ -224,15 +230,15 @@ func NewMessage(feePayer common.PublicKey, instructions []Instruction, recentBlo
 			return bytes.Compare(readOnlyUnsignedAccount[i].Bytes(), readOnlyUnsignedAccount[j].Bytes()) < 0
 		})
 	}
-	if feePayer != (common.PublicKey{}) {
+	if param.FeePayer != (common.PublicKey{}) {
 		for _, account := range accountMap {
-			if feePayer == account.PubKey {
+			if param.FeePayer == account.PubKey {
 				continue
 			}
 			classify(account)
 		}
 		sortAllAccount()
-		writableSignedAccount = append([]common.PublicKey{feePayer}, writableSignedAccount...)
+		writableSignedAccount = append([]common.PublicKey{param.FeePayer}, writableSignedAccount...)
 	} else {
 		for _, account := range accountMap {
 			classify(account)
@@ -251,7 +257,7 @@ func NewMessage(feePayer common.PublicKey, instructions []Instruction, recentBlo
 	}
 
 	compiledInstructions := []CompiledInstruction{}
-	for _, instruction := range instructions {
+	for _, instruction := range param.Instructions {
 		accountIdx := []int{}
 		for _, account := range instruction.Accounts {
 			accountIdx = append(accountIdx, publicKeyToIdx[account.PubKey])
@@ -270,7 +276,7 @@ func NewMessage(feePayer common.PublicKey, instructions []Instruction, recentBlo
 			NumReadonlyUnsignedAccounts: uint8(len(readOnlyUnsignedAccount)),
 		},
 		Accounts:        publicKeys,
-		RecentBlockHash: recentBlockHash,
+		RecentBlockHash: param.RecentBlockhash,
 		Instructions:    compiledInstructions,
 	}
 }

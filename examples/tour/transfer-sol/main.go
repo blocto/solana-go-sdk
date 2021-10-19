@@ -27,20 +27,23 @@ func main() {
 	}
 
 	// create a message
-	message := types.NewMessage(
-		feePayer.PublicKey,
-		[]types.Instruction{
+	message := types.NewMessage(types.NewMessageParam{
+		FeePayer:        feePayer.PublicKey,
+		RecentBlockhash: res.Blockhash, // recent blockhash
+		Instructions: []types.Instruction{
 			sysprog.Transfer(sysprog.TransferParam{
 				From:   alice.PublicKey,                                                            // from
 				To:     common.PublicKeyFromString("2xNweLHLqrbx4zo1waDvgWJHgsUpPj8Y8icbAFeR4a8i"), // to
 				Amount: 1e9,                                                                        // 1 SOL
 			}),
 		},
-		res.Blockhash, // recent blockhash
-	)
+	})
 
 	// create tx by message + signer
-	tx, err := types.NewTransaction(message, []types.Account{feePayer, alice})
+	tx, err := types.NewTransaction(types.NewTransactionParam{
+		Message: message,
+		Signers: []types.Account{feePayer, alice},
+	})
 	if err != nil {
 		log.Fatalf("failed to new transaction, err: %v", err)
 	}

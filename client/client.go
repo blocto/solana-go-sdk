@@ -160,14 +160,20 @@ func (c *Client) QuickSendTransaction(ctx context.Context, param QuickSendTransa
 	if err != nil {
 		return "", fmt.Errorf("failed to get recent blockhash, err: %v", err)
 	}
-	rawTx, err := types.CreateRawTransaction(types.CreateRawTransactionParam{
-		Instructions:    param.Instructions,
-		Signers:         param.Signers,
-		FeePayer:        param.FeePayer,
-		RecentBlockHash: recentBlockhashRes.Blockhash,
+	tx, err := types.NewTransaction(types.NewTransactionParam{
+		Message: types.NewMessage(types.NewMessageParam{
+			Instructions:    param.Instructions,
+			FeePayer:        param.FeePayer,
+			RecentBlockhash: recentBlockhashRes.Blockhash,
+		}),
+		Signers: param.Signers,
 	})
 	if err != nil {
-		return "", fmt.Errorf("failed to build tx, err: %v", err)
+		return "", fmt.Errorf("failed to create new tx, err: %v", err)
+	}
+	rawTx, err := tx.Serialize()
+	if err != nil {
+		return "", fmt.Errorf("failed to serialize tx, err: %v", err)
 	}
 	res, err := c.RpcClient.SendTransactionWithConfig(
 		ctx,

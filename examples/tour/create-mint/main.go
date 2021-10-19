@@ -37,33 +37,35 @@ func main() {
 	if err != nil {
 		log.Fatalf("get recent block hash error, err: %v\n", err)
 	}
-	rawTx, err := types.CreateRawTransaction(types.CreateRawTransactionParam{
-		Instructions: []types.Instruction{
-			sysprog.CreateAccount(sysprog.CreateAccountParam{
-				From:     feePayer.PublicKey,
-				New:      mint.PublicKey,
-				Owner:    common.TokenProgramID,
-				Lamports: rentExemptionBalance,
-				Space:    tokenprog.MintAccountSize,
-			}),
-			tokenprog.InitializeMint(tokenprog.InitializeMintParam{
-				Decimals:   8,
-				Mint:       mint.PublicKey,
-				MintAuth:   alice.PublicKey,
-				FreezeAuth: nil,
-			}),
-		},
-		Signers:         []types.Account{feePayer, mint},
-		FeePayer:        feePayer.PublicKey,
-		RecentBlockHash: res.Blockhash,
+	tx, err := types.NewTransaction(types.NewTransactionParam{
+		Message: types.NewMessage(types.NewMessageParam{
+			FeePayer:        feePayer.PublicKey,
+			RecentBlockhash: res.Blockhash,
+			Instructions: []types.Instruction{
+				sysprog.CreateAccount(sysprog.CreateAccountParam{
+					From:     feePayer.PublicKey,
+					New:      mint.PublicKey,
+					Owner:    common.TokenProgramID,
+					Lamports: rentExemptionBalance,
+					Space:    tokenprog.MintAccountSize,
+				}),
+				tokenprog.InitializeMint(tokenprog.InitializeMintParam{
+					Decimals:   8,
+					Mint:       mint.PublicKey,
+					MintAuth:   alice.PublicKey,
+					FreezeAuth: nil,
+				}),
+			},
+		}),
+		Signers: []types.Account{feePayer, mint},
 	})
 	if err != nil {
 		log.Fatalf("generate tx error, err: %v\n", err)
 	}
 
-	txhash, err := c.SendRawTransaction(context.Background(), rawTx)
+	txhash, err := c.SendTransaction(context.Background(), tx)
 	if err != nil {
-		log.Fatalf("send raw tx error, err: %v\n", err)
+		log.Fatalf("send tx error, err: %v\n", err)
 	}
 
 	log.Println("txhash:", txhash)

@@ -35,22 +35,24 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to get recent blockhash, err: %v", err)
 	}
-	rawTx, err := types.CreateRawTransaction(types.CreateRawTransactionParam{
-		Instructions: []types.Instruction{
-			sysprog.Transfer(sysprog.TransferParam{
-				From:   feePayer.PublicKey,
-				To:     feePayer.PublicKey,
-				Amount: 1,
-			}),
-		},
-		Signers:         []types.Account{feePayer},
-		FeePayer:        feePayer.PublicKey,
-		RecentBlockHash: resp.Blockhash,
+	tx, err := types.NewTransaction(types.NewTransactionParam{
+		Message: types.NewMessage(types.NewMessageParam{
+			FeePayer:        feePayer.PublicKey,
+			RecentBlockhash: resp.Blockhash,
+			Instructions: []types.Instruction{
+				sysprog.Transfer(sysprog.TransferParam{
+					From:   feePayer.PublicKey,
+					To:     feePayer.PublicKey,
+					Amount: 1,
+				}),
+			},
+		}),
+		Signers: []types.Account{feePayer},
 	})
 	if err != nil {
 		log.Fatalf("failed to build raw tx, err: %v", err)
 	}
-	sig, err = c.SendRawTransaction(context.Background(), rawTx)
+	sig, err = c.SendTransaction(context.Background(), tx)
 	if err != nil {
 		log.Fatalf("failed to send tx, err: %v", err)
 	}

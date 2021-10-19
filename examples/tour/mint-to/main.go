@@ -28,26 +28,28 @@ func main() {
 	if err != nil {
 		log.Fatalf("get recent block hash error, err: %v\n", err)
 	}
-	rawTx, err := types.CreateRawTransaction(types.CreateRawTransactionParam{
-		Instructions: []types.Instruction{
-			tokenprog.MintToChecked(tokenprog.MintToCheckedParam{
-				Mint:     mintPubkey,
-				Auth:     alice.PublicKey,
-				Signers:  []common.PublicKey{},
-				To:       aliceTokenRandomTokenPubkey,
-				Amount:   1e8,
-				Decimals: 8,
-			}),
-		},
-		Signers:         []types.Account{feePayer, alice},
-		FeePayer:        feePayer.PublicKey,
-		RecentBlockHash: res.Blockhash,
+	tx, err := types.NewTransaction(types.NewTransactionParam{
+		Message: types.NewMessage(types.NewMessageParam{
+			FeePayer:        feePayer.PublicKey,
+			RecentBlockhash: res.Blockhash,
+			Instructions: []types.Instruction{
+				tokenprog.MintToChecked(tokenprog.MintToCheckedParam{
+					Mint:     mintPubkey,
+					Auth:     alice.PublicKey,
+					Signers:  []common.PublicKey{},
+					To:       aliceTokenRandomTokenPubkey,
+					Amount:   1e8,
+					Decimals: 8,
+				}),
+			},
+		}),
+		Signers: []types.Account{feePayer, alice},
 	})
 	if err != nil {
 		log.Fatalf("generate tx error, err: %v\n", err)
 	}
 
-	txhash, err := c.SendRawTransaction(context.Background(), rawTx)
+	txhash, err := c.SendTransaction(context.Background(), tx)
 	if err != nil {
 		log.Fatalf("send raw tx error, err: %v\n", err)
 	}
