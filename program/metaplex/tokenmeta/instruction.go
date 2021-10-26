@@ -11,6 +11,7 @@ type Instruction uint8
 
 const (
 	InstructionCreateMetadataAccount Instruction = iota
+	InstructionUpdatePrimarySaleHappenedViaToken
 )
 
 func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority common.PublicKey, updateAuthorityIsSigner, isMutable bool, mintData Data) (types.Instruction, error) {
@@ -64,6 +65,35 @@ func CreateMetadataAccount(metadata, mint, mintAuthority, payer, updateAuthority
 			{
 				PubKey:     common.SysVarRentPubkey,
 				IsSigner:   false,
+				IsWritable: false,
+			},
+		},
+		Data: data,
+	}, nil
+}
+
+func UpdatePrimarySaleHappenedViaToken(token, owner common.PublicKey) (types.Instruction, error) {
+	data, err := borsh.Serialize(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionCreateMetadataAccount,
+	})
+
+	if err != nil {
+		return types.Instruction{}, errors.Wrap(err, "failed serialize")
+	}
+
+	return types.Instruction{
+		ProgramID: common.MetaplexTokenMetaProgramID,
+		Accounts: []types.AccountMeta{
+			{
+				PubKey:     token,
+				IsSigner:   false,
+				IsWritable: true,
+			},
+			{
+				PubKey:     owner,
+				IsSigner:   true,
 				IsWritable: false,
 			},
 		},
