@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestGetBlockProductionTest(t *testing.T) {
+func TestGetBlockProduction(t *testing.T) {
 	tests := []testRpcCallParam{
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlockProduction"}`,

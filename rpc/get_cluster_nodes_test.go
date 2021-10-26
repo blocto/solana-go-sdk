@@ -7,7 +7,7 @@ import (
 	"github.com/portto/solana-go-sdk/pkg/pointer"
 )
 
-func TestGetClusterNodesTest(t *testing.T) {
+func TestGetClusterNodes(t *testing.T) {
 	tests := []testRpcCallParam{
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getClusterNodes"}`,
