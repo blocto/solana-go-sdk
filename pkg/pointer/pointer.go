@@ -12,6 +12,14 @@ func Uint8(v uint8) *uint8 {
 	return &v
 }
 
+func Uint16(v uint16) *uint16 {
+	return &v
+}
+
+func Uint32(v uint32) *uint32 {
+	return &v
+}
+
 func Uint64(v uint64) *uint64 {
 	return &v
 }

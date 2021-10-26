@@ -324,3 +324,54 @@ func TestGetMinimumBalanceForRentExemption(t *testing.T) {
 		})
 	}
 }
+
+func TestClient_GetClusterNodes(t *testing.T) {
+	type args struct {
+		ctx context.Context
+	}
+	tests := []struct {
+		name         string
+		requestBody  string
+		responseBody string
+		args         args
+		want         []ClusterNode
+		err          error
+	}{
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getClusterNodes"}`,
+			responseBody: `{"jsonrpc":"2.0","result":[{"featureSet":1797267350,"gossip":"127.0.0.1:1024","pubkey":"8gNdbr9dG6oj8bhaQ44icyMYsfG3t1dhXKUJLGVav4tn","rpc":"127.0.0.1:8899","shredVersion":23492,"tpu":"127.0.0.1:1027","version":"1.8.1"}],"id":1}`,
+			args: args{
+				context.Background(),
+			},
+			want: []ClusterNode{
+				{
+					Pubkey:       common.PublicKeyFromString("8gNdbr9dG6oj8bhaQ44icyMYsfG3t1dhXKUJLGVav4tn"),
+					Gossip:       pointer.String("127.0.0.1:1024"),
+					Tpu:          pointer.String("127.0.0.1:1027"),
+					Rpc:          pointer.String("127.0.0.1:8899"),
+					Version:      pointer.String("1.8.1"),
+					FeatureSet:   pointer.Uint32(1797267350),
+					ShredVersion: pointer.Uint16(23492),
+				},
+			},
+			err: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+				body, err := ioutil.ReadAll(req.Body)
+				assert.Nil(t, err)
+				assert.JSONEq(t, tt.requestBody, string(body))
+				n, err := rw.Write([]byte(tt.responseBody))
+				assert.Nil(t, err)
+				assert.Equal(t, len([]byte(tt.responseBody)), n)
+			}))
+			c := NewClient(server.URL)
+			got, err := c.GetClusterNodes(tt.args.ctx)
+			assert.Equal(t, tt.err, err)
+			assert.Equal(t, tt.want, got)
+			server.Close()
+		})
+	}
+}

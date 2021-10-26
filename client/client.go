@@ -548,6 +548,38 @@ func (c *Client) GetTransactionCountWithConfig(ctx context.Context, cfg rpc.GetT
 	return res.Result, nil
 }
 
+type ClusterNode struct {
+	Pubkey       common.PublicKey
+	Gossip       *string
+	Tpu          *string
+	Rpc          *string
+	Version      *string
+	FeatureSet   *uint32
+	ShredVersion *uint16
+}
+
+// GetClusterNodes returns information about all the nodes participating in the cluster
+func (c *Client) GetClusterNodes(ctx context.Context) ([]ClusterNode, error) {
+	res, err := c.RpcClient.GetClusterNodes(ctx)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return nil, err
+	}
+	output := make([]ClusterNode, 0, len(res.Result))
+	for _, info := range res.Result {
+		output = append(output, ClusterNode{
+			Pubkey:       common.PublicKeyFromString(info.Pubkey),
+			Gossip:       info.Gossip,
+			Tpu:          info.Tpu,
+			Rpc:          info.Rpc,
+			Version:      info.Version,
+			FeatureSet:   info.FeatureSet,
+			ShredVersion: info.ShredVersion,
+		})
+	}
+	return output, nil
+}
+
 func checkRpcResult(res rpc.GeneralResponse, err error) error {
 	if err != nil {
 		return err
