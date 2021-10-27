@@ -51,12 +51,11 @@ func CreateProgramAddress(seeds [][]byte, programId PublicKey) (PublicKey, error
 	buf = append(buf, []byte("ProgramDerivedAddress")...)
 	h := sha256.Sum256(buf)
 
-	_, err := new(edwards25519.Point).SetBytes(h[:])
-	if err == nil {
+	pubkey := PublicKeyFromBytes(h[:])
+	if IsOnCurve(pubkey) {
 		return PublicKey{}, errors.New("invalid seeds, address must fall off the curve")
 	}
-
-	return PublicKeyFromBytes(h[:]), nil
+	return pubkey, nil
 }
 
 func (p PublicKey) ToBase58() string {
@@ -69,6 +68,11 @@ func (p PublicKey) Bytes() []byte {
 
 func (p *PublicKey) MarshalJSON() ([]byte, error) {
 	return json.Marshal(p.ToBase58())
+}
+
+func IsOnCurve(p PublicKey) bool {
+	_, err := new(edwards25519.Point).SetBytes(p.Bytes())
+	return err == nil
 }
 
 func CreateWithSeed(from PublicKey, seed string, programID PublicKey) PublicKey {

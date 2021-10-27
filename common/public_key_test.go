@@ -201,3 +201,40 @@ func TestCreateWithSeed(t *testing.T) {
 		})
 	}
 }
+
+func TestIsOnCurve(t *testing.T) {
+	type args struct {
+		p PublicKey
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			args: args{
+				p: PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+			},
+			want: true,
+		},
+		{
+			args: args{
+				p: PublicKeyFromString("DTA7FmUNYuQs2mScj2Lx8gQV63SEL1zGtzCSvPxtijbi"),
+			},
+			want: false,
+		},
+		{
+			args: args{
+				p: PublicKeyFromString("9FBAAZPWJ3k5p1oCRkAXbfACm8hwufjWNdAjGW8qgvtC"),
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsOnCurve(tt.args.p); got != tt.want {
+				t.Errorf("IsOnCurve() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
