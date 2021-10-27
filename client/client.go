@@ -207,6 +207,35 @@ func (c *Client) SendTransaction(ctx context.Context, tx types.Transaction) (str
 	return res.Result, nil
 }
 
+type SendTransactionConfig struct {
+	SkipPreflight       bool
+	PreflightCommitment rpc.Commitment
+	MaxRetries          uint64
+}
+
+// SendTransaction send transaction struct directly
+func (c *Client) SendTransactionWithConfig(ctx context.Context, tx types.Transaction, config SendTransactionConfig) (string, error) {
+	rawTx, err := tx.Serialize()
+	if err != nil {
+		return "", fmt.Errorf("failed to serialize tx, err: %v", err)
+	}
+	res, err := c.RpcClient.SendTransactionWithConfig(
+		ctx,
+		base64.StdEncoding.EncodeToString(rawTx),
+		rpc.SendTransactionConfig{
+			Encoding:            rpc.SendTransactionConfigEncodingBase64,
+			SkipPreflight:       config.SkipPreflight,
+			PreflightCommitment: config.PreflightCommitment,
+			MaxRetries:          config.MaxRetries,
+		},
+	)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return "", err
+	}
+	return res.Result, nil
+}
+
 // GetSlot get current slot (finalized)
 func (c *Client) GetSlot(ctx context.Context) (uint64, error) {
 	res, err := c.RpcClient.GetSlot(ctx)
