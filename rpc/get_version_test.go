@@ -3,6 +3,8 @@ package rpc
 import (
 	"context"
 	"testing"
+
+	"github.com/portto/solana-go-sdk/pkg/pointer"
 )
 
 func TestGetVersion(t *testing.T) {
@@ -23,7 +25,7 @@ func TestGetVersion(t *testing.T) {
 				},
 				Result: GetVersionResult{
 					SolanaCore: "1.7.14",
-					FeatureSet: 1824749018,
+					FeatureSet: pointer.Uint32(1824749018),
 				},
 			},
 			ExpectedError: nil,

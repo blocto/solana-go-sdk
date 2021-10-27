@@ -10,8 +10,8 @@ type GetVersionResponse struct {
 
 // GetVersionResult is a part of raw rpc response of `getVersion`
 type GetVersionResult struct {
-	SolanaCore string `json:"solana-core"`
-	FeatureSet uint64 `json:"feature-set"`
+	SolanaCore string  `json:"solana-core"`
+	FeatureSet *uint32 `json:"feature-set"`
 }
 
 // GetVersion returns the current solana versions running on the node
