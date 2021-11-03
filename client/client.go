@@ -431,9 +431,12 @@ func getBlock(res rpc.GetBlockResponse) (GetBlockResponse, error) {
 			for _, metaInnerInstruction := range rTx.Meta.InnerInstructions {
 				compiledInstructions := make([]types.CompiledInstruction, 0, len(metaInnerInstruction.Instructions))
 				for _, innerInstruction := range metaInnerInstruction.Instructions {
-					data, err := base58.Decode(innerInstruction.Data)
-					if err != nil {
-						return GetBlockResponse{}, fmt.Errorf("failed to base58 decode data, data: %v, err: %v", innerInstruction.Data, err)
+					var data []byte
+					if len(innerInstruction.Data) > 0 {
+						data, err = base58.Decode(innerInstruction.Data)
+						if err != nil {
+							return GetBlockResponse{}, fmt.Errorf("failed to base58 decode data, data: %v, err: %v", innerInstruction.Data, err)
+						}
 					}
 					compiledInstructions = append(compiledInstructions, types.CompiledInstruction{
 						ProgramIDIndex: innerInstruction.ProgramIDIndex,
