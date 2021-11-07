@@ -51,8 +51,7 @@ func TestGetTransaction(t *testing.T) {
 								{
 									ProgramIDIndex: 3,
 									Data:           []byte{0x8, 0x0, 0x0, 0x0, 0xa5, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
-
-									Accounts: []int{1},
+									Accounts:       []int{1},
 								},
 								{
 									ProgramIDIndex: 3,
@@ -142,6 +141,71 @@ func TestGetTransaction(t *testing.T) {
 							},
 						},
 						RecentBlockHash: "Gpemb2whtMogoSGVe5KMjuoueeqNNkQ1kKnw7fsYKZHj",
+					},
+				},
+			},
+			err: nil,
+		},
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getTransaction", "params":["25D9azGKNfJiKp4B5drSV1PjeePKaCreb9VAUFxAdm4qERDTMRjeKv4nfM1c1Wek879C9R2VT3x3hUdW5YCZ2hxp", {"encoding":"base64"}]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"blockTime":1631744159,"meta":{"err":null,"fee":5000,"innerInstructions":[],"logMessages":["Program H7WBiBDaZpWwGfhPLmXrdD3r86d6eQfzb184a2arM7Bm invoke [1]","Program consumption: 199622 units remaining","Program consumption: 199621 units remaining","Program consumption: 199620 units remaining","Program log: update here","Program log: update here","Program log: program id H7WBiBDaZpWwGfhPLmXrdD3r86d6eQfzb184a2arM7Bm","Program log: accounts [AccountInfo { key: 11111111111111111111111111111111 owner: NativeLoader1111111111111111111111111111111 is_signer: false is_writable: false executable: true rent_epoch: 55 lamports: 1 data.len: 14  data: 73797374656d5f70726f6772616d ... }]","Program log: data []","Program H7WBiBDaZpWwGfhPLmXrdD3r86d6eQfzb184a2arM7Bm consumed 32192 of 200000 compute units","Program H7WBiBDaZpWwGfhPLmXrdD3r86d6eQfzb184a2arM7Bm success"],"postBalances":[109107166519,1,1141440],"postTokenBalances":[],"preBalances":[109107171519,1,1141440],"preTokenBalances":[],"rewards":[],"status":{"Ok":null}},"slot":81103164,"transaction":["ATWlpjPdm+8muj2Gw5etBJABHggGthzIiQxcFO+Tizs4krrFB2rWui2DBN+Zz/N0x8tKp6731l5ZWnigQDuMQQ0BAAEDBj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO9leZEN4av+0/cP0pb3UfT4YZeMVMzaq+GAwcjoYx/Y4ueeH6yFx+7mz1QHKS/wM0DumafPn5kBqjpYmzd0eeABAgEBAA==","base64"]},"id":1}`,
+			args: args{
+				context.Background(),
+				"25D9azGKNfJiKp4B5drSV1PjeePKaCreb9VAUFxAdm4qERDTMRjeKv4nfM1c1Wek879C9R2VT3x3hUdW5YCZ2hxp",
+			},
+			want: GetTransactionResponse{
+				Slot:      81103164,
+				BlockTime: pointer.Int64(1631744159),
+				Meta: &TransactionMeta{
+					Fee:               5000,
+					InnerInstructions: []TransactionMetaInnerInstruction{},
+					LogMessages: []string{
+						"Program H7WBiBDaZpWwGfhPLmXrdD3r86d6eQfzb184a2arM7Bm invoke [1]",
+						"Program consumption: 199622 units remaining",
+						"Program consumption: 199621 units remaining",
+						"Program consumption: 199620 units remaining",
+						"Program log: update here",
+						"Program log: update here",
+						"Program log: program id H7WBiBDaZpWwGfhPLmXrdD3r86d6eQfzb184a2arM7Bm",
+						"Program log: accounts [AccountInfo { key: 11111111111111111111111111111111 owner: NativeLoader1111111111111111111111111111111 is_signer: false is_writable: false executable: true rent_epoch: 55 lamports: 1 data.len: 14  data: 73797374656d5f70726f6772616d ... }]",
+						"Program log: data []",
+						"Program H7WBiBDaZpWwGfhPLmXrdD3r86d6eQfzb184a2arM7Bm consumed 32192 of 200000 compute units",
+						"Program H7WBiBDaZpWwGfhPLmXrdD3r86d6eQfzb184a2arM7Bm success",
+					},
+					PreBalances: []int64{
+						109107171519,
+						1,
+						1141440,
+					},
+					PostBalances: []int64{
+						109107166519,
+						1,
+						1141440,
+					},
+					PreTokenBalances:  []rpc.TransactionMetaTokenBalance{},
+					PostTokenBalances: []rpc.TransactionMetaTokenBalance{},
+				},
+				Transaction: types.Transaction{
+					Signatures: []types.Signature{[]byte{0x35, 0xa5, 0xa6, 0x33, 0xdd, 0x9b, 0xef, 0x26, 0xba, 0x3d, 0x86, 0xc3, 0x97, 0xad, 0x4, 0x90, 0x1, 0x1e, 0x8, 0x6, 0xb6, 0x1c, 0xc8, 0x89, 0xc, 0x5c, 0x14, 0xef, 0x93, 0x8b, 0x3b, 0x38, 0x92, 0xba, 0xc5, 0x7, 0x6a, 0xd6, 0xba, 0x2d, 0x83, 0x4, 0xdf, 0x99, 0xcf, 0xf3, 0x74, 0xc7, 0xcb, 0x4a, 0xa7, 0xae, 0xf7, 0xd6, 0x5e, 0x59, 0x5a, 0x78, 0xa0, 0x40, 0x3b, 0x8c, 0x41, 0xd}},
+					Message: types.Message{
+						Header: types.MessageHeader{
+							NumRequireSignatures:        1,
+							NumReadonlySignedAccounts:   0,
+							NumReadonlyUnsignedAccounts: 1,
+						},
+						Accounts: []common.PublicKey{
+							common.PublicKeyFromString("RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"),
+							common.PublicKeyFromString("11111111111111111111111111111111"),
+							common.PublicKeyFromString("H7WBiBDaZpWwGfhPLmXrdD3r86d6eQfzb184a2arM7Bm"),
+						},
+						Instructions: []types.CompiledInstruction{
+							{
+								ProgramIDIndex: 2,
+								Accounts:       []int{1},
+								Data:           []byte{},
+							},
+						},
+						RecentBlockHash: "GGjz3cjABNTaCA9w1pP3y5FtpsZtKLR5taBk5MF8ijQj",
 					},
 				},
 			},
