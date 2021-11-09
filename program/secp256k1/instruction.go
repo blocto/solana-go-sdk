@@ -40,7 +40,7 @@ type Secp256k1InstructionParam struct {
 // solution is to hash any input before calculating the signature.
 //
 // The produced signature is in the [R || S || V] format where V is 0 or 1.
-func Sign(digestHash []byte, prv *ecdsa.PrivateKey) (sig []byte, err error) {
+func sign(digestHash []byte, prv *ecdsa.PrivateKey) (sig []byte, err error) {
 	if len(digestHash) != 32 {
 		return nil, fmt.Errorf("hash is required to be exactly %d bytes (%d)", 32, len(digestHash))
 	}
@@ -92,7 +92,7 @@ func NewSecp256k1InstructionMultipleSigs(privs []*ecdsa.PrivateKey, msgs [][]byt
 			return types.Instruction{}, err
 		}
 		hash := hasher.Sum([]byte{})
-		sig, err := Sign(hash[:], priv)
+		sig, err := sign(hash[:], priv)
 		if err != nil {
 			return types.Instruction{}, err
 		}
