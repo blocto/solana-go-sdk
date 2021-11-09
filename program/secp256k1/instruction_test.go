@@ -4,9 +4,10 @@ import (
 	"crypto/ecdsa"
 	"encoding/base64"
 	"fmt"
+	"math/big"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ipsn/go-secp256k1"
 )
 
 // Creates and checks a KeccakSecp256k1 instruction against the following rust code:
@@ -24,7 +25,7 @@ func TestNewSecp256k1InstructionMulti(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	sk := crypto.ToECDSAUnsafe(skBytes)
+	sk := toECDSAUnsafe(skBytes)
 
 	instr, err := NewSecp256k1InstructionMultipleSigs([]*ecdsa.PrivateKey{sk}, [][]byte{[]byte("message")}, 0)
 	if err != nil {
@@ -43,7 +44,7 @@ func TestNewSecp256k1InstructionSingle(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	sk := crypto.ToECDSAUnsafe(skBytes)
+	sk := toECDSAUnsafe(skBytes)
 
 	instr, err := NewSecp256k1Instruction(sk, []byte("message"), 0)
 	if err != nil {
@@ -55,4 +56,13 @@ func TestNewSecp256k1InstructionSingle(t *testing.T) {
 	if checkDataStr != instrDataStr {
 		t.Error(fmt.Sprintf("\ncheckDataStr: %s \ninstrDataStr: %s", checkDataStr, instrDataStr))
 	}
+}
+
+// Only for debugging. Many more checks should be done with real keys.
+func toECDSAUnsafe(d []byte) *ecdsa.PrivateKey {
+	priv := new(ecdsa.PrivateKey)
+	priv.PublicKey.Curve = secp256k1.S256()
+	priv.D = new(big.Int).SetBytes(d)
+	priv.PublicKey.X, priv.PublicKey.Y = priv.PublicKey.Curve.ScalarBaseMult(d)
+	return priv
 }
