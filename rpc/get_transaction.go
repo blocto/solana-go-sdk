@@ -34,6 +34,7 @@ type TransactionMeta struct {
 type TransactionMetaTokenBalance struct {
 	AccountIndex  uint64                            `json:"accountIndex"`
 	Mint          string                            `json:"mint"`
+	Owner         string                            `json:"owner,omitempty"`
 	UITokenAmount GetTokenAccountBalanceResultValue `json:"uiTokenAmount"`
 }
 
