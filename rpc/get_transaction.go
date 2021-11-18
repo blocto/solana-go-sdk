@@ -7,7 +7,7 @@ import (
 // GetTransactionResponse is a complete rpc response of `getTransaction`
 type GetTransactionResponse struct {
 	GeneralResponse
-	Result GetTransactionResult `json:"result"`
+	Result *GetTransactionResult `json:"result"`
 }
 
 // GetTransactionResult is a part of GetTransactionResponse

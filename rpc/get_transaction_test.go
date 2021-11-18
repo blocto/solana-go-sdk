@@ -24,7 +24,7 @@ func TestGetTransaction(t *testing.T) {
 					ID:      1,
 					Error:   nil,
 				},
-				Result: GetTransactionResult{
+				Result: &GetTransactionResult{
 					Slot:      80218681,
 					BlockTime: pointer.Int64(1631380624),
 					Meta: &TransactionMeta{
@@ -157,7 +157,7 @@ func TestGetTransaction(t *testing.T) {
 					ID:      1,
 					Error:   nil,
 				},
-				Result: GetTransactionResult{
+				Result: &GetTransactionResult{
 					Slot:      80218681,
 					BlockTime: pointer.Int64(1631380624),
 					Meta: &TransactionMeta{
@@ -241,6 +241,28 @@ func TestGetTransaction(t *testing.T) {
 					},
 					Transaction: []interface{}{"AaEGlsrjwHOjXODEvEGb5Zade8QelkWx2l9VvseP/g1olewFxKkJEwRDJyZ2wel8p2Dilp3wnBu6AEbRB4LthwABAAUHEJZZF158ZDMhpe1GQqAnsKvZe43ZetG8xtxkcThszdyUJGGIseU8n4crN7gTTkkjZvTPQVkY2NPZnO+5BTpTqzO9mOFbcsDwmqTwyIZje2Ppd9PY6hWpndBzwVYYhseQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG3fbh12Whk9nL4UbO63msHLSF7V9bN5E6jPWFfv8AqQan1RcZLFxRIYzJTD1K8X9Y2u4Im6H9ROPb2YoAAAAAjJclj04kifG7PRApFI4NgwtaE5na/xCEBI572Nvp+FnrFE6iq1ZbCKVJ+UiBaEkoE9dTFWqba+nWyTsH21qhygEGBwABAAIDBAUA", "base64"},
 				},
+			},
+			ExpectedError: nil,
+		},
+		{
+			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getTransaction", "params":["4Dj8Xbs7L6z7pbNp5eGZXLmYZLwePPRVTfunjx2EWDc4nwtVYRq4YqduiFKXR23cGqmbF6LHoubGnKa7gCozstGF", {"encoding":"base64"}]}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":null,"id":1}`,
+			RpcCall: func(rc RpcClient) (interface{}, error) {
+				return rc.GetTransactionWithConfig(
+					context.TODO(),
+					"4Dj8Xbs7L6z7pbNp5eGZXLmYZLwePPRVTfunjx2EWDc4nwtVYRq4YqduiFKXR23cGqmbF6LHoubGnKa7gCozstGF",
+					GetTransactionConfig{
+						Encoding: GetTransactionConfigEncodingBase64,
+					},
+				)
+			},
+			ExpectedResponse: GetTransactionResponse{
+				GeneralResponse: GeneralResponse{
+					JsonRPC: "2.0",
+					ID:      1,
+					Error:   nil,
+				},
+				Result: nil,
 			},
 			ExpectedError: nil,
 		},

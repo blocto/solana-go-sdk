@@ -279,9 +279,8 @@ type TransactionMetaInnerInstruction struct {
 	Instructions []types.CompiledInstruction
 }
 
-// NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedTransaction for solana-core v1.6
 // GetTransaction returns transaction details for a confirmed transaction
-func (c *Client) GetTransaction(ctx context.Context, txhash string) (GetTransactionResponse, error) {
+func (c *Client) GetTransaction(ctx context.Context, txhash string) (*GetTransactionResponse, error) {
 	res, err := c.RpcClient.GetTransactionWithConfig(
 		ctx,
 		txhash,
@@ -291,15 +290,21 @@ func (c *Client) GetTransaction(ctx context.Context, txhash string) (GetTransact
 	)
 	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
-		return GetTransactionResponse{}, err
+		return nil, err
 	}
-	return getTransaction(res)
+	if res.Result == nil {
+		return nil, nil
+	}
+	tx, err := getTransaction(res)
+	if err != nil {
+		return nil, err
+	}
+	return &tx, nil
 }
 
-// NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedTransaction for solana-core v1.6
 // GetTransactionWithConfig returns transaction details for a confirmed transaction
 // will ignore encoding
-func (c *Client) GetTransactionWithConfig(ctx context.Context, txhash string, cfg rpc.GetTransactionConfig) (GetTransactionResponse, error) {
+func (c *Client) GetTransactionWithConfig(ctx context.Context, txhash string, cfg rpc.GetTransactionConfig) (*GetTransactionResponse, error) {
 	res, err := c.RpcClient.GetTransactionWithConfig(
 		ctx,
 		txhash,
@@ -310,9 +315,16 @@ func (c *Client) GetTransactionWithConfig(ctx context.Context, txhash string, cf
 	)
 	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
-		return GetTransactionResponse{}, err
+		return nil, err
 	}
-	return getTransaction(res)
+	if res.Result == nil {
+		return nil, nil
+	}
+	tx, err := getTransaction(res)
+	if err != nil {
+		return nil, err
+	}
+	return &tx, nil
 }
 
 func getTransaction(res rpc.GetTransactionResponse) (GetTransactionResponse, error) {

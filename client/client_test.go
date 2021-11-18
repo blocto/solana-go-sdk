@@ -24,7 +24,7 @@ func TestGetTransaction(t *testing.T) {
 		requestBody  string
 		responseBody string
 		args         args
-		want         GetTransactionResponse
+		want         *GetTransactionResponse
 		err          error
 	}{
 		{
@@ -34,7 +34,7 @@ func TestGetTransaction(t *testing.T) {
 				context.Background(),
 				"4Dj8Xbs7L6z7pbNp5eGZXLmYZLwePPRVTfunjx2EWDc4nwtVYRq4YqduiFKXR23cGqmbF6LHoubGnKa7gCozstGF",
 			},
-			want: GetTransactionResponse{
+			want: &GetTransactionResponse{
 				Slot:      80218681,
 				BlockTime: pointer.Int64(1631380624),
 				Meta: &TransactionMeta{
@@ -153,7 +153,7 @@ func TestGetTransaction(t *testing.T) {
 				context.Background(),
 				"25D9azGKNfJiKp4B5drSV1PjeePKaCreb9VAUFxAdm4qERDTMRjeKv4nfM1c1Wek879C9R2VT3x3hUdW5YCZ2hxp",
 			},
-			want: GetTransactionResponse{
+			want: &GetTransactionResponse{
 				Slot:      81103164,
 				BlockTime: pointer.Int64(1631744159),
 				Meta: &TransactionMeta{
@@ -210,6 +210,16 @@ func TestGetTransaction(t *testing.T) {
 				},
 			},
 			err: nil,
+		},
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getTransaction", "params":["25D9azGKNfJiKp4B5drSV1PjeePKaCreb9VAUFxAdm4qERDTMRjeKv4nfM1c1Wek879C9R2VT3x3hUdW5YCZ2hxp", {"encoding":"base64"}]}`,
+			responseBody: `{"jsonrpc":"2.0","result":null,"id":1}`,
+			args: args{
+				context.Background(),
+				"25D9azGKNfJiKp4B5drSV1PjeePKaCreb9VAUFxAdm4qERDTMRjeKv4nfM1c1Wek879C9R2VT3x3hUdW5YCZ2hxp",
+			},
+			want: nil,
+			err:  nil,
 		},
 	}
 	for _, tt := range tests {
