@@ -131,11 +131,15 @@ func (c *Client) processGetAccountInfo(res rpc.GetAccountInfoResponse, err error
 	if err != nil {
 		return AccountInfo{}, err
 	}
-	if res.Result.Value == (rpc.GetAccountInfoResultValue{}) {
+	return c.rpcAccountInfoToClientAccountInfo(res.Result.Value)
+}
+
+func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.GetAccountInfoResultValue) (AccountInfo, error) {
+	if v == (rpc.GetAccountInfoResultValue{}) {
 		return AccountInfo{}, nil
 	}
 
-	data, ok := res.Result.Value.Data.([]interface{})
+	data, ok := v.Data.([]interface{})
 	if !ok {
 		return AccountInfo{}, fmt.Errorf("failed to cast raw response to []interface{}")
 	}
@@ -147,10 +151,10 @@ func (c *Client) processGetAccountInfo(res rpc.GetAccountInfoResponse, err error
 		return AccountInfo{}, fmt.Errorf("failed to base64 decode data")
 	}
 	return AccountInfo{
-		Lamports:  res.Result.Value.Lamports,
-		Owner:     res.Result.Value.Owner,
-		Excutable: res.Result.Value.Excutable,
-		RentEpoch: res.Result.Value.RentEpoch,
+		Lamports:  v.Lamports,
+		Owner:     v.Owner,
+		Excutable: v.Excutable,
+		RentEpoch: v.RentEpoch,
 		Data:      rawData,
 	}, nil
 }
@@ -678,6 +682,93 @@ func (c *Client) GetSignatureStatusesWithConfig(ctx context.Context, signatures 
 		return nil, err
 	}
 	return res.Result.Value, nil
+}
+
+type SimulateTransaction struct {
+	Err      interface{}
+	Logs     []string
+	Accounts []*AccountInfo
+}
+
+type SimulateTransactionConfig struct {
+	SigVerify              bool
+	Commitment             rpc.Commitment
+	ReplaceRecentBlockhash bool
+	Addresses              []string
+}
+
+func (c *Client) SimulateTransaction(ctx context.Context, tx types.Transaction) (SimulateTransaction, error) {
+	rawTx, err := tx.Serialize()
+	if err != nil {
+		return SimulateTransaction{}, fmt.Errorf("failed to serialize tx, err: %v", err)
+	}
+	return c.processSimulateTransaction(
+		c.RpcClient.SimulateTransactionWithConfig(
+			ctx,
+			base64.StdEncoding.EncodeToString(rawTx),
+			rpc.SimulateTransactionConfig{
+				Encoding: rpc.SimulateTransactionConfigEncodingBase64,
+			},
+		),
+	)
+}
+
+func (c *Client) SimulateTransactionWithConfig(ctx context.Context, tx types.Transaction, cfg SimulateTransactionConfig) (SimulateTransaction, error) {
+	rawTx, err := tx.Serialize()
+	if err != nil {
+		return SimulateTransaction{}, fmt.Errorf("failed to serialize tx, err: %v", err)
+	}
+
+	var accountCfg *rpc.SimulateTransactionConfigAccounts
+	if len(cfg.Addresses) > 0 {
+		accountCfg = &rpc.SimulateTransactionConfigAccounts{
+			Encoding:  rpc.GetAccountInfoConfigEncodingBase64,
+			Addresses: cfg.Addresses,
+		}
+	}
+
+	return c.processSimulateTransaction(
+		c.RpcClient.SimulateTransactionWithConfig(
+			ctx,
+			base64.StdEncoding.EncodeToString(rawTx),
+			rpc.SimulateTransactionConfig{
+				Encoding:               rpc.SimulateTransactionConfigEncodingBase64,
+				SigVerify:              cfg.SigVerify,
+				Commitment:             cfg.Commitment,
+				ReplaceRecentBlockhash: cfg.ReplaceRecentBlockhash,
+				Accounts:               accountCfg,
+			},
+		),
+	)
+}
+
+func (c *Client) processSimulateTransaction(res rpc.SimulateTransactionResponse, err error) (SimulateTransaction, error) {
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return SimulateTransaction{}, err
+	}
+
+	var accountInfos []*AccountInfo
+	if res.Result.Value.Accounts != nil {
+		accountInfos = make([]*AccountInfo, 0, len(res.Result.Value.Accounts))
+		for _, r := range res.Result.Value.Accounts {
+			if r == nil {
+				accountInfos = append(accountInfos, nil)
+				continue
+			}
+			accountInfo, err := c.rpcAccountInfoToClientAccountInfo(*r)
+			if err != nil {
+				return SimulateTransaction{}, err
+			}
+			accountInfos = append(accountInfos, &accountInfo)
+		}
+	}
+
+	return SimulateTransaction{
+		Err:      res.Result.Value.Err,
+		Logs:     res.Result.Value.Logs,
+		Accounts: accountInfos,
+	}, nil
 }
 
 func checkRpcResult(res rpc.GeneralResponse, err error) error {
