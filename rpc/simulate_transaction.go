@@ -18,9 +18,9 @@ type SimulateTransactionResponseResult struct {
 
 // SimulateTransactionResponseResultValue is a part of SimulateTransactionResponseResult
 type SimulateTransactionResponseResultValue struct {
-	Err      interface{}                 `json:"err"`
-	Logs     []string                    `json:"logs,omitempty"`
-	Accounts []GetAccountInfoResultValue `json:"accounts,omitempty"`
+	Err      interface{}                  `json:"err"`
+	Logs     []string                     `json:"logs,omitempty"`
+	Accounts []*GetAccountInfoResultValue `json:"accounts,omitempty"`
 }
 
 type SimulateTransactionConfig struct {
