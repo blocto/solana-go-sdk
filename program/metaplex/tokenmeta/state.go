@@ -8,6 +8,8 @@ import (
 	"github.com/portto/solana-go-sdk/common"
 )
 
+const EDITION_MARKER_BIT_SIZE uint64 = 248
+
 type Key borsh.Enum
 
 const (
@@ -56,4 +58,10 @@ func MetadataDeserialize(data []byte) (Metadata, error) {
 	metadata.Data.Symbol = strings.TrimRight(metadata.Data.Symbol, "\x00")
 	metadata.Data.Uri = strings.TrimRight(metadata.Data.Uri, "\x00")
 	return metadata, nil
+}
+
+type MasterEditionV2 struct {
+	Key       Key
+	Supply    uint64
+	MaxSupply *uint64
 }
