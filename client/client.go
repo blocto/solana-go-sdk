@@ -107,9 +107,26 @@ type AccountInfo struct {
 
 // GetAccountInfo return account's info
 func (c *Client) GetAccountInfo(ctx context.Context, base58Addr string) (AccountInfo, error) {
-	res, err := c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, rpc.GetAccountInfoConfig{
+	return c.processGetAccountInfo(c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, rpc.GetAccountInfoConfig{
 		Encoding: rpc.GetAccountInfoConfigEncodingBase64,
-	})
+	}))
+}
+
+type GetAccountInfoConfig struct {
+	Commitment rpc.Commitment
+	DataSlice  *rpc.GetAccountInfoConfigDataSlice
+}
+
+// GetAccountInfoWithConfig return account's info
+func (c *Client) GetAccountInfoWithConfig(ctx context.Context, base58Addr string, cfg GetAccountInfoConfig) (AccountInfo, error) {
+	return c.processGetAccountInfo(c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, rpc.GetAccountInfoConfig{
+		Encoding:   rpc.GetAccountInfoConfigEncodingBase64,
+		Commitment: cfg.Commitment,
+		DataSlice:  cfg.DataSlice,
+	}))
+}
+
+func (c *Client) processGetAccountInfo(res rpc.GetAccountInfoResponse, err error) (AccountInfo, error) {
 	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
 		return AccountInfo{}, err

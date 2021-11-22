@@ -449,3 +449,112 @@ func TestClient_GetClusterNodes(t *testing.T) {
 		})
 	}
 }
+
+func TestClient_GetAccountInfo(t *testing.T) {
+	type args struct {
+		ctx        context.Context
+		base58Addr string
+	}
+	tests := []struct {
+		name         string
+		requestBody  string
+		responseBody string
+		args         args
+		want         AccountInfo
+		err          error
+	}{
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getAccountInfo", "params":["F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb", {"encoding": "base64"}]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":77317717},"value":{"data":["AQAAAAY+cNmRV5jco+7bkTfPZMcP+vtizdOCgQUlC9drHWzeAAAAAAAAAAAJAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==","base64"],"executable":false,"lamports":1461600,"owner":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","rentEpoch":178}},"id":1}`,
+			args: args{
+				ctx:        context.Background(),
+				base58Addr: "F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb",
+			},
+			want: AccountInfo{
+				RentEpoch: 178,
+				Lamports:  1461600,
+				Owner:     common.TokenProgramID.ToBase58(),
+				Excutable: false,
+				Data:      []byte{0x1, 0x0, 0x0, 0x0, 0x6, 0x3e, 0x70, 0xd9, 0x91, 0x57, 0x98, 0xdc, 0xa3, 0xee, 0xdb, 0x91, 0x37, 0xcf, 0x64, 0xc7, 0xf, 0xfa, 0xfb, 0x62, 0xcd, 0xd3, 0x82, 0x81, 0x5, 0x25, 0xb, 0xd7, 0x6b, 0x1d, 0x6c, 0xde, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x9, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+			},
+			err: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run(tt.name, func(t *testing.T) {
+				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+					body, err := ioutil.ReadAll(req.Body)
+					assert.Nil(t, err)
+					assert.JSONEq(t, tt.requestBody, string(body))
+					n, err := rw.Write([]byte(tt.responseBody))
+					assert.Nil(t, err)
+					assert.Equal(t, len([]byte(tt.responseBody)), n)
+				}))
+				c := NewClient(server.URL)
+				got, err := c.GetAccountInfo(tt.args.ctx, tt.args.base58Addr)
+				assert.Equal(t, tt.err, err)
+				assert.Equal(t, tt.want, got)
+				server.Close()
+			})
+		})
+	}
+}
+
+func TestClient_GetAccountInfoWithConfig(t *testing.T) {
+	type args struct {
+		ctx        context.Context
+		base58Addr string
+		cfg        GetAccountInfoConfig
+	}
+	tests := []struct {
+		name         string
+		requestBody  string
+		responseBody string
+		args         args
+		want         AccountInfo
+		err          error
+	}{
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getAccountInfo", "params":["F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb", {"encoding": "base64", "dataSlice": {"offset": 4, "length": 32}}]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":95887894},"value":{"data":["Bj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4=","base64"],"executable":false,"lamports":1461600,"owner":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","rentEpoch":221}},"id":1}`,
+			args: args{
+				ctx:        context.Background(),
+				base58Addr: "F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb",
+				cfg: GetAccountInfoConfig{
+					DataSlice: &rpc.GetAccountInfoConfigDataSlice{
+						Offset: 4,
+						Length: 32,
+					},
+				},
+			},
+			want: AccountInfo{
+				RentEpoch: 221,
+				Lamports:  1461600,
+				Owner:     common.TokenProgramID.ToBase58(),
+				Excutable: false,
+				Data:      []byte{0x6, 0x3e, 0x70, 0xd9, 0x91, 0x57, 0x98, 0xdc, 0xa3, 0xee, 0xdb, 0x91, 0x37, 0xcf, 0x64, 0xc7, 0xf, 0xfa, 0xfb, 0x62, 0xcd, 0xd3, 0x82, 0x81, 0x5, 0x25, 0xb, 0xd7, 0x6b, 0x1d, 0x6c, 0xde},
+			},
+			err: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run(tt.name, func(t *testing.T) {
+				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+					body, err := ioutil.ReadAll(req.Body)
+					assert.Nil(t, err)
+					assert.JSONEq(t, tt.requestBody, string(body))
+					n, err := rw.Write([]byte(tt.responseBody))
+					assert.Nil(t, err)
+					assert.Equal(t, len([]byte(tt.responseBody)), n)
+				}))
+				c := NewClient(server.URL)
+				got, err := c.GetAccountInfoWithConfig(tt.args.ctx, tt.args.base58Addr, tt.args.cfg)
+				assert.Equal(t, tt.err, err)
+				assert.Equal(t, tt.want, got)
+				server.Close()
+			})
+		})
+	}
+}
