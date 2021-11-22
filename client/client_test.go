@@ -558,3 +558,331 @@ func TestClient_GetAccountInfoWithConfig(t *testing.T) {
 		})
 	}
 }
+
+func TestClient_GetSignatureStatus(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		sig string
+	}
+	tests := []struct {
+		name         string
+		requestBody  string
+		responseBody string
+		args         args
+		want         *rpc.GetSignatureStatusesResultValue
+		err          error
+	}{
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getSignatureStatuses", "params":[["3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"]]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":86136583},"value":[{"confirmationStatus":"confirmed","confirmations":25,"err":null,"slot":86136551,"status":{"Ok":null}}]},"id":1}`,
+			args: args{
+				ctx: context.Background(),
+				sig: "3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg",
+			},
+			want: &rpc.GetSignatureStatusesResultValue{
+				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
+				Confirmations:      pointer.Uint64(25),
+				Err:                nil,
+				Slot:               86136551,
+			},
+			err: nil,
+		},
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getSignatureStatuses", "params":[["3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"]]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":86136583},"value":[{"confirmationStatus":"finalized","confirmations":null,"err":null,"slot":86136524,"status":{"Ok":null}}]},"id":1}`,
+			args: args{
+				ctx: context.Background(),
+				sig: "3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg",
+			},
+			want: &rpc.GetSignatureStatusesResultValue{
+				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
+				Confirmations:      nil,
+				Err:                nil,
+				Slot:               86136524,
+			},
+			err: nil,
+		},
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getSignatureStatuses", "params":[["3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"]]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":86136583},"value":[null]},"id":1}`,
+			args: args{
+				ctx: context.Background(),
+				sig: "3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg",
+			},
+			want: nil,
+			err:  nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run(tt.name, func(t *testing.T) {
+				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+					body, err := ioutil.ReadAll(req.Body)
+					assert.Nil(t, err)
+					assert.JSONEq(t, tt.requestBody, string(body))
+					n, err := rw.Write([]byte(tt.responseBody))
+					assert.Nil(t, err)
+					assert.Equal(t, len([]byte(tt.responseBody)), n)
+				}))
+				c := NewClient(server.URL)
+				got, err := c.GetSignatureStatus(tt.args.ctx, tt.args.sig)
+				assert.Equal(t, tt.err, err)
+				assert.Equal(t, tt.want, got)
+				server.Close()
+			})
+		})
+	}
+}
+
+func TestClient_GetSignatureStatusWithConfig(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		sig string
+		cfg rpc.GetSignatureStatusesConfig
+	}
+	tests := []struct {
+		name         string
+		requestBody  string
+		responseBody string
+		args         args
+		want         *rpc.GetSignatureStatusesResultValue
+		err          error
+	}{
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getSignatureStatuses", "params":[["3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"], {"searchTransactionHistory": true}]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":86136583},"value":[{"confirmationStatus":"confirmed","confirmations":25,"err":null,"slot":86136551,"status":{"Ok":null}}]},"id":1}`,
+			args: args{
+				ctx: context.Background(),
+				sig: "3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg",
+				cfg: rpc.GetSignatureStatusesConfig{
+					SearchTransactionHistory: true,
+				},
+			},
+			want: &rpc.GetSignatureStatusesResultValue{
+				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
+				Confirmations:      pointer.Uint64(25),
+				Err:                nil,
+				Slot:               86136551,
+			},
+			err: nil,
+		},
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getSignatureStatuses", "params":[["3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"], {"searchTransactionHistory": true}]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":86136583},"value":[{"confirmationStatus":"finalized","confirmations":null,"err":null,"slot":86136524,"status":{"Ok":null}}]},"id":1}`,
+			args: args{
+				ctx: context.Background(),
+				sig: "3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg",
+				cfg: rpc.GetSignatureStatusesConfig{
+					SearchTransactionHistory: true,
+				},
+			},
+			want: &rpc.GetSignatureStatusesResultValue{
+				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
+				Confirmations:      nil,
+				Err:                nil,
+				Slot:               86136524,
+			},
+			err: nil,
+		},
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getSignatureStatuses", "params":[["3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"], {"searchTransactionHistory": true}]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":86136583},"value":[null]},"id":1}`,
+			args: args{
+				ctx: context.Background(),
+				sig: "3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg",
+				cfg: rpc.GetSignatureStatusesConfig{
+					SearchTransactionHistory: true,
+				},
+			},
+			want: nil,
+			err:  nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run(tt.name, func(t *testing.T) {
+				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+					body, err := ioutil.ReadAll(req.Body)
+					assert.Nil(t, err)
+					assert.JSONEq(t, tt.requestBody, string(body))
+					n, err := rw.Write([]byte(tt.responseBody))
+					assert.Nil(t, err)
+					assert.Equal(t, len([]byte(tt.responseBody)), n)
+				}))
+				c := NewClient(server.URL)
+				got, err := c.GetSignatureStatusWithConfig(tt.args.ctx, tt.args.sig, tt.args.cfg)
+				assert.Equal(t, tt.err, err)
+				assert.Equal(t, tt.want, got)
+				server.Close()
+			})
+		})
+	}
+}
+
+func TestClient_GetSignatureStatuses(t *testing.T) {
+	type args struct {
+		ctx  context.Context
+		sigs []string
+	}
+	tests := []struct {
+		name         string
+		requestBody  string
+		responseBody string
+		args         args
+		want         []*rpc.GetSignatureStatusesResultValue
+		err          error
+	}{
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getSignatureStatuses", "params":[["3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"]]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":86136583},"value":[{"confirmationStatus":"confirmed","confirmations":25,"err":null,"slot":86136551,"status":{"Ok":null}}]},"id":1}`,
+			args: args{
+				ctx:  context.Background(),
+				sigs: []string{"3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"},
+			},
+			want: []*rpc.GetSignatureStatusesResultValue{
+				{
+					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
+					Confirmations:      pointer.Uint64(25),
+					Err:                nil,
+					Slot:               86136551,
+				},
+			},
+			err: nil,
+		},
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getSignatureStatuses", "params":[["3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"]]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":86136583},"value":[{"confirmationStatus":"finalized","confirmations":null,"err":null,"slot":86136524,"status":{"Ok":null}}]},"id":1}`,
+			args: args{
+				ctx:  context.Background(),
+				sigs: []string{"3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"},
+			},
+			want: []*rpc.GetSignatureStatusesResultValue{
+				{
+					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
+					Confirmations:      nil,
+					Err:                nil,
+					Slot:               86136524,
+				},
+			},
+			err: nil,
+		},
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getSignatureStatuses", "params":[["3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"]]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":86136583},"value":[null]},"id":1}`,
+			args: args{
+				ctx:  context.Background(),
+				sigs: []string{"3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"},
+			},
+			want: []*rpc.GetSignatureStatusesResultValue{nil},
+			err:  nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run(tt.name, func(t *testing.T) {
+				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+					body, err := ioutil.ReadAll(req.Body)
+					assert.Nil(t, err)
+					assert.JSONEq(t, tt.requestBody, string(body))
+					n, err := rw.Write([]byte(tt.responseBody))
+					assert.Nil(t, err)
+					assert.Equal(t, len([]byte(tt.responseBody)), n)
+				}))
+				c := NewClient(server.URL)
+				got, err := c.GetSignatureStatuses(tt.args.ctx, tt.args.sigs)
+				assert.Equal(t, tt.err, err)
+				assert.Equal(t, tt.want, got)
+				server.Close()
+			})
+		})
+	}
+}
+
+func TestClient_GetSignatureStatusesWithConfig(t *testing.T) {
+	type args struct {
+		ctx  context.Context
+		sigs []string
+		cfg  rpc.GetSignatureStatusesConfig
+	}
+	tests := []struct {
+		name         string
+		requestBody  string
+		responseBody string
+		args         args
+		want         []*rpc.GetSignatureStatusesResultValue
+		err          error
+	}{
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getSignatureStatuses", "params":[["3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"], {"searchTransactionHistory": true}]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":86136583},"value":[{"confirmationStatus":"confirmed","confirmations":25,"err":null,"slot":86136551,"status":{"Ok":null}}]},"id":1}`,
+			args: args{
+				ctx:  context.Background(),
+				sigs: []string{"3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"},
+				cfg: rpc.GetSignatureStatusesConfig{
+					SearchTransactionHistory: true,
+				},
+			},
+			want: []*rpc.GetSignatureStatusesResultValue{
+				{
+					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
+					Confirmations:      pointer.Uint64(25),
+					Err:                nil,
+					Slot:               86136551,
+				},
+			},
+			err: nil,
+		},
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getSignatureStatuses", "params":[["3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"], {"searchTransactionHistory": true}]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":86136583},"value":[{"confirmationStatus":"finalized","confirmations":null,"err":null,"slot":86136524,"status":{"Ok":null}}]},"id":1}`,
+			args: args{
+				ctx:  context.Background(),
+				sigs: []string{"3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"},
+				cfg: rpc.GetSignatureStatusesConfig{
+					SearchTransactionHistory: true,
+				},
+			},
+			want: []*rpc.GetSignatureStatusesResultValue{
+				{
+					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
+					Confirmations:      nil,
+					Err:                nil,
+					Slot:               86136524,
+				},
+			},
+			err: nil,
+		},
+		{
+			requestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getSignatureStatuses", "params":[["3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"], {"searchTransactionHistory": true}]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":86136583},"value":[null]},"id":1}`,
+			args: args{
+				ctx:  context.Background(),
+				sigs: []string{"3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"},
+				cfg: rpc.GetSignatureStatusesConfig{
+					SearchTransactionHistory: true,
+				},
+			},
+			want: []*rpc.GetSignatureStatusesResultValue{nil},
+			err:  nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run(tt.name, func(t *testing.T) {
+				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+					body, err := ioutil.ReadAll(req.Body)
+					assert.Nil(t, err)
+					assert.JSONEq(t, tt.requestBody, string(body))
+					n, err := rw.Write([]byte(tt.responseBody))
+					assert.Nil(t, err)
+					assert.Equal(t, len([]byte(tt.responseBody)), n)
+				}))
+				c := NewClient(server.URL)
+				got, err := c.GetSignatureStatusesWithConfig(tt.args.ctx, tt.args.sigs, tt.args.cfg)
+				assert.Equal(t, tt.err, err)
+				assert.Equal(t, tt.want, got)
+				server.Close()
+			})
+		})
+	}
+}
