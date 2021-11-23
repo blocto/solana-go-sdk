@@ -58,6 +58,12 @@ func AccountFromHex(key string) (Account, error) {
 	return AccountFromBytes(b)
 }
 
+// AccountFromSeed generate a account by seed
+func AccountFromSeed(seed []byte) (Account, error) {
+	pk := ed25519.NewKeyFromSeed(seed)
+	return AccountFromBytes(pk)
+}
+
 func (a Account) Sign(message []byte) []byte {
 	return ed25519.Sign(a.PrivateKey, message)
 }
