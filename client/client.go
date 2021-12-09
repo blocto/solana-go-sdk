@@ -159,6 +159,66 @@ func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.GetAccountInfoResultVal
 	}, nil
 }
 
+type GetMultipleAccountsConfig struct {
+	Commitment rpc.Commitment
+	DataSlice  *rpc.GetMultipleAccountsConfigDataSlice
+}
+
+// GetMultipleAccounts returns multiple accounts info
+func (c *Client) GetMultipleAccounts(ctx context.Context, base58Addrs []string) ([]AccountInfo, error) {
+	return c.processGetMultipleAccounts(c.RpcClient.GetMultipleAccountsWithConfig(ctx, base58Addrs, rpc.GetMultipleAccountsConfig{
+		Encoding: rpc.GetMultipleAccountsConfigEncodingBase64,
+	}))
+}
+
+// GetAccountInfoWithConfig return account's info
+func (c *Client) GetMultipleAccountsWithConfig(ctx context.Context, base58Addrs []string, cfg GetMultipleAccountsConfig) ([]AccountInfo, error) {
+	return c.processGetMultipleAccounts(c.RpcClient.GetMultipleAccountsWithConfig(ctx, base58Addrs, rpc.GetMultipleAccountsConfig{
+		Encoding:   rpc.GetMultipleAccountsConfigEncodingBase64,
+		Commitment: cfg.Commitment,
+		DataSlice:  cfg.DataSlice,
+	}))
+}
+
+func (c *Client) processGetMultipleAccounts(res rpc.GetMultipleAccountsResponse, err error) ([]AccountInfo, error) {
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return []AccountInfo{}, err
+	}
+
+	return c.rpcMultipleAccountsToClientAccountInfos(res.Result.Value)
+}
+
+func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.GetMultipleAccountsResultValue) ([]AccountInfo, error) {
+	res := make([]AccountInfo, len(values))
+	for i, v := range values {
+		if v == (rpc.GetMultipleAccountsResultValue{}) {
+			res[i] = AccountInfo{}
+			continue
+		}
+
+		data, ok := v.Data.([]interface{})
+		if !ok {
+			return []AccountInfo{}, fmt.Errorf("failed to cast raw response to []interface{}")
+		}
+		if data[1] != string(rpc.GetAccountInfoConfigEncodingBase64) {
+			return []AccountInfo{}, fmt.Errorf("encoding mistmatch")
+		}
+		rawData, err := base64.StdEncoding.DecodeString(data[0].(string))
+		if err != nil {
+			return []AccountInfo{}, fmt.Errorf("failed to base64 decode data")
+		}
+		res[i] = AccountInfo{
+			Lamports:  v.Lamports,
+			Owner:     v.Owner,
+			Excutable: v.Excutable,
+			RentEpoch: v.RentEpoch,
+			Data:      rawData,
+		}
+	}
+	return res, nil
+}
+
 // GetRecentBlockhash return recent blockhash information
 func (c *Client) GetRecentBlockhash(ctx context.Context) (rpc.GetRecentBlockHashResultValue, error) {
 	res, err := c.RpcClient.GetRecentBlockhash(ctx)
