@@ -1,16 +1,11 @@
 package secp256k1
 
 import (
-	"crypto/ecdsa"
-	"crypto/elliptic"
-	"errors"
 	"fmt"
 
-	secp256k1 "github.com/ipsn/go-secp256k1"
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/pkg/bincode"
 	"github.com/portto/solana-go-sdk/types"
-	"golang.org/x/crypto/sha3"
 )
 
 const (
@@ -32,50 +27,17 @@ type Secp256k1InstructionParam struct {
 	Offsets []SecpSignatureOffsets
 }
 
-// Sign calculates an ECDSA signature.
-//
-// This function is susceptible to chosen plaintext attacks that can leak
-// information about the private key that is used for signing. Callers must
-// be aware that the given digest cannot be chosen by an adversery. Common
-// solution is to hash any input before calculating the signature.
-//
-// The produced signature is in the [R || S || V] format where V is 0 or 1.
-func sign(digestHash []byte, prv *ecdsa.PrivateKey) (sig []byte, err error) {
-	if len(digestHash) != 32 {
-		return nil, fmt.Errorf("hash is required to be exactly %d bytes (%d)", 32, len(digestHash))
-	}
-	seckey := [32]byte{}
-	prv.D.FillBytes(seckey[:])
-	defer zeroBytes(seckey[:])
-	return secp256k1.Sign(digestHash, seckey[:])
-}
-
 func zeroBytes(bytes []byte) {
 	for i := range bytes {
 		bytes[i] = 0
 	}
 }
 
-func pubkeyToAddress(pub *ecdsa.PublicKey) ([]byte, error) {
-	pubBytes := elliptic.Marshal(secp256k1.S256(), pub.X, pub.Y)
-	hasher := sha3.NewLegacyKeccak256()
-	if _, err := hasher.Write(pubBytes[1:]); err != nil {
-		return nil, err
+func NewSecp256k1Instruction(msgs [][]byte, sigs [][]byte, addrs [][]byte, thisInstrIndex uint8) (types.Instruction, error) {
+	if len(msgs) != len(sigs) || len(sigs) != len(addrs) {
+		return types.Instruction{}, fmt.Errorf("Provided a different number of keys, messages, or signatures")
 	}
-	return hasher.Sum([]byte{})[12:], nil
-}
-
-func NewSecp256k1Instruction(priv *ecdsa.PrivateKey, msg []byte, thisInstrIndex uint8) (types.Instruction, error) {
-	return NewSecp256k1InstructionMultipleSigs([]*ecdsa.PrivateKey{priv}, [][]byte{msg}, thisInstrIndex)
-}
-
-func NewSecp256k1InstructionMultipleSigs(privs []*ecdsa.PrivateKey, msgs [][]byte, thisInstrIndex uint8) (types.Instruction, error) {
-	if len(privs) != len(msgs) {
-		return types.Instruction{}, errors.New(fmt.Sprintf("Provided a different number of keys and messages: %d private keys and %d messages.", len(privs), len(msgs)))
-	}
-
-	n := len(privs)
-
+	n := len(msgs)
 	instrData := []byte{}
 	instrData = append(instrData, uint8(n)) // Count of Offsets structs
 	// Append empty offsets structs to be filled it once we add our message data
@@ -85,21 +47,8 @@ func NewSecp256k1InstructionMultipleSigs(privs []*ecdsa.PrivateKey, msgs [][]byt
 	}
 
 	for i, msg := range msgs {
-		priv := privs[i]
-		hasher := sha3.NewLegacyKeccak256()
-		_, err := hasher.Write(msg)
-		if err != nil {
-			return types.Instruction{}, err
-		}
-		hash := hasher.Sum([]byte{})
-		sig, err := sign(hash[:], priv)
-		if err != nil {
-			return types.Instruction{}, err
-		}
-		addr, err := pubkeyToAddress(&priv.PublicKey)
-		if err != nil {
-			return types.Instruction{}, err
-		}
+		sig := sigs[i]
+		addr := addrs[i]
 
 		ethOffset := len(instrData)
 		instrData = append(instrData, addr[:]...)
