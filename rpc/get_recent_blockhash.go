@@ -32,13 +32,15 @@ type GetRecentBlockhashConfig struct {
 	Commitment Commitment `json:"commitment,omitempty"`
 }
 
-// getRecentBlockhash returns a recent block hash from the ledger, and a fee schedule that can be used to compute
+// DEPRECATED: Please use getFeeForMessage instead This method is expected to be removed in solana-core v2.0
+// GetRecentBlockhash returns a recent block hash from the ledger, and a fee schedule that can be used to compute
 // the cost of submitting a transaction using it.
 func (c *RpcClient) GetRecentBlockhash(ctx context.Context) (GetRecentBlockHashResponse, error) {
 	return c.processGetRecentBlockhash(c.Call(ctx, "getRecentBlockhash"))
 }
 
-// getRecentBlockhash returns a recent block hash from the ledger, and a fee schedule that can be used to compute
+// DEPRECATED: Please use getFeeForMessage instead This method is expected to be removed in solana-core v2.0
+// GetRecentBlockhashWithConfig returns a recent block hash from the ledger, and a fee schedule that can be used to compute
 // the cost of submitting a transaction using it.
 func (c *RpcClient) GetRecentBlockhashWithConfig(ctx context.Context, cfg GetRecentBlockhashConfig) (GetRecentBlockHashResponse, error) {
 	return c.processGetRecentBlockhash(c.Call(ctx, "getRecentBlockhash", cfg))

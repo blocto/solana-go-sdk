@@ -219,6 +219,7 @@ func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.GetMultipl
 	return res, nil
 }
 
+// DEPRECATED: Please use getFeeForMessage instead This method is expected to be removed in solana-core v2.0
 // GetRecentBlockhash return recent blockhash information
 func (c *Client) GetRecentBlockhash(ctx context.Context) (rpc.GetRecentBlockHashResultValue, error) {
 	res, err := c.RpcClient.GetRecentBlockhash(ctx)
