@@ -1254,3 +1254,160 @@ func TestClient_IsBlockhashValidWithConfig(t *testing.T) {
 		})
 	}
 }
+
+func TestClient_GetFeeForMessage(t *testing.T) {
+	type Args struct {
+		ctx     context.Context
+		message types.Message
+	}
+	tests := []struct {
+		Name         string
+		RequestBody  string
+		ResponseBody string
+		Args         Args
+		Want         *uint64
+		Err          error
+	}{
+		{
+			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getFeeForMessage", "params":["AQABAyRn8Htq2L5KAQiNyByMm5M/q8rDpBu7qahSf2bBSZq4Bj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHtjfNL0642B6qTQXHXH7TCzYl7SJhtOdw7hTYnd/mMpAQICAAEMAgAAAAEAAAAAAAAA"]}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":112884237},"value":null},"id":1}`,
+			Args: Args{
+				ctx: context.Background(),
+				message: types.NewMessage(types.NewMessageParam{
+					FeePayer: common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
+					Instructions: []types.Instruction{
+						sysprog.Transfer(sysprog.TransferParam{
+							From:   common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
+							To:     common.PublicKeyFromString("RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"),
+							Amount: 1,
+						}),
+					},
+					RecentBlockhash: "9Jf8nJep3oubyeGVernU2kVVmrmnADJFyHu8Bmq23S2C",
+				}),
+			},
+			Want: nil,
+			Err:  nil,
+		},
+		{
+			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getFeeForMessage", "params":["AQABAyRn8Htq2L5KAQiNyByMm5M/q8rDpBu7qahSf2bBSZq4Bj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHtjfNL0642B6qTQXHXH7TCzYl7SJhtOdw7hTYnd/mMpAQICAAEMAgAAAAEAAAAAAAAA"]}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":112884237},"value":5000},"id":1}`,
+			Args: Args{
+				ctx: context.Background(),
+				message: types.NewMessage(types.NewMessageParam{
+					FeePayer: common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
+					Instructions: []types.Instruction{
+						sysprog.Transfer(sysprog.TransferParam{
+							From:   common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
+							To:     common.PublicKeyFromString("RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"),
+							Amount: 1,
+						}),
+					},
+					RecentBlockhash: "9Jf8nJep3oubyeGVernU2kVVmrmnADJFyHu8Bmq23S2C",
+				}),
+			},
+			Want: pointer.Uint64(5000),
+			Err:  nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
+			t.Run(tt.Name, func(t *testing.T) {
+				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+					body, err := ioutil.ReadAll(req.Body)
+					assert.Nil(t, err)
+					assert.JSONEq(t, tt.RequestBody, string(body))
+					n, err := rw.Write([]byte(tt.ResponseBody))
+					assert.Nil(t, err)
+					assert.Equal(t, len([]byte(tt.ResponseBody)), n)
+				}))
+				c := NewClient(server.URL)
+				got, err := c.GetFeeForMessage(tt.Args.ctx, tt.Args.message)
+				assert.Equal(t, tt.Err, err)
+				assert.Equal(t, tt.Want, got)
+				server.Close()
+			})
+		})
+	}
+}
+
+func TestClient_GetFeeForMessageWithConfig(t *testing.T) {
+	type Args struct {
+		ctx     context.Context
+		message types.Message
+		cfg     GetFeeForMessageConfig
+	}
+	tests := []struct {
+		Name         string
+		RequestBody  string
+		ResponseBody string
+		Args         Args
+		Want         *uint64
+		Err          error
+	}{
+		{
+			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getFeeForMessage", "params":["AQABAyRn8Htq2L5KAQiNyByMm5M/q8rDpBu7qahSf2bBSZq4Bj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHtjfNL0642B6qTQXHXH7TCzYl7SJhtOdw7hTYnd/mMpAQICAAEMAgAAAAEAAAAAAAAA", {"commitment":"processed"}]}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":112884237},"value":null},"id":1}`,
+			Args: Args{
+				ctx: context.Background(),
+				message: types.NewMessage(types.NewMessageParam{
+					FeePayer: common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
+					Instructions: []types.Instruction{
+						sysprog.Transfer(sysprog.TransferParam{
+							From:   common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
+							To:     common.PublicKeyFromString("RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"),
+							Amount: 1,
+						}),
+					},
+					RecentBlockhash: "9Jf8nJep3oubyeGVernU2kVVmrmnADJFyHu8Bmq23S2C",
+				}),
+				cfg: GetFeeForMessageConfig{
+					Commitment: rpc.CommitmentProcessed,
+				},
+			},
+			Want: nil,
+			Err:  nil,
+		},
+		{
+			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getFeeForMessage", "params":["AQABAyRn8Htq2L5KAQiNyByMm5M/q8rDpBu7qahSf2bBSZq4Bj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHtjfNL0642B6qTQXHXH7TCzYl7SJhtOdw7hTYnd/mMpAQICAAEMAgAAAAEAAAAAAAAA", {"commitment":"processed"}]}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":112884237},"value":5000},"id":1}`,
+			Args: Args{
+				ctx: context.Background(),
+				message: types.NewMessage(types.NewMessageParam{
+					FeePayer: common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
+					Instructions: []types.Instruction{
+						sysprog.Transfer(sysprog.TransferParam{
+							From:   common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
+							To:     common.PublicKeyFromString("RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"),
+							Amount: 1,
+						}),
+					},
+					RecentBlockhash: "9Jf8nJep3oubyeGVernU2kVVmrmnADJFyHu8Bmq23S2C",
+				}),
+				cfg: GetFeeForMessageConfig{
+					Commitment: rpc.CommitmentProcessed,
+				},
+			},
+			Want: pointer.Uint64(5000),
+			Err:  nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
+			t.Run(tt.Name, func(t *testing.T) {
+				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+					body, err := ioutil.ReadAll(req.Body)
+					assert.Nil(t, err)
+					assert.JSONEq(t, tt.RequestBody, string(body))
+					n, err := rw.Write([]byte(tt.ResponseBody))
+					assert.Nil(t, err)
+					assert.Equal(t, len([]byte(tt.ResponseBody)), n)
+				}))
+				c := NewClient(server.URL)
+				got, err := c.GetFeeForMessageWithConfig(tt.Args.ctx, tt.Args.message, tt.Args.cfg)
+				assert.Equal(t, tt.Err, err)
+				assert.Equal(t, tt.Want, got)
+				server.Close()
+			})
+		})
+	}
+}

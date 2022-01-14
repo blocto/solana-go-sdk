@@ -286,6 +286,48 @@ func (c *Client) IsBlockhashValidWithConfig(ctx context.Context, blockhash strin
 	return res.Result.Value, nil
 }
 
+type GetFeeForMessageConfig struct {
+	Commitment rpc.Commitment `json:"commitment,omitempty"`
+}
+
+// NEW: This method is only available in solana-core v1.9 or newer. Please use getFees for solana-core v1.8
+// GetFeeForMessage get the fee the network will charge for a particular Message
+func (c *Client) GetFeeForMessage(ctx context.Context, message types.Message) (*uint64, error) {
+	rawMessage, err := message.Serialize()
+	if err != nil {
+		return nil, fmt.Errorf("failed to serialize message, err: %v", err)
+	}
+
+	res, err := c.RpcClient.GetFeeForMessage(ctx, base64.StdEncoding.EncodeToString(rawMessage))
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return nil, err
+	}
+	return res.Result.Value, nil
+}
+
+// NEW: This method is only available in solana-core v1.9 or newer. Please use getFees for solana-core v1.8
+// GetFeeForMessageWithConfig get the fee the network will charge for a particular Message
+func (c *Client) GetFeeForMessageWithConfig(ctx context.Context, message types.Message, cfg GetFeeForMessageConfig) (*uint64, error) {
+	rawMessage, err := message.Serialize()
+	if err != nil {
+		return nil, fmt.Errorf("failed to serialize message, err: %v", err)
+	}
+
+	res, err := c.RpcClient.GetFeeForMessageWithConfig(
+		ctx,
+		base64.StdEncoding.EncodeToString(rawMessage),
+		rpc.GetFeeForMessageConfig{
+			Commitment: cfg.Commitment,
+		},
+	)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return nil, err
+	}
+	return res.Result.Value, nil
+}
+
 type QuickSendTransactionParam struct {
 	Instructions []types.Instruction
 	Signers      []types.Account
