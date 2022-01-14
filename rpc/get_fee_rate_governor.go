@@ -25,6 +25,7 @@ type FeeRateGovernor struct {
 	BurnPercent                uint8  `json:"burnPercent"`
 }
 
+// DEPRECATED
 // GetFeeRateGovernor returns the fee rate governor information from the root bank
 func (c *RpcClient) GetFeeRateGovernor(ctx context.Context) (GetFeeRateGovernorResponse, error) {
 	return c.processGetFeeRateGovernor(c.Call(ctx, "getFeeRateGovernor"))
