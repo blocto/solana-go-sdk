@@ -230,6 +230,34 @@ func (c *Client) GetRecentBlockhash(ctx context.Context) (rpc.GetRecentBlockHash
 	return res.Result.Value, nil
 }
 
+type GetLatestBlockhashConfig struct {
+	Commitment rpc.Commitment `json:"commitment,omitempty"`
+}
+
+// NEW: This method is only available in solana-core v1.9 or newer. Please use getRecentBlockhash for solana-core v1.8
+// GetLatestBlockhash returns the latest blockhash
+func (c *Client) GetLatestBlockhash(ctx context.Context) (rpc.GetLatestBlockhashValue, error) {
+	res, err := c.RpcClient.GetLatestBlockhash(ctx)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return rpc.GetLatestBlockhashValue{}, err
+	}
+	return res.Result.Value, nil
+}
+
+// NEW: This method is only available in solana-core v1.9 or newer. Please use getRecentBlockhash for solana-core v1.8
+// GetLatestBlockhashWithConfig returns the latest blockhash
+func (c *Client) GetLatestBlockhashWithConfig(ctx context.Context, cfg GetLatestBlockhashConfig) (rpc.GetLatestBlockhashValue, error) {
+	res, err := c.RpcClient.GetLatestBlockhashWithConfig(ctx, rpc.GetLatestBlockhashConfig{
+		Commitment: cfg.Commitment,
+	})
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return rpc.GetLatestBlockhashValue{}, err
+	}
+	return res.Result.Value, nil
+}
+
 type QuickSendTransactionParam struct {
 	Instructions []types.Instruction
 	Signers      []types.Account
