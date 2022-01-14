@@ -1160,3 +1160,97 @@ func TestClient_GetLatestBlockhashWithConfig(t *testing.T) {
 		})
 	}
 }
+
+func TestClient_IsBlockhashValid(t *testing.T) {
+	type Args struct {
+		ctx       context.Context
+		blockhash string
+	}
+	tests := []struct {
+		Name         string
+		RequestBody  string
+		ResponseBody string
+		Args         Args
+		Want         bool
+		Err          error
+	}{
+		{
+			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"isBlockhashValid", "params":["14PVzxGGU4WQ7qbQffn3XJV1pasafs4wApFUs5sps89N"]}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":112890169},"value":false},"id":1}`,
+			Args: Args{
+				ctx:       context.Background(),
+				blockhash: "14PVzxGGU4WQ7qbQffn3XJV1pasafs4wApFUs5sps89N",
+			},
+			Want: false,
+			Err:  nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
+			t.Run(tt.Name, func(t *testing.T) {
+				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+					body, err := ioutil.ReadAll(req.Body)
+					assert.Nil(t, err)
+					assert.JSONEq(t, tt.RequestBody, string(body))
+					n, err := rw.Write([]byte(tt.ResponseBody))
+					assert.Nil(t, err)
+					assert.Equal(t, len([]byte(tt.ResponseBody)), n)
+				}))
+				c := NewClient(server.URL)
+				got, err := c.IsBlockhashValid(tt.Args.ctx, tt.Args.blockhash)
+				assert.Equal(t, tt.Err, err)
+				assert.Equal(t, tt.Want, got)
+				server.Close()
+			})
+		})
+	}
+}
+
+func TestClient_IsBlockhashValidWithConfig(t *testing.T) {
+	type Args struct {
+		ctx       context.Context
+		blockhash string
+		cfg       IsBlockhashConfig
+	}
+	tests := []struct {
+		Name         string
+		RequestBody  string
+		ResponseBody string
+		Args         Args
+		Want         bool
+		Err          error
+	}{
+		{
+			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"isBlockhashValid", "params":["14PVzxGGU4WQ7qbQffn3XJV1pasafs4wApFUs5sps89N", {"commitment": "processed"}]}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":112890231},"value":true},"id":1}`,
+			Args: Args{
+				ctx:       context.Background(),
+				blockhash: "14PVzxGGU4WQ7qbQffn3XJV1pasafs4wApFUs5sps89N",
+				cfg: IsBlockhashConfig{
+					Commitment: rpc.CommitmentProcessed,
+				},
+			},
+			Want: true,
+			Err:  nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
+			t.Run(tt.Name, func(t *testing.T) {
+				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+					body, err := ioutil.ReadAll(req.Body)
+					assert.Nil(t, err)
+					assert.JSONEq(t, tt.RequestBody, string(body))
+					n, err := rw.Write([]byte(tt.ResponseBody))
+					assert.Nil(t, err)
+					assert.Equal(t, len([]byte(tt.ResponseBody)), n)
+				}))
+				c := NewClient(server.URL)
+				got, err := c.IsBlockhashValidWithConfig(tt.Args.ctx, tt.Args.blockhash, tt.Args.cfg)
+				assert.Equal(t, tt.Err, err)
+				assert.Equal(t, tt.Want, got)
+				server.Close()
+			})
+		})
+	}
+}

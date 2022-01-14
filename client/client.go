@@ -258,6 +258,34 @@ func (c *Client) GetLatestBlockhashWithConfig(ctx context.Context, cfg GetLatest
 	return res.Result.Value, nil
 }
 
+type IsBlockhashConfig struct {
+	Commitment rpc.Commitment `json:"commitment,omitempty"`
+}
+
+// NEW: This method is only available in solana-core v1.9 or newer. Please use getFees for solana-core v1.8
+// IsBlockhashValid get the fee the network will charge for a particular Message
+func (c *Client) IsBlockhashValid(ctx context.Context, blockhash string) (bool, error) {
+	res, err := c.RpcClient.IsBlockhashValid(ctx, blockhash)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return false, err
+	}
+	return res.Result.Value, nil
+}
+
+// NEW: This method is only available in solana-core v1.9 or newer. Please use getFees for solana-core v1.8
+// IsBlockhashValidWithConfig get the fee the network will charge for a particular Message
+func (c *Client) IsBlockhashValidWithConfig(ctx context.Context, blockhash string, cfg IsBlockhashConfig) (bool, error) {
+	res, err := c.RpcClient.IsBlockhashValidWithConfig(ctx, blockhash, rpc.IsBlockhashValidConfig{
+		Commitment: cfg.Commitment,
+	})
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return false, err
+	}
+	return res.Result.Value, nil
+}
+
 type QuickSendTransactionParam struct {
 	Instructions []types.Instruction
 	Signers      []types.Account
