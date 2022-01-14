@@ -485,7 +485,6 @@ type GetBlockTransaction struct {
 	Transaction types.Transaction
 }
 
-// NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedBlock for solana-core v1.6
 // GetBlock returns identity and transaction information about a confirmed block in the ledger
 func (c *Client) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, error) {
 	res, err := c.RpcClient.GetBlockWithConfig(

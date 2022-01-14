@@ -28,13 +28,13 @@ type GetLatestBlockhashConfig struct {
 }
 
 // NEW: This method is only available in solana-core v1.9 or newer. Please use getRecentBlockhash for solana-core v1.8
-// GetLatestBlockhash returns the SOL balance
+// GetLatestBlockhash returns the latest blockhash
 func (c *RpcClient) GetLatestBlockhash(ctx context.Context) (GetLatestBlockhashResponse, error) {
 	return c.processGetLatestBlockhash(c.Call(ctx, "getLatestBlockhash"))
 }
 
 // NEW: This method is only available in solana-core v1.9 or newer. Please use getRecentBlockhash for solana-core v1.8
-// GetLatestBlockhashWithConfig returns the SOL balance
+// GetLatestBlockhashWithConfig returns the latest blockhash
 func (c *RpcClient) GetLatestBlockhashWithConfig(ctx context.Context, cfg GetLatestBlockhashConfig) (GetLatestBlockhashResponse, error) {
 	return c.processGetLatestBlockhash(c.Call(ctx, "getLatestBlockhash", cfg))
 }

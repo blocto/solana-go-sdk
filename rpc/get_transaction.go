@@ -82,13 +82,11 @@ const (
 	GetTransactionConfigEncodingBase64     GetTransactionConfigEncoding = "base64"
 )
 
-// NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedTransaction for solana-core v1.6
 // GetTransaction returns transaction details for a confirmed transaction
 func (c *RpcClient) GetTransaction(ctx context.Context, txhash string) (GetTransactionResponse, error) {
 	return c.processGetTransaction(c.Call(ctx, "getTransaction", txhash))
 }
 
-// NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedTransaction for solana-core v1.6
 // GetTransactionWithConfig returns transaction details for a confirmed transaction
 func (c *RpcClient) GetTransactionWithConfig(ctx context.Context, txhash string, cfg GetTransactionConfig) (GetTransactionResponse, error) {
 	return c.processGetTransaction(c.Call(ctx, "getTransaction", txhash, cfg))

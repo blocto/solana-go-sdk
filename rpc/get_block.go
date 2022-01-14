@@ -65,13 +65,12 @@ const (
 	GetBlockConfigTransactionDetailsNone       GetBlockConfigTransactionDetails = "none"
 )
 
-// NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedBlock for solana-core v1.6
 // GetBlock returns identity and transaction information about a confirmed block in the ledger
 func (c *RpcClient) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, error) {
 	return c.processGetBlock(c.Call(ctx, "getBlock", slot))
 }
 
-// GetAccountInfo returns all information associated with the account of provided Pubkey
+// GetBlockWithConfig returns identity and transaction information about a confirmed block in the ledger
 func (c *RpcClient) GetBlockWithConfig(ctx context.Context, slot uint64, cfg GetBlockConfig) (GetBlockResponse, error) {
 	return c.processGetBlock(c.Call(ctx, "getBlock", slot, cfg))
 }
