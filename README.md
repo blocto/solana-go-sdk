@@ -25,7 +25,7 @@ Also feel free to post a issue for missing content.
 ### Installing
 
 ```sh
-go get -v github.com/portto/solana-go-sdk@v1.12.0
+go get -v github.com/portto/solana-go-sdk@v1.13.0
 ```
 
 ### Example
