@@ -219,12 +219,111 @@ func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.GetMultipl
 	return res, nil
 }
 
+// DEPRECATED: Please use getFeeForMessage instead This method is expected to be removed in solana-core v2.0
 // GetRecentBlockhash return recent blockhash information
 func (c *Client) GetRecentBlockhash(ctx context.Context) (rpc.GetRecentBlockHashResultValue, error) {
 	res, err := c.RpcClient.GetRecentBlockhash(ctx)
 	err = checkRpcResult(res.GeneralResponse, err)
 	if err != nil {
 		return rpc.GetRecentBlockHashResultValue{}, err
+	}
+	return res.Result.Value, nil
+}
+
+type GetLatestBlockhashConfig struct {
+	Commitment rpc.Commitment `json:"commitment,omitempty"`
+}
+
+// NEW: This method is only available in solana-core v1.9 or newer. Please use getRecentBlockhash for solana-core v1.8
+// GetLatestBlockhash returns the latest blockhash
+func (c *Client) GetLatestBlockhash(ctx context.Context) (rpc.GetLatestBlockhashValue, error) {
+	res, err := c.RpcClient.GetLatestBlockhash(ctx)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return rpc.GetLatestBlockhashValue{}, err
+	}
+	return res.Result.Value, nil
+}
+
+// NEW: This method is only available in solana-core v1.9 or newer. Please use getRecentBlockhash for solana-core v1.8
+// GetLatestBlockhashWithConfig returns the latest blockhash
+func (c *Client) GetLatestBlockhashWithConfig(ctx context.Context, cfg GetLatestBlockhashConfig) (rpc.GetLatestBlockhashValue, error) {
+	res, err := c.RpcClient.GetLatestBlockhashWithConfig(ctx, rpc.GetLatestBlockhashConfig{
+		Commitment: cfg.Commitment,
+	})
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return rpc.GetLatestBlockhashValue{}, err
+	}
+	return res.Result.Value, nil
+}
+
+type IsBlockhashConfig struct {
+	Commitment rpc.Commitment `json:"commitment,omitempty"`
+}
+
+// NEW: This method is only available in solana-core v1.9 or newer. Please use getFees for solana-core v1.8
+// IsBlockhashValid get the fee the network will charge for a particular Message
+func (c *Client) IsBlockhashValid(ctx context.Context, blockhash string) (bool, error) {
+	res, err := c.RpcClient.IsBlockhashValid(ctx, blockhash)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return false, err
+	}
+	return res.Result.Value, nil
+}
+
+// NEW: This method is only available in solana-core v1.9 or newer. Please use getFees for solana-core v1.8
+// IsBlockhashValidWithConfig get the fee the network will charge for a particular Message
+func (c *Client) IsBlockhashValidWithConfig(ctx context.Context, blockhash string, cfg IsBlockhashConfig) (bool, error) {
+	res, err := c.RpcClient.IsBlockhashValidWithConfig(ctx, blockhash, rpc.IsBlockhashValidConfig{
+		Commitment: cfg.Commitment,
+	})
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return false, err
+	}
+	return res.Result.Value, nil
+}
+
+type GetFeeForMessageConfig struct {
+	Commitment rpc.Commitment `json:"commitment,omitempty"`
+}
+
+// NEW: This method is only available in solana-core v1.9 or newer. Please use getFees for solana-core v1.8
+// GetFeeForMessage get the fee the network will charge for a particular Message
+func (c *Client) GetFeeForMessage(ctx context.Context, message types.Message) (*uint64, error) {
+	rawMessage, err := message.Serialize()
+	if err != nil {
+		return nil, fmt.Errorf("failed to serialize message, err: %v", err)
+	}
+
+	res, err := c.RpcClient.GetFeeForMessage(ctx, base64.StdEncoding.EncodeToString(rawMessage))
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return nil, err
+	}
+	return res.Result.Value, nil
+}
+
+// NEW: This method is only available in solana-core v1.9 or newer. Please use getFees for solana-core v1.8
+// GetFeeForMessageWithConfig get the fee the network will charge for a particular Message
+func (c *Client) GetFeeForMessageWithConfig(ctx context.Context, message types.Message, cfg GetFeeForMessageConfig) (*uint64, error) {
+	rawMessage, err := message.Serialize()
+	if err != nil {
+		return nil, fmt.Errorf("failed to serialize message, err: %v", err)
+	}
+
+	res, err := c.RpcClient.GetFeeForMessageWithConfig(
+		ctx,
+		base64.StdEncoding.EncodeToString(rawMessage),
+		rpc.GetFeeForMessageConfig{
+			Commitment: cfg.Commitment,
+		},
+	)
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return nil, err
 	}
 	return res.Result.Value, nil
 }
@@ -484,7 +583,6 @@ type GetBlockTransaction struct {
 	Transaction types.Transaction
 }
 
-// NEW: This method is only available in solana-core v1.7 or newer. Please use getConfirmedBlock for solana-core v1.6
 // GetBlock returns identity and transaction information about a confirmed block in the ledger
 func (c *Client) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, error) {
 	res, err := c.RpcClient.GetBlockWithConfig(

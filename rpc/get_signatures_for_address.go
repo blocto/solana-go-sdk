@@ -27,14 +27,12 @@ type GetSignaturesForAddressConfig struct {
 	Commitment Commitment `json:"commitment,omitempty"` // "processed" is not supported, default is "finalized"
 }
 
-// NEW: This method is only available in solana-core v1.7 or newer. Please use "getConfirmedSignaturesForAddress2" for solana-core v1.6
 // GetSignaturesForAddress returns confirmed signatures for transactions involving an address backwards
 // in time from the provided signature or most recent confirmed block
 func (c *RpcClient) GetSignaturesForAddress(ctx context.Context, base58Addr string) (GetSignaturesForAddressResponse, error) {
 	return c.processGetSignaturesForAddress(c.Call(ctx, "getSignaturesForAddress", base58Addr))
 }
 
-// NEW: This method is only available in solana-core v1.7 or newer. Please use "getConfirmedSignaturesForAddress2" for solana-core v1.6
 // GetSignaturesForAddressWithConfig returns confirmed signatures for transactions involving an address backwards
 // in time from the provided signature or most recent confirmed block
 func (c *RpcClient) GetSignaturesForAddressWithConfig(ctx context.Context, base58Addr string, cfg GetSignaturesForAddressConfig) (GetSignaturesForAddressResponse, error) {
