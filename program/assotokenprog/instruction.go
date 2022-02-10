@@ -1,8 +1,16 @@
 package assotokenprog
 
 import (
+	"github.com/near/borsh-go"
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/types"
+)
+
+type Instruction borsh.Enum
+
+const (
+	InstructionCreate Instruction = iota
+	InstructionCreateIdempotent
 )
 
 type CreateAssociatedTokenAccountParam struct {
@@ -14,6 +22,15 @@ type CreateAssociatedTokenAccountParam struct {
 
 // CreateAssociatedTokenAccount is the only instruction in associated token program
 func CreateAssociatedTokenAccount(param CreateAssociatedTokenAccountParam) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionCreate,
+	})
+	if err != nil {
+		panic(err)
+	}
+
 	return types.Instruction{
 		ProgramID: common.SPLAssociatedTokenAccountProgramID,
 		Accounts: []types.AccountMeta{
@@ -25,6 +42,6 @@ func CreateAssociatedTokenAccount(param CreateAssociatedTokenAccountParam) types
 			{PubKey: common.TokenProgramID, IsSigner: false, IsWritable: false},
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 		},
-		Data: []byte{},
+		Data: data,
 	}
 }

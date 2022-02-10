@@ -37,7 +37,7 @@ func TestCreateAssociatedTokenAccount(t *testing.T) {
 					{PubKey: common.TokenProgramID, IsSigner: false, IsWritable: false},
 					{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
 				},
-				Data: []byte{},
+				Data: []byte{0},
 			},
 		},
 	}
