@@ -39,6 +39,14 @@ export default defineUserConfig<DefaultThemeOptions>({
               },
             ],
           },
+          {
+            text: "NFT",
+            children: [
+              { text: "Mint a NFT", link: "/nft/mint-a-nft" },
+              { text: "Get Metadata", link: "/nft/get-metadata" },
+              { text: "Sign Metadata", link: "/nft/sign-metadata" },
+            ],
+          },
         ],
       },
     },
