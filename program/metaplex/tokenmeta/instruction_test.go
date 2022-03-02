@@ -1,6 +1,7 @@
 package tokenmeta
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/near/borsh-go"
@@ -224,6 +225,56 @@ func TestMintNewEditionFromMasterEditionViaToken(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := MintNewEditionFromMasterEditionViaToken(tt.args.param)
 			assert.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestUpdateMetadataAccount(t *testing.T) {
+	type args struct {
+		param UpdateMetadataAccountParam
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				param: UpdateMetadataAccountParam{
+					MetadataAccount: common.PublicKeyFromString("metadata11111111111111111111111111111111111"),
+					UpdateAuthority: common.PublicKeyFromString("updateAuthority1111111111111111111111111111"),
+					Data: &Data{
+						Name:                 "Fake Fake SMS #1355",
+						Symbol:               "FFSMB",
+						Uri:                  "https://34c7ef24f4v2aejh75xhxy5z6ars4xv47gpsdrei6fiowptk2nqq.arweave.net/3wXyF1wvK6ARJ_9ue-O58CMuXrz5nyHEiPFQ6z5q02E",
+						SellerFeeBasisPoints: 10000,
+						Creators: &[]Creator{
+							{
+								Address:  common.PublicKeyFromString("newMintAuthority111111111111111111111111111"),
+								Verified: false,
+								Share:    100,
+							},
+						},
+					},
+					NewUpdateAuthority:  pointer.Pubkey(common.PublicKeyFromString("newMintAuthority111111111111111111111111111")),
+					PrimarySaleHappened: pointer.Bool(true),
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.MetaplexTokenMetaProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("metadata11111111111111111111111111111111111"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("updateAuthority1111111111111111111111111111"), IsSigner: true, IsWritable: false},
+				},
+				Data: []byte{1, 1, 19, 0, 0, 0, 70, 97, 107, 101, 32, 70, 97, 107, 101, 32, 83, 77, 83, 32, 35, 49, 51, 53, 53, 5, 0, 0, 0, 70, 70, 83, 77, 66, 116, 0, 0, 0, 104, 116, 116, 112, 115, 58, 47, 47, 51, 52, 99, 55, 101, 102, 50, 52, 102, 52, 118, 50, 97, 101, 106, 104, 55, 53, 120, 104, 120, 121, 53, 122, 54, 97, 114, 115, 52, 120, 118, 52, 55, 103, 112, 115, 100, 114, 101, 105, 54, 102, 105, 111, 119, 112, 116, 107, 50, 110, 113, 113, 46, 97, 114, 119, 101, 97, 118, 101, 46, 110, 101, 116, 47, 51, 119, 88, 121, 70, 49, 119, 118, 75, 54, 65, 82, 74, 95, 57, 117, 101, 45, 79, 53, 56, 67, 77, 117, 88, 114, 122, 53, 110, 121, 72, 69, 105, 80, 70, 81, 54, 122, 53, 113, 48, 50, 69, 16, 39, 1, 1, 0, 0, 0, 11, 178, 8, 57, 177, 251, 32, 221, 58, 144, 223, 230, 99, 205, 90, 229, 189, 160, 243, 150, 11, 250, 14, 51, 183, 92, 96, 98, 208, 0, 0, 0, 0, 100, 1, 11, 178, 8, 57, 177, 251, 32, 221, 58, 144, 223, 230, 99, 205, 90, 229, 189, 160, 243, 150, 11, 250, 14, 51, 183, 92, 96, 98, 208, 0, 0, 0, 1, 1},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := UpdateMetadataAccount(tt.args.param); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("UpdateMetadataAccount() = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }

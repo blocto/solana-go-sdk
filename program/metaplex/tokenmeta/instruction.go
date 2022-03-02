@@ -10,7 +10,7 @@ type Instruction uint8
 
 const (
 	InstructionCreateMetadataAccount Instruction = iota
-	InstructionUpdateMetadataAccunnt
+	InstructionUpdateMetadataAccount
 	InstructionDeprecatedCreateMasterEdition
 	InstructionDeprecatedMintNewEditionFromMasterEditionViaPrintingToken
 	InstructionUpdatePrimarySaleHappenedViaToken
@@ -88,6 +88,48 @@ func CreateMetadataAccount(param CreateMetadataAccountParam) types.Instruction {
 			{
 				PubKey:     common.SysVarRentPubkey,
 				IsSigner:   false,
+				IsWritable: false,
+			},
+		},
+		Data: data,
+	}
+}
+
+type UpdateMetadataAccountParam struct {
+	MetadataAccount     common.PublicKey
+	UpdateAuthority     common.PublicKey
+	Data                *Data
+	NewUpdateAuthority  *common.PublicKey
+	PrimarySaleHappened *bool
+}
+
+func UpdateMetadataAccount(param UpdateMetadataAccountParam) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction         Instruction
+		Data                *Data
+		NewUpdateAuthority  *common.PublicKey
+		PrimarySaleHappened *bool
+	}{
+		Instruction:         InstructionUpdateMetadataAccount,
+		Data:                param.Data,
+		NewUpdateAuthority:  param.NewUpdateAuthority,
+		PrimarySaleHappened: param.PrimarySaleHappened,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.MetaplexTokenMetaProgramID,
+		Accounts: []types.AccountMeta{
+			{
+				PubKey:     param.MetadataAccount,
+				IsSigner:   false,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.UpdateAuthority,
+				IsSigner:   true,
 				IsWritable: false,
 			},
 		},
