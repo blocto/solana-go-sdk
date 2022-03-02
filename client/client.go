@@ -929,6 +929,22 @@ func (c *Client) processSimulateTransaction(res rpc.SimulateTransactionResponse,
 	}, nil
 }
 
+func (c *Client) GetSignaturesForAddress(ctx context.Context, base58Addr string) ([]rpc.GetSignaturesForAddressResult, error) {
+	return c.processGetSignaturesForAddress(c.RpcClient.GetSignaturesForAddress(ctx, base58Addr))
+}
+
+func (c *Client) GetSignaturesForAddressWithConfig(ctx context.Context, base58Addr string, cfg rpc.GetSignaturesForAddressConfig) ([]rpc.GetSignaturesForAddressResult, error) {
+	return c.processGetSignaturesForAddress(c.RpcClient.GetSignaturesForAddressWithConfig(ctx, base58Addr, cfg))
+}
+
+func (c *Client) processGetSignaturesForAddress(res rpc.GetSignaturesForAddressResponse, err error) ([]rpc.GetSignaturesForAddressResult, error) {
+	err = checkRpcResult(res.GeneralResponse, err)
+	if err != nil {
+		return nil, err
+	}
+	return res.Result, nil
+}
+
 func checkRpcResult(res rpc.GeneralResponse, err error) error {
 	if err != nil {
 		return err
