@@ -24,6 +24,20 @@ const (
 	InstructionConvertMasterEditionV1ToV2
 	InstructionMintNewEditionFromMasterEditionViaVaultProxy
 	InstructionPuffMetadata
+	InstructionUpdateMetadataAccountV2
+	InstructionCreateMetadataAccountV2
+	InstructionCreateMasterEditionV3
+	InstructionVerifyCollection
+	InstructionUtilize
+	InstructionApproveUseAuthority
+	InstructionRevokeUseAuthority
+	InstructionUnverifyCollection
+	InstructionApproveCollectionAuthority
+	InstructionRevokeCollectionAuthority
+	InstructionSetAndVerifyCollection
+	InstructionFreezeDelegatedAccount
+	InstructionThawDelegatedAccount
+	InstructionRemoveCreatorVerification
 )
 
 type CreateMetadataAccountParam struct {
@@ -327,6 +341,149 @@ func MintNewEditionFromMasterEditionViaToken(param MintNewEditionFromMasterEditi
 				PubKey:     param.MasterMetadata,
 				IsSigner:   false,
 				IsWritable: false,
+			},
+			{
+				PubKey:     common.TokenProgramID,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+			{
+				PubKey:     common.SystemProgramID,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+			{
+				PubKey:     common.SysVarRentPubkey,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+		},
+		Data: data,
+	}
+}
+
+type CreateMetadataAccountV2Param struct {
+	Metadata                common.PublicKey
+	Mint                    common.PublicKey
+	MintAuthority           common.PublicKey
+	Payer                   common.PublicKey
+	UpdateAuthority         common.PublicKey
+	UpdateAuthorityIsSigner bool
+	IsMutable               bool
+	Data                    DataV2
+}
+
+func CreateMetadataAccountV2(param CreateMetadataAccountV2Param) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction Instruction
+		Data        DataV2
+		IsMutable   bool
+	}{
+		Instruction: InstructionCreateMetadataAccountV2,
+		Data:        param.Data,
+		IsMutable:   param.IsMutable,
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.MetaplexTokenMetaProgramID,
+		Accounts: []types.AccountMeta{
+			{
+				PubKey:     param.Metadata,
+				IsSigner:   false,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.Mint,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+			{
+				PubKey:     param.MintAuthority,
+				IsSigner:   true,
+				IsWritable: false,
+			},
+			{
+				PubKey:     param.Payer,
+				IsSigner:   true,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.UpdateAuthority,
+				IsSigner:   param.UpdateAuthorityIsSigner,
+				IsWritable: false,
+			},
+			{
+				PubKey:     common.SystemProgramID,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+			{
+				PubKey:     common.SysVarRentPubkey,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+		},
+		Data: data,
+	}
+}
+
+type CreateMasterEditionV3Param struct {
+	Edition         common.PublicKey
+	Mint            common.PublicKey
+	UpdateAuthority common.PublicKey
+	MintAuthority   common.PublicKey
+	Metadata        common.PublicKey
+	Payer           common.PublicKey
+	MaxSupply       *uint64
+}
+
+func CreateMasterEditionV3(param CreateMasterEditionParam) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction Instruction
+		MaxSupply   *uint64
+	}{
+		Instruction: InstructionCreateMasterEditionV3,
+		MaxSupply:   param.MaxSupply,
+	})
+	if err != nil {
+		panic(err)
+	}
+	return types.Instruction{
+		ProgramID: common.MetaplexTokenMetaProgramID,
+		Accounts: []types.AccountMeta{
+			{
+				PubKey:     param.Edition,
+				IsSigner:   false,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.Mint,
+				IsSigner:   false,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.UpdateAuthority,
+				IsSigner:   true,
+				IsWritable: false,
+			},
+			{
+				PubKey:     param.MintAuthority,
+				IsSigner:   true,
+				IsWritable: false,
+			},
+			{
+				PubKey:     param.Payer,
+				IsSigner:   true,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.Metadata,
+				IsSigner:   false,
+				IsWritable: true,
 			},
 			{
 				PubKey:     common.TokenProgramID,

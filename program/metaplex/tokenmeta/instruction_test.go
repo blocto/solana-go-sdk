@@ -313,3 +313,145 @@ func TestSignMetadata(t *testing.T) {
 		})
 	}
 }
+
+func TestCreateMasterEditionV3(t *testing.T) {
+	type args struct {
+		param CreateMasterEditionParam
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				param: CreateMasterEditionParam{
+					Edition:         common.PublicKeyFromString("edition111111111111111111111111111111111111"),
+					Mint:            common.PublicKeyFromString("mint111111111111111111111111111111111111111"),
+					UpdateAuthority: common.PublicKeyFromString("updateAuthority1111111111111111111111111111"),
+					MintAuthority:   common.PublicKeyFromString("mintAuthority111111111111111111111111111111"),
+					Metadata:        common.PublicKeyFromString("metadata11111111111111111111111111111111111"),
+					Payer:           common.PublicKeyFromString("payer11111111111111111111111111111111111111"),
+					MaxSupply:       nil,
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.MetaplexTokenMetaProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("edition111111111111111111111111111111111111"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("mint111111111111111111111111111111111111111"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("updateAuthority1111111111111111111111111111"), IsSigner: true, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("mintAuthority111111111111111111111111111111"), IsSigner: true, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("payer11111111111111111111111111111111111111"), IsSigner: true, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("metadata11111111111111111111111111111111111"), IsSigner: false, IsWritable: true},
+					{PubKey: common.TokenProgramID, IsSigner: false, IsWritable: false},
+					{PubKey: common.SystemProgramID, IsSigner: false, IsWritable: false},
+					{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
+				},
+				Data: []byte{17, 0},
+			},
+		},
+		{
+			args: args{
+				param: CreateMasterEditionParam{
+					Edition:         common.PublicKeyFromString("edition111111111111111111111111111111111111"),
+					Mint:            common.PublicKeyFromString("mint111111111111111111111111111111111111111"),
+					UpdateAuthority: common.PublicKeyFromString("updateAuthority1111111111111111111111111111"),
+					MintAuthority:   common.PublicKeyFromString("mintAuthority111111111111111111111111111111"),
+					Metadata:        common.PublicKeyFromString("metadata11111111111111111111111111111111111"),
+					Payer:           common.PublicKeyFromString("payer11111111111111111111111111111111111111"),
+					MaxSupply:       pointer.Uint64(2),
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.MetaplexTokenMetaProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("edition111111111111111111111111111111111111"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("mint111111111111111111111111111111111111111"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("updateAuthority1111111111111111111111111111"), IsSigner: true, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("mintAuthority111111111111111111111111111111"), IsSigner: true, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("payer11111111111111111111111111111111111111"), IsSigner: true, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("metadata11111111111111111111111111111111111"), IsSigner: false, IsWritable: true},
+					{PubKey: common.TokenProgramID, IsSigner: false, IsWritable: false},
+					{PubKey: common.SystemProgramID, IsSigner: false, IsWritable: false},
+					{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
+				},
+				Data: []byte{17, 1, 2, 0, 0, 0, 0, 0, 0, 0},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := CreateMasterEditionV3(tt.args.param); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("CreateMasterEditionV3() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestCreateMetadataAccountV2(t *testing.T) {
+	type args struct {
+		param CreateMetadataAccountV2Param
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				param: CreateMetadataAccountV2Param{
+					Metadata:                common.PublicKeyFromString("MetaData11111111111111111111111111111111111"),
+					Mint:                    common.PublicKeyFromString("Mint111111111111111111111111111111111111111"),
+					MintAuthority:           common.PublicKeyFromString("MintAuthority111111111111111111111111111111"),
+					Payer:                   common.PublicKeyFromString("payer11111111111111111111111111111111111111"),
+					UpdateAuthority:         common.PublicKeyFromString("MetadataUpdateAuthority11111111111111111111"),
+					UpdateAuthorityIsSigner: true,
+					IsMutable:               true,
+					Data: DataV2{
+						Name:                 "Fake SMS #1355",
+						Symbol:               "FSMB",
+						Uri:                  "https://34c7ef24f4v2aejh75xhxy5z6ars4xv47gpsdrei6fiowptk2nqq.arweave.net/3wXyF1wvK6ARJ_9ue-O58CMuXrz5nyHEiPFQ6z5q02E",
+						SellerFeeBasisPoints: 100,
+						Creators: &[]Creator{
+							{
+								Address:  common.PublicKeyFromString("MetadataUpdateAuthority11111111111111111111"),
+								Verified: true,
+								Share:    100,
+							},
+						},
+						Collection: &Collection{
+							Verified: false,
+							Key:      common.PublicKeyFromString("Co11ection111111111111111111111111111111111"),
+						},
+						Uses: &Uses{
+							UseMethod: Burn,
+							Remaining: 10,
+							Total:     10,
+						},
+					},
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.MetaplexTokenMetaProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("MetaData11111111111111111111111111111111111"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("Mint111111111111111111111111111111111111111"), IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("MintAuthority111111111111111111111111111111"), IsSigner: true, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("payer11111111111111111111111111111111111111"), IsSigner: true, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("MetadataUpdateAuthority11111111111111111111"), IsSigner: true, IsWritable: false},
+					{PubKey: common.SystemProgramID, IsSigner: false, IsWritable: false},
+					{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
+				},
+				Data: []byte{16, 14, 0, 0, 0, 70, 97, 107, 101, 32, 83, 77, 83, 32, 35, 49, 51, 53, 53, 4, 0, 0, 0, 70, 83, 77, 66, 116, 0, 0, 0, 104, 116, 116, 112, 115, 58, 47, 47, 51, 52, 99, 55, 101, 102, 50, 52, 102, 52, 118, 50, 97, 101, 106, 104, 55, 53, 120, 104, 120, 121, 53, 122, 54, 97, 114, 115, 52, 120, 118, 52, 55, 103, 112, 115, 100, 114, 101, 105, 54, 102, 105, 111, 119, 112, 116, 107, 50, 110, 113, 113, 46, 97, 114, 119, 101, 97, 118, 101, 46, 110, 101, 116, 47, 51, 119, 88, 121, 70, 49, 119, 118, 75, 54, 65, 82, 74, 95, 57, 117, 101, 45, 79, 53, 56, 67, 77, 117, 88, 114, 122, 53, 110, 121, 72, 69, 105, 80, 70, 81, 54, 122, 53, 113, 48, 50, 69, 100, 0, 1, 1, 0, 0, 0, 5, 74, 117, 47, 163, 239, 155, 143, 132, 204, 186, 119, 12, 224, 235, 103, 83, 179, 159, 224, 107, 114, 196, 175, 165, 67, 236, 179, 239, 32, 0, 0, 1, 100, 1, 0, 3, 5, 102, 199, 161, 236, 51, 234, 59, 166, 8, 196, 18, 36, 64, 32, 255, 155, 159, 44, 123, 129, 201, 141, 70, 134, 218, 98, 0, 0, 0, 0, 1, 0, 10, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := CreateMetadataAccountV2(tt.args.param); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("CreateMetadataAccountV2() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

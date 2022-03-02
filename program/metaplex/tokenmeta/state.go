@@ -21,6 +21,8 @@ const (
 	KeyReservationListV2
 	KeyMasterEditionV2
 	KeyEditionMarker
+	KeyUseAuthorityRecord
+	KeyCollectionAuthorityRecord
 )
 
 type Creator struct {
@@ -37,6 +39,16 @@ type Data struct {
 	Creators             *[]Creator
 }
 
+type DataV2 struct {
+	Name                 string
+	Symbol               string
+	Uri                  string
+	SellerFeeBasisPoints uint16
+	Creators             *[]Creator
+	Collection           *Collection
+	Uses                 *Uses
+}
+
 type Metadata struct {
 	Key                 Key
 	UpdateAuthority     common.PublicKey
@@ -46,6 +58,25 @@ type Metadata struct {
 	IsMutable           bool
 	EditionNonce        *uint8
 }
+
+type Collection struct {
+	Verified bool
+	Key      common.PublicKey
+}
+
+type Uses struct {
+	UseMethod UseMethod
+	Remaining uint64
+	Total     uint64
+}
+
+type UseMethod borsh.Enum
+
+const (
+	Burn UseMethod = iota
+	Multiple
+	Single
+)
 
 func MetadataDeserialize(data []byte) (Metadata, error) {
 	var metadata Metadata
