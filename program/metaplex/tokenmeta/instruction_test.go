@@ -278,3 +278,38 @@ func TestUpdateMetadataAccount(t *testing.T) {
 		})
 	}
 }
+
+func TestSignMetadata(t *testing.T) {
+	type args struct {
+		param SignMetadataParam
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				param: SignMetadataParam{
+					Metadata: common.PublicKeyFromString("metadata11111111111111111111111111111111111"),
+					Creator:  common.PublicKeyFromString("newMintAuthority111111111111111111111111111"),
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.MetaplexTokenMetaProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("metadata11111111111111111111111111111111111"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("newMintAuthority111111111111111111111111111"), IsSigner: true, IsWritable: false},
+				},
+				Data: []byte{0x7},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := SignMetadata(tt.args.param); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SignMetadata() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

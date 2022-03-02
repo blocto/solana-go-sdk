@@ -211,6 +211,39 @@ func CreateMasterEdition(param CreateMasterEditionParam) types.Instruction {
 	}
 }
 
+type SignMetadataParam struct {
+	Metadata common.PublicKey
+	Creator  common.PublicKey
+}
+
+func SignMetadata(param SignMetadataParam) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionSignMetadata,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.MetaplexTokenMetaProgramID,
+		Accounts: []types.AccountMeta{
+			{
+				PubKey:     param.Metadata,
+				IsSigner:   false,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.Creator,
+				IsSigner:   true,
+				IsWritable: false,
+			},
+		},
+		Data: data,
+	}
+}
+
 type MintNewEditionFromMasterEditionViaTokeParam struct {
 	NewMetaData                common.PublicKey
 	NewEdition                 common.PublicKey
