@@ -111,7 +111,7 @@ func preparePayload(params []interface{}) ([]byte, error) {
 
 func (c *RpcClient) processRpcCall(body []byte, rpcErr error, res interface{}) error {
 	if rpcErr != nil {
-		return fmt.Errorf("rpc: call error, err: %v", rpcErr)
+		return fmt.Errorf("rpc: call error, err: %v, body: %v", rpcErr, string(body))
 	}
 	err := json.Unmarshal(body, &res)
 	if err != nil {
