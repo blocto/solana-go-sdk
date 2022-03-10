@@ -47,6 +47,21 @@ export default defineUserConfig<DefaultThemeOptions>({
               { text: "Sign Metadata", link: "/nft/sign-metadata" },
             ],
           },
+          {
+            text: "Advanced",
+            children: [
+              { text: "Add Memo", link: "/advanced/memo" },
+              {
+                text: "Durable Nonce",
+                link: "/advanced/durable-nonce/README.md",
+                children: [
+                  { text: "Create Nonce Account", link: "/advanced/durable-nonce/create-nonce-account" },
+                  { text: "Get Nonce Account", link: "/advanced/durable-nonce/get-nonce-account" },
+                  { text: "Use Nonce", link: "/advanced/durable-nonce/use-nonce" },
+                ],
+              },
+            ],
+          },
         ],
       },
     },

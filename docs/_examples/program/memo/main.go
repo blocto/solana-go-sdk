@@ -2,13 +2,11 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/program/memoprog"
-	"github.com/portto/solana-go-sdk/program/sysprog"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -22,11 +20,10 @@ var alice, _ = types.AccountFromBase58("4voSPg3tYuWbKzimpQK9EbXHmuyy5fUrtXvpLDML
 func main() {
 	c := client.NewClient(rpc.DevnetRPCEndpoint)
 
-	// get nonce account
-	nonceAccountPubkey := common.PublicKeyFromString("DJyNpXgggw1WGgjTVzFsNjb3fuQZVMqhoakvSBfX9LYx")
-	nonceAccount, err := c.GetNonceAccount(context.Background(), nonceAccountPubkey.ToBase58())
+	// to fetch recent blockhash
+	recentBlockhashResponse, err := c.GetRecentBlockhash(context.Background())
 	if err != nil {
-		log.Fatalf("failed to get nonce account, err: %v", err)
+		log.Fatalf("failed to get recent blockhash, err: %v", err)
 	}
 
 	// create a tx
@@ -34,14 +31,12 @@ func main() {
 		Signers: []types.Account{feePayer, alice},
 		Message: types.NewMessage(types.NewMessageParam{
 			FeePayer:        feePayer.PublicKey,
-			RecentBlockhash: nonceAccount.Nonce.ToBase58(),
+			RecentBlockhash: recentBlockhashResponse.Blockhash,
 			Instructions: []types.Instruction{
-				sysprog.AdvanceNonceAccount(sysprog.AdvanceNonceAccountParam{
-					Nonce: nonceAccountPubkey,
-					Auth:  alice.PublicKey,
-				}),
+				// memo instruction
 				memoprog.BuildMemo(memoprog.BuildMemoParam{
-					Memo: []byte("use nonce"),
+					SignerPubkeys: []common.PublicKey{alice.PublicKey},
+					Memo:          []byte("🐳"),
 				}),
 			},
 		}),
@@ -50,10 +45,11 @@ func main() {
 		log.Fatalf("failed to new a transaction, err: %v", err)
 	}
 
-	sig, err := c.SendTransaction(context.Background(), tx)
+	// send tx
+	txhash, err := c.SendTransaction(context.Background(), tx)
 	if err != nil {
 		log.Fatalf("failed to send tx, err: %v", err)
 	}
 
-	fmt.Println("txhash", sig)
+	log.Println("txhash:", txhash)
 }

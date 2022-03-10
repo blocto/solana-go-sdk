@@ -12,44 +12,57 @@ import (
 	"github.com/portto/solana-go-sdk/types"
 )
 
-var feePayer, _ = types.AccountFromBytes([]byte{178, 244, 76, 4, 247, 41, 113, 40, 111, 103, 12, 76, 195, 4, 100, 123, 88, 226, 37, 56, 209, 180, 92, 77, 39, 85, 78, 202, 121, 162, 88, 29, 125, 155, 223, 107, 139, 223, 229, 82, 89, 209, 27, 43, 108, 205, 144, 2, 74, 159, 215, 57, 198, 4, 193, 36, 161, 50, 160, 119, 89, 240, 102, 184})
+// FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz
+var feePayer, _ = types.AccountFromBase58("4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN")
+
+// 9aE476sH92Vz7DMPyq5WLPkrKWivxeuTKEFKd2sZZcde
+var alice, _ = types.AccountFromBase58("4voSPg3tYuWbKzimpQK9EbXHmuyy5fUrtXvpLDMLkmY6TRncaTHAKGD8jUg3maB5Jbrd9CkQg4qjJMyN6sQvnEF2")
 
 func main() {
-	c := client.NewClient(rpc.LocalnetRPCEndpoint)
+	c := client.NewClient(rpc.DevnetRPCEndpoint)
 
-	nonceAccountRentFreeBalance, err := c.GetMinimumBalanceForRentExemption(
-		context.Background(),
-		sysprog.NonceAccountSize,
-	)
-	if err != nil {
-		log.Fatalf("failed to get min balance for nonce account, err: %v", err)
-	}
-
+	// create a new account
 	nonceAccount := types.NewAccount()
 	fmt.Println("nonce account:", nonceAccount.PublicKey)
 
-	sig, err := c.QuickSendTransaction(
-		context.Background(),
-		client.QuickSendTransactionParam{
-			FeePayer: feePayer.PublicKey,
+	// get minimum balance
+	nonceAccountMinimumBalance, err := c.GetMinimumBalanceForRentExemption(context.Background(), sysprog.NonceAccountSize)
+	if err != nil {
+		log.Fatalf("failed to get minimum balance for nonce account, err: %v", err)
+	}
+
+	// recent blockhash
+	recentBlockhashResponse, err := c.GetRecentBlockhash(context.Background())
+	if err != nil {
+		log.Fatalf("failed to get recent blockhash, err: %v", err)
+	}
+
+	// create a tx
+	tx, err := types.NewTransaction(types.NewTransactionParam{
+		Signers: []types.Account{feePayer, nonceAccount},
+		Message: types.NewMessage(types.NewMessageParam{
+			FeePayer:        feePayer.PublicKey,
+			RecentBlockhash: recentBlockhashResponse.Blockhash,
 			Instructions: []types.Instruction{
 				sysprog.CreateAccount(sysprog.CreateAccountParam{
 					From:     feePayer.PublicKey,
 					New:      nonceAccount.PublicKey,
 					Owner:    common.SystemProgramID,
-					Lamports: nonceAccountRentFreeBalance,
+					Lamports: nonceAccountMinimumBalance,
 					Space:    sysprog.NonceAccountSize,
 				}),
 				sysprog.InitializeNonceAccount(sysprog.InitializeNonceAccountParam{
-					// nonce account
 					Nonce: nonceAccount.PublicKey,
-					// nonce account's owner
-					Auth: feePayer.PublicKey,
+					Auth:  alice.PublicKey,
 				}),
 			},
-			Signers: []types.Account{feePayer, nonceAccount},
-		},
-	)
+		}),
+	})
+	if err != nil {
+		log.Fatalf("failed to new a transaction, err: %v", err)
+	}
+
+	sig, err := c.SendTransaction(context.Background(), tx)
 	if err != nil {
 		log.Fatalf("failed to send tx, err: %v", err)
 	}
