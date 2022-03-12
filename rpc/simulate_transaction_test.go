@@ -161,11 +161,11 @@ func TestSimulateTransaction(t *testing.T) {
 					Value: SimulateTransactionResponseResultValue{
 						Accounts: []*GetAccountInfoResultValue{
 							{
-								Owner:     "11111111111111111111111111111111",
-								Lamports:  108112817160,
-								Data:      []interface{}{"KLUv/SAAAQAA", "base64+zstd"},
-								Excutable: false,
-								RentEpoch: 185,
+								Owner:      "11111111111111111111111111111111",
+								Lamports:   108112817160,
+								Data:       []interface{}{"KLUv/SAAAQAA", "base64+zstd"},
+								Executable: false,
+								RentEpoch:  185,
 							},
 						},
 						Logs: []string{"Program 11111111111111111111111111111111 invoke [1]", "Program 11111111111111111111111111111111 success"},

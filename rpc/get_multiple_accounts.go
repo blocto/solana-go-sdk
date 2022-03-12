@@ -42,11 +42,11 @@ type GetMultipleAccountsResult struct {
 
 // GetMultipleAccountsResultValue is rpc result of `getAccountInfo`
 type GetMultipleAccountsResultValue struct {
-	Lamports  uint64      `json:"lamports"`
-	Owner     string      `json:"owner"`
-	Excutable bool        `json:"excutable"`
-	RentEpoch uint64      `json:"rentEpoch"`
-	Data      interface{} `json:"data"`
+	Lamports   uint64      `json:"lamports"`
+	Owner      string      `json:"owner"`
+	Executable bool        `json:"executable"`
+	RentEpoch  uint64      `json:"rentEpoch"`
+	Data       interface{} `json:"data"`
 }
 
 // GetMultipleAccounts returns all information associated with the account of provided Pubkey

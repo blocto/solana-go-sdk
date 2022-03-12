@@ -98,11 +98,11 @@ func (c *Client) GetTokenSupplyWithConfig(ctx context.Context, mintAddr string, 
 }
 
 type AccountInfo struct {
-	Lamports  uint64
-	Owner     string
-	Excutable bool
-	RentEpoch uint64
-	Data      []byte
+	Lamports   uint64
+	Owner      string
+	Executable bool
+	RentEpoch  uint64
+	Data       []byte
 }
 
 // GetAccountInfo return account's info
@@ -151,11 +151,11 @@ func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.GetAccountInfoResultVal
 		return AccountInfo{}, fmt.Errorf("failed to base64 decode data")
 	}
 	return AccountInfo{
-		Lamports:  v.Lamports,
-		Owner:     v.Owner,
-		Excutable: v.Excutable,
-		RentEpoch: v.RentEpoch,
-		Data:      rawData,
+		Lamports:   v.Lamports,
+		Owner:      v.Owner,
+		Executable: v.Executable,
+		RentEpoch:  v.RentEpoch,
+		Data:       rawData,
 	}, nil
 }
 
@@ -209,11 +209,11 @@ func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.GetMultipl
 			return []AccountInfo{}, fmt.Errorf("failed to base64 decode data")
 		}
 		res[i] = AccountInfo{
-			Lamports:  v.Lamports,
-			Owner:     v.Owner,
-			Excutable: v.Excutable,
-			RentEpoch: v.RentEpoch,
-			Data:      rawData,
+			Lamports:   v.Lamports,
+			Owner:      v.Owner,
+			Executable: v.Executable,
+			RentEpoch:  v.RentEpoch,
+			Data:       rawData,
 		}
 	}
 	return res, nil
