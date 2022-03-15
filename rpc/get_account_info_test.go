@@ -338,6 +338,39 @@ func TestGetAccountInfo(t *testing.T) {
 			},
 			ExpectedError: nil,
 		},
+		{
+			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getAccountInfo", "params":["5xtKiHGFfhK6ynJwWrApoVkVHeTJ25czqnezDwJiT86N", {"encoding": "base64+zstd"}]}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":121172974},"value":{"data":["KLUv/QBYIQEAAgAAADLAWbd6nbiA1th1E/yH93WWg4hgfgn3t2BoTE9m2JGH","base64+zstd"],"executable":true,"lamports":1141440,"owner":"BPFLoaderUpgradeab1e11111111111111111111111","rentEpoch":280}},"id":1}`,
+			RpcCall: func(rc RpcClient) (interface{}, error) {
+				return rc.GetAccountInfoWithConfig(
+					context.Background(),
+					"5xtKiHGFfhK6ynJwWrApoVkVHeTJ25czqnezDwJiT86N",
+					GetAccountInfoConfig{
+						Encoding: GetAccountInfoConfigEncodingBase64Zstd,
+					},
+				)
+			},
+			ExpectedResponse: GetAccountInfoResponse{
+				GeneralResponse: GeneralResponse{
+					JsonRPC: "2.0",
+					ID:      1,
+					Error:   nil,
+				},
+				Result: GetAccountInfoResult{
+					Context: Context{
+						Slot: 121172974,
+					},
+					Value: GetAccountInfoResultValue{
+						Lamports:   1141440,
+						Owner:      "BPFLoaderUpgradeab1e11111111111111111111111",
+						Executable: true,
+						RentEpoch:  280,
+						Data:       []interface{}{"KLUv/QBYIQEAAgAAADLAWbd6nbiA1th1E/yH93WWg4hgfgn3t2BoTE9m2JGH", "base64+zstd"},
+					},
+				},
+			},
+			ExpectedError: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
