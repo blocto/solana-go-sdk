@@ -8,6 +8,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TokenStandardPtr(v TokenStandard) *TokenStandard {
+	return &v
+}
+
+func CollectionPtr(v Collection) *Collection {
+	return &v
+}
+
+func UsesPtr(v Uses) *Uses {
+	return &v
+}
+
 func TestMetadataDeserialize(t *testing.T) {
 	type args struct {
 		data []byte
@@ -62,6 +74,16 @@ func TestMetadataDeserialize(t *testing.T) {
 				PrimarySaleHappened: true,
 				IsMutable:           false,
 				EditionNonce:        pointer.Uint8(255),
+				TokenStandard:       TokenStandardPtr(NonFungible),
+				Collection: CollectionPtr(Collection{
+					Verified: false,
+					Key:      common.PublicKey{},
+				}),
+				Uses: UsesPtr(Uses{
+					UseMethod: Burn,
+					Remaining: 0,
+					Total:     0,
+				}),
 			},
 			err: nil,
 		},
