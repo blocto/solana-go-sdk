@@ -57,7 +57,19 @@ type Metadata struct {
 	PrimarySaleHappened bool
 	IsMutable           bool
 	EditionNonce        *uint8
+	TokenStandard       *TokenStandard
+	Collection          *Collection
+	Uses                *Uses
 }
+
+type TokenStandard borsh.Enum
+
+const (
+	NonFungible TokenStandard = iota
+	FungibleAsset
+	Fungible
+	NonFungibleEdition
+)
 
 type Collection struct {
 	Verified bool
