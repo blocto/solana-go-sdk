@@ -11,6 +11,8 @@ type Instruction borsh.Enum
 const (
 	InstructionRequestUnits Instruction = iota
 	InstructionRequestHeapFrame
+	InstructionSetComputeUnitLimit
+	InstructionSetComputeUnitPrice
 )
 
 type RequestUnitsParam struct {
