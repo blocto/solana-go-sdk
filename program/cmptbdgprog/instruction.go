@@ -65,3 +65,52 @@ func RequestHeapFrame(param RequestHeapFrameParam) types.Instruction {
 		Data:      data,
 	}
 }
+
+type SetComputeUnitLimitParam struct {
+	Units uint32
+}
+
+// SetComputeUnitLimit set a specific compute unit limit that the transaction is allowed to consume.
+func SetComputeUnitLimit(param SetComputeUnitLimitParam) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction Instruction
+		Units       uint32
+	}{
+		Instruction: InstructionSetComputeUnitLimit,
+		Units:       param.Units,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.ComputeBudgetProgramID,
+		Accounts:  []types.AccountMeta{},
+		Data:      data,
+	}
+}
+
+type SetComputeUnitPriceParam struct {
+	MicroLamports uint64
+}
+
+// SetComputeUnitPrice set a compute unit price in "micro-lamports" to pay a higher transaction
+// fee for higher transaction prioritization.
+func SetComputeUnitPrice(param SetComputeUnitPriceParam) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction   Instruction
+		MicroLamports uint64
+	}{
+		Instruction:   InstructionSetComputeUnitPrice,
+		MicroLamports: param.MicroLamports,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.ComputeBudgetProgramID,
+		Accounts:  []types.AccountMeta{},
+		Data:      data,
+	}
+}
