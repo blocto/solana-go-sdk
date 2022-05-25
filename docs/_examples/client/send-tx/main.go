@@ -31,7 +31,7 @@ func main() {
 	fmt.Println(sig)
 
 	// 2. send raw tx (pros: more custom tx you can send, cons: build tx steps are more complex)
-	resp, err := c.GetRecentBlockhash(context.Background())
+	resp, err := c.GetLatestBlockhash(context.Background())
 	if err != nil {
 		log.Fatalf("failed to get recent blockhash, err: %v", err)
 	}

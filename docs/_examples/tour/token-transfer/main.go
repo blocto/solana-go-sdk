@@ -26,10 +26,11 @@ var aliceTokenATAPubkey = common.PublicKeyFromString("J1T6kAPowNFcxFh4pmwSqxQM9A
 func main() {
 	c := client.NewClient(rpc.DevnetRPCEndpoint)
 
-	res, err := c.GetRecentBlockhash(context.Background())
+	res, err := c.GetLatestBlockhash(context.Background())
 	if err != nil {
 		log.Fatalf("get recent block hash error, err: %v\n", err)
 	}
+
 	tx, err := types.NewTransaction(types.NewTransactionParam{
 		Message: types.NewMessage(types.NewMessageParam{
 			FeePayer:        feePayer.PublicKey,

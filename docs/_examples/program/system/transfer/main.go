@@ -21,7 +21,7 @@ func main() {
 	c := client.NewClient(rpc.DevnetRPCEndpoint)
 
 	// to fetch recent blockhash
-	recentBlockhashResponse, err := c.GetRecentBlockhash(context.Background())
+	recentBlockhashResponse, err := c.GetLatestBlockhash(context.Background())
 	if err != nil {
 		log.Fatalf("failed to get recent blockhash, err: %v", err)
 	}

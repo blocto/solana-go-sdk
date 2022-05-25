@@ -31,7 +31,7 @@ func main() {
 
 	}
 
-	recentBlockhashResponse, err := c.GetRecentBlockhash(context.Background())
+	recentBlockhashResponse, err := c.GetLatestBlockhash(context.Background())
 	if err != nil {
 		log.Fatalf("failed to get recent blockhash, err: %v", err)
 	}

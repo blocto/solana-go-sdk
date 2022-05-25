@@ -29,10 +29,11 @@ func main() {
 	}
 	fmt.Println("ata:", ata.ToBase58())
 
-	res, err := c.GetRecentBlockhash(context.Background())
+	res, err := c.GetLatestBlockhash(context.Background())
 	if err != nil {
 		log.Fatalf("get recent block hash error, err: %v\n", err)
 	}
+
 	tx, err := types.NewTransaction(types.NewTransactionParam{
 		Message: types.NewMessage(types.NewMessageParam{
 			FeePayer:        feePayer.PublicKey,
