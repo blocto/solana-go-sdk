@@ -6,10 +6,10 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 
-	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/metaplex/tokenmeta"
-	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/OldSmokeGun/solana-go-sdk/client"
+	"github.com/OldSmokeGun/solana-go-sdk/common"
+	"github.com/OldSmokeGun/solana-go-sdk/program/metaplex/tokenmeta"
+	"github.com/OldSmokeGun/solana-go-sdk/rpc"
 )
 
 func main() {

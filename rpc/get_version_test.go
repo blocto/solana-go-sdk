@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/portto/solana-go-sdk/pkg/pointer"
+	"github.com/OldSmokeGun/solana-go-sdk/pkg/pointer"
 )
 
 func TestGetVersion(t *testing.T) {

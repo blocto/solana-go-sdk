@@ -5,15 +5,15 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/pkg/pointer"
-	"github.com/portto/solana-go-sdk/program/assotokenprog"
-	"github.com/portto/solana-go-sdk/program/metaplex/tokenmeta"
-	"github.com/portto/solana-go-sdk/program/sysprog"
-	"github.com/portto/solana-go-sdk/program/tokenprog"
-	"github.com/portto/solana-go-sdk/rpc"
-	"github.com/portto/solana-go-sdk/types"
+	"github.com/OldSmokeGun/solana-go-sdk/client"
+	"github.com/OldSmokeGun/solana-go-sdk/common"
+	"github.com/OldSmokeGun/solana-go-sdk/pkg/pointer"
+	"github.com/OldSmokeGun/solana-go-sdk/program/assotokenprog"
+	"github.com/OldSmokeGun/solana-go-sdk/program/metaplex/tokenmeta"
+	"github.com/OldSmokeGun/solana-go-sdk/program/sysprog"
+	"github.com/OldSmokeGun/solana-go-sdk/program/tokenprog"
+	"github.com/OldSmokeGun/solana-go-sdk/rpc"
+	"github.com/OldSmokeGun/solana-go-sdk/types"
 )
 
 // FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/portto/solana-go-sdk/common"
+	"github.com/OldSmokeGun/solana-go-sdk/common"
 )
 
 func TestGetTokenAccountsByOwner(t *testing.T) {

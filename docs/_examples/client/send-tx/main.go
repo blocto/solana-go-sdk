@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/program/sysprog"
-	"github.com/portto/solana-go-sdk/rpc"
-	"github.com/portto/solana-go-sdk/types"
+	"github.com/OldSmokeGun/solana-go-sdk/client"
+	"github.com/OldSmokeGun/solana-go-sdk/program/sysprog"
+	"github.com/OldSmokeGun/solana-go-sdk/rpc"
+	"github.com/OldSmokeGun/solana-go-sdk/types"
 )
 
 // There are many ways you can send tx

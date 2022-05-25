@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
+	"github.com/OldSmokeGun/solana-go-sdk/common"
+	"github.com/OldSmokeGun/solana-go-sdk/program/sysprog"
+	"github.com/OldSmokeGun/solana-go-sdk/rpc"
 	"github.com/mr-tron/base58"
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/sysprog"
-	"github.com/portto/solana-go-sdk/rpc"
 )
 
 func (c *Client) GetNonceAccount(ctx context.Context, base58Addr string) (sysprog.NonceAccount, error) {

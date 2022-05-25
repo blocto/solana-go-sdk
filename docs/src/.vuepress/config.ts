@@ -8,7 +8,7 @@ export default defineUserConfig<DefaultThemeOptions>({
   title: "Solana Development With Go",
   plugins: [["@snippetors/vuepress-plugin-code-copy", { color: "#BBBBBB" }]],
   themeConfig: {
-    navbar: [{ text: "GitHub", link: "https://github.com/portto/solana-go-sdk" }],
+    navbar: [{ text: "GitHub", link: "https://github.com/OldSmokeGun/solana-go-sdk" }],
     locales: {
       "/": {
         selectLanguageName: "English",

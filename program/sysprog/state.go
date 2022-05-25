@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/portto/solana-go-sdk/common"
+	"github.com/OldSmokeGun/solana-go-sdk/common"
 )
 
 const FeeCalculatorSize = 8
