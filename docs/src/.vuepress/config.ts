@@ -58,6 +58,8 @@ export default defineUserConfig<DefaultThemeOptions>({
                   { text: "Create Nonce Account", link: "/advanced/durable-nonce/create-nonce-account" },
                   { text: "Get Nonce Account", link: "/advanced/durable-nonce/get-nonce-account" },
                   { text: "Use Nonce", link: "/advanced/durable-nonce/use-nonce" },
+                  { text: "Upgrade Nonce", link: "/advanced/durable-nonce/upgrade-nonce" },
+                  { text: "Get Nonce Account By Owner", link: "/advanced/durable-nonce/get-nonce-account-by-owner" },
                 ],
               },
             ],
