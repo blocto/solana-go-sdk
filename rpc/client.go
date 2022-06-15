@@ -44,11 +44,27 @@ type GeneralResponse struct {
 }
 
 type RpcClient struct {
-	endpoint string
+	endpoint   string
+	httpClient *http.Client
 }
 
-func NewRpcClient(endpoint string) RpcClient {
-	return RpcClient{endpoint: endpoint}
+func NewRpcClient(endpoint string, options ...Option) RpcClient {
+	client := RpcClient{endpoint: endpoint}
+
+	for _, opt := range options {
+		opt(&client)
+	}
+
+	return client
+}
+
+type Option func(client *RpcClient)
+
+// WithHttpClient set custom http client
+func WithHttpClient(httpClient *http.Client) Option {
+	return func(client *RpcClient) {
+		client.httpClient = httpClient
+	}
 }
 
 // Call will return body of response. if http code beyond 200~300, the error also returns.
@@ -68,6 +84,10 @@ func (c *RpcClient) Call(ctx context.Context, params ...interface{}) ([]byte, er
 
 	// do request
 	httpclient := &http.Client{}
+	if c.httpClient != nil {
+		httpclient = c.httpClient
+	}
+
 	res, err := httpclient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to do request, err: %v", err)

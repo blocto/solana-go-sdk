@@ -1,7 +1,7 @@
 package pointer
 
 import (
-	"github.com/portto/solana-go-sdk/common"
+	"github.com/OldSmokeGun/solana-go-sdk/common"
 )
 
 func Bool(v bool) *bool {

@@ -7,18 +7,18 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/OldSmokeGun/solana-go-sdk/common"
+	"github.com/OldSmokeGun/solana-go-sdk/rpc"
+	"github.com/OldSmokeGun/solana-go-sdk/types"
 	"github.com/mr-tron/base58"
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/rpc"
-	"github.com/portto/solana-go-sdk/types"
 )
 
 type Client struct {
 	RpcClient rpc.RpcClient
 }
 
-func NewClient(endpoint string) *Client {
-	return &Client{rpc.NewRpcClient(endpoint)}
+func NewClient(endpoint string, options ...rpc.Option) *Client {
+	return &Client{rpc.NewRpcClient(endpoint, options...)}
 }
 
 // GetBalance fetch users lamports(SOL) balance
