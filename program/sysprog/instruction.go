@@ -21,6 +21,7 @@ const (
 	InstructionAllocateWithSeed
 	InstructionAssignWithSeed
 	InstructionTransferWithSeed
+	InstructionUpgradeNonceAccount
 )
 
 type CreateAccountParam struct {
@@ -397,6 +398,29 @@ func TransferWithSeed(param TransferWithSeedParam) types.Instruction {
 			{PubKey: param.From, IsSigner: false, IsWritable: true},
 			{PubKey: param.Base, IsSigner: true, IsWritable: false},
 			{PubKey: param.To, IsSigner: false, IsWritable: true},
+		},
+		Data: data,
+	}
+}
+
+type UpgradeNonceAccountParam struct {
+	NonceAccountPubkey common.PublicKey
+}
+
+func UpgradeNonceAccount(param UpgradeNonceAccountParam) types.Instruction {
+	data, err := bincode.SerializeData(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionUpgradeNonceAccount,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.SystemProgramID,
+		Accounts: []types.AccountMeta{
+			{PubKey: param.NonceAccountPubkey, IsSigner: false, IsWritable: true},
 		},
 		Data: data,
 	}

@@ -482,3 +482,36 @@ func TestTransferWithSeed(t *testing.T) {
 		})
 	}
 }
+
+func TestUpgradeNonceAccount(t *testing.T) {
+	type args struct {
+		param UpgradeNonceAccountParam
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				param: UpgradeNonceAccountParam{
+					NonceAccountPubkey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.SystemProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"), IsSigner: false, IsWritable: true},
+				},
+				Data: []byte{12, 0, 0, 0},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := UpgradeNonceAccount(tt.args.param); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("UpgradeNonceAccount() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
