@@ -17,8 +17,8 @@ type Client struct {
 	RpcClient rpc.RpcClient
 }
 
-func NewClient(endpoint string) *Client {
-	return &Client{rpc.NewRpcClient(endpoint)}
+func NewClient(endpoint string, options ...rpc.Option) *Client {
+	return &Client{rpc.NewRpcClient(endpoint, options...)}
 }
 
 // GetBalance fetch users lamports(SOL) balance
