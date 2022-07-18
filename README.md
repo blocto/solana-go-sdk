@@ -36,6 +36,10 @@ import (
 func main() {
 	c := client.NewClient(rpc.MainnetRPCEndpoint)
 
+	// If you would like to customize the http client used to make the
+	// requests you could do something like this
+	// c := client.New(rpc.WithEndpoint(rpc.MainnetRPCEndpoint),rpc.WithHTTPClient(customHTTPClient))
+
 	resp, err := c.GetVersion(context.TODO())
 	if err != nil {
 		log.Fatalf("failed to version info, err: %v", err)
