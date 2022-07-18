@@ -48,15 +48,13 @@ type RpcClient struct {
 	httpClient *http.Client
 }
 
-func NewRpcClient(endpoint string) RpcClient {
-	return New()
-}
+func NewRpcClient(endpoint string) RpcClient { return New(WithEndpoint(endpoint)) }
 
 // New applies the given options to the rpc client being created. if no options
 // is passed, it defaults to a bare bone http client and solana mainnet
 func New(opts ...Option) RpcClient {
 
-	client := RpcClient{}
+	client := &RpcClient{}
 
 	setDefaultOptions(client)
 
@@ -64,7 +62,7 @@ func New(opts ...Option) RpcClient {
 		opt(client)
 	}
 
-	return client
+	return *client
 }
 
 // Call will return body of response. if http code beyond 200~300, the error also returns.

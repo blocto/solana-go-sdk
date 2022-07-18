@@ -24,7 +24,7 @@ func New(opts ...rpc.Option) *Client {
 }
 
 func NewClient(endpoint string) *Client {
-	return &Client{rpc.NewRpcClient(endpoint)}
+	return &Client{rpc.New(rpc.WithEndpoint(endpoint))}
 }
 
 // GetBalance fetch users lamports(SOL) balance
