@@ -64,6 +64,12 @@ export default defineUserConfig<DefaultThemeOptions>({
               },
             ],
           },
+          {
+            text: "RPC",
+            children: [
+              { text: "Get Signatures For Address", link: "/rpc/get-signatures-for-address" },
+            ],
+          },
         ],
       },
     },
