@@ -60,6 +60,7 @@ type Metadata struct {
 	TokenStandard       *TokenStandard
 	Collection          *Collection
 	Uses                *Uses
+	CollectionDetails   *CollectionDetails
 }
 
 type TokenStandard borsh.Enum
@@ -89,6 +90,15 @@ const (
 	Multiple
 	Single
 )
+
+type CollectionDetails struct {
+	Enum borsh.Enum `borsh_enum:"true"`
+	V1   CollectionDetailsV1
+}
+
+type CollectionDetailsV1 struct {
+	Size uint64
+}
 
 func MetadataDeserialize(data []byte) (Metadata, error) {
 	var metadata Metadata

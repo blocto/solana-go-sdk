@@ -20,6 +20,10 @@ func UsesPtr(v Uses) *Uses {
 	return &v
 }
 
+func CollectionDetailsPtr(v CollectionDetails) *CollectionDetails {
+	return &v
+}
+
 func TestMetadataDeserialize(t *testing.T) {
 	type args struct {
 		data []byte
@@ -83,6 +87,11 @@ func TestMetadataDeserialize(t *testing.T) {
 					UseMethod: Burn,
 					Remaining: 0,
 					Total:     0,
+				}),
+				CollectionDetails: CollectionDetailsPtr(CollectionDetails{
+					V1: CollectionDetailsV1{
+						Size: 0,
+					},
 				}),
 			},
 			err: nil,
