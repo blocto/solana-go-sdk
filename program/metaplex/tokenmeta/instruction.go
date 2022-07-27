@@ -504,3 +504,136 @@ func CreateMasterEditionV3(param CreateMasterEditionParam) types.Instruction {
 		Data: data,
 	}
 }
+
+type VerifyCollectionParam struct {
+	Payer                          common.PublicKey
+	Metadata                       common.PublicKey
+	CollectionAuthority            common.PublicKey
+	CollectionMint                 common.PublicKey
+	Collection                     common.PublicKey
+	CollectionMasterEditionAccount common.PublicKey
+}
+
+func VerifyCollection(param VerifyCollectionParam) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionVerifyCollection,
+	})
+	if err != nil {
+		panic(err)
+	}
+	return types.Instruction{
+		ProgramID: common.MetaplexTokenMetaProgramID,
+		Accounts: []types.AccountMeta{
+			{
+				PubKey:     param.Metadata,
+				IsSigner:   false,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.CollectionAuthority,
+				IsSigner:   true,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.Payer,
+				IsSigner:   true,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.CollectionMint,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+			{
+				PubKey:     param.Collection,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+			{
+				PubKey:     param.CollectionMasterEditionAccount,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+		},
+		Data: data,
+	}
+}
+
+type SetAndVerifyCollectionParam struct {
+	Payer                          common.PublicKey
+	Metadata                       common.PublicKey
+	CollectionAuthority            common.PublicKey
+	UpdateAuthority                common.PublicKey
+	CollectionMint                 common.PublicKey
+	Collection                     common.PublicKey
+	CollectionMasterEditionAccount common.PublicKey
+	CollectionAuthorityRecord      common.PublicKey
+}
+
+var (
+	EmptyPubKey = common.PublicKey{}
+)
+
+func SetAndVerifyCollection(param SetAndVerifyCollectionParam) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionSetAndVerifyCollection,
+	})
+	if err != nil {
+		panic(err)
+	}
+	ix := types.Instruction{
+		ProgramID: common.MetaplexTokenMetaProgramID,
+		Accounts: []types.AccountMeta{
+			{
+				PubKey:     param.Metadata,
+				IsSigner:   false,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.CollectionAuthority,
+				IsSigner:   true,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.Payer,
+				IsSigner:   true,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.UpdateAuthority,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+			{
+				PubKey:     param.CollectionMint,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+			{
+				PubKey:     param.Collection,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+			{
+				PubKey:     param.CollectionMasterEditionAccount,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+		},
+		Data: data,
+	}
+
+	if param.CollectionAuthorityRecord != EmptyPubKey {
+		ix.Accounts = append(ix.Accounts, types.AccountMeta{
+			PubKey:     param.CollectionAuthorityRecord,
+			IsSigner:   false,
+			IsWritable: false,
+		})
+	}
+	
+	return ix
+}
