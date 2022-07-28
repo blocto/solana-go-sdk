@@ -9,6 +9,11 @@
 
 # Guide
 
+## Change log
+
+1. Add VerifyCollection 
+2. Add SetAndVerifyCollection
+
 ## Getting Started
 
 ### Installing
