@@ -506,12 +506,12 @@ func CreateMasterEditionV3(param CreateMasterEditionParam) types.Instruction {
 }
 
 type VerifyCollectionParam struct {
-	Payer                          common.PublicKey
-	Metadata                       common.PublicKey
-	CollectionAuthority            common.PublicKey
-	CollectionMint                 common.PublicKey
-	Collection                     common.PublicKey
-	CollectionMasterEditionAccount common.PublicKey
+	Payer                          common.PublicKey //payer
+	Metadata                       common.PublicKey //Metadata account
+	CollectionAuthority            common.PublicKey //Collection Update authority
+	CollectionMint                 common.PublicKey //Mint of the Collection
+	Collection                     common.PublicKey //Metadata Account of the Collection
+	CollectionMasterEditionAccount common.PublicKey //MasterEdition2 Account of the Collection Token
 }
 
 func VerifyCollection(param VerifyCollectionParam) types.Instruction {
@@ -634,6 +634,6 @@ func SetAndVerifyCollection(param SetAndVerifyCollectionParam) types.Instruction
 			IsWritable: false,
 		})
 	}
-	
+
 	return ix
 }
