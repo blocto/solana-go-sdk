@@ -26,6 +26,24 @@ type NewTransactionParam struct {
 	Signers []Account
 }
 
+// NewUnsignedTransaction create a new tx by message and signer without signatures. it will reserve signatures slot.
+func NewUnsignedTransaction(param NewTransactionParam) (Transaction, error) {
+	signatures := make([]Signature, 0, param.Message.Header.NumRequireSignatures)
+	for i := uint8(0); i < param.Message.Header.NumRequireSignatures; i++ {
+		signatures = append(signatures, make([]byte, 64))
+	}
+
+	m := map[common.PublicKey]uint8{}
+	for i := uint8(0); i < param.Message.Header.NumRequireSignatures; i++ {
+		m[param.Message.Accounts[i]] = i
+	}
+
+	return Transaction{
+		Signatures: signatures,
+		Message:    param.Message,
+	}, nil
+}
+
 // NewTransaction create a new tx by message and signer. it will reserve signatures slot.
 func NewTransaction(param NewTransactionParam) (Transaction, error) {
 	signatures := make([]Signature, 0, param.Message.Header.NumRequireSignatures)
