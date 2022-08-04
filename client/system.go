@@ -15,7 +15,7 @@ func (c *Client) GetNonceAccount(ctx context.Context, base58Addr string) (syspro
 	if err != nil {
 		return sysprog.NonceAccount{}, err
 	}
-	if accu.Owner != common.SystemProgramID.ToBase58() {
+	if accu.Owner != common.SystemProgramID {
 		return sysprog.NonceAccount{}, errors.New("owner mismatch")
 	}
 	return sysprog.NonceAccountDeserialize(accu.Data)

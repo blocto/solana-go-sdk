@@ -105,7 +105,7 @@ func (c *Client) GetTokenSupplyWithConfig(ctx context.Context, mintAddr string, 
 
 type AccountInfo struct {
 	Lamports   uint64
-	Owner      string
+	Owner      common.PublicKey
 	Executable bool
 	RentEpoch  uint64
 	Data       []byte
@@ -158,7 +158,7 @@ func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.GetAccountInfoResultVal
 	}
 	return AccountInfo{
 		Lamports:   v.Lamports,
-		Owner:      v.Owner,
+		Owner:      common.PublicKeyFromString(v.Owner),
 		Executable: v.Executable,
 		RentEpoch:  v.RentEpoch,
 		Data:       rawData,
@@ -216,7 +216,7 @@ func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.GetMultipl
 		}
 		res[i] = AccountInfo{
 			Lamports:   v.Lamports,
-			Owner:      v.Owner,
+			Owner:      common.PublicKeyFromString(v.Owner),
 			Executable: v.Executable,
 			RentEpoch:  v.RentEpoch,
 			Data:       rawData,
