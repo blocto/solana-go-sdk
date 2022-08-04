@@ -3,7 +3,6 @@ package tokenprog
 import (
 	"bytes"
 	"encoding/binary"
-	"fmt"
 
 	"github.com/portto/solana-go-sdk/common"
 )
@@ -26,7 +25,7 @@ type MultisigAccount struct {
 
 func MultisigAccountFromData(data []byte) (MultisigAccount, error) {
 	if len(data) != MultisigAccountSize {
-		return MultisigAccount{}, fmt.Errorf("data length not match")
+		return MultisigAccount{}, ErrInvalidAccountDataSize
 	}
 
 	m := uint8(data[0])
@@ -66,7 +65,7 @@ type MintAccount struct {
 
 func MintAccountFromData(data []byte) (MintAccount, error) {
 	if len(data) != MintAccountSize {
-		return MintAccount{}, fmt.Errorf("data length not match")
+		return MintAccount{}, ErrInvalidAccountDataSize
 	}
 
 	var mint *common.PublicKey
@@ -121,7 +120,7 @@ type TokenAccount struct {
 
 func TokenAccountFromData(data []byte) (TokenAccount, error) {
 	if len(data) != TokenAccountSize {
-		return TokenAccount{}, fmt.Errorf("data length not match")
+		return TokenAccount{}, ErrInvalidAccountDataSize
 	}
 
 	mint := common.PublicKeyFromBytes(data[:32])
@@ -162,4 +161,11 @@ func TokenAccountFromData(data []byte) (TokenAccount, error) {
 		DelegatedAmount: delegatedAmount,
 		CloseAuthority:  closeAuthority,
 	}, nil
+}
+
+func DeserializeTokenAccount(data []byte, accountOwner common.PublicKey) (TokenAccount, error) {
+	if accountOwner != common.TokenProgramID {
+		return TokenAccount{}, ErrInvalidAccountOwner
+	}
+	return TokenAccountFromData(data)
 }

@@ -9,6 +9,7 @@ import (
 
 	"github.com/mr-tron/base58"
 	"github.com/portto/solana-go-sdk/common"
+	"github.com/portto/solana-go-sdk/program/tokenprog"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -105,7 +106,7 @@ func (c *Client) GetTokenSupplyWithConfig(ctx context.Context, mintAddr string, 
 
 type AccountInfo struct {
 	Lamports   uint64
-	Owner      string
+	Owner      common.PublicKey
 	Executable bool
 	RentEpoch  uint64
 	Data       []byte
@@ -140,8 +141,8 @@ func (c *Client) processGetAccountInfo(res rpc.GetAccountInfoResponse, err error
 	return c.rpcAccountInfoToClientAccountInfo(res.Result.Value)
 }
 
-func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.GetAccountInfoResultValue) (AccountInfo, error) {
-	if v == (rpc.GetAccountInfoResultValue{}) {
+func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.AccountInfo) (AccountInfo, error) {
+	if v == (rpc.AccountInfo{}) {
 		return AccountInfo{}, nil
 	}
 
@@ -158,7 +159,7 @@ func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.GetAccountInfoResultVal
 	}
 	return AccountInfo{
 		Lamports:   v.Lamports,
-		Owner:      v.Owner,
+		Owner:      common.PublicKeyFromString(v.Owner),
 		Executable: v.Executable,
 		RentEpoch:  v.RentEpoch,
 		Data:       rawData,
@@ -195,10 +196,10 @@ func (c *Client) processGetMultipleAccounts(res rpc.GetMultipleAccountsResponse,
 	return c.rpcMultipleAccountsToClientAccountInfos(res.Result.Value)
 }
 
-func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.GetMultipleAccountsResultValue) ([]AccountInfo, error) {
+func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.AccountInfo) ([]AccountInfo, error) {
 	res := make([]AccountInfo, len(values))
 	for i, v := range values {
-		if v == (rpc.GetMultipleAccountsResultValue{}) {
+		if v == (rpc.AccountInfo{}) {
 			res[i] = AccountInfo{}
 			continue
 		}
@@ -216,7 +217,7 @@ func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.GetMultipl
 		}
 		res[i] = AccountInfo{
 			Lamports:   v.Lamports,
-			Owner:      v.Owner,
+			Owner:      common.PublicKeyFromString(v.Owner),
 			Executable: v.Executable,
 			RentEpoch:  v.RentEpoch,
 			Data:       rawData,
@@ -963,4 +964,34 @@ func checkRpcResult(res rpc.GeneralResponse, err error) error {
 		return fmt.Errorf("rpc response error: %v", string(errRes))
 	}
 	return nil
+}
+
+func (c *Client) GetTokenAccountsByOwner(ctx context.Context, base58Addr string) (map[common.PublicKey]tokenprog.TokenAccount, error) {
+	getTokenAccountsByOwnerResponse, err := c.RpcClient.GetTokenAccountsByOwnerWithConfig(
+		ctx,
+		base58Addr,
+		rpc.GetTokenAccountsByOwnerConfigFilter{
+			ProgramId: common.TokenProgramID.ToBase58(),
+		},
+		rpc.GetTokenAccountsByOwnerConfig{
+			Encoding: rpc.GetTokenAccountsByOwnerConfigEncodingBase64,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	m := map[common.PublicKey]tokenprog.TokenAccount{}
+	for _, v := range getTokenAccountsByOwnerResponse.Result.Value {
+		accountInfo, err := c.rpcAccountInfoToClientAccountInfo(v.Account)
+		if err != nil {
+			return nil, err
+		}
+		tokenAccount, err := tokenprog.DeserializeTokenAccount(accountInfo.Data, accountInfo.Owner)
+		if err != nil {
+			return nil, err
+		}
+		m[common.PublicKeyFromString(v.Pubkey)] = tokenAccount
+	}
+	return m, err
 }

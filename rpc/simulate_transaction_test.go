@@ -159,7 +159,7 @@ func TestSimulateTransaction(t *testing.T) {
 						Slot: 80208978,
 					},
 					Value: SimulateTransactionResponseResultValue{
-						Accounts: []*GetAccountInfoResultValue{
+						Accounts: []*AccountInfo{
 							{
 								Owner:      "11111111111111111111111111111111",
 								Lamports:   108112817160,

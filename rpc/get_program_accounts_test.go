@@ -25,7 +25,7 @@ func TestGetProgramAccounts(t *testing.T) {
 				Result: []GetProgramAccounts{
 					{
 						Pubkey: "9ywX3U33UZC1HThhoBR2Ys7SiouXDkkDoH6brJApFh5D",
-						Account: GetProgramAccountsAccount{
+						Account: AccountInfo{
 							Lamports:  2039280,
 							Owner:     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 							RentEpoch: 181,
@@ -38,7 +38,7 @@ func TestGetProgramAccounts(t *testing.T) {
 					},
 					{
 						Pubkey: "4MdGG2EnnAp4dhbMCDww1qLEEiW5SHfUAe9U9RtTqS8q",
-						Account: GetProgramAccountsAccount{
+						Account: AccountInfo{
 							Lamports:  2039280,
 							Owner:     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 							RentEpoch: 181,
@@ -82,7 +82,7 @@ func TestGetProgramAccounts(t *testing.T) {
 				Result: []GetProgramAccounts{
 					{
 						Pubkey: "Dh4w3Pn6HqCDbEDhZdcDY8bHydeqNAhYY6EktLiWxFf6",
-						Account: GetProgramAccountsAccount{
+						Account: AccountInfo{
 							Lamports:  2039280,
 							Owner:     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 							RentEpoch: 181,
@@ -123,7 +123,7 @@ func TestGetProgramAccounts(t *testing.T) {
 				Result: []GetProgramAccounts{
 					{
 						Pubkey: "Dh4w3Pn6HqCDbEDhZdcDY8bHydeqNAhYY6EktLiWxFf6",
-						Account: GetProgramAccountsAccount{
+						Account: AccountInfo{
 							Lamports:  2039280,
 							Owner:     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 							RentEpoch: 181,
@@ -170,7 +170,7 @@ func TestGetProgramAccounts(t *testing.T) {
 				Result: []GetProgramAccounts{
 					{
 						Pubkey: "Dh4w3Pn6HqCDbEDhZdcDY8bHydeqNAhYY6EktLiWxFf6",
-						Account: GetProgramAccountsAccount{
+						Account: AccountInfo{
 							Lamports:  2039280,
 							Owner:     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 							RentEpoch: 181,
@@ -207,7 +207,7 @@ func TestGetProgramAccounts(t *testing.T) {
 					Value: []GetProgramAccounts{
 						{
 							Pubkey: "9ywX3U33UZC1HThhoBR2Ys7SiouXDkkDoH6brJApFh5D",
-							Account: GetProgramAccountsAccount{
+							Account: AccountInfo{
 								Lamports:  2039280,
 								Owner:     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 								RentEpoch: 181,
@@ -220,7 +220,7 @@ func TestGetProgramAccounts(t *testing.T) {
 						},
 						{
 							Pubkey: "4MdGG2EnnAp4dhbMCDww1qLEEiW5SHfUAe9U9RtTqS8q",
-							Account: GetProgramAccountsAccount{
+							Account: AccountInfo{
 								Lamports:  2039280,
 								Owner:     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 								RentEpoch: 181,

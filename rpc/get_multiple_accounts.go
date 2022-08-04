@@ -36,17 +36,8 @@ type GetMultipleAccountsConfigDataSlice struct {
 
 // GetMultipleAccountsResult is rpc result of `getAccountInfo`
 type GetMultipleAccountsResult struct {
-	Context Context                          `json:"context"`
-	Value   []GetMultipleAccountsResultValue `json:"value"`
-}
-
-// GetMultipleAccountsResultValue is rpc result of `getAccountInfo`
-type GetMultipleAccountsResultValue struct {
-	Lamports   uint64      `json:"lamports"`
-	Owner      string      `json:"owner"`
-	Executable bool        `json:"executable"`
-	RentEpoch  uint64      `json:"rentEpoch"`
-	Data       interface{} `json:"data"`
+	Context Context       `json:"context"`
+	Value   []AccountInfo `json:"value"`
 }
 
 // GetMultipleAccounts returns all information associated with the account of provided Pubkey
