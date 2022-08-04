@@ -34,7 +34,7 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 					Value: []GetProgramAccounts{
 						{
 							Pubkey: "AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
-							Account: GetProgramAccountsAccount{
+							Account: AccountInfo{
 								Lamports:   2039280,
 								Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 								RentEpoch:  203,
@@ -72,7 +72,7 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 					Value: []GetProgramAccounts{
 						{
 							Pubkey: "AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
-							Account: GetProgramAccountsAccount{
+							Account: AccountInfo{
 								Lamports:   2039280,
 								Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 								RentEpoch:  203,
@@ -113,7 +113,7 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 					Value: []GetProgramAccounts{
 						{
 							Pubkey: "AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
-							Account: GetProgramAccountsAccount{
+							Account: AccountInfo{
 								Lamports:  2039280,
 								Owner:     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 								RentEpoch: 203,
@@ -161,7 +161,7 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 					Value: []GetProgramAccounts{
 						{
 							Pubkey: "AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
-							Account: GetProgramAccountsAccount{
+							Account: AccountInfo{
 								Lamports:  2039280,
 								Owner:     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 								RentEpoch: 203,

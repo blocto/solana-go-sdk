@@ -26,7 +26,7 @@ func TestGetAccountInfo(t *testing.T) {
 					Context: Context{
 						Slot: 77317716,
 					},
-					Value: GetAccountInfoResultValue{
+					Value: AccountInfo{
 						Lamports:   21474700400,
 						Owner:      "11111111111111111111111111111111",
 						Executable: false,
@@ -79,7 +79,7 @@ func TestGetAccountInfo(t *testing.T) {
 					Context: Context{
 						Slot: 77317716,
 					},
-					Value: GetAccountInfoResultValue{
+					Value: AccountInfo{
 						Lamports:   1461600,
 						Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 						Executable: false,
@@ -134,7 +134,7 @@ func TestGetAccountInfo(t *testing.T) {
 					Context: Context{
 						Slot: 77317716,
 					},
-					Value: GetAccountInfoResultValue{
+					Value: AccountInfo{
 						Lamports:   1461600,
 						Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 						Executable: false,
@@ -167,7 +167,7 @@ func TestGetAccountInfo(t *testing.T) {
 					Context: Context{
 						Slot: 77317717,
 					},
-					Value: GetAccountInfoResultValue{
+					Value: AccountInfo{
 						Lamports:   1461600,
 						Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 						Executable: false,
@@ -200,7 +200,7 @@ func TestGetAccountInfo(t *testing.T) {
 					Context: Context{
 						Slot: 77317717,
 					},
-					Value: GetAccountInfoResultValue{
+					Value: AccountInfo{
 						Lamports:   1461600,
 						Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 						Executable: false,
@@ -290,7 +290,7 @@ func TestGetAccountInfo(t *testing.T) {
 					Context: Context{
 						Slot: 77322439,
 					},
-					Value: GetAccountInfoResultValue{
+					Value: AccountInfo{
 						Lamports:   1461600,
 						Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 						Executable: false,
@@ -327,7 +327,7 @@ func TestGetAccountInfo(t *testing.T) {
 					Context: Context{
 						Slot: 77317718,
 					},
-					Value: GetAccountInfoResultValue{
+					Value: AccountInfo{
 						Lamports:   1461600,
 						Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 						Executable: false,
@@ -360,7 +360,7 @@ func TestGetAccountInfo(t *testing.T) {
 					Context: Context{
 						Slot: 121172974,
 					},
-					Value: GetAccountInfoResultValue{
+					Value: AccountInfo{
 						Lamports:   1141440,
 						Owner:      "BPFLoaderUpgradeab1e11111111111111111111111",
 						Executable: true,

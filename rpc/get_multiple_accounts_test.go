@@ -26,7 +26,7 @@ func TestGetMultipleAccounts(t *testing.T) {
 					Context: Context{
 						Slot: 77317716,
 					},
-					Value: []GetMultipleAccountsResultValue{
+					Value: []AccountInfo{
 						{
 							Lamports:   21474700400,
 							Owner:      "11111111111111111111111111111111",
@@ -58,7 +58,7 @@ func TestGetMultipleAccounts(t *testing.T) {
 					Context: Context{
 						Slot: 77382573,
 					},
-					Value: []GetMultipleAccountsResultValue{
+					Value: []AccountInfo{
 						{},
 					},
 				},
@@ -84,7 +84,7 @@ func TestGetMultipleAccounts(t *testing.T) {
 					Context: Context{
 						Slot: 77317716,
 					},
-					Value: []GetMultipleAccountsResultValue{
+					Value: []AccountInfo{
 						{
 							Lamports:   1461600,
 							Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
@@ -141,7 +141,7 @@ func TestGetMultipleAccounts(t *testing.T) {
 					Context: Context{
 						Slot: 77317716,
 					},
-					Value: []GetMultipleAccountsResultValue{
+					Value: []AccountInfo{
 						{
 							Lamports:   1461600,
 							Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
@@ -176,7 +176,7 @@ func TestGetMultipleAccounts(t *testing.T) {
 					Context: Context{
 						Slot: 77317717,
 					},
-					Value: []GetMultipleAccountsResultValue{
+					Value: []AccountInfo{
 						{
 							Lamports:   1461600,
 							Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
@@ -211,7 +211,7 @@ func TestGetMultipleAccounts(t *testing.T) {
 					Context: Context{
 						Slot: 77317717,
 					},
-					Value: []GetMultipleAccountsResultValue{
+					Value: []AccountInfo{
 						{
 							Lamports:   1461600,
 							Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
@@ -303,7 +303,7 @@ func TestGetMultipleAccounts(t *testing.T) {
 					Context: Context{
 						Slot: 77322439,
 					},
-					Value: []GetMultipleAccountsResultValue{
+					Value: []AccountInfo{
 						{
 							Lamports:   1461600,
 							Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
@@ -342,7 +342,7 @@ func TestGetMultipleAccounts(t *testing.T) {
 					Context: Context{
 						Slot: 77317718,
 					},
-					Value: []GetMultipleAccountsResultValue{
+					Value: []AccountInfo{
 						{
 							Lamports:   1461600,
 							Owner:      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",

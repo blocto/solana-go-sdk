@@ -36,17 +36,8 @@ type GetAccountInfoConfigDataSlice struct {
 
 // GetAccountInfoResult is rpc result of `getAccountInfo`
 type GetAccountInfoResult struct {
-	Context Context                   `json:"context"`
-	Value   GetAccountInfoResultValue `json:"value"`
-}
-
-// GetAccountInfoResultValue is rpc result of `getAccountInfo`
-type GetAccountInfoResultValue struct {
-	Lamports   uint64      `json:"lamports"`
-	Owner      string      `json:"owner"`
-	Executable bool        `json:"executable"`
-	RentEpoch  uint64      `json:"rentEpoch"`
-	Data       interface{} `json:"data"`
+	Context Context     `json:"context"`
+	Value   AccountInfo `json:"value"`
 }
 
 // GetAccountInfo returns all information associated with the account of provided Pubkey

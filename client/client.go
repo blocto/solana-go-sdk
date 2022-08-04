@@ -140,8 +140,8 @@ func (c *Client) processGetAccountInfo(res rpc.GetAccountInfoResponse, err error
 	return c.rpcAccountInfoToClientAccountInfo(res.Result.Value)
 }
 
-func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.GetAccountInfoResultValue) (AccountInfo, error) {
-	if v == (rpc.GetAccountInfoResultValue{}) {
+func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.AccountInfo) (AccountInfo, error) {
+	if v == (rpc.AccountInfo{}) {
 		return AccountInfo{}, nil
 	}
 
@@ -195,10 +195,10 @@ func (c *Client) processGetMultipleAccounts(res rpc.GetMultipleAccountsResponse,
 	return c.rpcMultipleAccountsToClientAccountInfos(res.Result.Value)
 }
 
-func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.GetMultipleAccountsResultValue) ([]AccountInfo, error) {
+func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.AccountInfo) ([]AccountInfo, error) {
 	res := make([]AccountInfo, len(values))
 	for i, v := range values {
-		if v == (rpc.GetMultipleAccountsResultValue{}) {
+		if v == (rpc.AccountInfo{}) {
 			res[i] = AccountInfo{}
 			continue
 		}
