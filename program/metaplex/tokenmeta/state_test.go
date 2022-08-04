@@ -78,21 +78,10 @@ func TestMetadataDeserialize(t *testing.T) {
 				PrimarySaleHappened: true,
 				IsMutable:           false,
 				EditionNonce:        pointer.Uint8(255),
-				TokenStandard:       TokenStandardPtr(NonFungible),
-				Collection: CollectionPtr(Collection{
-					Verified: false,
-					Key:      common.PublicKey{},
-				}),
-				Uses: UsesPtr(Uses{
-					UseMethod: Burn,
-					Remaining: 0,
-					Total:     0,
-				}),
-				CollectionDetails: CollectionDetailsPtr(CollectionDetails{
-					V1: CollectionDetailsV1{
-						Size: 0,
-					},
-				}),
+				TokenStandard:       nil,
+				Collection:          nil,
+				Uses:                nil,
+				CollectionDetails:   nil,
 			},
 			err: nil,
 		},
