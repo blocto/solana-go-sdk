@@ -186,3 +186,82 @@ func TestMultisigAccountFromData(t *testing.T) {
 		})
 	}
 }
+
+func TestDeserializeTokenAccount(t *testing.T) {
+	type args struct {
+		data         []byte
+		accountOwner common.PublicKey
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    TokenAccount
+		wantErr error
+	}{
+		{
+			args: args{
+				data:         []byte{105, 145, 9, 101, 129, 184, 46, 130, 176, 132, 102, 98, 17, 241, 215, 189, 90, 219, 106, 196, 196, 121, 174, 243, 65, 40, 132, 7, 252, 112, 238, 112, 206, 211, 135, 230, 195, 111, 87, 254, 147, 239, 143, 81, 110, 159, 49, 140, 109, 137, 224, 197, 24, 49, 223, 61, 123, 8, 78, 109, 110, 136, 228, 240, 0, 186, 69, 61, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				accountOwner: common.SystemProgramID,
+			},
+			want:    TokenAccount{},
+			wantErr: ErrInvalidAccountOwner,
+		},
+		{
+			args: args{
+				data:         []byte{1, 105, 145, 9, 101, 129, 184, 46, 130, 176, 132, 102, 98, 17, 241, 215, 189, 90, 219, 106, 196, 196, 121, 174, 243, 65, 40, 132, 7, 252, 112, 238, 112, 206, 211, 135, 230, 195, 111, 87, 254, 147, 239, 143, 81, 110, 159, 49, 140, 109, 137, 224, 197, 24, 49, 223, 61, 123, 8, 78, 109, 110, 136, 228, 240, 0, 186, 69, 61, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				accountOwner: common.TokenProgramID,
+			},
+			want:    TokenAccount{},
+			wantErr: ErrInvalidAccountDataSize,
+		},
+		{
+			args: args{
+				data:         []byte{145, 9, 101, 129, 184, 46, 130, 176, 132, 102, 98, 17, 241, 215, 189, 90, 219, 106, 196, 196, 121, 174, 243, 65, 40, 132, 7, 252, 112, 238, 112, 206, 211, 135, 230, 195, 111, 87, 254, 147, 239, 143, 81, 110, 159, 49, 140, 109, 137, 224, 197, 24, 49, 223, 61, 123, 8, 78, 109, 110, 136, 228, 240, 0, 186, 69, 61, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				accountOwner: common.TokenProgramID,
+			},
+			want:    TokenAccount{},
+			wantErr: ErrInvalidAccountDataSize,
+		},
+		{
+			args: args{
+				data:         []byte{105, 145, 9, 101, 129, 184, 46, 130, 176, 132, 102, 98, 17, 241, 215, 189, 90, 219, 106, 196, 196, 121, 174, 243, 65, 40, 132, 7, 252, 112, 238, 112, 206, 211, 135, 230, 195, 111, 87, 254, 147, 239, 143, 81, 110, 159, 49, 140, 109, 137, 224, 197, 24, 49, 223, 61, 123, 8, 78, 109, 110, 136, 228, 240, 0, 186, 69, 61, 244, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+				accountOwner: common.TokenProgramID,
+			},
+			want: TokenAccount{
+				Mint:            common.PublicKeyFromString("8765cK2Vucsic6NA5nm4cfkrCzusaFVqBf6Pk31tGkXH"),
+				Owner:           common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+				Amount:          1049000000000,
+				Delegate:        nil,
+				State:           TokenAccountStateInitialized,
+				IsNative:        nil,
+				DelegatedAmount: 0,
+				CloseAuthority:  nil,
+			},
+			wantErr: nil,
+		},
+		{
+			args: args{
+				data:         []byte{0x6, 0x9b, 0x88, 0x57, 0xfe, 0xab, 0x81, 0x84, 0xfb, 0x68, 0x7f, 0x63, 0x46, 0x18, 0xc0, 0x35, 0xda, 0xc4, 0x39, 0xdc, 0x1a, 0xeb, 0x3b, 0x55, 0x98, 0xa0, 0xf0, 0x0, 0x0, 0x0, 0x0, 0x1, 0x10, 0x96, 0x59, 0x17, 0x5e, 0x7c, 0x64, 0x33, 0x21, 0xa5, 0xed, 0x46, 0x42, 0xa0, 0x27, 0xb0, 0xab, 0xd9, 0x7b, 0x8d, 0xd9, 0x7a, 0xd1, 0xbc, 0xc6, 0xdc, 0x64, 0x71, 0x38, 0x6c, 0xcd, 0xdc, 0x10, 0x76, 0x16, 0x77, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1, 0x1, 0x0, 0x0, 0x0, 0xf0, 0x1d, 0x1f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+				accountOwner: common.TokenProgramID,
+			},
+			want: TokenAccount{
+				Mint:            common.PublicKeyFromString("So11111111111111111111111111111111111111112"),
+				Owner:           common.PublicKeyFromString("27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ"),
+				Amount:          1997960720,
+				Delegate:        nil,
+				State:           TokenAccountStateInitialized,
+				IsNative:        pointer.Uint64(2039280),
+				DelegatedAmount: 0,
+				CloseAuthority:  nil,
+			},
+			wantErr: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := DeserializeTokenAccount(tt.args.data, tt.args.accountOwner)
+			assert.Equal(t, tt.wantErr, err)
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
