@@ -49,6 +49,16 @@ type DataV2 struct {
 	Uses                 *Uses
 }
 
+type metadataPreV11 struct {
+	Key                 Key
+	UpdateAuthority     common.PublicKey
+	Mint                common.PublicKey
+	Data                Data
+	PrimarySaleHappened bool
+	IsMutable           bool
+	EditionNonce        *uint8
+}
+
 type Metadata struct {
 	Key                 Key
 	UpdateAuthority     common.PublicKey
@@ -104,7 +114,22 @@ func MetadataDeserialize(data []byte) (Metadata, error) {
 	var metadata Metadata
 	err := borsh.Deserialize(&metadata, data)
 	if err != nil {
-		return Metadata{}, fmt.Errorf("failed to deserialize data, err: %v", err)
+		// https://github.com/samuelvanderwaal/metaboss/issues/121
+		// https://github.com/metaplex-foundation/metaplex-program-library/pull/407
+		// C.f. https://github.com/metaplex-foundation/metaplex-program-library/blob/master/token-metadata/program/src/deser.rs#L12
+		var metadataPreV11 metadataPreV11
+		err := borsh.Deserialize(&metadataPreV11, data)
+		if err != nil {
+			return Metadata{}, fmt.Errorf("failed to deserialize data, err: %v", err)
+		} else {
+			metadata.Key = metadataPreV11.Key
+			metadata.UpdateAuthority = metadataPreV11.UpdateAuthority
+			metadata.Mint = metadataPreV11.Mint
+			metadata.Data = metadataPreV11.Data
+			metadata.PrimarySaleHappened = metadataPreV11.PrimarySaleHappened
+			metadata.IsMutable = metadataPreV11.IsMutable
+			metadata.EditionNonce = metadataPreV11.EditionNonce
+		}
 	}
 	// trim null byte
 	metadata.Data.Name = strings.TrimRight(metadata.Data.Name, "\x00")
