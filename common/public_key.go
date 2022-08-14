@@ -84,7 +84,7 @@ func CreateWithSeed(from PublicKey, seed string, programID PublicKey) PublicKey 
 	return PublicKeyFromBytes(hash[:])
 }
 
-func FindAssociatedTokenAddress(walletAddress, tokenMintAddress PublicKey) (PublicKey, int, error) {
+func FindAssociatedTokenAddress(walletAddress, tokenMintAddress PublicKey) (PublicKey, uint8, error) {
 	seeds := [][]byte{}
 	seeds = append(seeds, walletAddress.Bytes())
 	seeds = append(seeds, TokenProgramID.Bytes())
@@ -93,10 +93,10 @@ func FindAssociatedTokenAddress(walletAddress, tokenMintAddress PublicKey) (Publ
 	return FindProgramAddress(seeds, SPLAssociatedTokenAccountProgramID)
 }
 
-func FindProgramAddress(seed [][]byte, programID PublicKey) (PublicKey, int, error) {
+func FindProgramAddress(seed [][]byte, programID PublicKey) (PublicKey, uint8, error) {
 	var pubKey PublicKey
 	var err error
-	nonce := 0xff
+	var nonce uint8 = 0xff
 	for nonce != 0x0 {
 		pubKey, err = CreateProgramAddress(append(seed, []byte{byte(nonce)}), programID)
 		if err == nil {

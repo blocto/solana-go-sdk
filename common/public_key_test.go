@@ -143,7 +143,7 @@ func TestFindAssociatedTokenAddress(t *testing.T) {
 		name    string
 		args    args
 		want    PublicKey
-		want1   int
+		want1   uint8
 		wantErr bool
 	}{
 		{
