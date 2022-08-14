@@ -10,6 +10,14 @@ func SerializeData(data interface{}) ([]byte, error) {
 	return serializeData(reflect.ValueOf(data))
 }
 
+func MustSerializeData(data interface{}) []byte {
+	serializedData, err := serializeData(reflect.ValueOf(data))
+	if err != nil {
+		panic(err)
+	}
+	return serializedData
+}
+
 func serializeData(v reflect.Value) ([]byte, error) {
 	switch v.Kind() {
 	case reflect.Bool:
