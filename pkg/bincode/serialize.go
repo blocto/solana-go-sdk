@@ -10,6 +10,14 @@ func SerializeData(data interface{}) ([]byte, error) {
 	return serializeData(reflect.ValueOf(data))
 }
 
+func MustSerializeData(data interface{}) []byte {
+	serializedData, err := serializeData(reflect.ValueOf(data))
+	if err != nil {
+		panic(err)
+	}
+	return serializedData
+}
+
 func serializeData(v reflect.Value) ([]byte, error) {
 	switch v.Kind() {
 	case reflect.Bool:
@@ -43,7 +51,27 @@ func serializeData(v reflect.Value) ([]byte, error) {
 		b := make([]byte, 8)
 		binary.LittleEndian.PutUint64(b, v.Uint())
 		return b, nil
-	case reflect.Slice, reflect.Array:
+	case reflect.Slice:
+		switch v.Type().Elem().Kind() {
+		case reflect.Array:
+			l := v.Len()
+			output := make([]byte, 0, 8+l*v.Type().Elem().Len())
+
+			b := make([]byte, 8)
+			binary.LittleEndian.PutUint64(b, uint64(v.Len()))
+
+			output = append(output, b...)
+			for i := 0; i < l; i++ {
+				d, err := serializeData(v.Index(i))
+				if err != nil {
+					return nil, err
+				}
+				output = append(output, d...)
+			}
+			return output, nil
+		}
+		return nil, fmt.Errorf("unsupport type: %v, elem: %v", v.Kind(), v.Elem().Kind())
+	case reflect.Array:
 		switch v.Type().Elem().Kind() {
 		case reflect.Uint8:
 			b := make([]byte, 0, v.Len())

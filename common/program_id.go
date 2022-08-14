@@ -13,4 +13,5 @@ var (
 	SPLNameServiceProgramID            = PublicKeyFromString("namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX")
 	MetaplexTokenMetaProgramID         = PublicKeyFromString("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s")
 	ComputeBudgetProgramID             = PublicKeyFromString("ComputeBudget111111111111111111111111111111")
+	AddressLookupTableProgramID        = PublicKeyFromString("AddressLookupTab1e1111111111111111111111111")
 )
