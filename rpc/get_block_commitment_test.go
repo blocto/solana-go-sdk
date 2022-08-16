@@ -16,12 +16,10 @@ func TestGetBlockCommitment(t *testing.T) {
 					86708800,
 				)
 			},
-			ExpectedResponse: GetBlockCommitmentResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetBlockCommitmentResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetBlockCommitmentResult{
 					Commitment: nil,
 					TotalStake: 156502861915805458,
@@ -38,12 +36,10 @@ func TestGetBlockCommitment(t *testing.T) {
 					86708895,
 				)
 			},
-			ExpectedResponse: GetBlockCommitmentResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetBlockCommitmentResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetBlockCommitmentResult{
 					Commitment: &[]uint64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 140000814436952564},
 					TotalStake: 156502861915805458,
