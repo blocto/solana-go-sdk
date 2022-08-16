@@ -426,7 +426,7 @@ func (c *Client) SendTransactionWithConfig(ctx context.Context, tx types.Transac
 // GetSlot get current slot (finalized)
 func (c *Client) GetSlot(ctx context.Context) (uint64, error) {
 	res, err := c.RpcClient.GetSlot(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
@@ -436,7 +436,7 @@ func (c *Client) GetSlot(ctx context.Context) (uint64, error) {
 // GetSlotWithConfig get slot by commitment
 func (c *Client) GetSlotWithConfig(ctx context.Context, cfg rpc.GetSlotConfig) (uint64, error) {
 	res, err := c.RpcClient.GetSlotWithConfig(ctx, cfg)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}

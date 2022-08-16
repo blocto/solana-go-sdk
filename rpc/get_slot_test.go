@@ -15,13 +15,11 @@ func TestGetSlot(t *testing.T) {
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetSlotResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: 78413497,
+			ExpectedResponse: JsonRpcResponse[uint64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  78413497,
 			},
 			ExpectedError: nil,
 		},
@@ -36,13 +34,11 @@ func TestGetSlot(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetSlotResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: 78478796,
+			ExpectedResponse: JsonRpcResponse[uint64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  78478796,
 			},
 			ExpectedError: nil,
 		},
