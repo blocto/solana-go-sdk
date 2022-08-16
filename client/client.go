@@ -713,7 +713,7 @@ func (c *Client) GetIdentity(ctx context.Context) (string, error) {
 // GetGenesisHash returns the genesis hash
 func (c *Client) GetGenesisHash(ctx context.Context) (string, error) {
 	res, err := c.RpcClient.GetGenesisHash(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return "", err
 	}

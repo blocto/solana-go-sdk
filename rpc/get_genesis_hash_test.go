@@ -15,13 +15,11 @@ func TestGetGenesisHash(t *testing.T) {
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetGenesisHashResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+			ExpectedResponse: JsonRpcResponse[string]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
 			},
 			ExpectedError: nil,
 		},
