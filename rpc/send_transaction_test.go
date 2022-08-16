@@ -13,14 +13,12 @@ func TestSendTransaction(t *testing.T) {
 			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.SendTransaction(context.Background(), "37u9WtQpcm6ULa3Vmu7ySnANv")
 			},
-			ExpectedResponse: SendTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error: &ErrorResponse{
-						Code:    -32602,
-						Message: `io error: failed to fill whole buffer`,
-					},
+			ExpectedResponse: JsonRpcResponse[string]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error: &JsonRpcError{
+					Code:    -32602,
+					Message: `io error: failed to fill whole buffer`,
 				},
 				Result: "",
 			},
@@ -32,18 +30,16 @@ func TestSendTransaction(t *testing.T) {
 			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.SendTransaction(context.Background(), "582FZW9Ed2W4mLJVXPbHjDNw2LPZHL3UB3FRovi2qwzN3DZyRY26mhifhs6E9cpgaBqMeoPwE8vjU2LT63EfjxmH8BqkpJd2huKNBbZiV9DsBrTQwez8gfuiv5d9nt9af7pYdRhj1LH1PGF3cYVz1pkGwuyRnmnPqRFHFerXnNtDR5LncKLxoTi2So8LqJcdrQWfMRvqUJNB7EJBGrsvXtYSFdkXa3wqmsyY9a6PVwoGh2tcAY9o9DzTS16Cp1JFceBq4dQkNHxxnpUpPw6Rgey1SLveY7XUv61j5")
 			},
-			ExpectedResponse: SendTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error: &ErrorResponse{
-						Code:    -32002,
-						Message: `Transaction simulation failed: Blockhash not found`,
-						Data: map[string]any{
-							"accounts": nil,
-							"err":      "BlockhashNotFound",
-							"logs":     []any{},
-						},
+			ExpectedResponse: JsonRpcResponse[string]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error: &JsonRpcError{
+					Code:    -32002,
+					Message: `Transaction simulation failed: Blockhash not found`,
+					Data: map[string]any{
+						"accounts": nil,
+						"err":      "BlockhashNotFound",
+						"logs":     []any{},
 					},
 				},
 				Result: "",
@@ -56,16 +52,14 @@ func TestSendTransaction(t *testing.T) {
 			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.SendTransaction(context.Background(), "6RU3epX3frKoMKHLGjcH1pJQKt2ngYU2sTMB1siJfZFZFucUorBNpUT4JF3VCLjWRh1FMhadsbLnbUwoRRfWuVXrpiHbUa42pz9HpSvwospNeMzZLNTV9PBvS3CZQtLwrEzdv93kPo1uKquNWPdzBRSfLo13aCRaNfxvZNwg8mZb1cibSLRTGqvYKJhFqrVRaxCovZyQ9jVPBNG71hVXhzUnNHSKMTDRZAGqodZLodjZU4k4Eo4RZQ5g56R7cAMcPd4Pet8g5WGmSZwUAHauZjFY7jKxAB4eYRr3R")
 			},
-			ExpectedResponse: SendTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error: &ErrorResponse{
-						Code:    -32005,
-						Message: `Node is behind by 42 slots`,
-						Data: map[string]any{
-							"numSlotsBehind": float64(42),
-						},
+			ExpectedResponse: JsonRpcResponse[string]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error: &JsonRpcError{
+					Code:    -32005,
+					Message: `Node is behind by 42 slots`,
+					Data: map[string]any{
+						"numSlotsBehind": float64(42),
 					},
 				},
 				Result: "",
@@ -78,12 +72,11 @@ func TestSendTransaction(t *testing.T) {
 			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.SendTransaction(context.Background(), "KAmmQBoPnTWMnMCsoa8chJJN6R2EdP2X9i48wDayjdg6WBpaj88yYQ655LNpXiSa1pPVsp6ynCBaaQeSi1ZKQKuziYss4LgmfjuWhQyRyzZfkfM5W7AsQCG1XTNWbKmXzXpNPLXLLx3tTN49n3Q7eq7g5kJnsJZNJJKnYgHSbwEQVcTfqecC6P3V6CtMEeCjM9PzRKnaUXc5seW6gcMDhgTfgPbacVjkZsrUh6mwC84amEJrwioYcYqyh")
 			},
-			ExpectedResponse: SendTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-				},
-				Result: "5rgpegm86vwXotD2Z7WWW1DxpSxmWGQ9g4RMoBJvxJ2xiVF6TNCvGseZ3A1uisew9tGrdKirkkHUGjQW8uNqz9BW",
+			ExpectedResponse: JsonRpcResponse[string]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  "5rgpegm86vwXotD2Z7WWW1DxpSxmWGQ9g4RMoBJvxJ2xiVF6TNCvGseZ3A1uisew9tGrdKirkkHUGjQW8uNqz9BW",
 			},
 			ExpectedError: nil,
 		},
@@ -99,12 +92,11 @@ func TestSendTransaction(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: SendTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-				},
-				Result: "23hVrUsx17XuRbGndEPhShvaMT7HnxEs4dppq2NqvFJTDbEFm11a16f6W4Abs7RfXpzKQRKRoCiyHSNvBmvhVwR7",
+			ExpectedResponse: JsonRpcResponse[string]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  "23hVrUsx17XuRbGndEPhShvaMT7HnxEs4dppq2NqvFJTDbEFm11a16f6W4Abs7RfXpzKQRKRoCiyHSNvBmvhVwR7",
 			},
 			ExpectedError: nil,
 		},
@@ -120,12 +112,11 @@ func TestSendTransaction(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: SendTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-				},
-				Result: "2F53DggXYWLzczigoMr7smSEZtWSKmsWr7HMJQiNbTBdjjcN54LUMWdvTLj46MH7rAnJVPjJEjRjjXKeG7mssmZb",
+			ExpectedResponse: JsonRpcResponse[string]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  "2F53DggXYWLzczigoMr7smSEZtWSKmsWr7HMJQiNbTBdjjcN54LUMWdvTLj46MH7rAnJVPjJEjRjjXKeG7mssmZb",
 			},
 			ExpectedError: nil,
 		},
@@ -142,12 +133,11 @@ func TestSendTransaction(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: SendTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-				},
-				Result: "2F53DggXYWLzczigoMr7smSEZtWSKmsWr7HMJQiNbTBdjjcN54LUMWdvTLj46MH7rAnJVPjJEjRjjXKeG7mssmZb",
+			ExpectedResponse: JsonRpcResponse[string]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  "2F53DggXYWLzczigoMr7smSEZtWSKmsWr7HMJQiNbTBdjjcN54LUMWdvTLj46MH7rAnJVPjJEjRjjXKeG7mssmZb",
 			},
 			ExpectedError: nil,
 		},

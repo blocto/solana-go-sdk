@@ -367,7 +367,7 @@ func (c *Client) QuickSendTransaction(ctx context.Context, param QuickSendTransa
 		base64.StdEncoding.EncodeToString(rawTx),
 		rpc.SendTransactionConfig{Encoding: rpc.SendTransactionConfigEncodingBase64},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return "", err
 	}
@@ -387,7 +387,7 @@ func (c *Client) SendTransaction(ctx context.Context, tx types.Transaction) (str
 			Encoding: rpc.SendTransactionConfigEncodingBase64,
 		},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return "", err
 	}
@@ -416,7 +416,7 @@ func (c *Client) SendTransactionWithConfig(ctx context.Context, tx types.Transac
 			MaxRetries:          config.MaxRetries,
 		},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return "", err
 	}
