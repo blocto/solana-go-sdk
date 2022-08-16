@@ -17,13 +17,11 @@ func TestGetBlocks(t *testing.T) {
 					86686578,
 				)
 			},
-			ExpectedResponse: GetBlocksResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []uint64{86686567, 86686572, 86686573, 86686574, 86686575, 86686576, 86686577, 86686578},
+			ExpectedResponse: JsonRpcResponse[GetBlocks]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  []uint64{86686567, 86686572, 86686573, 86686574, 86686575, 86686576, 86686577, 86686578},
 			},
 			ExpectedError: nil,
 		},
@@ -40,13 +38,11 @@ func TestGetBlocks(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetBlocksResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []uint64{86686567, 86686572, 86686573, 86686574, 86686575, 86686576, 86686577, 86686578},
+			ExpectedResponse: JsonRpcResponse[GetBlocks]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  []uint64{86686567, 86686572, 86686573, 86686574, 86686575, 86686576, 86686577, 86686578},
 			},
 			ExpectedError: nil,
 		},
