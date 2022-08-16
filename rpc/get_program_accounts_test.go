@@ -16,13 +16,11 @@ func TestGetProgramAccounts(t *testing.T) {
 					"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 				)
 			},
-			ExpectedResponse: GetProgramAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []GetProgramAccounts{
+			ExpectedResponse: JsonRpcResponse[GetProgramAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetProgramAccounts{
 					{
 						Pubkey: "9ywX3U33UZC1HThhoBR2Ys7SiouXDkkDoH6brJApFh5D",
 						Account: AccountInfo{
@@ -61,7 +59,7 @@ func TestGetProgramAccounts(t *testing.T) {
 					context.TODO(),
 					"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 					GetProgramAccountsConfig{
-						Encoding: GetProgramAccountsConfigEncodingBase64Zstd,
+						Encoding: AccountEncodingBase64Zstd,
 						Filters: []GetProgramAccountsConfigFilter{
 							{
 								MemCmp: &GetProgramAccountsConfigFilterMemCmp{
@@ -73,13 +71,11 @@ func TestGetProgramAccounts(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetProgramAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []GetProgramAccounts{
+			ExpectedResponse: JsonRpcResponse[GetProgramAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetProgramAccounts{
 					{
 						Pubkey: "Dh4w3Pn6HqCDbEDhZdcDY8bHydeqNAhYY6EktLiWxFf6",
 						Account: AccountInfo{
@@ -105,7 +101,7 @@ func TestGetProgramAccounts(t *testing.T) {
 					context.TODO(),
 					"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 					GetProgramAccountsConfig{
-						Encoding: GetProgramAccountsConfigEncodingBase64Zstd,
+						Encoding: AccountEncodingBase64Zstd,
 						Filters: []GetProgramAccountsConfigFilter{
 							{
 								DataSize: 165,
@@ -114,13 +110,11 @@ func TestGetProgramAccounts(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetProgramAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []GetProgramAccounts{
+			ExpectedResponse: JsonRpcResponse[GetProgramAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetProgramAccounts{
 					{
 						Pubkey: "Dh4w3Pn6HqCDbEDhZdcDY8bHydeqNAhYY6EktLiWxFf6",
 						Account: AccountInfo{
@@ -146,7 +140,7 @@ func TestGetProgramAccounts(t *testing.T) {
 					context.TODO(),
 					"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 					GetProgramAccountsConfig{
-						Encoding: GetProgramAccountsConfigEncodingBase64Zstd,
+						Encoding: AccountEncodingBase64Zstd,
 						Filters: []GetProgramAccountsConfigFilter{
 							{
 								MemCmp: &GetProgramAccountsConfigFilterMemCmp{
@@ -161,13 +155,11 @@ func TestGetProgramAccounts(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetProgramAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []GetProgramAccounts{
+			ExpectedResponse: JsonRpcResponse[GetProgramAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetProgramAccounts{
 					{
 						Pubkey: "Dh4w3Pn6HqCDbEDhZdcDY8bHydeqNAhYY6EktLiWxFf6",
 						Account: AccountInfo{
@@ -194,17 +186,15 @@ func TestGetProgramAccounts(t *testing.T) {
 					"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 				)
 			},
-			ExpectedResponse: GetProgramAccountsWithContextResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetProgramAccountsWithContextResult{
+			ExpectedResponse: JsonRpcResponse[GetProgramAccountsWithContext]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetProgramAccountsWithContext{
 					Context: Context{
 						Slot: 78496860,
 					},
-					Value: []GetProgramAccounts{
+					Value: GetProgramAccounts{
 						{
 							Pubkey: "9ywX3U33UZC1HThhoBR2Ys7SiouXDkkDoH6brJApFh5D",
 							Account: AccountInfo{

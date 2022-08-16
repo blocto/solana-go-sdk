@@ -21,17 +21,15 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetTokenAccountsByOwnerResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetTokenAccountsByOwnerResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetTokenAccountsByOwner]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetTokenAccountsByOwner{
 					Context: Context{
 						Slot: 88024144,
 					},
-					Value: []GetProgramAccounts{
+					Value: GetProgramAccounts{
 						{
 							Pubkey: "AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
 							Account: AccountInfo{
@@ -59,17 +57,15 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetTokenAccountsByOwnerResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetTokenAccountsByOwnerResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetTokenAccountsByOwner]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetTokenAccountsByOwner{
 					Context: Context{
 						Slot: 88024144,
 					},
-					Value: []GetProgramAccounts{
+					Value: GetProgramAccounts{
 						{
 							Pubkey: "AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
 							Account: AccountInfo{
@@ -96,21 +92,19 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 						Mint: "4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3",
 					},
 					GetTokenAccountsByOwnerConfig{
-						Encoding: GetTokenAccountsByOwnerConfigEncodingBase64,
+						Encoding: AccountEncodingBase64,
 					},
 				)
 			},
-			ExpectedResponse: GetTokenAccountsByOwnerResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetTokenAccountsByOwnerResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetTokenAccountsByOwner]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetTokenAccountsByOwner{
 					Context: Context{
 						Slot: 88024145,
 					},
-					Value: []GetProgramAccounts{
+					Value: GetProgramAccounts{
 						{
 							Pubkey: "AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
 							Account: AccountInfo{
@@ -140,25 +134,23 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 						Mint: "4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3",
 					},
 					GetTokenAccountsByOwnerConfig{
-						Encoding: GetTokenAccountsByOwnerConfigEncodingBase64,
-						DataSlice: &GetTokenAccountsByOwnerConfigDataSlice{
+						Encoding: AccountEncodingBase64,
+						DataSlice: &DataSlice{
 							Offset: 4,
 							Length: 32,
 						},
 					},
 				)
 			},
-			ExpectedResponse: GetTokenAccountsByOwnerResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetTokenAccountsByOwnerResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetTokenAccountsByOwner]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetTokenAccountsByOwner{
 					Context: Context{
 						Slot: 88024145,
 					},
-					Value: []GetProgramAccounts{
+					Value: GetProgramAccounts{
 						{
 							Pubkey: "AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
 							Account: AccountInfo{

@@ -988,7 +988,7 @@ func (c *Client) GetTokenAccountsByOwner(ctx context.Context, base58Addr string)
 			ProgramId: common.TokenProgramID.ToBase58(),
 		},
 		rpc.GetTokenAccountsByOwnerConfig{
-			Encoding: rpc.GetTokenAccountsByOwnerConfigEncodingBase64,
+			Encoding: rpc.AccountEncodingBase64,
 		},
 	)
 	if err != nil {
