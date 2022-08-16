@@ -168,27 +168,27 @@ func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.AccountInfo) (AccountIn
 
 type GetMultipleAccountsConfig struct {
 	Commitment rpc.Commitment
-	DataSlice  *rpc.GetMultipleAccountsConfigDataSlice
+	DataSlice  *rpc.DataSlice
 }
 
 // GetMultipleAccounts returns multiple accounts info
 func (c *Client) GetMultipleAccounts(ctx context.Context, base58Addrs []string) ([]AccountInfo, error) {
 	return c.processGetMultipleAccounts(c.RpcClient.GetMultipleAccountsWithConfig(ctx, base58Addrs, rpc.GetMultipleAccountsConfig{
-		Encoding: rpc.GetMultipleAccountsConfigEncodingBase64,
+		Encoding: rpc.AccountEncodingBase64,
 	}))
 }
 
 // GetAccountInfoWithConfig return account's info
 func (c *Client) GetMultipleAccountsWithConfig(ctx context.Context, base58Addrs []string, cfg GetMultipleAccountsConfig) ([]AccountInfo, error) {
 	return c.processGetMultipleAccounts(c.RpcClient.GetMultipleAccountsWithConfig(ctx, base58Addrs, rpc.GetMultipleAccountsConfig{
-		Encoding:   rpc.GetMultipleAccountsConfigEncodingBase64,
+		Encoding:   rpc.AccountEncodingBase64,
 		Commitment: cfg.Commitment,
 		DataSlice:  cfg.DataSlice,
 	}))
 }
 
-func (c *Client) processGetMultipleAccounts(res rpc.GetMultipleAccountsResponse, err error) ([]AccountInfo, error) {
-	err = checkRpcResult(res.GeneralResponse, err)
+func (c *Client) processGetMultipleAccounts(res rpc.JsonRpcResponse[rpc.GetMultipleAccounts], err error) ([]AccountInfo, error) {
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return []AccountInfo{}, err
 	}

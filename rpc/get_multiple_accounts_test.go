@@ -16,13 +16,11 @@ func TestGetMultipleAccounts(t *testing.T) {
 					[]string{"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"},
 				)
 			},
-			ExpectedResponse: GetMultipleAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetMultipleAccountsResult{
+			ExpectedResponse: JsonRpcResponse[GetMultipleAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetMultipleAccounts{
 					Context: Context{
 						Slot: 77317716,
 					},
@@ -48,13 +46,11 @@ func TestGetMultipleAccounts(t *testing.T) {
 					[]string{"FaTGhPTgKeZZzQwLenoxn2VZXPWV1FpjQ1AQe77JUeJw"},
 				)
 			},
-			ExpectedResponse: GetMultipleAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetMultipleAccountsResult{
+			ExpectedResponse: JsonRpcResponse[GetMultipleAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetMultipleAccounts{
 					Context: Context{
 						Slot: 77382573,
 					},
@@ -74,13 +70,11 @@ func TestGetMultipleAccounts(t *testing.T) {
 					[]string{"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb"},
 				)
 			},
-			ExpectedResponse: GetMultipleAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetMultipleAccountsResult{
+			ExpectedResponse: JsonRpcResponse[GetMultipleAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetMultipleAccounts{
 					Context: Context{
 						Slot: 77317716,
 					},
@@ -106,16 +100,14 @@ func TestGetMultipleAccounts(t *testing.T) {
 					[]string{"9ywX3U33UZC1HThhoBR2Ys7SiouXDkkDoH6brJApFh5D"},
 				)
 			},
-			ExpectedResponse: GetMultipleAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error: &ErrorResponse{
-						Code:    -32600,
-						Message: "Encoded binary (base 58) data should be less than 128 bytes, please use Base64 encoding.",
-					},
+			ExpectedResponse: JsonRpcResponse[GetMultipleAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error: &JsonRpcError{
+					Code:    -32600,
+					Message: "Encoded binary (base 58) data should be less than 128 bytes, please use Base64 encoding.",
 				},
-				Result: GetMultipleAccountsResult{},
+				Result: GetMultipleAccounts{},
 			},
 			ExpectedError: nil,
 		},
@@ -131,13 +123,11 @@ func TestGetMultipleAccounts(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetMultipleAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetMultipleAccountsResult{
+			ExpectedResponse: JsonRpcResponse[GetMultipleAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetMultipleAccounts{
 					Context: Context{
 						Slot: 77317716,
 					},
@@ -162,17 +152,15 @@ func TestGetMultipleAccounts(t *testing.T) {
 					context.Background(),
 					[]string{"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb"},
 					GetMultipleAccountsConfig{
-						Encoding: GetMultipleAccountsConfigEncodingBase64,
+						Encoding: AccountEncodingBase64,
 					},
 				)
 			},
-			ExpectedResponse: GetMultipleAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetMultipleAccountsResult{
+			ExpectedResponse: JsonRpcResponse[GetMultipleAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetMultipleAccounts{
 					Context: Context{
 						Slot: 77317717,
 					},
@@ -197,17 +185,15 @@ func TestGetMultipleAccounts(t *testing.T) {
 					context.Background(),
 					[]string{"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb"},
 					GetMultipleAccountsConfig{
-						Encoding: GetMultipleAccountsConfigEncodingBase64Zstd,
+						Encoding: AccountEncodingBase64Zstd,
 					},
 				)
 			},
-			ExpectedResponse: GetMultipleAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetMultipleAccountsResult{
+			ExpectedResponse: JsonRpcResponse[GetMultipleAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetMultipleAccounts{
 					Context: Context{
 						Slot: 77317717,
 					},
@@ -232,22 +218,20 @@ func TestGetMultipleAccounts(t *testing.T) {
 					context.Background(),
 					[]string{"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb"},
 					GetMultipleAccountsConfig{
-						DataSlice: &GetMultipleAccountsConfigDataSlice{
+						DataSlice: &DataSlice{
 							Length: 32,
 						},
 					},
 				)
 			},
-			ExpectedResponse: GetMultipleAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error: &ErrorResponse{
-						Code:    -32602,
-						Message: `Invalid params: missing field` + "`offset`" + `.`,
-					},
+			ExpectedResponse: JsonRpcResponse[GetMultipleAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error: &JsonRpcError{
+					Code:    -32602,
+					Message: `Invalid params: missing field` + "`offset`" + `.`,
 				},
-				Result: GetMultipleAccountsResult{},
+				Result: GetMultipleAccounts{},
 			},
 			ExpectedError: nil,
 		},
@@ -259,22 +243,20 @@ func TestGetMultipleAccounts(t *testing.T) {
 					context.Background(),
 					[]string{"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb"},
 					GetMultipleAccountsConfig{
-						DataSlice: &GetMultipleAccountsConfigDataSlice{
+						DataSlice: &DataSlice{
 							Offset: 4,
 						},
 					},
 				)
 			},
-			ExpectedResponse: GetMultipleAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error: &ErrorResponse{
-						Code:    -32602,
-						Message: `Invalid params: missing field` + "`length`" + `.`,
-					},
+			ExpectedResponse: JsonRpcResponse[GetMultipleAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error: &JsonRpcError{
+					Code:    -32602,
+					Message: `Invalid params: missing field` + "`length`" + `.`,
 				},
-				Result: GetMultipleAccountsResult{},
+				Result: GetMultipleAccounts{},
 			},
 			ExpectedError: nil,
 		},
@@ -286,20 +268,18 @@ func TestGetMultipleAccounts(t *testing.T) {
 					context.Background(),
 					[]string{"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb"},
 					GetMultipleAccountsConfig{
-						DataSlice: &GetMultipleAccountsConfigDataSlice{
+						DataSlice: &DataSlice{
 							Offset: 4,
 							Length: 32,
 						},
 					},
 				)
 			},
-			ExpectedResponse: GetMultipleAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetMultipleAccountsResult{
+			ExpectedResponse: JsonRpcResponse[GetMultipleAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetMultipleAccounts{
 					Context: Context{
 						Slot: 77322439,
 					},
@@ -324,21 +304,19 @@ func TestGetMultipleAccounts(t *testing.T) {
 					context.Background(),
 					[]string{"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb"},
 					GetMultipleAccountsConfig{
-						Encoding: GetMultipleAccountsConfigEncodingBase64,
-						DataSlice: &GetMultipleAccountsConfigDataSlice{
+						Encoding: AccountEncodingBase64,
+						DataSlice: &DataSlice{
 							Offset: 4,
 							Length: 32,
 						},
 					},
 				)
 			},
-			ExpectedResponse: GetMultipleAccountsResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetMultipleAccountsResult{
+			ExpectedResponse: JsonRpcResponse[GetMultipleAccounts]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetMultipleAccounts{
 					Context: Context{
 						Slot: 77317718,
 					},
