@@ -16,14 +16,12 @@ func TestGetBlockTime(t *testing.T) {
 					100000,
 				)
 			},
-			ExpectedResponse: GetBlockTimeResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error: &ErrorResponse{
-						Code:    -32009,
-						Message: "Slot 100000 was skipped, or missing in long-term storage",
-					},
+			ExpectedResponse: JsonRpcResponse[int64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error: &JsonRpcError{
+					Code:    -32009,
+					Message: "Slot 100000 was skipped, or missing in long-term storage",
 				},
 				Result: 0,
 			},
@@ -38,14 +36,12 @@ func TestGetBlockTime(t *testing.T) {
 					100048426,
 				)
 			},
-			ExpectedResponse: GetBlockTimeResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error: &ErrorResponse{
-						Code:    -32004,
-						Message: "Block not available for slot 100048426",
-					},
+			ExpectedResponse: JsonRpcResponse[int64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error: &JsonRpcError{
+					Code:    -32004,
+					Message: "Block not available for slot 100048426",
 				},
 				Result: 0,
 			},
@@ -60,13 +56,11 @@ func TestGetBlockTime(t *testing.T) {
 					85588104,
 				)
 			},
-			ExpectedResponse: GetBlockTimeResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: 1633531934,
+			ExpectedResponse: JsonRpcResponse[int64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  1633531934,
 			},
 			ExpectedError: nil,
 		},

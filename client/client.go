@@ -693,7 +693,7 @@ func (c *Client) GetMinimumBalanceForRentExemption(ctx context.Context, dataLen 
 // GetBlockTime returns the estimated production time of a block.
 func (c *Client) GetBlockTime(ctx context.Context, slot uint64) (int64, error) {
 	res, err := c.RpcClient.GetBlockTime(ctx, slot)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
