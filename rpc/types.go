@@ -22,6 +22,11 @@ const (
 	AccountEncodingBase64Zstd AccountEncoding = "base64+zstd"
 )
 
+type DataSlice struct {
+	Offset uint64 `json:"offset,omitempty"`
+	Length uint64 `json:"length,omitempty"`
+}
+
 type AccountInfo struct {
 	Lamports   uint64 `json:"lamports"`
 	Owner      string `json:"owner"`
