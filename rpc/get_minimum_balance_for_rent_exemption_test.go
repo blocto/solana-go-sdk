@@ -16,13 +16,11 @@ func TestGetMinimumBalanceForRentExemption(t *testing.T) {
 					100,
 				)
 			},
-			ExpectedResponse: GetMinimumBalanceForRentExemptionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: 1586880,
+			ExpectedResponse: JsonRpcResponse[uint64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  1586880,
 			},
 			ExpectedError: nil,
 		},
@@ -38,13 +36,11 @@ func TestGetMinimumBalanceForRentExemption(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetMinimumBalanceForRentExemptionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: 1586880,
+			ExpectedResponse: JsonRpcResponse[uint64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  1586880,
 			},
 			ExpectedError: nil,
 		},

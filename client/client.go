@@ -683,7 +683,7 @@ func getBlock(res rpc.JsonRpcResponse[rpc.GetBlock]) (GetBlockResponse, error) {
 // GetMinimumBalanceForRentExemption returns minimum balance required to make account rent exempt
 func (c *Client) GetMinimumBalanceForRentExemption(ctx context.Context, dataLen uint64) (uint64, error) {
 	res, err := c.RpcClient.GetMinimumBalanceForRentExemption(ctx, dataLen)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
