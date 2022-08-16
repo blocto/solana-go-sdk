@@ -13,13 +13,11 @@ func TestIsBlockhashValid(t *testing.T) {
 			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.IsBlockhashValid(context.TODO(), "14PVzxGGU4WQ7qbQffn3XJV1pasafs4wApFUs5sps89N")
 			},
-			ExpectedResponse: IsBlockhashValidResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: IsBlockhashValidResult{
+			ExpectedResponse: JsonRpcResponse[IsBlockhashValid]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: IsBlockhashValid{
 					Context: Context{
 						Slot: 112890169,
 					},
@@ -40,13 +38,11 @@ func TestIsBlockhashValid(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: IsBlockhashValidResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: IsBlockhashValidResult{
+			ExpectedResponse: JsonRpcResponse[IsBlockhashValid]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: IsBlockhashValid{
 					Context: Context{
 						Slot: 112890231,
 					},

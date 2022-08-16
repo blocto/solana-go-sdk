@@ -273,7 +273,7 @@ type IsBlockhashConfig struct {
 // IsBlockhashValid get the fee the network will charge for a particular Message
 func (c *Client) IsBlockhashValid(ctx context.Context, blockhash string) (bool, error) {
 	res, err := c.RpcClient.IsBlockhashValid(ctx, blockhash)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return false, err
 	}
@@ -286,7 +286,7 @@ func (c *Client) IsBlockhashValidWithConfig(ctx context.Context, blockhash strin
 	res, err := c.RpcClient.IsBlockhashValidWithConfig(ctx, blockhash, rpc.IsBlockhashValidConfig{
 		Commitment: cfg.Commitment,
 	})
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return false, err
 	}
