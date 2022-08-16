@@ -306,7 +306,7 @@ func (c *Client) GetFeeForMessage(ctx context.Context, message types.Message) (*
 	}
 
 	res, err := c.RpcClient.GetFeeForMessage(ctx, base64.StdEncoding.EncodeToString(rawMessage))
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
@@ -328,7 +328,7 @@ func (c *Client) GetFeeForMessageWithConfig(ctx context.Context, message types.M
 			Commitment: cfg.Commitment,
 		},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}

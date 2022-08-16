@@ -18,13 +18,11 @@ func TestGetFeeForMessage(t *testing.T) {
 					"AQABAyRn8Htq2L5KAQiNyByMm5M/q8rDpBu7qahSf2bBSZq4Bj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMqYD+EHyvdHM3SIIuGet5Q6BxOI26dTbdOzaCY8V1mtAQICAAEMAgAAAAEAAAAAAAAA",
 				)
 			},
-			ExpectedResponse: GetFeeForMessageResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetFeeForMessageResult{
+			ExpectedResponse: JsonRpcResponse[GetFeeForMessage]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetFeeForMessage{
 					Context: Context{
 						Slot: 112884237,
 					},
@@ -45,13 +43,11 @@ func TestGetFeeForMessage(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetFeeForMessageResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetFeeForMessageResult{
+			ExpectedResponse: JsonRpcResponse[GetFeeForMessage]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetFeeForMessage{
 					Context: Context{
 						Slot: 112884286,
 					},
