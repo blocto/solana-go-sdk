@@ -18,13 +18,11 @@ func TestGetInflationReward(t *testing.T) {
 					[]string{"27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ", "BJhtevCiNKrWsc2pkJP1TFhxAhheZ9FNJ7F567FayhSD"},
 				)
 			},
-			ExpectedResponse: GetInflationRewardResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []*GetInflationRewardResult{
+			ExpectedResponse: JsonRpcResponse[[]*GetInflationReward]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: []*GetInflationReward{
 					nil,
 					{
 						Epoch:         34,
@@ -49,13 +47,11 @@ func TestGetInflationReward(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetInflationRewardResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []*GetInflationRewardResult{
+			ExpectedResponse: JsonRpcResponse[[]*GetInflationReward]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: []*GetInflationReward{
 					nil,
 					{
 						Epoch:         35,
@@ -80,13 +76,11 @@ func TestGetInflationReward(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetInflationRewardResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []*GetInflationRewardResult{
+			ExpectedResponse: JsonRpcResponse[[]*GetInflationReward]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: []*GetInflationReward{
 					nil,
 					{
 						Epoch:         31,

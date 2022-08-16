@@ -4,21 +4,18 @@ import (
 	"context"
 )
 
-// GetInflationRewardResponse is a full raw rpc response of `getInflationReward`
-type GetInflationRewardResponse struct {
-	GeneralResponse
-	Result []*GetInflationRewardResult `json:"result"`
-}
+type GetInflationRewardResponse JsonRpcResponse[[]*GetInflationReward]
 
 // GetInflationRewardResult is a part of raw rpc response of `getInflationReward`
-type GetInflationRewardResult struct {
+type GetInflationReward struct {
 	Epoch         uint64 `json:"epoch"`
 	EffectiveSlot uint64 `json:"effectiveSlot"`
 	Amount        uint64 `json:"amount"`
 	PostBalance   uint64 `json:"postBalance"`
 	Commission    *uint8 `json:"commission"`
 }
-type GetInflationRewardResponseResultValue struct {
+
+type GetInflationRewardValue struct {
 	FeeCalculator FeeCalculator `json:"feeCalculator"`
 }
 
@@ -29,16 +26,16 @@ type GetInflationRewardConfig struct {
 }
 
 // GetInflationReward returns the inflation reward for a list of addresses for an epoch
-func (c *RpcClient) GetInflationReward(ctx context.Context, stakeAccountAddrs []string) (GetInflationRewardResponse, error) {
+func (c *RpcClient) GetInflationReward(ctx context.Context, stakeAccountAddrs []string) (JsonRpcResponse[[]*GetInflationReward], error) {
 	return c.processGetInflationReward(c.Call(ctx, "getInflationReward", stakeAccountAddrs))
 }
 
 // GetInflationRewardWithConfig returns the inflation reward for a list of addresses for an epoch
-func (c *RpcClient) GetInflationRewardWithConfig(ctx context.Context, stakeAccountAddrs []string, cfg GetInflationRewardConfig) (GetInflationRewardResponse, error) {
+func (c *RpcClient) GetInflationRewardWithConfig(ctx context.Context, stakeAccountAddrs []string, cfg GetInflationRewardConfig) (JsonRpcResponse[[]*GetInflationReward], error) {
 	return c.processGetInflationReward(c.Call(ctx, "getInflationReward", stakeAccountAddrs, cfg))
 }
 
-func (c *RpcClient) processGetInflationReward(body []byte, rpcErr error) (res GetInflationRewardResponse, err error) {
+func (c *RpcClient) processGetInflationReward(body []byte, rpcErr error) (res JsonRpcResponse[[]*GetInflationReward], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }
