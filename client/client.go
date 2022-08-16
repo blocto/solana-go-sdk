@@ -150,7 +150,7 @@ func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.AccountInfo) (AccountIn
 	if !ok {
 		return AccountInfo{}, fmt.Errorf("failed to cast raw response to []any")
 	}
-	if data[1] != string(rpc.GetAccountInfoConfigEncodingBase64) {
+	if data[1] != string(rpc.AccountEncodingBase64) {
 		return AccountInfo{}, fmt.Errorf("encoding mistmatch")
 	}
 	rawData, err := base64.StdEncoding.DecodeString(data[0].(string))
@@ -208,7 +208,7 @@ func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.AccountInf
 		if !ok {
 			return []AccountInfo{}, fmt.Errorf("failed to cast raw response to []any")
 		}
-		if data[1] != string(rpc.GetAccountInfoConfigEncodingBase64) {
+		if data[1] != string(rpc.AccountEncodingBase58) {
 			return []AccountInfo{}, fmt.Errorf("encoding mistmatch")
 		}
 		rawData, err := base64.StdEncoding.DecodeString(data[0].(string))
