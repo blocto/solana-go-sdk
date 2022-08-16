@@ -872,7 +872,7 @@ func (c *Client) SimulateTransaction(ctx context.Context, tx types.Transaction) 
 			ctx,
 			base64.StdEncoding.EncodeToString(rawTx),
 			rpc.SimulateTransactionConfig{
-				Encoding: rpc.SimulateTransactionConfigEncodingBase64,
+				Encoding: rpc.SimulateTransactionEncodingBase64,
 			},
 		),
 	)
@@ -897,7 +897,7 @@ func (c *Client) SimulateTransactionWithConfig(ctx context.Context, tx types.Tra
 			ctx,
 			base64.StdEncoding.EncodeToString(rawTx),
 			rpc.SimulateTransactionConfig{
-				Encoding:               rpc.SimulateTransactionConfigEncodingBase64,
+				Encoding:               rpc.SimulateTransactionEncodingBase64,
 				SigVerify:              cfg.SigVerify,
 				Commitment:             cfg.Commitment,
 				ReplaceRecentBlockhash: cfg.ReplaceRecentBlockhash,
@@ -907,8 +907,8 @@ func (c *Client) SimulateTransactionWithConfig(ctx context.Context, tx types.Tra
 	)
 }
 
-func (c *Client) processSimulateTransaction(res rpc.SimulateTransactionResponse, err error) (SimulateTransaction, error) {
-	err = checkRpcResult(res.GeneralResponse, err)
+func (c *Client) processSimulateTransaction(res rpc.JsonRpcResponse[rpc.SimulateTransaction], err error) (SimulateTransaction, error) {
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return SimulateTransaction{}, err
 	}

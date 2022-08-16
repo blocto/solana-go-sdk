@@ -16,17 +16,15 @@ func TestSimulateTransaction(t *testing.T) {
 					"5nxpoKAc5anKyiJuwj5f2SLxnruNHDjpFFz1TAw5VvpL1L4TbF4mVUMwiH36uBMnJEhpxqtKvjPFMaBms2vNe2LYQjydRs2niy5pBsBjjxif5mxkEa3S27pc5epeYATPA9Xhgagz2TDzniZEYQgQ6uEGyKGJRQ2AX9qpTY7LtHxN8sUqn5SuZAMnM27iZ9bwwyjjBGepRmz1mfQfFvSV92exnJRjCrzcR5VPuViSAxDtwZFVzB8CVcA3M9ZFaUn8mhTe9U8wKFYEm1mH9cPjWHpwm5h4S2yvMVSw1",
 				)
 			},
-			ExpectedResponse: SimulateTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: SimulateTransactionResponseResult{
+			ExpectedResponse: JsonRpcResponse[SimulateTransaction]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: SimulateTransaction{
 					Context: Context{
 						Slot: 80208054,
 					},
-					Value: SimulateTransactionResponseResultValue{
+					Value: SimulateTransactionValue{
 						Logs: []string{"Program 11111111111111111111111111111111 invoke [1]", "Program 11111111111111111111111111111111 success"},
 					},
 				},
@@ -42,17 +40,15 @@ func TestSimulateTransaction(t *testing.T) {
 					"3vDU6xomZYLVZDefJLUEKXdzQLxRvJ8m1u31a4m6ynNDrPmFUUC9ogWH1yTnqaKm5SRcYbrp1xXExzhVKdCiv1KTkZdmZ7oNgTMSq4SN1nu1nL4hkZPSKGNGxXk6fViefXGiaHvzmC6mR2coVhvjs75eayuGyhomCfEUnKfUuQK99UC8pYJNenHTQQ4DX92sJmuiPoQHGDBVDwtVAkvLEfav89uSUxS1jbpfMPBs7fTNGiEhgMgYq5p4rsvPAYG6EZpDnK3VFjbBGBeUAdkCbjxLQGRJs3UEUNwjD",
 				)
 			},
-			ExpectedResponse: SimulateTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: SimulateTransactionResponseResult{
+			ExpectedResponse: JsonRpcResponse[SimulateTransaction]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: SimulateTransaction{
 					Context: Context{
 						Slot: 80207873,
 					},
-					Value: SimulateTransactionResponseResultValue{
+					Value: SimulateTransactionValue{
 						Err: map[string]any{
 							"InstructionError": []any{
 								0.,
@@ -76,17 +72,15 @@ func TestSimulateTransaction(t *testing.T) {
 					"3vDU6xomZYLVZDefJLUEKXdzQLxRvJ8m1u31a4m6ynNDrPmFUUC9ogWH1yTnqaKm5SRcYbrp1xXExzhVKdCiv1KTkZdmZ7oNgTMSq4SN1nu1nL4hkZPSKGNGxXk6fViefXGiaHvzmC6mR2coVhvjs75eayuGyhomCfEUnKfUuQK99UC8pYJNenHTQQ4DX92sJmuiPoQHGDBVDwtVAkvLEfav89uSUxS1jbpfMPBs7fTNGiEhgMgYq5p4rsvPAYG6EZpDnK3VFjbBGBeUAdkCbjxLQGRJs3UEUNwjD",
 				)
 			},
-			ExpectedResponse: SimulateTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: SimulateTransactionResponseResult{
+			ExpectedResponse: JsonRpcResponse[SimulateTransaction]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: SimulateTransaction{
 					Context: Context{
 						Slot: 80208056,
 					},
-					Value: SimulateTransactionResponseResultValue{
+					Value: SimulateTransactionValue{
 						Err:  "BlockhashNotFound",
 						Logs: []string{},
 					},
@@ -106,17 +100,15 @@ func TestSimulateTransaction(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: SimulateTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: SimulateTransactionResponseResult{
+			ExpectedResponse: JsonRpcResponse[SimulateTransaction]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: SimulateTransaction{
 					Context: Context{
 						Slot: 80208226,
 					},
-					Value: SimulateTransactionResponseResultValue{
+					Value: SimulateTransactionValue{
 						Err: map[string]any{
 							"InstructionError": []any{
 								0.,
@@ -139,7 +131,7 @@ func TestSimulateTransaction(t *testing.T) {
 					context.TODO(),
 					"AbsEK+X7n9gAZ6giVYXDsyjtpHWaz8DA8IzsvBZSBGrtusZXpDaRD90P5HkZfc/JSzJTKfdmwG57tk6BvUkp4AYBAAEDBj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4QllkXXnxkMyGl7UZCoCewq9l7jdl60bzG3GRxOGzN3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA06LaMHqdmx+mBhPvnVRx5R2BobhuEZaAxJvCwM6btcUBAgIAAQwCAAAAAMqaOwAAAAA",
 					SimulateTransactionConfig{
-						Encoding:               SimulateTransactionConfigEncodingBase64,
+						Encoding:               SimulateTransactionEncodingBase64,
 						ReplaceRecentBlockhash: true,
 						Accounts: &SimulateTransactionConfigAccounts{
 							Encoding:  AccountEncodingBase64Zstd,
@@ -148,17 +140,15 @@ func TestSimulateTransaction(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: SimulateTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: SimulateTransactionResponseResult{
+			ExpectedResponse: JsonRpcResponse[SimulateTransaction]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: SimulateTransaction{
 					Context: Context{
 						Slot: 80208978,
 					},
-					Value: SimulateTransactionResponseResultValue{
+					Value: SimulateTransactionValue{
 						Accounts: []*AccountInfo{
 							{
 								Owner:      "11111111111111111111111111111111",

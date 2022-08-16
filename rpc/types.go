@@ -23,6 +23,16 @@ const (
 	AccountEncodingBase64Zstd AccountEncoding = "base64+zstd"
 )
 
+type TransactionEncoding string
+
+const (
+	TransactionEncodingBinary     TransactionEncoding = "binary"
+	TransactionEncodingBase64     TransactionEncoding = "base64"
+	TransactionEncodingBase58     TransactionEncoding = "base58"
+	TransactionEncodingJson       TransactionEncoding = "json"
+	TransactionEncodingJsonParsed TransactionEncoding = "jsonParsed"
+)
+
 type DataSlice struct {
 	Offset uint64 `json:"offset,omitempty"`
 	Length uint64 `json:"length,omitempty"`
