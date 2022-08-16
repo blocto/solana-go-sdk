@@ -15,10 +15,6 @@ type GetInflationReward struct {
 	Commission    *uint8 `json:"commission"`
 }
 
-type GetInflationRewardValue struct {
-	FeeCalculator FeeCalculator `json:"feeCalculator"`
-}
-
 // GetInflationRewardConfig is a option config for `getInflationReward`
 type GetInflationRewardConfig struct {
 	Commitment Commitment `json:"commitment,omitempty"`

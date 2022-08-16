@@ -226,17 +226,6 @@ func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.AccountInf
 	return res, nil
 }
 
-// DEPRECATED: Please use getFeeForMessage instead This method is expected to be removed in solana-core v2.0
-// GetRecentBlockhash return recent blockhash information
-func (c *Client) GetRecentBlockhash(ctx context.Context) (rpc.GetRecentBlockHashResultValue, error) {
-	res, err := c.RpcClient.GetRecentBlockhash(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
-	if err != nil {
-		return rpc.GetRecentBlockHashResultValue{}, err
-	}
-	return res.Result.Value, nil
-}
-
 type GetLatestBlockhashConfig struct {
 	Commitment rpc.Commitment `json:"commitment,omitempty"`
 }
@@ -343,7 +332,7 @@ type QuickSendTransactionParam struct {
 
 // QuickSendTransaction is a quick way to send tx
 func (c *Client) QuickSendTransaction(ctx context.Context, param QuickSendTransactionParam) (string, error) {
-	recentBlockhashRes, err := c.GetRecentBlockhash(ctx)
+	recentBlockhashRes, err := c.GetLatestBlockhash(ctx)
 	if err != nil {
 		return "", fmt.Errorf("failed to get recent blockhash, err: %v", err)
 	}
