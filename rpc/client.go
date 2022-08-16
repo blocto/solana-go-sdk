@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -88,7 +88,7 @@ func (c *RpcClient) Call(ctx context.Context, params ...interface{}) ([]byte, er
 	defer res.Body.Close()
 
 	// parse body
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read body, err: %v", err)
 	}
