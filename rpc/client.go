@@ -25,6 +25,26 @@ const (
 	CommitmentProcessed Commitment = "processed"
 )
 
+type JsonRpcRequest struct {
+	JsonRpc string `json:"jsonrpc"`
+	Id      uint64 `json:"id"`
+	Method  string `json:"method"`
+	Params  []any  `json:"params,omitempty"`
+}
+
+type JsonRpcResponse[T any] struct {
+	JsonRpc string        `json:"jsonrpc"`
+	Id      uint64        `json:"id"`
+	Result  T             `json:"result"`
+	Error   *JsonRpcError `json:"error,omitempty"`
+}
+
+type JsonRpcError struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Data    any    `json:"data"`
+}
+
 // ErrorResponse is a error rpc response
 type ErrorResponse struct {
 	Code    int            `json:"code"`
@@ -99,13 +119,6 @@ func (c *RpcClient) Call(ctx context.Context, params ...any) ([]byte, error) {
 	}
 
 	return body, nil
-}
-
-type JsonRpcRequest struct {
-	JsonRpc string `json:"jsonrpc"`
-	Id      uint64 `json:"id"`
-	Method  string `json:"method"`
-	Params  []any  `json:"params,omitempty"`
 }
 
 func preparePayload(params []any) ([]byte, error) {
