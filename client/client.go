@@ -743,7 +743,7 @@ func (c *Client) GetVersion(ctx context.Context) (rpc.GetVersionResult, error) {
 // RequestAirdrop requests an airdrop of lamports to a Pubkey
 func (c *Client) RequestAirdrop(ctx context.Context, base58Addr string, lamports uint64) (string, error) {
 	res, err := c.RpcClient.RequestAirdrop(ctx, base58Addr, lamports)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return "", err
 	}

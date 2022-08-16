@@ -17,13 +17,11 @@ func TestRequestAirdrop(t *testing.T) {
 					1,
 				)
 			},
-			ExpectedResponse: RequestAirdropResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: "2HsNt2iPgHVKzbYxsivEUWutMAzFkJL1YBs7phaBTtKY82sbDLuhzEBqbmGwxBAWTRSiPwkqop8vqWxezkxcuaVW",
+			ExpectedResponse: JsonRpcResponse[string]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  "2HsNt2iPgHVKzbYxsivEUWutMAzFkJL1YBs7phaBTtKY82sbDLuhzEBqbmGwxBAWTRSiPwkqop8vqWxezkxcuaVW",
 			},
 			ExpectedError: nil,
 		},
@@ -40,13 +38,11 @@ func TestRequestAirdrop(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: RequestAirdropResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: "4eAWQLipk6hA7AcRuLUw2VXbiHRVR6HABVcQQqaBuukNNMohWg4ToAn4Qh2RaiFnK1LiUxrGnVgm1n4kpUbB7Yt9",
+			ExpectedResponse: JsonRpcResponse[string]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  "4eAWQLipk6hA7AcRuLUw2VXbiHRVR6HABVcQQqaBuukNNMohWg4ToAn4Qh2RaiFnK1LiUxrGnVgm1n4kpUbB7Yt9",
 			},
 			ExpectedError: nil,
 		},
