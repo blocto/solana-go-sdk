@@ -802,36 +802,36 @@ func (c *Client) GetClusterNodes(ctx context.Context) ([]ClusterNode, error) {
 	return output, nil
 }
 
-func (c *Client) GetSignatureStatus(ctx context.Context, signature string) (*rpc.GetSignatureStatusesResultValue, error) {
+func (c *Client) GetSignatureStatus(ctx context.Context, signature string) (*rpc.SignatureStatus, error) {
 	res, err := c.RpcClient.GetSignatureStatuses(ctx, []string{signature})
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
 	return res.Result.Value[0], nil
 }
 
-func (c *Client) GetSignatureStatusWithConfig(ctx context.Context, signature string, cfg rpc.GetSignatureStatusesConfig) (*rpc.GetSignatureStatusesResultValue, error) {
+func (c *Client) GetSignatureStatusWithConfig(ctx context.Context, signature string, cfg rpc.GetSignatureStatusesConfig) (*rpc.SignatureStatus, error) {
 	res, err := c.RpcClient.GetSignatureStatusesWithConfig(ctx, []string{signature}, cfg)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
 	return res.Result.Value[0], nil
 }
 
-func (c *Client) GetSignatureStatuses(ctx context.Context, signatures []string) ([]*rpc.GetSignatureStatusesResultValue, error) {
+func (c *Client) GetSignatureStatuses(ctx context.Context, signatures []string) (rpc.SignatureStatuses, error) {
 	res, err := c.RpcClient.GetSignatureStatuses(ctx, signatures)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
 	return res.Result.Value, nil
 }
 
-func (c *Client) GetSignatureStatusesWithConfig(ctx context.Context, signatures []string, cfg rpc.GetSignatureStatusesConfig) ([]*rpc.GetSignatureStatusesResultValue, error) {
+func (c *Client) GetSignatureStatusesWithConfig(ctx context.Context, signatures []string, cfg rpc.GetSignatureStatusesConfig) (rpc.SignatureStatuses, error) {
 	res, err := c.RpcClient.GetSignatureStatusesWithConfig(ctx, signatures, cfg)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}

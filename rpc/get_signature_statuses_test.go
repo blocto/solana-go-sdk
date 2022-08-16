@@ -19,17 +19,15 @@ func TestGetSignatureStatuses(t *testing.T) {
 					[]string{"3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"},
 				)
 			},
-			ExpectedResponse: GetSignatureStatusesResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetSignatureStatusesResult{
+			ExpectedResponse: JsonRpcResponse[GetSignatureStatuses]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetSignatureStatuses{
 					Context: Context{
 						Slot: 86136583,
 					},
-					Value: []*GetSignatureStatusesResultValue{
+					Value: []*SignatureStatus{
 						{
 							Slot:               86136524,
 							Confirmations:      nil,
@@ -54,17 +52,15 @@ func TestGetSignatureStatuses(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetSignatureStatusesResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetSignatureStatusesResult{
+			ExpectedResponse: JsonRpcResponse[GetSignatureStatuses]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetSignatureStatuses{
 					Context: Context{
 						Slot: 86136583,
 					},
-					Value: []*GetSignatureStatusesResultValue{
+					Value: []*SignatureStatus{
 						{
 							Slot:               86136524,
 							Confirmations:      nil,
@@ -95,17 +91,15 @@ func TestGetSignatureStatuses(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetSignatureStatusesResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetSignatureStatusesResult{
+			ExpectedResponse: JsonRpcResponse[GetSignatureStatuses]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetSignatureStatuses{
 					Context: Context{
 						Slot: 86136583,
 					},
-					Value: []*GetSignatureStatusesResultValue{
+					Value: []*SignatureStatus{
 						{
 							Slot:               86136524,
 							Confirmations:      nil,
@@ -130,17 +124,15 @@ func TestGetSignatureStatuses(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetSignatureStatusesResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetSignatureStatusesResult{
+			ExpectedResponse: JsonRpcResponse[GetSignatureStatuses]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetSignatureStatuses{
 					Context: Context{
 						Slot: 86143308,
 					},
-					Value: []*GetSignatureStatusesResultValue{
+					Value: []*SignatureStatus{
 						{
 							Slot:               85500622,
 							Confirmations:      nil,
@@ -172,17 +164,15 @@ func TestGetSignatureStatuses(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetSignatureStatusesResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetSignatureStatusesResult{
+			ExpectedResponse: JsonRpcResponse[GetSignatureStatuses]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetSignatureStatuses{
 					Context: Context{
 						Slot: 86138946,
 					},
-					Value: []*GetSignatureStatusesResultValue{
+					Value: []*SignatureStatus{
 						nil,
 					},
 				},
@@ -199,17 +189,15 @@ func TestGetSignatureStatuses(t *testing.T) {
 					[]string{"3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg", "4jSRBMUh8HvfPkjZt8enXBFvKykhGdDW5uqtXy8ys52rqeEQuG8Y9hyRSjsSwjEkYYQht7aqEoLwJnuxv9YD99EQ"},
 				)
 			},
-			ExpectedResponse: GetSignatureStatusesResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetSignatureStatusesResult{
+			ExpectedResponse: JsonRpcResponse[GetSignatureStatuses]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetSignatureStatuses{
 					Context: Context{
 						Slot: 86142683,
 					},
-					Value: []*GetSignatureStatusesResultValue{
+					Value: []*SignatureStatus{
 						nil,
 						{
 							Slot:               86142617,

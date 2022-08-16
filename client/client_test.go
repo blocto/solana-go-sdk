@@ -570,7 +570,7 @@ func TestClient_GetSignatureStatus(t *testing.T) {
 		requestBody  string
 		responseBody string
 		args         args
-		want         *rpc.GetSignatureStatusesResultValue
+		want         *rpc.SignatureStatus
 		err          error
 	}{
 		{
@@ -580,7 +580,7 @@ func TestClient_GetSignatureStatus(t *testing.T) {
 				ctx: context.Background(),
 				sig: "3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg",
 			},
-			want: &rpc.GetSignatureStatusesResultValue{
+			want: &rpc.SignatureStatus{
 				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
 				Confirmations:      pointer.Uint64(25),
 				Err:                nil,
@@ -595,7 +595,7 @@ func TestClient_GetSignatureStatus(t *testing.T) {
 				ctx: context.Background(),
 				sig: "3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg",
 			},
-			want: &rpc.GetSignatureStatusesResultValue{
+			want: &rpc.SignatureStatus{
 				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
 				Confirmations:      nil,
 				Err:                nil,
@@ -646,7 +646,7 @@ func TestClient_GetSignatureStatusWithConfig(t *testing.T) {
 		requestBody  string
 		responseBody string
 		args         args
-		want         *rpc.GetSignatureStatusesResultValue
+		want         *rpc.SignatureStatus
 		err          error
 	}{
 		{
@@ -659,7 +659,7 @@ func TestClient_GetSignatureStatusWithConfig(t *testing.T) {
 					SearchTransactionHistory: true,
 				},
 			},
-			want: &rpc.GetSignatureStatusesResultValue{
+			want: &rpc.SignatureStatus{
 				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
 				Confirmations:      pointer.Uint64(25),
 				Err:                nil,
@@ -677,7 +677,7 @@ func TestClient_GetSignatureStatusWithConfig(t *testing.T) {
 					SearchTransactionHistory: true,
 				},
 			},
-			want: &rpc.GetSignatureStatusesResultValue{
+			want: &rpc.SignatureStatus{
 				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
 				Confirmations:      nil,
 				Err:                nil,
@@ -730,7 +730,7 @@ func TestClient_GetSignatureStatuses(t *testing.T) {
 		requestBody  string
 		responseBody string
 		args         args
-		want         []*rpc.GetSignatureStatusesResultValue
+		want         rpc.SignatureStatuses
 		err          error
 	}{
 		{
@@ -740,7 +740,7 @@ func TestClient_GetSignatureStatuses(t *testing.T) {
 				ctx:  context.Background(),
 				sigs: []string{"3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"},
 			},
-			want: []*rpc.GetSignatureStatusesResultValue{
+			want: rpc.SignatureStatuses{
 				{
 					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
 					Confirmations:      pointer.Uint64(25),
@@ -757,7 +757,7 @@ func TestClient_GetSignatureStatuses(t *testing.T) {
 				ctx:  context.Background(),
 				sigs: []string{"3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"},
 			},
-			want: []*rpc.GetSignatureStatusesResultValue{
+			want: rpc.SignatureStatuses{
 				{
 					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
 					Confirmations:      nil,
@@ -774,7 +774,7 @@ func TestClient_GetSignatureStatuses(t *testing.T) {
 				ctx:  context.Background(),
 				sigs: []string{"3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"},
 			},
-			want: []*rpc.GetSignatureStatusesResultValue{nil},
+			want: rpc.SignatureStatuses{nil},
 			err:  nil,
 		},
 	}
@@ -810,7 +810,7 @@ func TestClient_GetSignatureStatusesWithConfig(t *testing.T) {
 		requestBody  string
 		responseBody string
 		args         args
-		want         []*rpc.GetSignatureStatusesResultValue
+		want         rpc.SignatureStatuses
 		err          error
 	}{
 		{
@@ -823,7 +823,7 @@ func TestClient_GetSignatureStatusesWithConfig(t *testing.T) {
 					SearchTransactionHistory: true,
 				},
 			},
-			want: []*rpc.GetSignatureStatusesResultValue{
+			want: rpc.SignatureStatuses{
 				{
 					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
 					Confirmations:      pointer.Uint64(25),
@@ -843,7 +843,7 @@ func TestClient_GetSignatureStatusesWithConfig(t *testing.T) {
 					SearchTransactionHistory: true,
 				},
 			},
-			want: []*rpc.GetSignatureStatusesResultValue{
+			want: rpc.SignatureStatuses{
 				{
 					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
 					Confirmations:      nil,
@@ -863,7 +863,7 @@ func TestClient_GetSignatureStatusesWithConfig(t *testing.T) {
 					SearchTransactionHistory: true,
 				},
 			},
-			want: []*rpc.GetSignatureStatusesResultValue{nil},
+			want: rpc.SignatureStatuses{nil},
 			err:  nil,
 		},
 	}
