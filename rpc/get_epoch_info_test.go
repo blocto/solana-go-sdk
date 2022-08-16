@@ -17,13 +17,11 @@ func TestGetEpochInfo(t *testing.T) {
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetEpochInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetEpochInfoResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetEpochInfo]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetEpochInfo{
 					AbsoluteSlot:     86715160,
 					BlockHeight:      84901536,
 					Epoch:            200,
@@ -45,13 +43,11 @@ func TestGetEpochInfo(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetEpochInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetEpochInfoResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetEpochInfo]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetEpochInfo{
 					AbsoluteSlot:     86715194,
 					BlockHeight:      84901570,
 					Epoch:            200,
