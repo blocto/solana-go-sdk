@@ -16,12 +16,10 @@ func TestGetAccountInfo(t *testing.T) {
 					"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
 				)
 			},
-			ExpectedResponse: GetAccountInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetAccountInfoResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetAccountInfoResult{
 					Context: Context{
 						Slot: 77317716,
@@ -46,12 +44,10 @@ func TestGetAccountInfo(t *testing.T) {
 					"FaTGhPTgKeZZzQwLenoxn2VZXPWV1FpjQ1AQe77JUeJw",
 				)
 			},
-			ExpectedResponse: GetAccountInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetAccountInfoResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetAccountInfoResult{
 					Context: Context{
 						Slot: 77382573,
@@ -69,12 +65,10 @@ func TestGetAccountInfo(t *testing.T) {
 					"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb",
 				)
 			},
-			ExpectedResponse: GetAccountInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetAccountInfoResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetAccountInfoResult{
 					Context: Context{
 						Slot: 77317716,
@@ -99,14 +93,12 @@ func TestGetAccountInfo(t *testing.T) {
 					"9ywX3U33UZC1HThhoBR2Ys7SiouXDkkDoH6brJApFh5D",
 				)
 			},
-			ExpectedResponse: GetAccountInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error: &ErrorResponse{
-						Code:    -32600,
-						Message: "Encoded binary (base 58) data should be less than 128 bytes, please use Base64 encoding.",
-					},
+			ExpectedResponse: JsonRpcResponse[GetAccountInfoResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error: &JsonRpcError{
+					Code:    -32600,
+					Message: "Encoded binary (base 58) data should be less than 128 bytes, please use Base64 encoding.",
 				},
 				Result: GetAccountInfoResult{},
 			},
@@ -124,12 +116,10 @@ func TestGetAccountInfo(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetAccountInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetAccountInfoResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetAccountInfoResult{
 					Context: Context{
 						Slot: 77317716,
@@ -153,16 +143,14 @@ func TestGetAccountInfo(t *testing.T) {
 					context.Background(),
 					"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb",
 					GetAccountInfoConfig{
-						Encoding: GetAccountInfoConfigEncodingBase64,
+						Encoding: AccountEncodingBase64,
 					},
 				)
 			},
-			ExpectedResponse: GetAccountInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetAccountInfoResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetAccountInfoResult{
 					Context: Context{
 						Slot: 77317717,
@@ -186,16 +174,14 @@ func TestGetAccountInfo(t *testing.T) {
 					context.Background(),
 					"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb",
 					GetAccountInfoConfig{
-						Encoding: GetAccountInfoConfigEncodingBase64Zstd,
+						Encoding: AccountEncodingBase64Zstd,
 					},
 				)
 			},
-			ExpectedResponse: GetAccountInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetAccountInfoResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetAccountInfoResult{
 					Context: Context{
 						Slot: 77317717,
@@ -219,20 +205,18 @@ func TestGetAccountInfo(t *testing.T) {
 					context.Background(),
 					"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb",
 					GetAccountInfoConfig{
-						DataSlice: &GetAccountInfoConfigDataSlice{
+						DataSlice: &DataSlice{
 							Length: 32,
 						},
 					},
 				)
 			},
-			ExpectedResponse: GetAccountInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error: &ErrorResponse{
-						Code:    -32602,
-						Message: `Invalid params: missing field` + "`offset`" + `.`,
-					},
+			ExpectedResponse: JsonRpcResponse[GetAccountInfoResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error: &JsonRpcError{
+					Code:    -32602,
+					Message: `Invalid params: missing field` + "`offset`" + `.`,
 				},
 				Result: GetAccountInfoResult{},
 			},
@@ -246,20 +230,18 @@ func TestGetAccountInfo(t *testing.T) {
 					context.Background(),
 					"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb",
 					GetAccountInfoConfig{
-						DataSlice: &GetAccountInfoConfigDataSlice{
+						DataSlice: &DataSlice{
 							Offset: 4,
 						},
 					},
 				)
 			},
-			ExpectedResponse: GetAccountInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error: &ErrorResponse{
-						Code:    -32602,
-						Message: `Invalid params: missing field` + "`length`" + `.`,
-					},
+			ExpectedResponse: JsonRpcResponse[GetAccountInfoResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error: &JsonRpcError{
+					Code:    -32602,
+					Message: `Invalid params: missing field` + "`length`" + `.`,
 				},
 				Result: GetAccountInfoResult{},
 			},
@@ -273,19 +255,17 @@ func TestGetAccountInfo(t *testing.T) {
 					context.Background(),
 					"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb",
 					GetAccountInfoConfig{
-						DataSlice: &GetAccountInfoConfigDataSlice{
+						DataSlice: &DataSlice{
 							Offset: 4,
 							Length: 32,
 						},
 					},
 				)
 			},
-			ExpectedResponse: GetAccountInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetAccountInfoResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetAccountInfoResult{
 					Context: Context{
 						Slot: 77322439,
@@ -309,20 +289,18 @@ func TestGetAccountInfo(t *testing.T) {
 					context.Background(),
 					"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb",
 					GetAccountInfoConfig{
-						Encoding: GetAccountInfoConfigEncodingBase64,
-						DataSlice: &GetAccountInfoConfigDataSlice{
+						Encoding: AccountEncodingBase64,
+						DataSlice: &DataSlice{
 							Offset: 4,
 							Length: 32,
 						},
 					},
 				)
 			},
-			ExpectedResponse: GetAccountInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetAccountInfoResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetAccountInfoResult{
 					Context: Context{
 						Slot: 77317718,
@@ -346,16 +324,14 @@ func TestGetAccountInfo(t *testing.T) {
 					context.Background(),
 					"5xtKiHGFfhK6ynJwWrApoVkVHeTJ25czqnezDwJiT86N",
 					GetAccountInfoConfig{
-						Encoding: GetAccountInfoConfigEncodingBase64Zstd,
+						Encoding: AccountEncodingBase64Zstd,
 					},
 				)
 			},
-			ExpectedResponse: GetAccountInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetAccountInfoResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetAccountInfoResult{
 					Context: Context{
 						Slot: 121172974,
@@ -366,6 +342,35 @@ func TestGetAccountInfo(t *testing.T) {
 						Executable: true,
 						RentEpoch:  280,
 						Data:       []any{"KLUv/QBYIQEAAgAAADLAWbd6nbiA1th1E/yH93WWg4hgfgn3t2BoTE9m2JGH", "base64+zstd"},
+					},
+				},
+			},
+			ExpectedError: nil,
+		},
+		{
+			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getAccountInfo", "params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"]}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"apiVersion":"1.10.34","slot":155401599},"value":{"data":"","executable":false,"lamports":114638463277,"owner":"11111111111111111111111111111111","rentEpoch":359}},"id":1}`,
+			RpcCall: func(rc RpcClient) (any, error) {
+				return rc.GetAccountInfo(
+					context.Background(),
+					"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
+				)
+			},
+			ExpectedResponse: JsonRpcResponse[GetAccountInfoResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetAccountInfoResult{
+					Context: Context{
+						Slot:       155401599,
+						ApiVersion: "1.10.34",
+					},
+					Value: AccountInfo{
+						Lamports:   114638463277,
+						Owner:      "11111111111111111111111111111111",
+						Executable: false,
+						RentEpoch:  359,
+						Data:       "",
 					},
 				},
 			},
