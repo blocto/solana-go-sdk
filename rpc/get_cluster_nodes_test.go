@@ -17,13 +17,11 @@ func TestGetClusterNodes(t *testing.T) {
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetClusterNodesResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []GetClusterNodesResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetClusterNodes]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetClusterNodes{
 					{
 						Pubkey:       "8gNdbr9dG6oj8bhaQ44icyMYsfG3t1dhXKUJLGVav4tn",
 						Gossip:       pointer.String("127.0.0.1:1024"),

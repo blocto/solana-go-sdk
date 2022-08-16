@@ -794,7 +794,7 @@ type ClusterNode struct {
 // GetClusterNodes returns information about all the nodes participating in the cluster
 func (c *Client) GetClusterNodes(ctx context.Context) ([]ClusterNode, error) {
 	res, err := c.RpcClient.GetClusterNodes(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
