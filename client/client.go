@@ -925,16 +925,16 @@ func (c *Client) processSimulateTransaction(res rpc.JsonRpcResponse[rpc.Simulate
 	}, nil
 }
 
-func (c *Client) GetSignaturesForAddress(ctx context.Context, base58Addr string) ([]rpc.GetSignaturesForAddressResult, error) {
+func (c *Client) GetSignaturesForAddress(ctx context.Context, base58Addr string) (rpc.GetSignaturesForAddress, error) {
 	return c.processGetSignaturesForAddress(c.RpcClient.GetSignaturesForAddress(ctx, base58Addr))
 }
 
-func (c *Client) GetSignaturesForAddressWithConfig(ctx context.Context, base58Addr string, cfg rpc.GetSignaturesForAddressConfig) ([]rpc.GetSignaturesForAddressResult, error) {
+func (c *Client) GetSignaturesForAddressWithConfig(ctx context.Context, base58Addr string, cfg rpc.GetSignaturesForAddressConfig) (rpc.GetSignaturesForAddress, error) {
 	return c.processGetSignaturesForAddress(c.RpcClient.GetSignaturesForAddressWithConfig(ctx, base58Addr, cfg))
 }
 
-func (c *Client) processGetSignaturesForAddress(res rpc.GetSignaturesForAddressResponse, err error) ([]rpc.GetSignaturesForAddressResult, error) {
-	err = checkRpcResult(res.GeneralResponse, err)
+func (c *Client) processGetSignaturesForAddress(res rpc.JsonRpcResponse[rpc.GetSignaturesForAddress], err error) (rpc.GetSignaturesForAddress, error) {
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}

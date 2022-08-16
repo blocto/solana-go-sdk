@@ -18,13 +18,11 @@ func TestGetSignaturesForAddress(t *testing.T) {
 					"27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ",
 				)
 			},
-			ExpectedResponse: GetSignaturesForAddressResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []GetSignaturesForAddressResult{
+			ExpectedResponse: JsonRpcResponse[GetSignaturesForAddress]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetSignaturesForAddress{
 					{
 						Signature: "26UNKcerqcmHhRgFqtvtWUJZod91dGpkkAtRzKewvsZSoah33VZiFgKPmnHmMhBwsHT4bQjKdCgH88Faex5WkChh",
 						Slot:      63372,
@@ -67,13 +65,11 @@ func TestGetSignaturesForAddress(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetSignaturesForAddressResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []GetSignaturesForAddressResult{
+			ExpectedResponse: JsonRpcResponse[GetSignaturesForAddress]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetSignaturesForAddress{
 					{
 						Signature: "66z7UgyzEozBQ1moxc2ThzGtzbwETZ9bR5ExSUubWhQzqGuX1hQgCGSV1n22o96yuDCFY2dHeMNNLDnf6zjewy7C",
 						Slot:      64265,
@@ -95,13 +91,11 @@ func TestGetSignaturesForAddress(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetSignaturesForAddressResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []GetSignaturesForAddressResult{
+			ExpectedResponse: JsonRpcResponse[GetSignaturesForAddress]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetSignaturesForAddress{
 					{
 						Signature: "66z7UgyzEozBQ1moxc2ThzGtzbwETZ9bR5ExSUubWhQzqGuX1hQgCGSV1n22o96yuDCFY2dHeMNNLDnf6zjewy7C",
 						Slot:      64265,
@@ -128,13 +122,11 @@ func TestGetSignaturesForAddress(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetSignaturesForAddressResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []GetSignaturesForAddressResult{
+			ExpectedResponse: JsonRpcResponse[GetSignaturesForAddress]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetSignaturesForAddress{
 					{
 						Signature: "63BWysCcY6CcVT9G4FrfD1XuZ2DUswSTuJM5jeULUWwgp3BJhMnAStH3gTkUPXeUEjYoQhVNfd61RxxxWwsezi8y",
 						Slot:      63367,
@@ -162,13 +154,11 @@ func TestGetSignaturesForAddress(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetSignaturesForAddressResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []GetSignaturesForAddressResult{
+			ExpectedResponse: JsonRpcResponse[GetSignaturesForAddress]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetSignaturesForAddress{
 					{
 						Signature: "63BWysCcY6CcVT9G4FrfD1XuZ2DUswSTuJM5jeULUWwgp3BJhMnAStH3gTkUPXeUEjYoQhVNfd61RxxxWwsezi8y",
 						Slot:      63367,
