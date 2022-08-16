@@ -15,13 +15,11 @@ func TestGetInflationGovernor(t *testing.T) {
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetInflationGovernorResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetInflationGovernorResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetInflationGovernor]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetInflationGovernor{
 					Foundation:     0.05,
 					FoundationTerm: 7.0,
 					Initial:        0.08,
@@ -42,13 +40,11 @@ func TestGetInflationGovernor(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetInflationGovernorResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetInflationGovernorResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetInflationGovernor]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetInflationGovernor{
 					Foundation:     0.05,
 					FoundationTerm: 7.0,
 					Initial:        0.08,

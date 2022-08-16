@@ -4,14 +4,9 @@ import (
 	"context"
 )
 
-// GetInflationGovernorResponse is a full raw rpc response of `getInflationGovernor`
-type GetInflationGovernorResponse struct {
-	GeneralResponse
-	Result GetInflationGovernorResponseResult `json:"result"`
-}
+type GetInflationGovernorResponse JsonRpcResponse[GetInflationGovernor]
 
-// GetInflationGovernorResult is a part of raw rpc response of `getInflationGovernor`
-type GetInflationGovernorResponseResult struct {
+type GetInflationGovernor struct {
 	Foundation     float64 `json:"foundation"`
 	FoundationTerm float64 `json:"foundationTerm"`
 	Initial        float64 `json:"initial"`
@@ -25,16 +20,16 @@ type GetInflationGovernorConfig struct {
 }
 
 // GetInflationGovernor returns the current inflation governor
-func (c *RpcClient) GetInflationGovernor(ctx context.Context) (GetInflationGovernorResponse, error) {
+func (c *RpcClient) GetInflationGovernor(ctx context.Context) (JsonRpcResponse[GetInflationGovernor], error) {
 	return c.processGetInflationGovernor(c.Call(ctx, "getInflationGovernor"))
 }
 
 // GetInflationGovernorWithConfig returns the current inflation governor
-func (c *RpcClient) GetInflationGovernorWithConfig(ctx context.Context, cfg GetInflationGovernorConfig) (GetInflationGovernorResponse, error) {
+func (c *RpcClient) GetInflationGovernorWithConfig(ctx context.Context, cfg GetInflationGovernorConfig) (JsonRpcResponse[GetInflationGovernor], error) {
 	return c.processGetInflationGovernor(c.Call(ctx, "getInflationGovernor", cfg))
 }
 
-func (c *RpcClient) processGetInflationGovernor(body []byte, rpcErr error) (res GetInflationGovernorResponse, err error) {
+func (c *RpcClient) processGetInflationGovernor(body []byte, rpcErr error) (res JsonRpcResponse[GetInflationGovernor], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }
