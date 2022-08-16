@@ -13,13 +13,11 @@ func TestGetLatestBlockhash(t *testing.T) {
 			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetLatestBlockhash(context.TODO())
 			},
-			ExpectedResponse: GetLatestBlockhashResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetLatestBlockhashResult{
+			ExpectedResponse: JsonRpcResponse[GetLatestBlockhash]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetLatestBlockhash{
 					Context: Context{
 						Slot: 112872139,
 					},
@@ -37,13 +35,11 @@ func TestGetLatestBlockhash(t *testing.T) {
 			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetLatestBlockhashWithConfig(context.TODO(), GetLatestBlockhashConfig{Commitment: CommitmentProcessed})
 			},
-			ExpectedResponse: GetLatestBlockhashResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetLatestBlockhashResult{
+			ExpectedResponse: JsonRpcResponse[GetLatestBlockhash]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetLatestBlockhash{
 					Context: Context{
 						Slot: 112871314,
 					},
@@ -61,13 +57,11 @@ func TestGetLatestBlockhash(t *testing.T) {
 			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetLatestBlockhashWithConfig(context.TODO(), GetLatestBlockhashConfig{Commitment: CommitmentConfirmed})
 			},
-			ExpectedResponse: GetLatestBlockhashResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetLatestBlockhashResult{
+			ExpectedResponse: JsonRpcResponse[GetLatestBlockhash]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetLatestBlockhash{
 					Context: Context{
 						Slot: 112871311,
 					},
@@ -85,13 +79,11 @@ func TestGetLatestBlockhash(t *testing.T) {
 			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetLatestBlockhashWithConfig(context.TODO(), GetLatestBlockhashConfig{Commitment: CommitmentFinalized})
 			},
-			ExpectedResponse: GetLatestBlockhashResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetLatestBlockhashResult{
+			ExpectedResponse: JsonRpcResponse[GetLatestBlockhash]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetLatestBlockhash{
 					Context: Context{
 						Slot: 112871221,
 					},

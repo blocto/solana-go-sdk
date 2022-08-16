@@ -245,7 +245,7 @@ type GetLatestBlockhashConfig struct {
 // GetLatestBlockhash returns the latest blockhash
 func (c *Client) GetLatestBlockhash(ctx context.Context) (rpc.GetLatestBlockhashValue, error) {
 	res, err := c.RpcClient.GetLatestBlockhash(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return rpc.GetLatestBlockhashValue{}, err
 	}
@@ -258,7 +258,7 @@ func (c *Client) GetLatestBlockhashWithConfig(ctx context.Context, cfg GetLatest
 	res, err := c.RpcClient.GetLatestBlockhashWithConfig(ctx, rpc.GetLatestBlockhashConfig{
 		Commitment: cfg.Commitment,
 	})
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return rpc.GetLatestBlockhashValue{}, err
 	}
