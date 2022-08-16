@@ -133,7 +133,7 @@ func (c *Client) GetAccountInfoWithConfig(ctx context.Context, base58Addr string
 	}))
 }
 
-func (c *Client) processGetAccountInfo(res rpc.JsonRpcResponse[rpc.GetAccountInfoResult], err error) (AccountInfo, error) {
+func (c *Client) processGetAccountInfo(res rpc.JsonRpcResponse[rpc.GetAccountInfo], err error) (AccountInfo, error) {
 	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return AccountInfo{}, err
