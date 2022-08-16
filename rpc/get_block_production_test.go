@@ -15,12 +15,10 @@ func TestGetBlockProduction(t *testing.T) {
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetBlockProductionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetBlockProductionResponseResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetBlockProductionResponseResult{
 					Context: Context{
 						Slot: 6850,
@@ -49,12 +47,10 @@ func TestGetBlockProduction(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetBlockProductionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetBlockProductionResponseResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetBlockProductionResponseResult{
 					Context: Context{
 						Slot: 6850,
@@ -83,12 +79,10 @@ func TestGetBlockProduction(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetBlockProductionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetBlockProductionResponseResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetBlockProductionResponseResult{
 					Context: Context{
 						Slot: 6850,
@@ -119,12 +113,10 @@ func TestGetBlockProduction(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetBlockProductionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetBlockProductionResponseResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetBlockProductionResponseResult{
 					Context: Context{
 						Slot: 6850,
@@ -156,12 +148,10 @@ func TestGetBlockProduction(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetBlockProductionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetBlockProductionResponseResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetBlockProductionResponseResult{
 					Context: Context{
 						Slot: 6850,
@@ -194,12 +184,10 @@ func TestGetBlockProduction(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetBlockProductionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
+			ExpectedResponse: JsonRpcResponse[GetBlockProductionResponseResult]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
 				Result: GetBlockProductionResponseResult{
 					Context: Context{
 						Slot: 6851,
