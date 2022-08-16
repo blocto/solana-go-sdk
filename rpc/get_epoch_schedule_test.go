@@ -15,13 +15,11 @@ func TestGetEpochSchedule(t *testing.T) {
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetEpochScheduleResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetEpochScheduleResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetEpochSchedule]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetEpochSchedule{
 					FirstNormalEpoch:         0,
 					FirstNormalSlot:          0,
 					LeaderScheduleSlotOffset: 432000,
