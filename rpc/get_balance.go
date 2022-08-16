@@ -4,11 +4,7 @@ import (
 	"context"
 )
 
-// GetBalanceResponse is a full raw rpc response of `getBalance`
-type GetBalanceResponse struct {
-	GeneralResponse
-	Result GetBalanceResult `json:"result"`
-}
+type GetBalanceResponse JsonRpcResponse[GetBalanceResult]
 
 // GetBalanceResult is a part of raw rpc response of `getBalance`
 type GetBalanceResult struct {
@@ -22,16 +18,16 @@ type GetBalanceConfig struct {
 }
 
 // GetBalance returns the SOL balance
-func (c *RpcClient) GetBalance(ctx context.Context, base58Addr string) (GetBalanceResponse, error) {
+func (c *RpcClient) GetBalance(ctx context.Context, base58Addr string) (JsonRpcResponse[GetBalanceResult], error) {
 	return c.processGetBalance(c.Call(ctx, "getBalance", base58Addr))
 }
 
 // GetBalanceWithConfig returns the SOL balance
-func (c *RpcClient) GetBalanceWithConfig(ctx context.Context, base58Addr string, cfg GetBalanceConfig) (GetBalanceResponse, error) {
+func (c *RpcClient) GetBalanceWithConfig(ctx context.Context, base58Addr string, cfg GetBalanceConfig) (JsonRpcResponse[GetBalanceResult], error) {
 	return c.processGetBalance(c.Call(ctx, "getBalance", base58Addr, cfg))
 }
 
-func (c *RpcClient) processGetBalance(body []byte, rpcErr error) (res GetBalanceResponse, err error) {
+func (c *RpcClient) processGetBalance(body []byte, rpcErr error) (res JsonRpcResponse[GetBalanceResult], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

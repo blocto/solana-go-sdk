@@ -31,7 +31,7 @@ func NewClient(endpoint string) *Client {
 // GetBalance fetch users lamports(SOL) balance
 func (c *Client) GetBalance(ctx context.Context, base58Addr string) (uint64, error) {
 	res, err := c.RpcClient.GetBalance(ctx, base58Addr)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
@@ -41,7 +41,7 @@ func (c *Client) GetBalance(ctx context.Context, base58Addr string) (uint64, err
 // GetBalance fetch users lamports(SOL) balance with specific commitment
 func (c *Client) GetBalanceWithConfig(ctx context.Context, base58Addr string, cfg rpc.GetBalanceConfig) (uint64, error) {
 	res, err := c.RpcClient.GetBalanceWithConfig(ctx, base58Addr, cfg)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
