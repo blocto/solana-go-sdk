@@ -731,11 +731,11 @@ func (c *Client) GetFirstAvailableBlock(ctx context.Context) (uint64, error) {
 }
 
 // GetVersion returns the current solana versions running on the node
-func (c *Client) GetVersion(ctx context.Context) (rpc.GetVersionResult, error) {
+func (c *Client) GetVersion(ctx context.Context) (rpc.GetVersion, error) {
 	res, err := c.RpcClient.GetVersion(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
-		return rpc.GetVersionResult{}, err
+		return rpc.GetVersion{}, err
 	}
 	return res.Result, nil
 }

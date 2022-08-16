@@ -17,13 +17,11 @@ func TestGetVersion(t *testing.T) {
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetVersionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetVersionResult{
+			ExpectedResponse: JsonRpcResponse[GetVersion]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetVersion{
 					SolanaCore: "1.7.14",
 					FeatureSet: pointer.Uint32(1824749018),
 				},
