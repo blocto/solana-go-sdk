@@ -109,7 +109,7 @@ func TestGetTransaction(t *testing.T) {
 						{
 							AccountIndex: 1,
 							Mint:         "4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3",
-							UITokenAmount: rpc.GetTokenAccountBalanceResultValue{
+							UITokenAmount: rpc.TokenAccountBalance{
 								Amount:         "0",
 								Decimals:       9,
 								UIAmountString: "0",

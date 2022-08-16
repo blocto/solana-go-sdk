@@ -2,20 +2,11 @@ package rpc
 
 import "context"
 
-type GetTokenAccountBalanceResponse struct {
-	GeneralResponse
-	Result GetTokenAccountBalanceResult `json:"result"`
-}
+type GetTokenAccountBalanceResponse JsonRpcResponse[GetTokenAccountBalance]
 
-type GetTokenAccountBalanceResult struct {
-	Context Context                           `json:"context"`
-	Value   GetTokenAccountBalanceResultValue `json:"value"`
-}
-
-type GetTokenAccountBalanceResultValue struct {
-	Amount         string `json:"amount"`
-	Decimals       uint8  `json:"decimals"`
-	UIAmountString string `json:"uiAmountString"`
+type GetTokenAccountBalance struct {
+	Context Context             `json:"context"`
+	Value   TokenAccountBalance `json:"value"`
 }
 
 type GetTokenAccountBalanceConfig struct {
@@ -23,16 +14,16 @@ type GetTokenAccountBalanceConfig struct {
 }
 
 // GetTokenAccountBalance returns the token balance of an SPL Token account
-func (c *RpcClient) GetTokenAccountBalance(ctx context.Context, base58Addr string) (GetTokenAccountBalanceResponse, error) {
+func (c *RpcClient) GetTokenAccountBalance(ctx context.Context, base58Addr string) (JsonRpcResponse[GetTokenAccountBalance], error) {
 	return c.processGetTokenAccountBalance(c.Call(ctx, "getTokenAccountBalance", base58Addr))
 }
 
 // GetTokenAccountBalance returns the token balance of an SPL Token account
-func (c *RpcClient) GetTokenAccountBalanceWithConfig(ctx context.Context, base58Addr string, cfg GetTokenAccountBalanceConfig) (GetTokenAccountBalanceResponse, error) {
+func (c *RpcClient) GetTokenAccountBalanceWithConfig(ctx context.Context, base58Addr string, cfg GetTokenAccountBalanceConfig) (JsonRpcResponse[GetTokenAccountBalance], error) {
 	return c.processGetTokenAccountBalance(c.Call(ctx, "getTokenAccountBalance", base58Addr, cfg))
 }
 
-func (c *RpcClient) processGetTokenAccountBalance(body []byte, rpcErr error) (res GetTokenAccountBalanceResponse, err error) {
+func (c *RpcClient) processGetTokenAccountBalance(body []byte, rpcErr error) (res JsonRpcResponse[GetTokenAccountBalance], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

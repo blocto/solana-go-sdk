@@ -28,10 +28,10 @@ type TransactionMeta struct {
 
 // TransactionMetaTokenBalance is a part of TransactionMeta
 type TransactionMetaTokenBalance struct {
-	AccountIndex  uint64                            `json:"accountIndex"`
-	Mint          string                            `json:"mint"`
-	Owner         string                            `json:"owner,omitempty"`
-	UITokenAmount GetTokenAccountBalanceResultValue `json:"uiTokenAmount"`
+	AccountIndex  uint64              `json:"accountIndex"`
+	Mint          string              `json:"mint"`
+	Owner         string              `json:"owner,omitempty"`
+	UITokenAmount TokenAccountBalance `json:"uiTokenAmount"`
 }
 
 // TransactionMetaInnerInstruction is a part of TransactionMeta

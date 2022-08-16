@@ -51,7 +51,7 @@ func (c *Client) GetBalanceWithConfig(ctx context.Context, base58Addr string, cf
 // GetTokenAccountBalance returns the token balance of an SPL Token account
 func (c *Client) GetTokenAccountBalance(ctx context.Context, base58Addr string) (uint64, uint8, error) {
 	res, err := c.RpcClient.GetTokenAccountBalance(ctx, base58Addr)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, 0, err
 	}
@@ -65,7 +65,7 @@ func (c *Client) GetTokenAccountBalance(ctx context.Context, base58Addr string) 
 // GetTokenAccountBalance returns the token balance of an SPL Token account
 func (c *Client) GetTokenAccountBalanceWithConfig(ctx context.Context, base58Addr string, cfg rpc.GetTokenAccountBalanceConfig) (uint64, uint8, error) {
 	res, err := c.RpcClient.GetTokenAccountBalanceWithConfig(ctx, base58Addr, cfg)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, 0, err
 	}

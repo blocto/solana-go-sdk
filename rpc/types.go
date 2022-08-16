@@ -45,3 +45,9 @@ type AccountInfo struct {
 	Data       any    `json:"data"`
 	Executable bool   `json:"executable"`
 }
+
+type TokenAccountBalance struct {
+	Amount         string `json:"amount"`
+	Decimals       uint8  `json:"decimals"`
+	UIAmountString string `json:"uiAmountString"`
+}

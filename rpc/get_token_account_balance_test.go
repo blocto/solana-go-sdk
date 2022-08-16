@@ -16,17 +16,15 @@ func TestGetTokenBalance(t *testing.T) {
 					"AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
 				)
 			},
-			ExpectedResponse: GetTokenAccountBalanceResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetTokenAccountBalanceResult{
+			ExpectedResponse: JsonRpcResponse[GetTokenAccountBalance]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetTokenAccountBalance{
 					Context: Context{
 						Slot: 80218700,
 					},
-					Value: GetTokenAccountBalanceResultValue{
+					Value: TokenAccountBalance{
 						Amount:         "10000000000",
 						Decimals:       9,
 						UIAmountString: "10",
@@ -47,17 +45,15 @@ func TestGetTokenBalance(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetTokenAccountBalanceResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetTokenAccountBalanceResult{
+			ExpectedResponse: JsonRpcResponse[GetTokenAccountBalance]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetTokenAccountBalance{
 					Context: Context{
 						Slot: 80219466,
 					},
-					Value: GetTokenAccountBalanceResultValue{
+					Value: TokenAccountBalance{
 						Amount:         "10000000000",
 						Decimals:       9,
 						UIAmountString: "10",
