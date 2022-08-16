@@ -10,7 +10,8 @@ const (
 )
 
 type Context struct {
-	Slot uint64 `json:"slot"`
+	Slot       uint64 `json:"slot"`
+	ApiVersion string `json:"apiVersion,omitempty"`
 }
 
 type AccountEncoding string
