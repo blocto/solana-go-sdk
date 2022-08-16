@@ -6,7 +6,7 @@ import (
 	"reflect"
 )
 
-func SerializeData(data interface{}) ([]byte, error) {
+func SerializeData(data any) ([]byte, error) {
 	return serializeData(reflect.ValueOf(data))
 }
 

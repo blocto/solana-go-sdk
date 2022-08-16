@@ -10,7 +10,7 @@ func TestGetBlockCommitment(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlockCommitment", "params":[86708800]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"commitment":null,"totalStake":156502861915805458},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetBlockCommitment(
 					context.TODO(),
 					86708800,
@@ -32,7 +32,7 @@ func TestGetBlockCommitment(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlockCommitment", "params":[86708895]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"commitment":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,140000814436952564],"totalStake":156502861915805458},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetBlockCommitment(
 					context.TODO(),
 					86708895,

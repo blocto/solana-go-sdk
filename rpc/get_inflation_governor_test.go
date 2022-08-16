@@ -10,7 +10,7 @@ func TestGetInflationGovernor(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getInflationGovernor"}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"foundation":0.05,"foundationTerm":7.0,"initial":0.08,"taper":0.15,"terminal":0.015},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetInflationGovernor(
 					context.TODO(),
 				)
@@ -34,7 +34,7 @@ func TestGetInflationGovernor(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getInflationGovernor", "params":[{"commitment": "processed"}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"foundation":0.05,"foundationTerm":7.0,"initial":0.08,"taper":0.15,"terminal":0.015},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetInflationGovernorWithConfig(
 					context.TODO(),
 					GetInflationGovernorConfig{

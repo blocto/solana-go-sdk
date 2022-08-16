@@ -146,9 +146,9 @@ func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.AccountInfo) (AccountIn
 		return AccountInfo{}, nil
 	}
 
-	data, ok := v.Data.([]interface{})
+	data, ok := v.Data.([]any)
 	if !ok {
-		return AccountInfo{}, fmt.Errorf("failed to cast raw response to []interface{}")
+		return AccountInfo{}, fmt.Errorf("failed to cast raw response to []any")
 	}
 	if data[1] != string(rpc.GetAccountInfoConfigEncodingBase64) {
 		return AccountInfo{}, fmt.Errorf("encoding mistmatch")
@@ -204,9 +204,9 @@ func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.AccountInf
 			continue
 		}
 
-		data, ok := v.Data.([]interface{})
+		data, ok := v.Data.([]any)
 		if !ok {
-			return []AccountInfo{}, fmt.Errorf("failed to cast raw response to []interface{}")
+			return []AccountInfo{}, fmt.Errorf("failed to cast raw response to []any")
 		}
 		if data[1] != string(rpc.GetAccountInfoConfigEncodingBase64) {
 			return []AccountInfo{}, fmt.Errorf("encoding mistmatch")
@@ -451,7 +451,7 @@ type GetTransactionResponse struct {
 }
 
 type TransactionMeta struct {
-	Err               interface{}
+	Err               any
 	Fee               uint64
 	PreBalances       []int64
 	PostBalances      []int64
@@ -515,9 +515,9 @@ func (c *Client) GetTransactionWithConfig(ctx context.Context, txhash string, cf
 }
 
 func getTransaction(res rpc.GetTransactionResponse) (GetTransactionResponse, error) {
-	data, ok := res.Result.Transaction.([]interface{})
+	data, ok := res.Result.Transaction.([]any)
 	if !ok {
-		return GetTransactionResponse{}, fmt.Errorf("failed to cast raw response to []interface{}")
+		return GetTransactionResponse{}, fmt.Errorf("failed to cast raw response to []any")
 	}
 	if data[1] != string(rpc.GetTransactionConfigEncodingBase64) {
 		return GetTransactionResponse{}, fmt.Errorf("encoding mistmatch")
@@ -610,9 +610,9 @@ func (c *Client) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, e
 func getBlock(res rpc.GetBlockResponse) (GetBlockResponse, error) {
 	txs := make([]GetBlockTransaction, 0, len(res.Result.Transactions))
 	for _, rTx := range res.Result.Transactions {
-		data, ok := rTx.Transaction.([]interface{})
+		data, ok := rTx.Transaction.([]any)
 		if !ok {
-			return GetBlockResponse{}, fmt.Errorf("failed to cast raw response to []interface{}")
+			return GetBlockResponse{}, fmt.Errorf("failed to cast raw response to []any")
 		}
 		if data[1] != string(rpc.GetTransactionConfigEncodingBase64) {
 			return GetBlockResponse{}, fmt.Errorf("encoding mistmatch")
@@ -850,7 +850,7 @@ func (c *Client) GetSignatureStatusesWithConfig(ctx context.Context, signatures 
 }
 
 type SimulateTransaction struct {
-	Err      interface{}
+	Err      any
 	Logs     []string
 	Accounts []*AccountInfo
 }

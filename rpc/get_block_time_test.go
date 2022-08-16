@@ -10,7 +10,7 @@ func TestGetBlockTime(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlockTime", "params":[100000]}`,
 			ResponseBody: `{"jsonrpc":"2.0","error":{"code":-32009,"message":"Slot 100000 was skipped, or missing in long-term storage"},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetBlockTime(
 					context.TODO(),
 					100000,
@@ -32,7 +32,7 @@ func TestGetBlockTime(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlockTime", "params":[100048426]}`,
 			ResponseBody: `{"jsonrpc":"2.0","error":{"code":-32004,"message":"Block not available for slot 100048426"},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetBlockTime(
 					context.TODO(),
 					100048426,
@@ -54,7 +54,7 @@ func TestGetBlockTime(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlockTime", "params":[85588104]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":1633531934,"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetBlockTime(
 					context.TODO(),
 					85588104,

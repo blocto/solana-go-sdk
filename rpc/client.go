@@ -27,9 +27,9 @@ const (
 
 // ErrorResponse is a error rpc response
 type ErrorResponse struct {
-	Code    int                    `json:"code"`
-	Message string                 `json:"message"`
-	Data    map[string]interface{} `json:"data,omitempty"`
+	Code    int            `json:"code"`
+	Message string         `json:"message"`
+	Data    map[string]any `json:"data,omitempty"`
 }
 
 type Context struct {
@@ -66,7 +66,7 @@ func New(opts ...Option) RpcClient {
 }
 
 // Call will return body of response. if http code beyond 200~300, the error also returns.
-func (c *RpcClient) Call(ctx context.Context, params ...interface{}) ([]byte, error) {
+func (c *RpcClient) Call(ctx context.Context, params ...any) ([]byte, error) {
 	// prepare payload
 	j, err := preparePayload(params)
 	if err != nil {
@@ -101,16 +101,16 @@ func (c *RpcClient) Call(ctx context.Context, params ...interface{}) ([]byte, er
 	return body, nil
 }
 
-type jsonRpcRequest struct {
-	JsonRpc string        `json:"jsonrpc"`
-	Id      uint64        `json:"id"`
-	Method  string        `json:"method"`
-	Params  []interface{} `json:"params,omitempty"`
+type JsonRpcRequest struct {
+	JsonRpc string `json:"jsonrpc"`
+	Id      uint64 `json:"id"`
+	Method  string `json:"method"`
+	Params  []any  `json:"params,omitempty"`
 }
 
-func preparePayload(params []interface{}) ([]byte, error) {
+func preparePayload(params []any) ([]byte, error) {
 	// prepare payload
-	j, err := json.Marshal(jsonRpcRequest{
+	j, err := json.Marshal(JsonRpcRequest{
 		JsonRpc: "2.0",
 		Id:      1,
 		Method:  params[0].(string),
@@ -122,7 +122,7 @@ func preparePayload(params []interface{}) ([]byte, error) {
 	return j, nil
 }
 
-func (c *RpcClient) processRpcCall(body []byte, rpcErr error, res interface{}) error {
+func (c *RpcClient) processRpcCall(body []byte, rpcErr error, res any) error {
 	if rpcErr != nil {
 		return fmt.Errorf("rpc: call error, err: %v, body: %v", rpcErr, string(body))
 	}

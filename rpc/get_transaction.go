@@ -14,13 +14,13 @@ type GetTransactionResponse struct {
 type GetTransactionResult struct {
 	Slot        uint64           `json:"slot"`
 	Meta        *TransactionMeta `json:"meta"`
-	Transaction interface{}      `json:"transaction"`
+	Transaction any              `json:"transaction"`
 	BlockTime   *int64           `json:"blockTime"`
 }
 
 // TransactionMeta is a part of GetTransactionResult
 type TransactionMeta struct {
-	Err               interface{}                       `json:"err"`
+	Err               any                               `json:"err"`
 	Fee               uint64                            `json:"fee"`
 	PreBalances       []int64                           `json:"preBalances"`
 	PostBalances      []int64                           `json:"postBalances"`

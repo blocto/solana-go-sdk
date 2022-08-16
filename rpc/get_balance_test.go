@@ -10,7 +10,7 @@ func TestGetBalance(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBalance", "params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":73914708},"value":6999995000},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetBalance(
 					context.TODO(),
 					"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
@@ -34,7 +34,7 @@ func TestGetBalance(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBalance", "params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7", {"commitment": "finalized"}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":73914708},"value":6999995000},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetBalanceWithConfig(
 					context.Background(),
 					"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",

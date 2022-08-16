@@ -10,7 +10,7 @@ func TestGetFeeCalculatorForBlockhash(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getFeeCalculatorForBlockhash", "params":["9EbVxv9NLnXVBUCdY5LEkv89iHVHVyFnfzHNZgP4eF5V"]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":13752},"value":null},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetFeeCalculatorForBlockhash(
 					context.TODO(),
 					"9EbVxv9NLnXVBUCdY5LEkv89iHVHVyFnfzHNZgP4eF5V",
@@ -34,7 +34,7 @@ func TestGetFeeCalculatorForBlockhash(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getFeeCalculatorForBlockhash", "params":["BVvVdTXHSUMDnnCAMy53DHQ8zy27L7Ehm6WZsywbAPT7"]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":13752},"value":{"feeCalculator":{"lamportsPerSignature":5000}}},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetFeeCalculatorForBlockhash(
 					context.TODO(),
 					"BVvVdTXHSUMDnnCAMy53DHQ8zy27L7Ehm6WZsywbAPT7",
@@ -62,7 +62,7 @@ func TestGetFeeCalculatorForBlockhash(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getFeeCalculatorForBlockhash", "params":["BVvVdTXHSUMDnnCAMy53DHQ8zy27L7Ehm6WZsywbAPT7", {"commitment": "confirmed"}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":13752},"value":{"feeCalculator":{"lamportsPerSignature":5000}}},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetFeeCalculatorForBlockhashWithConfig(
 					context.TODO(),
 					"BVvVdTXHSUMDnnCAMy53DHQ8zy27L7Ehm6WZsywbAPT7",

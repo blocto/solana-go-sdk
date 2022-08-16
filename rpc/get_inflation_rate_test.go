@@ -10,7 +10,7 @@ func TestGetInflationRate(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getInflationRate"}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"epoch":200,"foundation":0.0,"total":0.06956826778571164,"validator":0.06956826778571164},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetInflationRate(context.TODO())
 			},
 			ExpectedResponse: GetInflationRateResponse{

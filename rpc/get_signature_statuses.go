@@ -20,7 +20,7 @@ type GetSignatureStatusesResultValue struct {
 	Slot               uint64      `json:"slot"`
 	Confirmations      *uint64     `json:"confirmations"`
 	ConfirmationStatus *Commitment `json:"confirmationStatus"`
-	Err                interface{} `json:"err"`
+	Err                any         `json:"err"`
 }
 
 // GetSignatureStatusesConfig is a option config for `getSignatureStatuses`

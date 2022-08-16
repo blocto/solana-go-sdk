@@ -12,7 +12,7 @@ func TestGetEpochInfo(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getEpochInfo"}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"absoluteSlot":86715160,"blockHeight":84901536,"epoch":200,"slotIndex":315160,"slotsInEpoch":432000,"transactionCount":2265984079},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetEpochInfo(
 					context.TODO(),
 				)
@@ -37,7 +37,7 @@ func TestGetEpochInfo(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getEpochInfo", "params":[{"commitment": "processed"}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"absoluteSlot":86715194,"blockHeight":84901570,"epoch":200,"slotIndex":315194,"slotsInEpoch":432000,"transactionCount":2265987458},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetEpochInfoWithConfig(
 					context.TODO(),
 					GetEpochInfoConfig{

@@ -37,7 +37,7 @@ const (
 )
 
 type GetBlockTransaction struct {
-	Transaction interface{}      `json:"transaction"`
+	Transaction any              `json:"transaction"`
 	Meta        *TransactionMeta `json:"meta"`
 }
 

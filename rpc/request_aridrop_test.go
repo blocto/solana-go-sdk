@@ -10,7 +10,7 @@ func TestRequestAirdrop(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"requestAirdrop", "params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7", 1]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":"2HsNt2iPgHVKzbYxsivEUWutMAzFkJL1YBs7phaBTtKY82sbDLuhzEBqbmGwxBAWTRSiPwkqop8vqWxezkxcuaVW","id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.RequestAirdrop(
 					context.TODO(),
 					"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
@@ -30,7 +30,7 @@ func TestRequestAirdrop(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"requestAirdrop", "params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7", 1, {"commitment": "processed"}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":"4eAWQLipk6hA7AcRuLUw2VXbiHRVR6HABVcQQqaBuukNNMohWg4ToAn4Qh2RaiFnK1LiUxrGnVgm1n4kpUbB7Yt9","id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.RequestAirdropWithConfig(
 					context.TODO(),
 					"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",

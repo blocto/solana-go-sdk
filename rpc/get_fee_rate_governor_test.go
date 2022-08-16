@@ -10,7 +10,7 @@ func TestGetFeeRateGovernor(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getFeeRateGovernor"}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":15230},"value":{"feeRateGovernor":{"burnPercent":50,"maxLamportsPerSignature":100000,"minLamportsPerSignature":5000,"targetLamportsPerSignature":10000,"targetSignaturesPerSlot":20000}}},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetFeeRateGovernor(
 					context.TODO(),
 				)

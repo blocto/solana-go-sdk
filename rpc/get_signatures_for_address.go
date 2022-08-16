@@ -12,11 +12,11 @@ type GetSignaturesForAddressResponse struct {
 
 // GetSignaturesForAddressResult is a part of `getSignaturesForAddress` raw response
 type GetSignaturesForAddressResult struct {
-	Signature string      `json:"signature"`
-	Slot      uint64      `json:"slot"`
-	BlockTime *int64      `json:"blockTime"`
-	Err       interface{} `json:"err"`
-	Memo      *string     `json:"memo"`
+	Signature string  `json:"signature"`
+	Slot      uint64  `json:"slot"`
+	BlockTime *int64  `json:"blockTime"`
+	Err       any     `json:"err"`
+	Memo      *string `json:"memo"`
 }
 
 // GetSignaturesForAddressConfig is option config of `getSignaturesForAddress`
