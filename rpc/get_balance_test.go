@@ -16,11 +16,11 @@ func TestGetBalance(t *testing.T) {
 					"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
 				)
 			},
-			ExpectedResponse: JsonRpcResponse[GetBalanceResult]{
+			ExpectedResponse: JsonRpcResponse[GetBalance]{
 				JsonRpc: "2.0",
 				Id:      1,
 				Error:   nil,
-				Result: GetBalanceResult{
+				Result: GetBalance{
 					Context: Context{
 						Slot: 73914708,
 					},
@@ -41,11 +41,11 @@ func TestGetBalance(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: JsonRpcResponse[GetBalanceResult]{
+			ExpectedResponse: JsonRpcResponse[GetBalance]{
 				JsonRpc: "2.0",
 				Id:      1,
 				Error:   nil,
-				Result: GetBalanceResult{
+				Result: GetBalance{
 					Context: Context{
 						Slot: 73914708,
 					},
@@ -63,11 +63,11 @@ func TestGetBalance(t *testing.T) {
 					"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
 				)
 			},
-			ExpectedResponse: JsonRpcResponse[GetBalanceResult]{
+			ExpectedResponse: JsonRpcResponse[GetBalance]{
 				JsonRpc: "2.0",
 				Id:      1,
 				Error:   nil,
-				Result: GetBalanceResult{
+				Result: GetBalance{
 					Context: Context{
 						Slot:       155451486,
 						ApiVersion: "1.10.34",
