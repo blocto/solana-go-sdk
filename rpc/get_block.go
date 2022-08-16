@@ -2,12 +2,9 @@ package rpc
 
 import "context"
 
-type GetBlockResponse struct {
-	GeneralResponse
-	Result GetBlockResponseResult `json:"result"`
-}
+type GetBlockResponse JsonRpcResponse[GetBlock]
 
-type GetBlockResponseResult struct {
+type GetBlock struct {
 	Blockhash         string                `json:"blockhash"`
 	BlockTime         *int64                `json:"blockTime"`
 	BlockHeight       *int64                `json:"blockHeight"`
@@ -66,16 +63,16 @@ const (
 )
 
 // GetBlock returns identity and transaction information about a confirmed block in the ledger
-func (c *RpcClient) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, error) {
+func (c *RpcClient) GetBlock(ctx context.Context, slot uint64) (JsonRpcResponse[GetBlock], error) {
 	return c.processGetBlock(c.Call(ctx, "getBlock", slot))
 }
 
 // GetBlockWithConfig returns identity and transaction information about a confirmed block in the ledger
-func (c *RpcClient) GetBlockWithConfig(ctx context.Context, slot uint64, cfg GetBlockConfig) (GetBlockResponse, error) {
+func (c *RpcClient) GetBlockWithConfig(ctx context.Context, slot uint64, cfg GetBlockConfig) (JsonRpcResponse[GetBlock], error) {
 	return c.processGetBlock(c.Call(ctx, "getBlock", slot, cfg))
 }
 
-func (c *RpcClient) processGetBlock(body []byte, rpcErr error) (res GetBlockResponse, err error) {
+func (c *RpcClient) processGetBlock(body []byte, rpcErr error) (res JsonRpcResponse[GetBlock], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

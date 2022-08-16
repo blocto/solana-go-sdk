@@ -599,7 +599,7 @@ func (c *Client) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, e
 			Encoding: rpc.GetBlockConfigEncodingBase64,
 		},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return GetBlockResponse{}, err
 	}
@@ -607,7 +607,7 @@ func (c *Client) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, e
 }
 
 // add test and get block
-func getBlock(res rpc.GetBlockResponse) (GetBlockResponse, error) {
+func getBlock(res rpc.JsonRpcResponse[rpc.GetBlock]) (GetBlockResponse, error) {
 	txs := make([]GetBlockTransaction, 0, len(res.Result.Transactions))
 	for _, rTx := range res.Result.Transactions {
 		data, ok := rTx.Transaction.([]any)

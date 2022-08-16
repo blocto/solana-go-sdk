@@ -18,13 +18,11 @@ func TestGetBlock(t *testing.T) {
 					33,
 				)
 			},
-			ExpectedResponse: GetBlockResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetBlockResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetBlock]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetBlock{
 					ParentSLot:        32,
 					BlockHeight:       pointer.Int64(33),
 					BlockTime:         pointer.Int64(1631803928),
@@ -113,13 +111,11 @@ func TestGetBlock(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetBlockResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetBlockResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetBlock]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetBlock{
 					ParentSLot:        32,
 					BlockHeight:       pointer.Int64(33),
 					BlockTime:         pointer.Int64(1631803928),
@@ -174,13 +170,11 @@ func TestGetBlock(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetBlockResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetBlockResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetBlock]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetBlock{
 					ParentSLot:        32,
 					BlockHeight:       pointer.Int64(33),
 					BlockTime:         pointer.Int64(1631803928),
@@ -245,13 +239,11 @@ func TestGetBlock(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetBlockResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetBlockResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetBlock]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetBlock{
 					ParentSLot:        32,
 					BlockHeight:       pointer.Int64(33),
 					BlockTime:         pointer.Int64(1631803928),
@@ -286,13 +278,11 @@ func TestGetBlock(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetBlockResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetBlockResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetBlock]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetBlock{
 					ParentSLot:        32,
 					BlockHeight:       pointer.Int64(33),
 					BlockTime:         pointer.Int64(1631803928),
@@ -325,13 +315,11 @@ func TestGetBlock(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetBlockResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetBlockResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetBlock]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetBlock{
 					ParentSLot:        32,
 					BlockHeight:       pointer.Int64(33),
 					BlockTime:         pointer.Int64(1631803928),
