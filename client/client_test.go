@@ -523,7 +523,7 @@ func TestClient_GetAccountInfoWithConfig(t *testing.T) {
 				ctx:        context.Background(),
 				base58Addr: "F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb",
 				cfg: GetAccountInfoConfig{
-					DataSlice: &rpc.GetAccountInfoConfigDataSlice{
+					DataSlice: &rpc.DataSlice{
 						Offset: 4,
 						Length: 32,
 					},

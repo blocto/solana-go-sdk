@@ -142,7 +142,7 @@ func TestSimulateTransaction(t *testing.T) {
 						Encoding:               SimulateTransactionConfigEncodingBase64,
 						ReplaceRecentBlockhash: true,
 						Accounts: &SimulateTransactionConfigAccounts{
-							Encoding:  GetAccountInfoConfigEncodingBase64Zstd,
+							Encoding:  AccountEncodingBase64Zstd,
 							Addresses: []string{"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"},
 						},
 					},

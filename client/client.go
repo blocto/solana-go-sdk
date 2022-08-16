@@ -115,26 +115,26 @@ type AccountInfo struct {
 // GetAccountInfo return account's info
 func (c *Client) GetAccountInfo(ctx context.Context, base58Addr string) (AccountInfo, error) {
 	return c.processGetAccountInfo(c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, rpc.GetAccountInfoConfig{
-		Encoding: rpc.GetAccountInfoConfigEncodingBase64,
+		Encoding: rpc.AccountEncodingBase64,
 	}))
 }
 
 type GetAccountInfoConfig struct {
 	Commitment rpc.Commitment
-	DataSlice  *rpc.GetAccountInfoConfigDataSlice
+	DataSlice  *rpc.DataSlice
 }
 
 // GetAccountInfoWithConfig return account's info
 func (c *Client) GetAccountInfoWithConfig(ctx context.Context, base58Addr string, cfg GetAccountInfoConfig) (AccountInfo, error) {
 	return c.processGetAccountInfo(c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, rpc.GetAccountInfoConfig{
-		Encoding:   rpc.GetAccountInfoConfigEncodingBase64,
+		Encoding:   rpc.AccountEncodingBase64,
 		Commitment: cfg.Commitment,
 		DataSlice:  cfg.DataSlice,
 	}))
 }
 
-func (c *Client) processGetAccountInfo(res rpc.GetAccountInfoResponse, err error) (AccountInfo, error) {
-	err = checkRpcResult(res.GeneralResponse, err)
+func (c *Client) processGetAccountInfo(res rpc.JsonRpcResponse[rpc.GetAccountInfoResult], err error) (AccountInfo, error) {
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return AccountInfo{}, err
 	}
@@ -887,7 +887,7 @@ func (c *Client) SimulateTransactionWithConfig(ctx context.Context, tx types.Tra
 	var accountCfg *rpc.SimulateTransactionConfigAccounts
 	if len(cfg.Addresses) > 0 {
 		accountCfg = &rpc.SimulateTransactionConfigAccounts{
-			Encoding:  rpc.GetAccountInfoConfigEncodingBase64,
+			Encoding:  rpc.AccountEncodingBase64,
 			Addresses: cfg.Addresses,
 		}
 	}
@@ -953,6 +953,20 @@ func (c *Client) processGetSignaturesForAddress(res rpc.GetSignaturesForAddressR
 }
 
 func checkRpcResult(res rpc.GeneralResponse, err error) error {
+	if err != nil {
+		return err
+	}
+	if res.Error != nil {
+		errRes, err := json.Marshal(res.Error)
+		if err != nil {
+			return fmt.Errorf("rpc response error: %v", res.Error)
+		}
+		return fmt.Errorf("rpc response error: %v", string(errRes))
+	}
+	return nil
+}
+
+func checkJsonRpcResponse[T any](res rpc.JsonRpcResponse[T], err error) error {
 	if err != nil {
 		return err
 	}

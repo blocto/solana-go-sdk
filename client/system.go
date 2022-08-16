@@ -23,7 +23,7 @@ func (c *Client) GetNonceAccount(ctx context.Context, base58Addr string) (syspro
 
 func (c *Client) GetNonceFromNonceAccount(ctx context.Context, base58Addr string) (string, error) {
 	accuInfo, err := c.GetAccountInfoWithConfig(ctx, base58Addr, GetAccountInfoConfig{
-		DataSlice: &rpc.GetAccountInfoConfigDataSlice{
+		DataSlice: &rpc.DataSlice{
 			Offset: 40,
 			Length: 32,
 		},

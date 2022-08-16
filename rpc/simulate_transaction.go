@@ -39,7 +39,7 @@ const (
 )
 
 type SimulateTransactionConfigAccounts struct {
-	Encoding GetAccountInfoConfigEncoding `json:"encoding,omitempty"`
+	Encoding AccountEncoding `json:"encoding,omitempty"`
 	// An array of accounts to return, as base-58 encoded strings
 	Addresses []string `json:"addresses"`
 }
