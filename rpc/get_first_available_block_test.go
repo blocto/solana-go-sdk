@@ -15,13 +15,11 @@ func TestGetFirstAvailableBlock(t *testing.T) {
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetFirstAvailableBlockResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: 0,
+			ExpectedResponse: JsonRpcResponse[uint64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  0,
 			},
 			ExpectedError: nil,
 		},
