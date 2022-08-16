@@ -472,10 +472,10 @@ func (c *Client) GetTransaction(ctx context.Context, txhash string) (*GetTransac
 		ctx,
 		txhash,
 		rpc.GetTransactionConfig{
-			Encoding: rpc.GetTransactionConfigEncodingBase64,
+			Encoding: rpc.TransactionEncodingBase64,
 		},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
@@ -496,11 +496,11 @@ func (c *Client) GetTransactionWithConfig(ctx context.Context, txhash string, cf
 		ctx,
 		txhash,
 		rpc.GetTransactionConfig{
-			Encoding:   rpc.GetTransactionConfigEncodingBase64,
+			Encoding:   rpc.TransactionEncodingBase64,
 			Commitment: cfg.Commitment,
 		},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
@@ -514,12 +514,12 @@ func (c *Client) GetTransactionWithConfig(ctx context.Context, txhash string, cf
 	return &tx, nil
 }
 
-func getTransaction(res rpc.GetTransactionResponse) (GetTransactionResponse, error) {
+func getTransaction(res rpc.JsonRpcResponse[*rpc.GetTransaction]) (GetTransactionResponse, error) {
 	data, ok := res.Result.Transaction.([]any)
 	if !ok {
 		return GetTransactionResponse{}, fmt.Errorf("failed to cast raw response to []any")
 	}
-	if data[1] != string(rpc.GetTransactionConfigEncodingBase64) {
+	if data[1] != string(rpc.TransactionEncodingBase64) {
 		return GetTransactionResponse{}, fmt.Errorf("encoding mistmatch")
 	}
 	rawTx, err := base64.StdEncoding.DecodeString(data[0].(string))
@@ -614,7 +614,7 @@ func getBlock(res rpc.JsonRpcResponse[rpc.GetBlock]) (GetBlockResponse, error) {
 		if !ok {
 			return GetBlockResponse{}, fmt.Errorf("failed to cast raw response to []any")
 		}
-		if data[1] != string(rpc.GetTransactionConfigEncodingBase64) {
+		if data[1] != string(rpc.TransactionEncodingBase64) {
 			return GetBlockResponse{}, fmt.Errorf("encoding mistmatch")
 		}
 		rawTx, err := base64.StdEncoding.DecodeString(data[0].(string))

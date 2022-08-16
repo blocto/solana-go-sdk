@@ -4,14 +4,10 @@ import (
 	"context"
 )
 
-// GetTransactionResponse is a complete rpc response of `getTransaction`
-type GetTransactionResponse struct {
-	GeneralResponse
-	Result *GetTransactionResult `json:"result"`
-}
+type GetTransactionResponse JsonRpcResponse[*GetTransaction]
 
-// GetTransactionResult is a part of GetTransactionResponse
-type GetTransactionResult struct {
+// GetTransaction is a part of GetTransactionResponse
+type GetTransaction struct {
 	Slot        uint64           `json:"slot"`
 	Meta        *TransactionMeta `json:"meta"`
 	Transaction any              `json:"transaction"`
@@ -69,30 +65,21 @@ const (
 
 // GetTransactionConfig is a option config for `getTransaction`
 type GetTransactionConfig struct {
-	Encoding   GetTransactionConfigEncoding `json:"encoding,omitempty"`
-	Commitment Commitment                   `json:"commitment,omitempty"` // "processed" is not supported
+	Encoding   TransactionEncoding `json:"encoding,omitempty"`
+	Commitment Commitment          `json:"commitment,omitempty"` // "processed" is not supported
 }
 
-type GetTransactionConfigEncoding string
-
-const (
-	GetTransactionConfigEncodingJson       GetTransactionConfigEncoding = "json"
-	GetTransactionConfigEncodingJsonParsed GetTransactionConfigEncoding = "jsonParsed"
-	GetTransactionConfigEncodingBase58     GetTransactionConfigEncoding = "base58"
-	GetTransactionConfigEncodingBase64     GetTransactionConfigEncoding = "base64"
-)
-
 // GetTransaction returns transaction details for a confirmed transaction
-func (c *RpcClient) GetTransaction(ctx context.Context, txhash string) (GetTransactionResponse, error) {
+func (c *RpcClient) GetTransaction(ctx context.Context, txhash string) (JsonRpcResponse[*GetTransaction], error) {
 	return c.processGetTransaction(c.Call(ctx, "getTransaction", txhash))
 }
 
 // GetTransactionWithConfig returns transaction details for a confirmed transaction
-func (c *RpcClient) GetTransactionWithConfig(ctx context.Context, txhash string, cfg GetTransactionConfig) (GetTransactionResponse, error) {
+func (c *RpcClient) GetTransactionWithConfig(ctx context.Context, txhash string, cfg GetTransactionConfig) (JsonRpcResponse[*GetTransaction], error) {
 	return c.processGetTransaction(c.Call(ctx, "getTransaction", txhash, cfg))
 }
 
-func (c *RpcClient) processGetTransaction(body []byte, rpcErr error) (res GetTransactionResponse, err error) {
+func (c *RpcClient) processGetTransaction(body []byte, rpcErr error) (res JsonRpcResponse[*GetTransaction], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

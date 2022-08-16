@@ -18,13 +18,11 @@ func TestGetTransaction(t *testing.T) {
 					"4Dj8Xbs7L6z7pbNp5eGZXLmYZLwePPRVTfunjx2EWDc4nwtVYRq4YqduiFKXR23cGqmbF6LHoubGnKa7gCozstGF",
 				)
 			},
-			ExpectedResponse: GetTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: &GetTransactionResult{
+			ExpectedResponse: JsonRpcResponse[*GetTransaction]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: &GetTransaction{
 					Slot:      80218681,
 					BlockTime: pointer.Int64(1631380624),
 					Meta: &TransactionMeta{
@@ -147,17 +145,15 @@ func TestGetTransaction(t *testing.T) {
 					context.TODO(),
 					"4Dj8Xbs7L6z7pbNp5eGZXLmYZLwePPRVTfunjx2EWDc4nwtVYRq4YqduiFKXR23cGqmbF6LHoubGnKa7gCozstGF",
 					GetTransactionConfig{
-						Encoding: GetTransactionConfigEncodingBase64,
+						Encoding: TransactionEncodingBase64,
 					},
 				)
 			},
-			ExpectedResponse: GetTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: &GetTransactionResult{
+			ExpectedResponse: JsonRpcResponse[*GetTransaction]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: &GetTransaction{
 					Slot:      80218681,
 					BlockTime: pointer.Int64(1631380624),
 					Meta: &TransactionMeta{
@@ -252,17 +248,15 @@ func TestGetTransaction(t *testing.T) {
 					context.TODO(),
 					"4Dj8Xbs7L6z7pbNp5eGZXLmYZLwePPRVTfunjx2EWDc4nwtVYRq4YqduiFKXR23cGqmbF6LHoubGnKa7gCozstGF",
 					GetTransactionConfig{
-						Encoding: GetTransactionConfigEncodingBase64,
+						Encoding: TransactionEncodingBase64,
 					},
 				)
 			},
-			ExpectedResponse: GetTransactionResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: nil,
+			ExpectedResponse: JsonRpcResponse[*GetTransaction]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  nil,
 			},
 			ExpectedError: nil,
 		},
