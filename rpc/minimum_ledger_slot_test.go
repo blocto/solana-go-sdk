@@ -15,13 +15,11 @@ func TestMinimumLedgerSlot(t *testing.T) {
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: MinimumLedgerSlotResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: 84044778,
+			ExpectedResponse: JsonRpcResponse[uint64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  84044778,
 			},
 			ExpectedError: nil,
 		},
