@@ -703,7 +703,7 @@ func (c *Client) GetBlockTime(ctx context.Context, slot uint64) (int64, error) {
 // GetIdentity returns the identity pubkey for the current node
 func (c *Client) GetIdentity(ctx context.Context) (string, error) {
 	res, err := c.RpcClient.GetIdentity(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return "", err
 	}

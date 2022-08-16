@@ -15,13 +15,11 @@ func TestGetIdentity(t *testing.T) {
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetIdentityResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetIdentityResult{
+			ExpectedResponse: JsonRpcResponse[GetIdentity]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetIdentity{
 					Identity: "BjHeMczor9oycGJHLepRTCU2LpkZNtpy2mdQKianx1EJ",
 				},
 			},
