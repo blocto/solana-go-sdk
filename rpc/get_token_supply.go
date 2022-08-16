@@ -4,14 +4,9 @@ import (
 	"context"
 )
 
-// GetTokenSupplyResponse is full `getTokenSupply` raw response
-type GetTokenSupplyResponse struct {
-	GeneralResponse
-	Result GetTokenSupplyResult `json:"result"`
-}
+type GetTokenSupplyResponse JsonRpcResponse[GetTokenSupply]
 
-// GetTokenSupplyResult is a part of `getTokenSupply` raw response
-type GetTokenSupplyResult struct {
+type GetTokenSupply struct {
 	Context Context                   `json:"context"`
 	Value   GetTokenSupplyResultValue `json:"value"`
 }
@@ -29,16 +24,16 @@ type GetTokenSupplyConfig struct {
 }
 
 // GetTokenSupply returns the token balance of an SPL Token account
-func (c *RpcClient) GetTokenSupply(ctx context.Context, mintAddr string) (GetTokenSupplyResponse, error) {
+func (c *RpcClient) GetTokenSupply(ctx context.Context, mintAddr string) (JsonRpcResponse[GetTokenSupply], error) {
 	return c.processGetTokenSupply(c.Call(ctx, "getTokenSupply", mintAddr))
 }
 
 // GetTokenSupply returns the token balance of an SPL Token account
-func (c *RpcClient) GetTokenSupplyWithConfig(ctx context.Context, mintAddr string, cfg GetTokenSupplyConfig) (GetTokenSupplyResponse, error) {
+func (c *RpcClient) GetTokenSupplyWithConfig(ctx context.Context, mintAddr string, cfg GetTokenSupplyConfig) (JsonRpcResponse[GetTokenSupply], error) {
 	return c.processGetTokenSupply(c.Call(ctx, "getTokenSupply", mintAddr, cfg))
 }
 
-func (c *RpcClient) processGetTokenSupply(body []byte, rpcErr error) (res GetTokenSupplyResponse, err error) {
+func (c *RpcClient) processGetTokenSupply(body []byte, rpcErr error) (res JsonRpcResponse[GetTokenSupply], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

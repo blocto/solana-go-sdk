@@ -16,13 +16,11 @@ func TestGetTokenSupply(t *testing.T) {
 					"4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3",
 				)
 			},
-			ExpectedResponse: GetTokenSupplyResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetTokenSupplyResult{
+			ExpectedResponse: JsonRpcResponse[GetTokenSupply]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetTokenSupply{
 					Context: Context{
 						Slot: 85609218,
 					},
@@ -47,13 +45,11 @@ func TestGetTokenSupply(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetTokenSupplyResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetTokenSupplyResult{
+			ExpectedResponse: JsonRpcResponse[GetTokenSupply]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetTokenSupply{
 					Context: Context{
 						Slot: 85609258,
 					},
