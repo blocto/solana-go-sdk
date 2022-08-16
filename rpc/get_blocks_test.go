@@ -17,7 +17,7 @@ func TestGetBlocks(t *testing.T) {
 					86686578,
 				)
 			},
-			ExpectedResponse: JsonRpcResponse[GetBlocks]{
+			ExpectedResponse: JsonRpcResponse[[]uint64]{
 				JsonRpc: "2.0",
 				Id:      1,
 				Error:   nil,
@@ -38,7 +38,7 @@ func TestGetBlocks(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: JsonRpcResponse[GetBlocks]{
+			ExpectedResponse: JsonRpcResponse[[]uint64]{
 				JsonRpc: "2.0",
 				Id:      1,
 				Error:   nil,
