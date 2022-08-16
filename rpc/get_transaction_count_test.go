@@ -15,13 +15,11 @@ func TestGetTransactionCount(t *testing.T) {
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetTransactionCountResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: 2168509541,
+			ExpectedResponse: JsonRpcResponse[uint64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  2168509541,
 			},
 			ExpectedError: nil,
 		},
@@ -36,13 +34,11 @@ func TestGetTransactionCount(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetTransactionCountResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: 2168514398,
+			ExpectedResponse: JsonRpcResponse[uint64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  2168514398,
 			},
 			ExpectedError: nil,
 		},

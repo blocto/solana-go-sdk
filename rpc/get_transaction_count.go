@@ -4,11 +4,7 @@ import (
 	"context"
 )
 
-// GetTransactionCountResponse is a full raw rpc response of `getTransactionCount`
-type GetTransactionCountResponse struct {
-	GeneralResponse
-	Result uint64 `json:"result"`
-}
+type GetTransactionCountResponse JsonRpcResponse[uint64]
 
 // GetTransactionCountConfig is a option config for `getTransactionCount`
 type GetTransactionCountConfig struct {
@@ -16,16 +12,16 @@ type GetTransactionCountConfig struct {
 }
 
 // GetTransactionCount returns the current Transaction count from the ledger
-func (c *RpcClient) GetTransactionCount(ctx context.Context) (GetTransactionCountResponse, error) {
+func (c *RpcClient) GetTransactionCount(ctx context.Context) (JsonRpcResponse[uint64], error) {
 	return c.processGetTransactionCount(c.Call(ctx, "getTransactionCount"))
 }
 
 // GetTransactionCountWithConfig returns the current Transaction count from the ledger
-func (c *RpcClient) GetTransactionCountWithConfig(ctx context.Context, cfg GetTransactionCountConfig) (GetTransactionCountResponse, error) {
+func (c *RpcClient) GetTransactionCountWithConfig(ctx context.Context, cfg GetTransactionCountConfig) (JsonRpcResponse[uint64], error) {
 	return c.processGetTransactionCount(c.Call(ctx, "getTransactionCount", cfg))
 }
 
-func (c *RpcClient) processGetTransactionCount(body []byte, rpcErr error) (res GetTransactionCountResponse, err error) {
+func (c *RpcClient) processGetTransactionCount(body []byte, rpcErr error) (res JsonRpcResponse[uint64], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }
