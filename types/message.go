@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"sort"
+	"strconv"
 
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/pkg/bincode"
@@ -18,15 +19,31 @@ type MessageHeader struct {
 	NumReadonlyUnsignedAccounts uint8
 }
 
+type messageVersion string
+
+const (
+	messageVersionLegacy = "legacy"
+	messageVersionV0     = "v0"
+)
+
 type Message struct {
-	Header          MessageHeader
-	Accounts        []common.PublicKey
-	RecentBlockHash string
-	Instructions    []CompiledInstruction
+	version            messageVersion
+	Header             MessageHeader
+	Accounts           []common.PublicKey
+	RecentBlockHash    string
+	Instructions       []CompiledInstruction
+	AddressLookupTable *CompiledAddressLookupTable
+}
+
+type CompiledAddressLookupTable struct {
+	AccountKey      common.PublicKey
+	WritableIndexes []uint8
+	ReadonlyIndexes []uint8
 }
 
 func (m *Message) Serialize() ([]byte, error) {
 	b := []byte{}
+
 	b = append(b, m.Header.NumRequireSignatures)
 	b = append(b, m.Header.NumReadonlySignedAccounts)
 	b = append(b, m.Header.NumReadonlyUnsignedAccounts)
@@ -53,6 +70,30 @@ func (m *Message) Serialize() ([]byte, error) {
 		b = append(b, bincode.UintToVarLenBytes(uint64(len(instruction.Data)))...)
 		b = append(b, instruction.Data...)
 	}
+
+	if len(m.version) > 0 && m.version != messageVersionLegacy {
+		versionNum, err := strconv.Atoi(string(m.version[1:]))
+		if err != nil || versionNum > 255 {
+			return nil, fmt.Errorf("failed to parse message version")
+		}
+		if versionNum > 128 {
+			return nil, fmt.Errorf("unexpected message version")
+		}
+		b = append([]byte{byte(versionNum + 128)}, b...)
+
+		if m.AddressLookupTable != nil &&
+			(len(m.AddressLookupTable.WritableIndexes) != 0 || len(m.AddressLookupTable.ReadonlyIndexes) != 0) {
+			b = append(b, 1)
+			b = append(b, m.AddressLookupTable.AccountKey.Bytes()...)
+			b = append(b, bincode.UintToVarLenBytes(uint64(len(m.AddressLookupTable.WritableIndexes)))...)
+			b = append(b, m.AddressLookupTable.WritableIndexes...)
+			b = append(b, bincode.UintToVarLenBytes(uint64(len(m.AddressLookupTable.ReadonlyIndexes)))...)
+			b = append(b, m.AddressLookupTable.ReadonlyIndexes...)
+		} else {
+			b = append(b, 0)
+		}
+	}
+
 	return b, nil
 }
 
@@ -171,48 +212,94 @@ type NewMessageParam struct {
 	FeePayer        common.PublicKey
 	Instructions    []Instruction
 	RecentBlockhash string
+	// v0 transaction
+	AddressLookupTable          common.PublicKey
+	AddressLookupTableAddresses []common.PublicKey
 }
 
-func NewMessage(param NewMessageParam) Message {
-	accountMap := map[common.PublicKey]*AccountMeta{}
-	for _, instruction := range param.Instructions {
-		// program is a readonly unsigned account
-		_, exist := accountMap[instruction.ProgramID]
+type accountMeta struct {
+	IsSigner   bool
+	IsWritable bool
+	IsProgram  bool
+}
+
+func compileKey(instructions []Instruction) map[common.PublicKey]*accountMeta {
+	m := map[common.PublicKey]*accountMeta{}
+
+	for _, instruction := range instructions {
+		// compile program
+		v, exist := m[instruction.ProgramID]
 		if !exist {
-			accountMap[instruction.ProgramID] = &AccountMeta{
-				PubKey:     instruction.ProgramID,
+			m[instruction.ProgramID] = &accountMeta{
 				IsSigner:   false,
 				IsWritable: false,
+				IsProgram:  true,
 			}
+		} else {
+			v.IsProgram = true
 		}
+
+		// compile accounts
 		for i := 0; i < len(instruction.Accounts); i++ {
 			account := instruction.Accounts[i]
-			a, exist := accountMap[account.PubKey]
+			v, exist := m[account.PubKey]
 			if !exist {
-				accountMap[account.PubKey] = &account
+				m[account.PubKey] = &accountMeta{
+					IsSigner:   account.IsSigner,
+					IsWritable: account.IsWritable,
+				}
 			} else {
-				a.IsSigner = a.IsSigner || account.IsSigner
-				a.IsWritable = a.IsWritable || account.IsWritable
+				v.IsSigner = v.IsSigner || account.IsSigner
+				v.IsWritable = v.IsWritable || account.IsWritable
 			}
 		}
 	}
+
+	return m
+}
+
+func NewMessage(param NewMessageParam) Message {
+	compiledKeys := compileKey(param.Instructions)
 
 	writableSignedAccount := []common.PublicKey{}
 	readOnlySignedAccount := []common.PublicKey{}
 	writableUnsignedAccount := []common.PublicKey{}
 	readOnlyUnsignedAccount := []common.PublicKey{}
-	classify := func(account *AccountMeta) {
-		if account.IsSigner {
-			if account.IsWritable {
-				writableSignedAccount = append(writableSignedAccount, account.PubKey)
+	addressLookupTableWritable := []common.PublicKey{}
+	addressLookupTableReadonly := []common.PublicKey{}
+
+	addressLookupTableWritableIdx := []uint8{}
+	addressLookupTableReadonlyIdx := []uint8{}
+
+	addressLookupTableMap := map[common.PublicKey]uint8{}
+	for i, k := range param.AddressLookupTableAddresses {
+		addressLookupTableMap[k] = uint8(i)
+	}
+
+	classify := func(key common.PublicKey, meta *accountMeta) {
+		if meta.IsSigner {
+			if meta.IsWritable {
+				writableSignedAccount = append(writableSignedAccount, key)
 			} else {
-				readOnlySignedAccount = append(readOnlySignedAccount, account.PubKey)
+				readOnlySignedAccount = append(readOnlySignedAccount, key)
 			}
 		} else {
-			if account.IsWritable {
-				writableUnsignedAccount = append(writableUnsignedAccount, account.PubKey)
+			if meta.IsWritable {
+				idx, exist := addressLookupTableMap[key]
+				if exist && !meta.IsProgram {
+					addressLookupTableWritable = append(addressLookupTableWritable, key)
+					addressLookupTableWritableIdx = append(addressLookupTableWritableIdx, idx)
+				} else {
+					writableUnsignedAccount = append(writableUnsignedAccount, key)
+				}
 			} else {
-				readOnlyUnsignedAccount = append(readOnlyUnsignedAccount, account.PubKey)
+				idx, exist := addressLookupTableMap[key]
+				if exist && !meta.IsProgram {
+					addressLookupTableReadonly = append(addressLookupTableReadonly, key)
+					addressLookupTableReadonlyIdx = append(addressLookupTableReadonlyIdx, idx)
+				} else {
+					readOnlyUnsignedAccount = append(readOnlyUnsignedAccount, key)
+				}
 			}
 		}
 	}
@@ -231,26 +318,36 @@ func NewMessage(param NewMessageParam) Message {
 		})
 	}
 	if param.FeePayer != (common.PublicKey{}) {
-		for _, account := range accountMap {
-			if param.FeePayer == account.PubKey {
+		for key, meta := range compiledKeys {
+			if param.FeePayer == key {
 				continue
 			}
-			classify(account)
+			classify(key, meta)
 		}
 		sortAllAccount()
 		writableSignedAccount = append([]common.PublicKey{param.FeePayer}, writableSignedAccount...)
 	} else {
-		for _, account := range accountMap {
-			classify(account)
+		for key, meta := range compiledKeys {
+			classify(key, meta)
 		}
 		sortAllAccount()
 	}
 
-	publicKeys := make([]common.PublicKey, 0, len(writableSignedAccount)+len(readOnlySignedAccount)+len(writableUnsignedAccount)+len(readOnlyUnsignedAccount))
+	l := 0 +
+		len(writableSignedAccount) +
+		len(readOnlySignedAccount) +
+		len(writableUnsignedAccount) +
+		len(readOnlyUnsignedAccount) +
+		len(addressLookupTableWritable) +
+		len(addressLookupTableReadonly)
+
+	publicKeys := make([]common.PublicKey, 0, l)
 	publicKeys = append(publicKeys, writableSignedAccount...)
 	publicKeys = append(publicKeys, readOnlySignedAccount...)
 	publicKeys = append(publicKeys, writableUnsignedAccount...)
 	publicKeys = append(publicKeys, readOnlyUnsignedAccount...)
+	publicKeys = append(publicKeys, addressLookupTableWritable...)
+	publicKeys = append(publicKeys, addressLookupTableReadonly...)
 	publicKeyToIdx := map[common.PublicKey]int{}
 	for idx, publicKey := range publicKeys {
 		publicKeyToIdx[publicKey] = idx
@@ -269,14 +366,29 @@ func NewMessage(param NewMessageParam) Message {
 		})
 	}
 
+	var version messageVersion = messageVersionLegacy
+	if param.AddressLookupTable != (common.PublicKey{}) {
+		version = messageVersionV0
+	}
+
+	var compiledAddressLookupTable *CompiledAddressLookupTable = nil
+	if len(addressLookupTableWritable) != 0 || len(addressLookupTableReadonly) != 0 {
+		compiledAddressLookupTable = &CompiledAddressLookupTable{
+			AccountKey:      param.AddressLookupTable,
+			WritableIndexes: addressLookupTableWritableIdx,
+			ReadonlyIndexes: addressLookupTableReadonlyIdx,
+		}
+	}
 	return Message{
+		version: version,
 		Header: MessageHeader{
 			NumRequireSignatures:        uint8(len(writableSignedAccount) + len(readOnlySignedAccount)),
 			NumReadonlySignedAccounts:   uint8(len(readOnlySignedAccount)),
 			NumReadonlyUnsignedAccounts: uint8(len(readOnlyUnsignedAccount)),
 		},
-		Accounts:        publicKeys,
-		RecentBlockHash: param.RecentBlockhash,
-		Instructions:    compiledInstructions,
+		Accounts:           publicKeys[:len(publicKeys)-len(addressLookupTableWritable)-len(addressLookupTableReadonly)],
+		RecentBlockHash:    param.RecentBlockhash,
+		Instructions:       compiledInstructions,
+		AddressLookupTable: compiledAddressLookupTable,
 	}
 }
