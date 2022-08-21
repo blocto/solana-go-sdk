@@ -19,15 +19,15 @@ type MessageHeader struct {
 	NumReadonlyUnsignedAccounts uint8
 }
 
-type messageVersion string
+type MessageVersion string
 
 const (
-	messageVersionLegacy = "legacy"
-	messageVersionV0     = "v0"
+	MessageVersionLegacy = "legacy"
+	MessageVersionV0     = "v0"
 )
 
 type Message struct {
-	version            messageVersion
+	Version            MessageVersion
 	Header             MessageHeader
 	Accounts           []common.PublicKey
 	RecentBlockHash    string
@@ -71,8 +71,8 @@ func (m *Message) Serialize() ([]byte, error) {
 		b = append(b, instruction.Data...)
 	}
 
-	if len(m.version) > 0 && m.version != messageVersionLegacy {
-		versionNum, err := strconv.Atoi(string(m.version[1:]))
+	if len(m.Version) > 0 && m.Version != MessageVersionLegacy {
+		versionNum, err := strconv.Atoi(string(m.Version[1:]))
 		if err != nil || versionNum > 255 {
 			return nil, fmt.Errorf("failed to parse message version")
 		}
@@ -120,6 +120,14 @@ func (m *Message) DecompileInstructions() []Instruction {
 }
 
 func MessageDeserialize(messageData []byte) (Message, error) {
+	var version MessageVersion
+	if v := uint8(messageData[0]); v > 127 {
+		version = MessageVersion(fmt.Sprintf("v%v", v-128))
+		messageData = messageData[1:]
+	} else {
+		version = MessageVersionLegacy
+	}
+
 	var numRequireSignatures, numReadonlySignedAccounts, numReadonlyUnsignedAccounts uint8
 	var t uint64
 	var err error
@@ -188,15 +196,47 @@ func MessageDeserialize(messageData []byte) (Message, error) {
 		})
 	}
 
+	var compiledAddressLookupTable *CompiledAddressLookupTable = nil
+	if version != MessageVersionLegacy {
+		hasCompiledAddressLookupTable := messageData[0]
+		messageData = messageData[1:]
+		if hasCompiledAddressLookupTable == 1 {
+			addressLookupTablePubkey := common.PublicKeyFromBytes(messageData[:32])
+			messageData = messageData[32:]
+
+			writableAccountIdxCount, err := parseUvarint(&messageData)
+			if err != nil {
+				return Message{}, fmt.Errorf("failed to parse address lookup table writable account idx count, err: %v", err)
+			}
+			var writableAccountIdxList []uint8
+			writableAccountIdxList, messageData = messageData[:writableAccountIdxCount], messageData[writableAccountIdxCount:]
+
+			readOnlyAccountIdxCount, err := parseUvarint(&messageData)
+			if err != nil {
+				return Message{}, fmt.Errorf("failed to parse address lookup table readOnly account idx count, err: %v", err)
+			}
+			var readOnlyAccountIdxList []uint8
+			readOnlyAccountIdxList, messageData = messageData[:readOnlyAccountIdxCount], messageData[readOnlyAccountIdxCount:]
+
+			compiledAddressLookupTable = &CompiledAddressLookupTable{
+				AccountKey:      addressLookupTablePubkey,
+				WritableIndexes: writableAccountIdxList,
+				ReadonlyIndexes: readOnlyAccountIdxList,
+			}
+		}
+	}
+
 	return Message{
+		Version: version,
 		Header: MessageHeader{
 			NumRequireSignatures:        numRequireSignatures,
 			NumReadonlySignedAccounts:   numReadonlySignedAccounts,
 			NumReadonlyUnsignedAccounts: numReadonlyUnsignedAccounts,
 		},
-		Accounts:        accounts,
-		RecentBlockHash: blockHash,
-		Instructions:    instructions,
+		Accounts:           accounts,
+		RecentBlockHash:    blockHash,
+		Instructions:       instructions,
+		AddressLookupTable: compiledAddressLookupTable,
 	}, nil
 }
 
@@ -366,9 +406,9 @@ func NewMessage(param NewMessageParam) Message {
 		})
 	}
 
-	var version messageVersion = messageVersionLegacy
+	var version MessageVersion = MessageVersionLegacy
 	if param.AddressLookupTable != (common.PublicKey{}) {
-		version = messageVersionV0
+		version = MessageVersionV0
 	}
 
 	var compiledAddressLookupTable *CompiledAddressLookupTable = nil
@@ -380,7 +420,7 @@ func NewMessage(param NewMessageParam) Message {
 		}
 	}
 	return Message{
-		version: version,
+		Version: version,
 		Header: MessageHeader{
 			NumRequireSignatures:        uint8(len(writableSignedAccount) + len(readOnlySignedAccount)),
 			NumReadonlySignedAccounts:   uint8(len(readOnlySignedAccount)),

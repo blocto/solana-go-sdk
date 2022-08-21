@@ -82,6 +82,7 @@ func TestTransactionDeserialize(t *testing.T) {
 			want: Transaction{
 				Signatures: []Signature{[]byte{189, 98, 67, 19, 102, 99, 124, 234, 70, 209, 28, 10, 33, 66, 167, 162, 222, 122, 16, 68, 248, 129, 46, 111, 221, 255, 40, 40, 236, 84, 233, 213, 234, 185, 235, 222, 155, 204, 139, 164, 184, 155, 32, 54, 151, 73, 235, 65, 200, 76, 127, 111, 244, 72, 183, 208, 21, 247, 114, 176, 181, 21, 77, 8}},
 				Message: Message{
+					Version: MessageVersionLegacy,
 					Header: MessageHeader{
 						NumRequireSignatures:        1,
 						NumReadonlySignedAccounts:   0,
@@ -114,6 +115,7 @@ func TestTransactionDeserialize(t *testing.T) {
 					[]byte{33, 150, 49, 151, 221, 70, 119, 149, 120, 244, 227, 186, 179, 109, 146, 176, 20, 58, 224, 180, 254, 64, 210, 181, 208, 226, 151, 52, 192, 198, 242, 20, 184, 23, 238, 214, 165, 140, 56, 190, 100, 122, 29, 216, 79, 196, 144, 239, 203, 64, 106, 255, 216, 27, 153, 242, 78, 154, 235, 204, 72, 58, 227, 3},
 				},
 				Message: Message{
+					Version: MessageVersionLegacy,
 					Header: MessageHeader{
 						NumRequireSignatures:        2,
 						NumReadonlySignedAccounts:   0,
