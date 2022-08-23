@@ -7,8 +7,8 @@ import (
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/sysprog"
-	"github.com/portto/solana-go-sdk/program/tokenprog"
+	"github.com/portto/solana-go-sdk/program/system"
+	"github.com/portto/solana-go-sdk/program/token"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -27,7 +27,7 @@ func main() {
 	aliceRandomTokenAccount := types.NewAccount()
 	fmt.Println("alice token account:", aliceRandomTokenAccount.PublicKey.ToBase58())
 
-	rentExemptionBalance, err := c.GetMinimumBalanceForRentExemption(context.Background(), tokenprog.TokenAccountSize)
+	rentExemptionBalance, err := c.GetMinimumBalanceForRentExemption(context.Background(), token.TokenAccountSize)
 	if err != nil {
 		log.Fatalf("get min balacne for rent exemption, err: %v", err)
 	}
@@ -42,14 +42,14 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: res.Blockhash,
 			Instructions: []types.Instruction{
-				sysprog.CreateAccount(sysprog.CreateAccountParam{
+				system.CreateAccount(system.CreateAccountParam{
 					From:     feePayer.PublicKey,
 					New:      aliceRandomTokenAccount.PublicKey,
 					Owner:    common.TokenProgramID,
 					Lamports: rentExemptionBalance,
-					Space:    tokenprog.TokenAccountSize,
+					Space:    token.TokenAccountSize,
 				}),
-				tokenprog.InitializeAccount(tokenprog.InitializeAccountParam{
+				token.InitializeAccount(token.InitializeAccountParam{
 					Account: aliceRandomTokenAccount.PublicKey,
 					Mint:    mintPubkey,
 					Owner:   alice.PublicKey,

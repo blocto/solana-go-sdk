@@ -6,7 +6,7 @@ import (
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/sysprog"
+	"github.com/portto/solana-go-sdk/program/system"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -33,7 +33,7 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: recentBlockhashResponse.Blockhash,
 			Instructions: []types.Instruction{
-				sysprog.Transfer(sysprog.TransferParam{
+				system.Transfer(system.TransferParam{
 					From:   alice.PublicKey,
 					To:     common.PublicKeyFromString("2xNweLHLqrbx4zo1waDvgWJHgsUpPj8Y8icbAFeR4a8i"),
 					Amount: 1e8, // 0.1 SOL

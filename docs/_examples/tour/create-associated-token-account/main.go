@@ -7,7 +7,7 @@ import (
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/assotokenprog"
+	"github.com/portto/solana-go-sdk/program/associated_token_account"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -39,7 +39,7 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: res.Blockhash,
 			Instructions: []types.Instruction{
-				assotokenprog.CreateAssociatedTokenAccount(assotokenprog.CreateAssociatedTokenAccountParam{
+				associated_token_account.CreateAssociatedTokenAccount(associated_token_account.CreateAssociatedTokenAccountParam{
 					Funder:                 feePayer.PublicKey,
 					Owner:                  alice.PublicKey,
 					Mint:                   mintPubkey,

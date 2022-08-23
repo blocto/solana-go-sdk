@@ -7,8 +7,8 @@ import (
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/memoprog"
-	"github.com/portto/solana-go-sdk/program/sysprog"
+	"github.com/portto/solana-go-sdk/program/memo"
+	"github.com/portto/solana-go-sdk/program/system"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -36,11 +36,11 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: nonceAccount.Nonce.ToBase58(),
 			Instructions: []types.Instruction{
-				sysprog.AdvanceNonceAccount(sysprog.AdvanceNonceAccountParam{
+				system.AdvanceNonceAccount(system.AdvanceNonceAccountParam{
 					Nonce: nonceAccountPubkey,
 					Auth:  alice.PublicKey,
 				}),
-				memoprog.BuildMemo(memoprog.BuildMemoParam{
+				memo.BuildMemo(memo.BuildMemoParam{
 					Memo: []byte("use nonce"),
 				}),
 			},

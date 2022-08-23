@@ -9,19 +9,16 @@ import (
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/pkg/pointer"
-	"github.com/portto/solana-go-sdk/program/assotokenprog"
-	"github.com/portto/solana-go-sdk/program/metaplex/tokenmeta"
-	"github.com/portto/solana-go-sdk/program/sysprog"
-	"github.com/portto/solana-go-sdk/program/tokenprog"
+	"github.com/portto/solana-go-sdk/program/associated_token_account"
+	"github.com/portto/solana-go-sdk/program/metaplex/token_metadata"
+	"github.com/portto/solana-go-sdk/program/system"
+	"github.com/portto/solana-go-sdk/program/token"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
 
 // FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz
 var feePayer, _ = types.AccountFromBase58("4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN")
-
-// 9aE476sH92Vz7DMPyq5WLPkrKWivxeuTKEFKd2sZZcde
-var alice, _ = types.AccountFromBase58("4voSPg3tYuWbKzimpQK9EbXHmuyy5fUrtXvpLDMLkmY6TRncaTHAKGD8jUg3maB5Jbrd9CkQg4qjJMyN6sQvnEF2")
 
 func main() {
 	c := client.NewClient(rpc.DevnetRPCEndpoint)
@@ -38,17 +35,17 @@ func main() {
 		log.Fatalf("failed to find a valid ata, err: %v", err)
 	}
 
-	tokenMetadataPubkey, err := tokenmeta.GetTokenMetaPubkey(mint.PublicKey)
+	tokenMetadataPubkey, err := token_metadata.GetTokenMetaPubkey(mint.PublicKey)
 	if err != nil {
 		log.Fatalf("failed to find a valid token metadata, err: %v", err)
 
 	}
-	tokenMasterEditionPubkey, err := tokenmeta.GetMasterEdition(mint.PublicKey)
+	tokenMasterEditionPubkey, err := token_metadata.GetMasterEdition(mint.PublicKey)
 	if err != nil {
 		log.Fatalf("failed to find a valid master edition, err: %v", err)
 	}
 
-	mintAccountRent, err := c.GetMinimumBalanceForRentExemption(context.Background(), tokenprog.MintAccountSize)
+	mintAccountRent, err := c.GetMinimumBalanceForRentExemption(context.Background(), token.MintAccountSize)
 	if err != nil {
 		log.Fatalf("failed to get mint account rent, err: %v", err)
 	}
@@ -64,19 +61,19 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: recentBlockhashResponse.Blockhash,
 			Instructions: []types.Instruction{
-				sysprog.CreateAccount(sysprog.CreateAccountParam{
+				system.CreateAccount(system.CreateAccountParam{
 					From:     feePayer.PublicKey,
 					New:      mint.PublicKey,
 					Owner:    common.TokenProgramID,
 					Lamports: mintAccountRent,
-					Space:    tokenprog.MintAccountSize,
+					Space:    token.MintAccountSize,
 				}),
-				tokenprog.InitializeMint(tokenprog.InitializeMintParam{
+				token.InitializeMint(token.InitializeMintParam{
 					Decimals: 0,
 					Mint:     mint.PublicKey,
 					MintAuth: feePayer.PublicKey,
 				}),
-				tokenmeta.CreateMetadataAccountV2(tokenmeta.CreateMetadataAccountV2Param{
+				token_metadata.CreateMetadataAccountV2(token_metadata.CreateMetadataAccountV2Param{
 					Metadata:                tokenMetadataPubkey,
 					Mint:                    mint.PublicKey,
 					MintAuthority:           feePayer.PublicKey,
@@ -84,42 +81,42 @@ func main() {
 					UpdateAuthority:         feePayer.PublicKey,
 					UpdateAuthorityIsSigner: true,
 					IsMutable:               true,
-					Data: tokenmeta.DataV2{
+					Data: token_metadata.DataV2{
 						Name:                 "Fake SMS #1355",
 						Symbol:               "FSMB",
 						Uri:                  "https://34c7ef24f4v2aejh75xhxy5z6ars4xv47gpsdrei6fiowptk2nqq.arweave.net/3wXyF1wvK6ARJ_9ue-O58CMuXrz5nyHEiPFQ6z5q02E",
 						SellerFeeBasisPoints: 100,
-						Creators: &[]tokenmeta.Creator{
+						Creators: &[]token_metadata.Creator{
 							{
 								Address:  feePayer.PublicKey,
 								Verified: true,
 								Share:    100,
 							},
 						},
-						Collection: &tokenmeta.Collection{
+						Collection: &token_metadata.Collection{
 							Verified: false,
 							Key:      collection.PublicKey,
 						},
-						Uses: &tokenmeta.Uses{
-							UseMethod: tokenmeta.Burn,
+						Uses: &token_metadata.Uses{
+							UseMethod: token_metadata.Burn,
 							Remaining: 10,
 							Total:     10,
 						},
 					},
 				}),
-				assotokenprog.CreateAssociatedTokenAccount(assotokenprog.CreateAssociatedTokenAccountParam{
+				associated_token_account.CreateAssociatedTokenAccount(associated_token_account.CreateAssociatedTokenAccountParam{
 					Funder:                 feePayer.PublicKey,
 					Owner:                  feePayer.PublicKey,
 					Mint:                   mint.PublicKey,
 					AssociatedTokenAccount: ata,
 				}),
-				tokenprog.MintTo(tokenprog.MintToParam{
+				token.MintTo(token.MintToParam{
 					Mint:   mint.PublicKey,
 					To:     ata,
 					Auth:   feePayer.PublicKey,
 					Amount: 1,
 				}),
-				tokenmeta.CreateMasterEditionV3(tokenmeta.CreateMasterEditionParam{
+				token_metadata.CreateMasterEditionV3(token_metadata.CreateMasterEditionParam{
 					Edition:         tokenMasterEditionPubkey,
 					Mint:            mint.PublicKey,
 					UpdateAuthority: feePayer.PublicKey,

@@ -8,7 +8,7 @@ import (
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/sysprog"
+	"github.com/portto/solana-go-sdk/program/system"
 	"github.com/portto/solana-go-sdk/rpc"
 )
 
@@ -19,10 +19,10 @@ func main() {
 		context.Background(),
 		common.SystemProgramID.ToBase58(),
 		rpc.GetProgramAccountsConfig{
-			Encoding: rpc.GetProgramAccountsConfigEncodingBase64,
+			Encoding: rpc.AccountEncodingBase64,
 			Filters: []rpc.GetProgramAccountsConfigFilter{
 				{
-					DataSize: sysprog.NonceAccountSize,
+					DataSize: system.NonceAccountSize,
 				},
 				{
 					MemCmp: &rpc.GetProgramAccountsConfigFilterMemCmp{
@@ -43,7 +43,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("failed to decode data, err: %v", err)
 		}
-		nonceAccount, err := sysprog.NonceAccountDeserialize(data)
+		nonceAccount, err := system.NonceAccountDeserialize(data)
 		if err != nil {
 			log.Fatalf("failed to parse nonce account, err: %v", err)
 		}

@@ -7,7 +7,7 @@ import (
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/metaplex/tokenmeta"
+	"github.com/portto/solana-go-sdk/program/metaplex/token_metadata"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -15,16 +15,13 @@ import (
 // FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz
 var feePayer, _ = types.AccountFromBase58("4TMFNY9ntAn3CHzguSAvDNLPRoQTaK3sWbQQXdDXaE6KWRBLufGL6PJdsD2koiEe3gGmMdRK3aAw7sikGNksHJrN")
 
-// 9aE476sH92Vz7DMPyq5WLPkrKWivxeuTKEFKd2sZZcde
-var alice, _ = types.AccountFromBase58("4voSPg3tYuWbKzimpQK9EbXHmuyy5fUrtXvpLDMLkmY6TRncaTHAKGD8jUg3maB5Jbrd9CkQg4qjJMyN6sQvnEF2")
-
 func main() {
 	c := client.NewClient(rpc.DevnetRPCEndpoint)
 
 	// mint address
 	nft := common.PublicKeyFromString("FK8eFRgmqewUzr7R6pYUxSPnSNusYmkhAV4e3pUJYdCd")
 
-	tokenMetadataPubkey, err := tokenmeta.GetTokenMetaPubkey(nft)
+	tokenMetadataPubkey, err := token_metadata.GetTokenMetaPubkey(nft)
 	if err != nil {
 		log.Fatalf("failed to find a valid token metadata, err: %v", err)
 	}
@@ -40,7 +37,7 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: recentBlockhashResponse.Blockhash,
 			Instructions: []types.Instruction{
-				tokenmeta.SignMetadata(tokenmeta.SignMetadataParam{
+				token_metadata.SignMetadata(token_metadata.SignMetadataParam{
 					Metadata: tokenMetadataPubkey,
 					Creator:  feePayer.PublicKey,
 				}),

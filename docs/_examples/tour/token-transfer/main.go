@@ -6,7 +6,7 @@ import (
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/tokenprog"
+	"github.com/portto/solana-go-sdk/program/token"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -36,7 +36,7 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: res.Blockhash,
 			Instructions: []types.Instruction{
-				tokenprog.TransferChecked(tokenprog.TransferCheckedParam{
+				token.TransferChecked(token.TransferCheckedParam{
 					From:     aliceTokenRandomTokenPubkey,
 					To:       aliceTokenATAPubkey,
 					Mint:     mintPubkey,

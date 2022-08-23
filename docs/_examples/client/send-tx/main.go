@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/program/sysprog"
+	"github.com/portto/solana-go-sdk/program/system"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -40,7 +40,7 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: resp.Blockhash,
 			Instructions: []types.Instruction{
-				sysprog.Transfer(sysprog.TransferParam{
+				system.Transfer(system.TransferParam{
 					From:   feePayer.PublicKey,
 					To:     feePayer.PublicKey,
 					Amount: 1,

@@ -6,19 +6,19 @@ import (
 
 	"github.com/mr-tron/base58"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/sysprog"
+	"github.com/portto/solana-go-sdk/program/system"
 	"github.com/portto/solana-go-sdk/rpc"
 )
 
-func (c *Client) GetNonceAccount(ctx context.Context, base58Addr string) (sysprog.NonceAccount, error) {
+func (c *Client) GetNonceAccount(ctx context.Context, base58Addr string) (system.NonceAccount, error) {
 	accu, err := c.GetAccountInfo(ctx, base58Addr)
 	if err != nil {
-		return sysprog.NonceAccount{}, err
+		return system.NonceAccount{}, err
 	}
 	if accu.Owner != common.SystemProgramID {
-		return sysprog.NonceAccount{}, errors.New("owner mismatch")
+		return system.NonceAccount{}, errors.New("owner mismatch")
 	}
-	return sysprog.NonceAccountDeserialize(accu.Data)
+	return system.NonceAccountDeserialize(accu.Data)
 }
 
 func (c *Client) GetNonceFromNonceAccount(ctx context.Context, base58Addr string) (string, error) {

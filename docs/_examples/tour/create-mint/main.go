@@ -7,8 +7,8 @@ import (
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/sysprog"
-	"github.com/portto/solana-go-sdk/program/tokenprog"
+	"github.com/portto/solana-go-sdk/program/system"
+	"github.com/portto/solana-go-sdk/program/token"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -29,7 +29,7 @@ func main() {
 	// get rent
 	rentExemptionBalance, err := c.GetMinimumBalanceForRentExemption(
 		context.Background(),
-		tokenprog.MintAccountSize,
+		token.MintAccountSize,
 	)
 	if err != nil {
 		log.Fatalf("get min balacne for rent exemption, err: %v", err)
@@ -45,14 +45,14 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: res.Blockhash,
 			Instructions: []types.Instruction{
-				sysprog.CreateAccount(sysprog.CreateAccountParam{
+				system.CreateAccount(system.CreateAccountParam{
 					From:     feePayer.PublicKey,
 					New:      mint.PublicKey,
 					Owner:    common.TokenProgramID,
 					Lamports: rentExemptionBalance,
-					Space:    tokenprog.MintAccountSize,
+					Space:    token.MintAccountSize,
 				}),
-				tokenprog.InitializeMint(tokenprog.InitializeMintParam{
+				token.InitializeMint(token.InitializeMintParam{
 					Decimals:   8,
 					Mint:       mint.PublicKey,
 					MintAuth:   alice.PublicKey,

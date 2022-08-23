@@ -9,7 +9,7 @@ import (
 
 	"github.com/mr-tron/base58"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/tokenprog"
+	"github.com/portto/solana-go-sdk/program/token"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -969,7 +969,7 @@ func checkJsonRpcResponse[T any](res rpc.JsonRpcResponse[T], err error) error {
 	return nil
 }
 
-func (c *Client) GetTokenAccountsByOwner(ctx context.Context, base58Addr string) (map[common.PublicKey]tokenprog.TokenAccount, error) {
+func (c *Client) GetTokenAccountsByOwner(ctx context.Context, base58Addr string) (map[common.PublicKey]token.TokenAccount, error) {
 	getTokenAccountsByOwnerResponse, err := c.RpcClient.GetTokenAccountsByOwnerWithConfig(
 		ctx,
 		base58Addr,
@@ -984,13 +984,13 @@ func (c *Client) GetTokenAccountsByOwner(ctx context.Context, base58Addr string)
 		return nil, err
 	}
 
-	m := map[common.PublicKey]tokenprog.TokenAccount{}
+	m := map[common.PublicKey]token.TokenAccount{}
 	for _, v := range getTokenAccountsByOwnerResponse.Result.Value {
 		accountInfo, err := c.rpcAccountInfoToClientAccountInfo(v.Account)
 		if err != nil {
 			return nil, err
 		}
-		tokenAccount, err := tokenprog.DeserializeTokenAccount(accountInfo.Data, accountInfo.Owner)
+		tokenAccount, err := token.DeserializeTokenAccount(accountInfo.Data, accountInfo.Owner)
 		if err != nil {
 			return nil, err
 		}
