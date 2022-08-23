@@ -17,13 +17,11 @@ func TestGetBlocksWithLimit(t *testing.T) {
 					15,
 				)
 			},
-			ExpectedResponse: GetBlocksWithLimitResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []uint64{86686567, 86686572, 86686573, 86686574, 86686575, 86686576, 86686577, 86686578, 86686579, 86686580, 86686581, 86686582, 86686583, 86686584, 86686585},
+			ExpectedResponse: JsonRpcResponse[[]uint64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  []uint64{86686567, 86686572, 86686573, 86686574, 86686575, 86686576, 86686577, 86686578, 86686579, 86686580, 86686581, 86686582, 86686583, 86686584, 86686585},
 			},
 			ExpectedError: nil,
 		},
@@ -40,13 +38,11 @@ func TestGetBlocksWithLimit(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetBlocksWithLimitResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []uint64{86686567, 86686572, 86686573, 86686574, 86686575, 86686576, 86686577, 86686578, 86686579, 86686580, 86686581, 86686582, 86686583, 86686584, 86686585},
+			ExpectedResponse: JsonRpcResponse[[]uint64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  []uint64{86686567, 86686572, 86686573, 86686574, 86686575, 86686576, 86686577, 86686578, 86686579, 86686580, 86686581, 86686582, 86686583, 86686584, 86686585},
 			},
 			ExpectedError: nil,
 		},

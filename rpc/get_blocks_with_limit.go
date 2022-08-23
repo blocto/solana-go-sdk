@@ -2,11 +2,7 @@ package rpc
 
 import "context"
 
-// GetBlocksWithLimitResponse is a full raw rpc response of `getBlocksWithLimit`
-type GetBlocksWithLimitResponse struct {
-	GeneralResponse
-	Result []uint64 `json:"result"`
-}
+type GetBlocksWithLimitResponse JsonRpcResponse[[]uint64]
 
 // GetBlocksWithLimitConfig is a option config for `getBlocksWithLimit`
 type GetBlocksWithLimitConfig struct {
@@ -14,16 +10,16 @@ type GetBlocksWithLimitConfig struct {
 }
 
 // GetBlocksWithLimit eturns a list of confirmed blocks starting at the given slot
-func (c *RpcClient) GetBlocksWithLimit(ctx context.Context, startSlot uint64, limit uint64) (GetBlocksWithLimitResponse, error) {
+func (c *RpcClient) GetBlocksWithLimit(ctx context.Context, startSlot uint64, limit uint64) (JsonRpcResponse[[]uint64], error) {
 	return c.processGetBlocksWithLimit(c.Call(ctx, "getBlocksWithLimit", startSlot, limit))
 }
 
 // GetBlocksWithLimit eturns a list of confirmed blocks starting at the given slot
-func (c *RpcClient) GetBlocksWithLimitWithConfig(ctx context.Context, startSlot uint64, limit uint64, cfg GetBlocksWithLimitConfig) (GetBlocksWithLimitResponse, error) {
+func (c *RpcClient) GetBlocksWithLimitWithConfig(ctx context.Context, startSlot uint64, limit uint64, cfg GetBlocksWithLimitConfig) (JsonRpcResponse[[]uint64], error) {
 	return c.processGetBlocksWithLimit(c.Call(ctx, "getBlocksWithLimit", startSlot, limit, cfg))
 }
 
-func (c *RpcClient) processGetBlocksWithLimit(body []byte, rpcErr error) (res GetBlocksWithLimitResponse, err error) {
+func (c *RpcClient) processGetBlocksWithLimit(body []byte, rpcErr error) (res JsonRpcResponse[[]uint64], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }
