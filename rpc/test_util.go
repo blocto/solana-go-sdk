@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -21,7 +21,7 @@ type testRpcCallParam struct {
 func testRpcCall(t *testing.T, param testRpcCallParam) {
 	// setup test server
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		body, err := ioutil.ReadAll(req.Body)
+		body, err := io.ReadAll(req.Body)
 		assert.Nil(t, err)
 		assert.JSONEq(t, param.RequestBody, string(body))
 		n, err := rw.Write([]byte(param.ResponseBody))
