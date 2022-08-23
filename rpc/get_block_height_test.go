@@ -10,23 +10,21 @@ func TestGetBlockHeight(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlockHeight"}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":83518197,"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetBlockHeight(context.TODO())
 			},
-			ExpectedResponse: GetBlockHeightResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: 83518197,
+			ExpectedResponse: JsonRpcResponse[uint64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  83518197,
 			},
 			ExpectedError: nil,
 		},
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlockHeight", "params":[{"commitment": "confirmed"}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":83518231,"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetBlockHeightWithConfig(
 					context.Background(),
 					GetBlockHeightConfig{
@@ -34,13 +32,11 @@ func TestGetBlockHeight(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetBlockHeightResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: 83518231,
+			ExpectedResponse: JsonRpcResponse[uint64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  83518231,
 			},
 			ExpectedError: nil,
 		},

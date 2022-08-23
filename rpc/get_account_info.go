@@ -4,53 +4,32 @@ import (
 	"context"
 )
 
-// GetAccountInfoConfigEncoding is account's data encode format
-type GetAccountInfoConfigEncoding string
+type GetAccountResponse JsonRpcResponse[GetAccountInfo]
 
-const (
-	// GetAccountInfoConfigEncodingBase58 limited to Account data of less than 128 bytes
-	GetAccountInfoConfigEncodingBase58     GetAccountInfoConfigEncoding = "base58"
-	GetAccountInfoConfigEncodingJsonParsed GetAccountInfoConfigEncoding = "jsonParsed"
-	GetAccountInfoConfigEncodingBase64     GetAccountInfoConfigEncoding = "base64"
-	GetAccountInfoConfigEncodingBase64Zstd GetAccountInfoConfigEncoding = "base64+zstd"
-)
-
-// GetAccountInfoConfig is an option config for `getAccountInfo`
-type GetAccountInfoConfig struct {
-	Commitment Commitment                     `json:"commitment,omitempty"`
-	Encoding   GetAccountInfoConfigEncoding   `json:"encoding,omitempty"`
-	DataSlice  *GetAccountInfoConfigDataSlice `json:"dataSlice,omitempty"`
-}
-
-// GetAccountInfoResponse is a full raw rpc response of `getAccountInfo`
-type GetAccountInfoResponse struct {
-	GeneralResponse
-	Result GetAccountInfoResult `json:"result"`
-}
-
-// GetAccountInfoConfigDataSlice is a part of GetAccountInfoConfig
-type GetAccountInfoConfigDataSlice struct {
-	Offset uint64 `json:"offset,omitempty"`
-	Length uint64 `json:"length,omitempty"`
-}
-
-// GetAccountInfoResult is rpc result of `getAccountInfo`
-type GetAccountInfoResult struct {
+// GetAccountInfo is rpc result of `getAccountInfo`
+type GetAccountInfo struct {
 	Context Context     `json:"context"`
 	Value   AccountInfo `json:"value"`
 }
 
+// GetAccountInfoConfig is an option config for `getAccountInfo`
+type GetAccountInfoConfig struct {
+	Commitment Commitment      `json:"commitment,omitempty"`
+	Encoding   AccountEncoding `json:"encoding,omitempty"`
+	DataSlice  *DataSlice      `json:"dataSlice,omitempty"`
+}
+
 // GetAccountInfo returns all information associated with the account of provided Pubkey
-func (c *RpcClient) GetAccountInfo(ctx context.Context, base58Addr string) (GetAccountInfoResponse, error) {
+func (c *RpcClient) GetAccountInfo(ctx context.Context, base58Addr string) (JsonRpcResponse[GetAccountInfo], error) {
 	return c.processGetAccountInfo(c.Call(ctx, "getAccountInfo", base58Addr))
 }
 
 // GetAccountInfo returns all information associated with the account of provided Pubkey
-func (c *RpcClient) GetAccountInfoWithConfig(ctx context.Context, base58Addr string, cfg GetAccountInfoConfig) (GetAccountInfoResponse, error) {
+func (c *RpcClient) GetAccountInfoWithConfig(ctx context.Context, base58Addr string, cfg GetAccountInfoConfig) (JsonRpcResponse[GetAccountInfo], error) {
 	return c.processGetAccountInfo(c.Call(ctx, "getAccountInfo", base58Addr, cfg))
 }
 
-func (c *RpcClient) processGetAccountInfo(body []byte, rpcErr error) (res GetAccountInfoResponse, err error) {
+func (c *RpcClient) processGetAccountInfo(body []byte, rpcErr error) (res JsonRpcResponse[GetAccountInfo], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

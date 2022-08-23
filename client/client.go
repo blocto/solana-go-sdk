@@ -31,7 +31,7 @@ func NewClient(endpoint string) *Client {
 // GetBalance fetch users lamports(SOL) balance
 func (c *Client) GetBalance(ctx context.Context, base58Addr string) (uint64, error) {
 	res, err := c.RpcClient.GetBalance(ctx, base58Addr)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
@@ -41,7 +41,7 @@ func (c *Client) GetBalance(ctx context.Context, base58Addr string) (uint64, err
 // GetBalance fetch users lamports(SOL) balance with specific commitment
 func (c *Client) GetBalanceWithConfig(ctx context.Context, base58Addr string, cfg rpc.GetBalanceConfig) (uint64, error) {
 	res, err := c.RpcClient.GetBalanceWithConfig(ctx, base58Addr, cfg)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
@@ -51,7 +51,7 @@ func (c *Client) GetBalanceWithConfig(ctx context.Context, base58Addr string, cf
 // GetTokenAccountBalance returns the token balance of an SPL Token account
 func (c *Client) GetTokenAccountBalance(ctx context.Context, base58Addr string) (uint64, uint8, error) {
 	res, err := c.RpcClient.GetTokenAccountBalance(ctx, base58Addr)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, 0, err
 	}
@@ -65,7 +65,7 @@ func (c *Client) GetTokenAccountBalance(ctx context.Context, base58Addr string) 
 // GetTokenAccountBalance returns the token balance of an SPL Token account
 func (c *Client) GetTokenAccountBalanceWithConfig(ctx context.Context, base58Addr string, cfg rpc.GetTokenAccountBalanceConfig) (uint64, uint8, error) {
 	res, err := c.RpcClient.GetTokenAccountBalanceWithConfig(ctx, base58Addr, cfg)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, 0, err
 	}
@@ -79,7 +79,7 @@ func (c *Client) GetTokenAccountBalanceWithConfig(ctx context.Context, base58Add
 // GetTokenSupply returns the total supply of an SPL Token type.
 func (c *Client) GetTokenSupply(ctx context.Context, mintAddr string) (uint64, uint8, error) {
 	res, err := c.RpcClient.GetTokenSupply(ctx, mintAddr)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, 0, err
 	}
@@ -93,7 +93,7 @@ func (c *Client) GetTokenSupply(ctx context.Context, mintAddr string) (uint64, u
 // GetTokenSupply returns the total supply of an SPL Token type.
 func (c *Client) GetTokenSupplyWithConfig(ctx context.Context, mintAddr string, cfg rpc.GetTokenSupplyConfig) (uint64, uint8, error) {
 	res, err := c.RpcClient.GetTokenSupplyWithConfig(ctx, mintAddr, cfg)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, 0, err
 	}
@@ -115,26 +115,26 @@ type AccountInfo struct {
 // GetAccountInfo return account's info
 func (c *Client) GetAccountInfo(ctx context.Context, base58Addr string) (AccountInfo, error) {
 	return c.processGetAccountInfo(c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, rpc.GetAccountInfoConfig{
-		Encoding: rpc.GetAccountInfoConfigEncodingBase64,
+		Encoding: rpc.AccountEncodingBase64,
 	}))
 }
 
 type GetAccountInfoConfig struct {
 	Commitment rpc.Commitment
-	DataSlice  *rpc.GetAccountInfoConfigDataSlice
+	DataSlice  *rpc.DataSlice
 }
 
 // GetAccountInfoWithConfig return account's info
 func (c *Client) GetAccountInfoWithConfig(ctx context.Context, base58Addr string, cfg GetAccountInfoConfig) (AccountInfo, error) {
 	return c.processGetAccountInfo(c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, rpc.GetAccountInfoConfig{
-		Encoding:   rpc.GetAccountInfoConfigEncodingBase64,
+		Encoding:   rpc.AccountEncodingBase64,
 		Commitment: cfg.Commitment,
 		DataSlice:  cfg.DataSlice,
 	}))
 }
 
-func (c *Client) processGetAccountInfo(res rpc.GetAccountInfoResponse, err error) (AccountInfo, error) {
-	err = checkRpcResult(res.GeneralResponse, err)
+func (c *Client) processGetAccountInfo(res rpc.JsonRpcResponse[rpc.GetAccountInfo], err error) (AccountInfo, error) {
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return AccountInfo{}, err
 	}
@@ -146,11 +146,11 @@ func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.AccountInfo) (AccountIn
 		return AccountInfo{}, nil
 	}
 
-	data, ok := v.Data.([]interface{})
+	data, ok := v.Data.([]any)
 	if !ok {
-		return AccountInfo{}, fmt.Errorf("failed to cast raw response to []interface{}")
+		return AccountInfo{}, fmt.Errorf("failed to cast raw response to []any")
 	}
-	if data[1] != string(rpc.GetAccountInfoConfigEncodingBase64) {
+	if data[1] != string(rpc.AccountEncodingBase64) {
 		return AccountInfo{}, fmt.Errorf("encoding mistmatch")
 	}
 	rawData, err := base64.StdEncoding.DecodeString(data[0].(string))
@@ -168,27 +168,27 @@ func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.AccountInfo) (AccountIn
 
 type GetMultipleAccountsConfig struct {
 	Commitment rpc.Commitment
-	DataSlice  *rpc.GetMultipleAccountsConfigDataSlice
+	DataSlice  *rpc.DataSlice
 }
 
 // GetMultipleAccounts returns multiple accounts info
 func (c *Client) GetMultipleAccounts(ctx context.Context, base58Addrs []string) ([]AccountInfo, error) {
 	return c.processGetMultipleAccounts(c.RpcClient.GetMultipleAccountsWithConfig(ctx, base58Addrs, rpc.GetMultipleAccountsConfig{
-		Encoding: rpc.GetMultipleAccountsConfigEncodingBase64,
+		Encoding: rpc.AccountEncodingBase64,
 	}))
 }
 
 // GetAccountInfoWithConfig return account's info
 func (c *Client) GetMultipleAccountsWithConfig(ctx context.Context, base58Addrs []string, cfg GetMultipleAccountsConfig) ([]AccountInfo, error) {
 	return c.processGetMultipleAccounts(c.RpcClient.GetMultipleAccountsWithConfig(ctx, base58Addrs, rpc.GetMultipleAccountsConfig{
-		Encoding:   rpc.GetMultipleAccountsConfigEncodingBase64,
+		Encoding:   rpc.AccountEncodingBase64,
 		Commitment: cfg.Commitment,
 		DataSlice:  cfg.DataSlice,
 	}))
 }
 
-func (c *Client) processGetMultipleAccounts(res rpc.GetMultipleAccountsResponse, err error) ([]AccountInfo, error) {
-	err = checkRpcResult(res.GeneralResponse, err)
+func (c *Client) processGetMultipleAccounts(res rpc.JsonRpcResponse[rpc.GetMultipleAccounts], err error) ([]AccountInfo, error) {
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return []AccountInfo{}, err
 	}
@@ -204,11 +204,11 @@ func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.AccountInf
 			continue
 		}
 
-		data, ok := v.Data.([]interface{})
+		data, ok := v.Data.([]any)
 		if !ok {
-			return []AccountInfo{}, fmt.Errorf("failed to cast raw response to []interface{}")
+			return []AccountInfo{}, fmt.Errorf("failed to cast raw response to []any")
 		}
-		if data[1] != string(rpc.GetAccountInfoConfigEncodingBase64) {
+		if data[1] != string(rpc.AccountEncodingBase58) {
 			return []AccountInfo{}, fmt.Errorf("encoding mistmatch")
 		}
 		rawData, err := base64.StdEncoding.DecodeString(data[0].(string))
@@ -226,17 +226,6 @@ func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.AccountInf
 	return res, nil
 }
 
-// DEPRECATED: Please use getFeeForMessage instead This method is expected to be removed in solana-core v2.0
-// GetRecentBlockhash return recent blockhash information
-func (c *Client) GetRecentBlockhash(ctx context.Context) (rpc.GetRecentBlockHashResultValue, error) {
-	res, err := c.RpcClient.GetRecentBlockhash(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
-	if err != nil {
-		return rpc.GetRecentBlockHashResultValue{}, err
-	}
-	return res.Result.Value, nil
-}
-
 type GetLatestBlockhashConfig struct {
 	Commitment rpc.Commitment `json:"commitment,omitempty"`
 }
@@ -245,7 +234,7 @@ type GetLatestBlockhashConfig struct {
 // GetLatestBlockhash returns the latest blockhash
 func (c *Client) GetLatestBlockhash(ctx context.Context) (rpc.GetLatestBlockhashValue, error) {
 	res, err := c.RpcClient.GetLatestBlockhash(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return rpc.GetLatestBlockhashValue{}, err
 	}
@@ -258,7 +247,7 @@ func (c *Client) GetLatestBlockhashWithConfig(ctx context.Context, cfg GetLatest
 	res, err := c.RpcClient.GetLatestBlockhashWithConfig(ctx, rpc.GetLatestBlockhashConfig{
 		Commitment: cfg.Commitment,
 	})
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return rpc.GetLatestBlockhashValue{}, err
 	}
@@ -273,7 +262,7 @@ type IsBlockhashConfig struct {
 // IsBlockhashValid get the fee the network will charge for a particular Message
 func (c *Client) IsBlockhashValid(ctx context.Context, blockhash string) (bool, error) {
 	res, err := c.RpcClient.IsBlockhashValid(ctx, blockhash)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return false, err
 	}
@@ -286,7 +275,7 @@ func (c *Client) IsBlockhashValidWithConfig(ctx context.Context, blockhash strin
 	res, err := c.RpcClient.IsBlockhashValidWithConfig(ctx, blockhash, rpc.IsBlockhashValidConfig{
 		Commitment: cfg.Commitment,
 	})
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return false, err
 	}
@@ -306,7 +295,7 @@ func (c *Client) GetFeeForMessage(ctx context.Context, message types.Message) (*
 	}
 
 	res, err := c.RpcClient.GetFeeForMessage(ctx, base64.StdEncoding.EncodeToString(rawMessage))
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
@@ -328,7 +317,7 @@ func (c *Client) GetFeeForMessageWithConfig(ctx context.Context, message types.M
 			Commitment: cfg.Commitment,
 		},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
@@ -343,7 +332,7 @@ type QuickSendTransactionParam struct {
 
 // QuickSendTransaction is a quick way to send tx
 func (c *Client) QuickSendTransaction(ctx context.Context, param QuickSendTransactionParam) (string, error) {
-	recentBlockhashRes, err := c.GetRecentBlockhash(ctx)
+	recentBlockhashRes, err := c.GetLatestBlockhash(ctx)
 	if err != nil {
 		return "", fmt.Errorf("failed to get recent blockhash, err: %v", err)
 	}
@@ -367,7 +356,7 @@ func (c *Client) QuickSendTransaction(ctx context.Context, param QuickSendTransa
 		base64.StdEncoding.EncodeToString(rawTx),
 		rpc.SendTransactionConfig{Encoding: rpc.SendTransactionConfigEncodingBase64},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return "", err
 	}
@@ -387,7 +376,7 @@ func (c *Client) SendTransaction(ctx context.Context, tx types.Transaction) (str
 			Encoding: rpc.SendTransactionConfigEncodingBase64,
 		},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return "", err
 	}
@@ -416,7 +405,7 @@ func (c *Client) SendTransactionWithConfig(ctx context.Context, tx types.Transac
 			MaxRetries:          config.MaxRetries,
 		},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return "", err
 	}
@@ -426,7 +415,7 @@ func (c *Client) SendTransactionWithConfig(ctx context.Context, tx types.Transac
 // GetSlot get current slot (finalized)
 func (c *Client) GetSlot(ctx context.Context) (uint64, error) {
 	res, err := c.RpcClient.GetSlot(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
@@ -436,7 +425,7 @@ func (c *Client) GetSlot(ctx context.Context) (uint64, error) {
 // GetSlotWithConfig get slot by commitment
 func (c *Client) GetSlotWithConfig(ctx context.Context, cfg rpc.GetSlotConfig) (uint64, error) {
 	res, err := c.RpcClient.GetSlotWithConfig(ctx, cfg)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
@@ -451,7 +440,7 @@ type GetTransactionResponse struct {
 }
 
 type TransactionMeta struct {
-	Err               interface{}
+	Err               any
 	Fee               uint64
 	PreBalances       []int64
 	PostBalances      []int64
@@ -472,10 +461,10 @@ func (c *Client) GetTransaction(ctx context.Context, txhash string) (*GetTransac
 		ctx,
 		txhash,
 		rpc.GetTransactionConfig{
-			Encoding: rpc.GetTransactionConfigEncodingBase64,
+			Encoding: rpc.TransactionEncodingBase64,
 		},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
@@ -496,11 +485,11 @@ func (c *Client) GetTransactionWithConfig(ctx context.Context, txhash string, cf
 		ctx,
 		txhash,
 		rpc.GetTransactionConfig{
-			Encoding:   rpc.GetTransactionConfigEncodingBase64,
+			Encoding:   rpc.TransactionEncodingBase64,
 			Commitment: cfg.Commitment,
 		},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
@@ -514,12 +503,12 @@ func (c *Client) GetTransactionWithConfig(ctx context.Context, txhash string, cf
 	return &tx, nil
 }
 
-func getTransaction(res rpc.GetTransactionResponse) (GetTransactionResponse, error) {
-	data, ok := res.Result.Transaction.([]interface{})
+func getTransaction(res rpc.JsonRpcResponse[*rpc.GetTransaction]) (GetTransactionResponse, error) {
+	data, ok := res.Result.Transaction.([]any)
 	if !ok {
-		return GetTransactionResponse{}, fmt.Errorf("failed to cast raw response to []interface{}")
+		return GetTransactionResponse{}, fmt.Errorf("failed to cast raw response to []any")
 	}
-	if data[1] != string(rpc.GetTransactionConfigEncodingBase64) {
+	if data[1] != string(rpc.TransactionEncodingBase64) {
 		return GetTransactionResponse{}, fmt.Errorf("encoding mistmatch")
 	}
 	rawTx, err := base64.StdEncoding.DecodeString(data[0].(string))
@@ -599,7 +588,7 @@ func (c *Client) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, e
 			Encoding: rpc.GetBlockConfigEncodingBase64,
 		},
 	)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return GetBlockResponse{}, err
 	}
@@ -607,14 +596,14 @@ func (c *Client) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, e
 }
 
 // add test and get block
-func getBlock(res rpc.GetBlockResponse) (GetBlockResponse, error) {
+func getBlock(res rpc.JsonRpcResponse[rpc.GetBlock]) (GetBlockResponse, error) {
 	txs := make([]GetBlockTransaction, 0, len(res.Result.Transactions))
 	for _, rTx := range res.Result.Transactions {
-		data, ok := rTx.Transaction.([]interface{})
+		data, ok := rTx.Transaction.([]any)
 		if !ok {
-			return GetBlockResponse{}, fmt.Errorf("failed to cast raw response to []interface{}")
+			return GetBlockResponse{}, fmt.Errorf("failed to cast raw response to []any")
 		}
-		if data[1] != string(rpc.GetTransactionConfigEncodingBase64) {
+		if data[1] != string(rpc.TransactionEncodingBase64) {
 			return GetBlockResponse{}, fmt.Errorf("encoding mistmatch")
 		}
 		rawTx, err := base64.StdEncoding.DecodeString(data[0].(string))
@@ -683,7 +672,7 @@ func getBlock(res rpc.GetBlockResponse) (GetBlockResponse, error) {
 // GetMinimumBalanceForRentExemption returns minimum balance required to make account rent exempt
 func (c *Client) GetMinimumBalanceForRentExemption(ctx context.Context, dataLen uint64) (uint64, error) {
 	res, err := c.RpcClient.GetMinimumBalanceForRentExemption(ctx, dataLen)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
@@ -693,7 +682,7 @@ func (c *Client) GetMinimumBalanceForRentExemption(ctx context.Context, dataLen 
 // GetBlockTime returns the estimated production time of a block.
 func (c *Client) GetBlockTime(ctx context.Context, slot uint64) (int64, error) {
 	res, err := c.RpcClient.GetBlockTime(ctx, slot)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
@@ -703,7 +692,7 @@ func (c *Client) GetBlockTime(ctx context.Context, slot uint64) (int64, error) {
 // GetIdentity returns the identity pubkey for the current node
 func (c *Client) GetIdentity(ctx context.Context) (string, error) {
 	res, err := c.RpcClient.GetIdentity(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return "", err
 	}
@@ -713,7 +702,7 @@ func (c *Client) GetIdentity(ctx context.Context) (string, error) {
 // GetGenesisHash returns the genesis hash
 func (c *Client) GetGenesisHash(ctx context.Context) (string, error) {
 	res, err := c.RpcClient.GetGenesisHash(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return "", err
 	}
@@ -723,7 +712,7 @@ func (c *Client) GetGenesisHash(ctx context.Context) (string, error) {
 // GetFirstAvailableBlock returns the slot of the lowest confirmed block that has not been purged from the ledger
 func (c *Client) GetFirstAvailableBlock(ctx context.Context) (uint64, error) {
 	res, err := c.RpcClient.GetFirstAvailableBlock(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
@@ -731,11 +720,11 @@ func (c *Client) GetFirstAvailableBlock(ctx context.Context) (uint64, error) {
 }
 
 // GetVersion returns the current solana versions running on the node
-func (c *Client) GetVersion(ctx context.Context) (rpc.GetVersionResult, error) {
+func (c *Client) GetVersion(ctx context.Context) (rpc.GetVersion, error) {
 	res, err := c.RpcClient.GetVersion(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
-		return rpc.GetVersionResult{}, err
+		return rpc.GetVersion{}, err
 	}
 	return res.Result, nil
 }
@@ -743,7 +732,7 @@ func (c *Client) GetVersion(ctx context.Context) (rpc.GetVersionResult, error) {
 // RequestAirdrop requests an airdrop of lamports to a Pubkey
 func (c *Client) RequestAirdrop(ctx context.Context, base58Addr string, lamports uint64) (string, error) {
 	res, err := c.RpcClient.RequestAirdrop(ctx, base58Addr, lamports)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return "", err
 	}
@@ -754,7 +743,7 @@ func (c *Client) RequestAirdrop(ctx context.Context, base58Addr string, lamports
 // This value may increase over time if the node is configured to purge older ledger data
 func (c *Client) MinimumLedgerSlot(ctx context.Context) (uint64, error) {
 	res, err := c.RpcClient.MinimumLedgerSlot(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
@@ -764,7 +753,7 @@ func (c *Client) MinimumLedgerSlot(ctx context.Context) (uint64, error) {
 // GetTransactionCount returns the current Transaction count from the ledger
 func (c *Client) GetTransactionCount(ctx context.Context) (uint64, error) {
 	res, err := c.RpcClient.GetTransactionCount(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
@@ -774,7 +763,7 @@ func (c *Client) GetTransactionCount(ctx context.Context) (uint64, error) {
 // GetTransactionCountWithConfig returns the current Transaction count from the ledger
 func (c *Client) GetTransactionCountWithConfig(ctx context.Context, cfg rpc.GetTransactionCountConfig) (uint64, error) {
 	res, err := c.RpcClient.GetTransactionCountWithConfig(ctx, cfg)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return 0, err
 	}
@@ -794,7 +783,7 @@ type ClusterNode struct {
 // GetClusterNodes returns information about all the nodes participating in the cluster
 func (c *Client) GetClusterNodes(ctx context.Context) ([]ClusterNode, error) {
 	res, err := c.RpcClient.GetClusterNodes(ctx)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
@@ -813,36 +802,36 @@ func (c *Client) GetClusterNodes(ctx context.Context) ([]ClusterNode, error) {
 	return output, nil
 }
 
-func (c *Client) GetSignatureStatus(ctx context.Context, signature string) (*rpc.GetSignatureStatusesResultValue, error) {
+func (c *Client) GetSignatureStatus(ctx context.Context, signature string) (*rpc.SignatureStatus, error) {
 	res, err := c.RpcClient.GetSignatureStatuses(ctx, []string{signature})
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
 	return res.Result.Value[0], nil
 }
 
-func (c *Client) GetSignatureStatusWithConfig(ctx context.Context, signature string, cfg rpc.GetSignatureStatusesConfig) (*rpc.GetSignatureStatusesResultValue, error) {
+func (c *Client) GetSignatureStatusWithConfig(ctx context.Context, signature string, cfg rpc.GetSignatureStatusesConfig) (*rpc.SignatureStatus, error) {
 	res, err := c.RpcClient.GetSignatureStatusesWithConfig(ctx, []string{signature}, cfg)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
 	return res.Result.Value[0], nil
 }
 
-func (c *Client) GetSignatureStatuses(ctx context.Context, signatures []string) ([]*rpc.GetSignatureStatusesResultValue, error) {
+func (c *Client) GetSignatureStatuses(ctx context.Context, signatures []string) (rpc.SignatureStatuses, error) {
 	res, err := c.RpcClient.GetSignatureStatuses(ctx, signatures)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
 	return res.Result.Value, nil
 }
 
-func (c *Client) GetSignatureStatusesWithConfig(ctx context.Context, signatures []string, cfg rpc.GetSignatureStatusesConfig) ([]*rpc.GetSignatureStatusesResultValue, error) {
+func (c *Client) GetSignatureStatusesWithConfig(ctx context.Context, signatures []string, cfg rpc.GetSignatureStatusesConfig) (rpc.SignatureStatuses, error) {
 	res, err := c.RpcClient.GetSignatureStatusesWithConfig(ctx, signatures, cfg)
-	err = checkRpcResult(res.GeneralResponse, err)
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
@@ -850,7 +839,7 @@ func (c *Client) GetSignatureStatusesWithConfig(ctx context.Context, signatures 
 }
 
 type SimulateTransaction struct {
-	Err      interface{}
+	Err      any
 	Logs     []string
 	Accounts []*AccountInfo
 }
@@ -872,7 +861,7 @@ func (c *Client) SimulateTransaction(ctx context.Context, tx types.Transaction) 
 			ctx,
 			base64.StdEncoding.EncodeToString(rawTx),
 			rpc.SimulateTransactionConfig{
-				Encoding: rpc.SimulateTransactionConfigEncodingBase64,
+				Encoding: rpc.SimulateTransactionEncodingBase64,
 			},
 		),
 	)
@@ -887,7 +876,7 @@ func (c *Client) SimulateTransactionWithConfig(ctx context.Context, tx types.Tra
 	var accountCfg *rpc.SimulateTransactionConfigAccounts
 	if len(cfg.Addresses) > 0 {
 		accountCfg = &rpc.SimulateTransactionConfigAccounts{
-			Encoding:  rpc.GetAccountInfoConfigEncodingBase64,
+			Encoding:  rpc.AccountEncodingBase64,
 			Addresses: cfg.Addresses,
 		}
 	}
@@ -897,7 +886,7 @@ func (c *Client) SimulateTransactionWithConfig(ctx context.Context, tx types.Tra
 			ctx,
 			base64.StdEncoding.EncodeToString(rawTx),
 			rpc.SimulateTransactionConfig{
-				Encoding:               rpc.SimulateTransactionConfigEncodingBase64,
+				Encoding:               rpc.SimulateTransactionEncodingBase64,
 				SigVerify:              cfg.SigVerify,
 				Commitment:             cfg.Commitment,
 				ReplaceRecentBlockhash: cfg.ReplaceRecentBlockhash,
@@ -907,8 +896,8 @@ func (c *Client) SimulateTransactionWithConfig(ctx context.Context, tx types.Tra
 	)
 }
 
-func (c *Client) processSimulateTransaction(res rpc.SimulateTransactionResponse, err error) (SimulateTransaction, error) {
-	err = checkRpcResult(res.GeneralResponse, err)
+func (c *Client) processSimulateTransaction(res rpc.JsonRpcResponse[rpc.SimulateTransaction], err error) (SimulateTransaction, error) {
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return SimulateTransaction{}, err
 	}
@@ -936,16 +925,16 @@ func (c *Client) processSimulateTransaction(res rpc.SimulateTransactionResponse,
 	}, nil
 }
 
-func (c *Client) GetSignaturesForAddress(ctx context.Context, base58Addr string) ([]rpc.GetSignaturesForAddressResult, error) {
+func (c *Client) GetSignaturesForAddress(ctx context.Context, base58Addr string) (rpc.GetSignaturesForAddress, error) {
 	return c.processGetSignaturesForAddress(c.RpcClient.GetSignaturesForAddress(ctx, base58Addr))
 }
 
-func (c *Client) GetSignaturesForAddressWithConfig(ctx context.Context, base58Addr string, cfg rpc.GetSignaturesForAddressConfig) ([]rpc.GetSignaturesForAddressResult, error) {
+func (c *Client) GetSignaturesForAddressWithConfig(ctx context.Context, base58Addr string, cfg rpc.GetSignaturesForAddressConfig) (rpc.GetSignaturesForAddress, error) {
 	return c.processGetSignaturesForAddress(c.RpcClient.GetSignaturesForAddressWithConfig(ctx, base58Addr, cfg))
 }
 
-func (c *Client) processGetSignaturesForAddress(res rpc.GetSignaturesForAddressResponse, err error) ([]rpc.GetSignaturesForAddressResult, error) {
-	err = checkRpcResult(res.GeneralResponse, err)
+func (c *Client) processGetSignaturesForAddress(res rpc.JsonRpcResponse[rpc.GetSignaturesForAddress], err error) (rpc.GetSignaturesForAddress, error) {
+	err = checkJsonRpcResponse(res, err)
 	if err != nil {
 		return nil, err
 	}
@@ -953,6 +942,20 @@ func (c *Client) processGetSignaturesForAddress(res rpc.GetSignaturesForAddressR
 }
 
 func checkRpcResult(res rpc.GeneralResponse, err error) error {
+	if err != nil {
+		return err
+	}
+	if res.Error != nil {
+		errRes, err := json.Marshal(res.Error)
+		if err != nil {
+			return fmt.Errorf("rpc response error: %v", res.Error)
+		}
+		return fmt.Errorf("rpc response error: %v", string(errRes))
+	}
+	return nil
+}
+
+func checkJsonRpcResponse[T any](res rpc.JsonRpcResponse[T], err error) error {
 	if err != nil {
 		return err
 	}
@@ -974,7 +977,7 @@ func (c *Client) GetTokenAccountsByOwner(ctx context.Context, base58Addr string)
 			ProgramId: common.TokenProgramID.ToBase58(),
 		},
 		rpc.GetTokenAccountsByOwnerConfig{
-			Encoding: rpc.GetTokenAccountsByOwnerConfigEncodingBase64,
+			Encoding: rpc.AccountEncodingBase64,
 		},
 	)
 	if err != nil {

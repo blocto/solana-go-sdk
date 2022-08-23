@@ -12,19 +12,17 @@ func TestGetInflationReward(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getInflationReward", "params":[["27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ", "BJhtevCiNKrWsc2pkJP1TFhxAhheZ9FNJ7F567FayhSD"]]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":[null,{"amount":154995,"commission":0,"effectiveSlot":1120,"epoch":34,"postBalance":10003564885}],"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetInflationReward(
 					context.TODO(),
 					[]string{"27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ", "BJhtevCiNKrWsc2pkJP1TFhxAhheZ9FNJ7F567FayhSD"},
 				)
 			},
-			ExpectedResponse: GetInflationRewardResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []*GetInflationRewardResult{
+			ExpectedResponse: JsonRpcResponse[[]*GetInflationReward]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: []*GetInflationReward{
 					nil,
 					{
 						Epoch:         34,
@@ -40,7 +38,7 @@ func TestGetInflationReward(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getInflationReward", "params":[["27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ", "BJhtevCiNKrWsc2pkJP1TFhxAhheZ9FNJ7F567FayhSD"], {"commitment": "confirmed"}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":[null,{"amount":154995,"commission":0,"effectiveSlot":1152,"epoch":35,"postBalance":10003719880}],"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetInflationRewardWithConfig(
 					context.TODO(),
 					[]string{"27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ", "BJhtevCiNKrWsc2pkJP1TFhxAhheZ9FNJ7F567FayhSD"},
@@ -49,13 +47,11 @@ func TestGetInflationReward(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetInflationRewardResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []*GetInflationRewardResult{
+			ExpectedResponse: JsonRpcResponse[[]*GetInflationReward]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: []*GetInflationReward{
 					nil,
 					{
 						Epoch:         35,
@@ -71,7 +67,7 @@ func TestGetInflationReward(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getInflationReward", "params":[["27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ", "BJhtevCiNKrWsc2pkJP1TFhxAhheZ9FNJ7F567FayhSD"], {"epoch": 31}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":[null,{"amount":154995,"commission":0,"effectiveSlot":1024,"epoch":31,"postBalance":10003099900}],"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetInflationRewardWithConfig(
 					context.TODO(),
 					[]string{"27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ", "BJhtevCiNKrWsc2pkJP1TFhxAhheZ9FNJ7F567FayhSD"},
@@ -80,13 +76,11 @@ func TestGetInflationReward(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetInflationRewardResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []*GetInflationRewardResult{
+			ExpectedResponse: JsonRpcResponse[[]*GetInflationReward]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: []*GetInflationReward{
 					nil,
 					{
 						Epoch:         31,

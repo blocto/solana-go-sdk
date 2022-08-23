@@ -13,8 +13,8 @@ type testRpcCallParam struct {
 	Name             string
 	RequestBody      string
 	ResponseBody     string
-	RpcCall          func(RpcClient) (interface{}, error)
-	ExpectedResponse interface{}
+	RpcCall          func(RpcClient) (any, error)
+	ExpectedResponse any
 	ExpectedError    error
 }
 

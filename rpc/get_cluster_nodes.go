@@ -2,13 +2,11 @@ package rpc
 
 import "context"
 
-// GetClusterNodesResponse is a full raw rpc response of `GetClusterNodes`
-type GetClusterNodesResponse struct {
-	GeneralResponse
-	Result []GetClusterNodesResponseResult `json:"result"`
-}
+type GetClusterNodesResponse JsonRpcResponse[GetClusterNodes]
 
-type GetClusterNodesResponseResult struct {
+type GetClusterNodes []GetClusterNode
+
+type GetClusterNode struct {
 	Pubkey       string
 	Gossip       *string
 	Tpu          *string
@@ -19,11 +17,11 @@ type GetClusterNodesResponseResult struct {
 }
 
 // GetClusterNodes returns information about all the nodes participating in the cluster
-func (c *RpcClient) GetClusterNodes(ctx context.Context) (GetClusterNodesResponse, error) {
+func (c *RpcClient) GetClusterNodes(ctx context.Context) (JsonRpcResponse[GetClusterNodes], error) {
 	return c.processGetClusterNodes(c.Call(ctx, "getClusterNodes"))
 }
 
-func (c *RpcClient) processGetClusterNodes(body []byte, rpcErr error) (res GetClusterNodesResponse, err error) {
+func (c *RpcClient) processGetClusterNodes(body []byte, rpcErr error) (res JsonRpcResponse[GetClusterNodes], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

@@ -2,14 +2,9 @@ package rpc
 
 import "context"
 
-// GetInflationRateResponse is a full raw rpc response of `getInflationRate`
-type GetInflationRateResponse struct {
-	GeneralResponse
-	Result GetInflationRateResult `json:"result"`
-}
+type GetInflationRateResponse JsonRpcResponse[GetInflationRate]
 
-// GetInflationRateResult is a part of raw rpc response of `getInflationRate`
-type GetInflationRateResult struct {
+type GetInflationRate struct {
 	Epoch      uint64  `json:"epoch"`
 	Foundation float64 `json:"foundation"`
 	Total      float64 `json:"total"`
@@ -17,11 +12,11 @@ type GetInflationRateResult struct {
 }
 
 // GetInflationRate returns the specific inflation values for the current epoch
-func (c *RpcClient) GetInflationRate(ctx context.Context) (GetInflationRateResponse, error) {
+func (c *RpcClient) GetInflationRate(ctx context.Context) (JsonRpcResponse[GetInflationRate], error) {
 	return c.processGetInflationRate(c.Call(ctx, "getInflationRate"))
 }
 
-func (c *RpcClient) processGetInflationRate(body []byte, rpcErr error) (res GetInflationRateResponse, err error) {
+func (c *RpcClient) processGetInflationRate(body []byte, rpcErr error) (res JsonRpcResponse[GetInflationRate], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

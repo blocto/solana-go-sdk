@@ -39,7 +39,7 @@ func main() {
 
 	for _, a := range res.Result {
 		fmt.Println("pubkey", a.Pubkey)
-		data, err := base64.StdEncoding.DecodeString((a.Account.Data.([]interface{}))[0].(string))
+		data, err := base64.StdEncoding.DecodeString((a.Account.Data.([]any))[0].(string))
 		if err != nil {
 			log.Fatalf("failed to decode data, err: %v", err)
 		}

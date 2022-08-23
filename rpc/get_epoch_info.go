@@ -2,13 +2,9 @@ package rpc
 
 import "context"
 
-// GetEpochInfoResponse is a full raw rpc response of `getEpochInfo`
-type GetEpochInfoResponse struct {
-	GeneralResponse
-	Result GetEpochInfoResponseResult `json:"result"`
-}
+type GetEpochInfoResponse JsonRpcResponse[GetEpochInfo]
 
-type GetEpochInfoResponseResult struct {
+type GetEpochInfo struct {
 	AbsoluteSlot     uint64  `json:"absoluteSlot"`
 	BlockHeight      uint64  `json:"blockHeight"`
 	Epoch            uint64  `json:"epoch"`
@@ -23,16 +19,16 @@ type GetEpochInfoConfig struct {
 }
 
 // GetEpochInfo returns the SOL balance
-func (c *RpcClient) GetEpochInfo(ctx context.Context) (GetEpochInfoResponse, error) {
+func (c *RpcClient) GetEpochInfo(ctx context.Context) (JsonRpcResponse[GetEpochInfo], error) {
 	return c.processGetEpochInfo(c.Call(ctx, "getEpochInfo"))
 }
 
 // GetEpochInfoWithConfig returns the SOL balance
-func (c *RpcClient) GetEpochInfoWithConfig(ctx context.Context, cfg GetEpochInfoConfig) (GetEpochInfoResponse, error) {
+func (c *RpcClient) GetEpochInfoWithConfig(ctx context.Context, cfg GetEpochInfoConfig) (JsonRpcResponse[GetEpochInfo], error) {
 	return c.processGetEpochInfo(c.Call(ctx, "getEpochInfo", cfg))
 }
 
-func (c *RpcClient) processGetEpochInfo(body []byte, rpcErr error) (res GetEpochInfoResponse, err error) {
+func (c *RpcClient) processGetEpochInfo(body []byte, rpcErr error) (res JsonRpcResponse[GetEpochInfo], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

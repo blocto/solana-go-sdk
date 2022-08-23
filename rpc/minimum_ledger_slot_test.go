@@ -10,18 +10,16 @@ func TestMinimumLedgerSlot(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"minimumLedgerSlot"}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":84044778,"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.MinimumLedgerSlot(
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: MinimumLedgerSlotResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: 84044778,
+			ExpectedResponse: JsonRpcResponse[uint64]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result:  84044778,
 			},
 			ExpectedError: nil,
 		},

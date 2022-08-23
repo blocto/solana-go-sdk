@@ -10,18 +10,16 @@ func TestGetIdentity(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getIdentity"}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"identity":"BjHeMczor9oycGJHLepRTCU2LpkZNtpy2mdQKianx1EJ"},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetIdentity(
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetIdentityResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetIdentityResult{
+			ExpectedResponse: JsonRpcResponse[GetIdentity]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetIdentity{
 					Identity: "BjHeMczor9oycGJHLepRTCU2LpkZNtpy2mdQKianx1EJ",
 				},
 			},

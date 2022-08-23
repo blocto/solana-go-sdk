@@ -12,18 +12,16 @@ func TestGetEpochInfo(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getEpochInfo"}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"absoluteSlot":86715160,"blockHeight":84901536,"epoch":200,"slotIndex":315160,"slotsInEpoch":432000,"transactionCount":2265984079},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetEpochInfo(
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetEpochInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetEpochInfoResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetEpochInfo]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetEpochInfo{
 					AbsoluteSlot:     86715160,
 					BlockHeight:      84901536,
 					Epoch:            200,
@@ -37,7 +35,7 @@ func TestGetEpochInfo(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getEpochInfo", "params":[{"commitment": "processed"}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"absoluteSlot":86715194,"blockHeight":84901570,"epoch":200,"slotIndex":315194,"slotsInEpoch":432000,"transactionCount":2265987458},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetEpochInfoWithConfig(
 					context.TODO(),
 					GetEpochInfoConfig{
@@ -45,13 +43,11 @@ func TestGetEpochInfo(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetEpochInfoResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetEpochInfoResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetEpochInfo]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetEpochInfo{
 					AbsoluteSlot:     86715194,
 					BlockHeight:      84901570,
 					Epoch:            200,

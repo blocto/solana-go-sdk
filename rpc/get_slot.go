@@ -4,11 +4,7 @@ import (
 	"context"
 )
 
-// GetSlotResponse is a full raw rpc response of `getSlot`
-type GetSlotResponse struct {
-	GeneralResponse
-	Result uint64 `json:"result"`
-}
+type GetSlotResponse JsonRpcResponse[uint64]
 
 // GetSlotConfig is a option config for `getSlot`
 type GetSlotConfig struct {
@@ -16,16 +12,16 @@ type GetSlotConfig struct {
 }
 
 // GetSlot returns the SOL balance
-func (c *RpcClient) GetSlot(ctx context.Context) (GetSlotResponse, error) {
+func (c *RpcClient) GetSlot(ctx context.Context) (JsonRpcResponse[uint64], error) {
 	return c.processGetSlot(c.Call(ctx, "getSlot"))
 }
 
 // GetSlotWithConfig returns the SOL balance
-func (c *RpcClient) GetSlotWithConfig(ctx context.Context, cfg GetSlotConfig) (GetSlotResponse, error) {
+func (c *RpcClient) GetSlotWithConfig(ctx context.Context, cfg GetSlotConfig) (JsonRpcResponse[uint64], error) {
 	return c.processGetSlot(c.Call(ctx, "getSlot", cfg))
 }
 
-func (c *RpcClient) processGetSlot(body []byte, rpcErr error) (res GetSlotResponse, err error) {
+func (c *RpcClient) processGetSlot(body []byte, rpcErr error) (res JsonRpcResponse[uint64], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

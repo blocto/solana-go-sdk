@@ -8,7 +8,7 @@ import (
 
 func Test_preparePayload(t *testing.T) {
 	type args struct {
-		params []interface{}
+		params []any
 	}
 	tests := []struct {
 		name string
@@ -18,28 +18,28 @@ func Test_preparePayload(t *testing.T) {
 	}{
 		{
 			args: args{
-				params: []interface{}{"getBalance", "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7", nil},
+				params: []any{"getBalance", "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7", nil},
 			},
 			want: `{"id":1,"jsonrpc":"2.0","method":"getBalance","params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",null]}`,
 			err:  nil,
 		},
 		{
 			args: args{
-				params: []interface{}{"getBalance", "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7", GetBalanceConfig{}},
+				params: []any{"getBalance", "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7", GetBalanceConfig{}},
 			},
 			want: `{"id":1,"jsonrpc":"2.0","method":"getBalance","params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",{}]}`,
 			err:  nil,
 		},
 		{
 			args: args{
-				params: []interface{}{"getBalance", "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7", GetBalanceConfig{Commitment: CommitmentFinalized}},
+				params: []any{"getBalance", "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7", GetBalanceConfig{Commitment: CommitmentFinalized}},
 			},
 			want: `{"id":1,"jsonrpc":"2.0","method":"getBalance","params":["RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",{"commitment":"finalized"}]}`,
 			err:  nil,
 		},
 		{
 			args: args{
-				params: []interface{}{"getBalance"},
+				params: []any{"getBalance"},
 			},
 			want: `{"id":1,"jsonrpc":"2.0","method":"getBalance"}`,
 			err:  nil,

@@ -12,7 +12,7 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getTokenAccountsByOwner", "params":["27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ", {"mint": "4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3"}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":88024144},"value":[{"account":{"data":"error: data too large for bs58 encoding","executable":false,"lamports":2039280,"owner":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","rentEpoch":203},"pubkey":"AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ"}]},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetTokenAccountsByOwner(
 					context.TODO(),
 					"27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ",
@@ -21,17 +21,15 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetTokenAccountsByOwnerResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetTokenAccountsByOwnerResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetTokenAccountsByOwner]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetTokenAccountsByOwner{
 					Context: Context{
 						Slot: 88024144,
 					},
-					Value: []GetProgramAccounts{
+					Value: GetProgramAccounts{
 						{
 							Pubkey: "AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
 							Account: AccountInfo{
@@ -50,7 +48,7 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getTokenAccountsByOwner", "params":["27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ", {"programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":88024144},"value":[{"account":{"data":"error: data too large for bs58 encoding","executable":false,"lamports":2039280,"owner":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","rentEpoch":203},"pubkey":"AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ"}]},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetTokenAccountsByOwner(
 					context.TODO(),
 					"27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ",
@@ -59,17 +57,15 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 					},
 				)
 			},
-			ExpectedResponse: GetTokenAccountsByOwnerResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetTokenAccountsByOwnerResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetTokenAccountsByOwner]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetTokenAccountsByOwner{
 					Context: Context{
 						Slot: 88024144,
 					},
-					Value: []GetProgramAccounts{
+					Value: GetProgramAccounts{
 						{
 							Pubkey: "AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
 							Account: AccountInfo{
@@ -88,7 +84,7 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getTokenAccountsByOwner", "params":["27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ", {"mint": "4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3"}, {"encoding":"base64"}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":88024145},"value":[{"account":{"data":["M72Y4VtywPCapPDIhmN7Y+l309jqFamd0HPBVhiGx5AQllkXXnxkMyGl7UZCoCewq9l7jdl60bzG3GRxOGzN3ADkC1QCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","base64"],"executable":false,"lamports":2039280,"owner":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","rentEpoch":203},"pubkey":"AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ"}]},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetTokenAccountsByOwnerWithConfig(
 					context.TODO(),
 					"27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ",
@@ -96,28 +92,26 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 						Mint: "4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3",
 					},
 					GetTokenAccountsByOwnerConfig{
-						Encoding: GetTokenAccountsByOwnerConfigEncodingBase64,
+						Encoding: AccountEncodingBase64,
 					},
 				)
 			},
-			ExpectedResponse: GetTokenAccountsByOwnerResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetTokenAccountsByOwnerResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetTokenAccountsByOwner]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetTokenAccountsByOwner{
 					Context: Context{
 						Slot: 88024145,
 					},
-					Value: []GetProgramAccounts{
+					Value: GetProgramAccounts{
 						{
 							Pubkey: "AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
 							Account: AccountInfo{
 								Lamports:  2039280,
 								Owner:     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 								RentEpoch: 203,
-								Data: []interface{}{
+								Data: []any{
 									"M72Y4VtywPCapPDIhmN7Y+l309jqFamd0HPBVhiGx5AQllkXXnxkMyGl7UZCoCewq9l7jdl60bzG3GRxOGzN3ADkC1QCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
 									"base64",
 								},
@@ -132,7 +126,7 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getTokenAccountsByOwner", "params":["27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ", {"mint": "4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3"}, {"encoding":"base64", "dataSlice": {"offset": 4, "length": 32}}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":88024145},"value":[{"account":{"data":["M72Y4VtywPCapPDIhmN7Y+l309jqFamd0HPBVhiGx5AQllkXXnxkMyGl7UZCoCewq9l7jdl60bzG3GRxOGzN3ADkC1QCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","base64"],"executable":false,"lamports":2039280,"owner":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","rentEpoch":203},"pubkey":"AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ"}]},"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetTokenAccountsByOwnerWithConfig(
 					context.TODO(),
 					"27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ",
@@ -140,32 +134,30 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 						Mint: "4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3",
 					},
 					GetTokenAccountsByOwnerConfig{
-						Encoding: GetTokenAccountsByOwnerConfigEncodingBase64,
-						DataSlice: &GetTokenAccountsByOwnerConfigDataSlice{
+						Encoding: AccountEncodingBase64,
+						DataSlice: &DataSlice{
 							Offset: 4,
 							Length: 32,
 						},
 					},
 				)
 			},
-			ExpectedResponse: GetTokenAccountsByOwnerResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: GetTokenAccountsByOwnerResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetTokenAccountsByOwner]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetTokenAccountsByOwner{
 					Context: Context{
 						Slot: 88024145,
 					},
-					Value: []GetProgramAccounts{
+					Value: GetProgramAccounts{
 						{
 							Pubkey: "AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
 							Account: AccountInfo{
 								Lamports:  2039280,
 								Owner:     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
 								RentEpoch: 203,
-								Data: []interface{}{
+								Data: []any{
 									"M72Y4VtywPCapPDIhmN7Y+l309jqFamd0HPBVhiGx5AQllkXXnxkMyGl7UZCoCewq9l7jdl60bzG3GRxOGzN3ADkC1QCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
 									"base64",
 								},

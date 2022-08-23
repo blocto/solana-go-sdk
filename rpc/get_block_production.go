@@ -4,14 +4,10 @@ import (
 	"context"
 )
 
-// GetBlockProductionResponse is a rpc response of `getBlockProduction`
-type GetBlockProductionResponse struct {
-	GeneralResponse
-	Result GetBlockProductionResponseResult `json:"result"`
-}
+type GetBlockProductionResponse JsonRpcResponse[GetBlockProduction]
 
 // GetBlockProductionResponseResult is a part of raw rpc response of `getBlockProduction`
-type GetBlockProductionResponseResult struct {
+type GetBlockProduction struct {
 	Context Context                               `json:"context"`
 	Value   GetBlockProductionResponseResultValue `json:"value"`
 }
@@ -34,16 +30,16 @@ type GetBlockProductionRange struct {
 }
 
 // GetBlockProduction returns the current block height of the node
-func (c *RpcClient) GetBlockProduction(ctx context.Context) (GetBlockProductionResponse, error) {
+func (c *RpcClient) GetBlockProduction(ctx context.Context) (JsonRpcResponse[GetBlockProduction], error) {
 	return c.processGetBlockProduction(c.Call(ctx, "getBlockProduction"))
 }
 
 // GetBlockProductionWithConfig returns the current block height of the node
-func (c *RpcClient) GetBlockProductionWithConfig(ctx context.Context, cfg GetBlockProductionConfig) (GetBlockProductionResponse, error) {
+func (c *RpcClient) GetBlockProductionWithConfig(ctx context.Context, cfg GetBlockProductionConfig) (JsonRpcResponse[GetBlockProduction], error) {
 	return c.processGetBlockProduction(c.Call(ctx, "getBlockProduction", cfg))
 }
 
-func (c *RpcClient) processGetBlockProduction(body []byte, rpcErr error) (res GetBlockProductionResponse, err error) {
+func (c *RpcClient) processGetBlockProduction(body []byte, rpcErr error) (res JsonRpcResponse[GetBlockProduction], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

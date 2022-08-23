@@ -12,18 +12,16 @@ func TestGetClusterNodes(t *testing.T) {
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getClusterNodes"}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":[{"featureSet":1797267350,"gossip":"127.0.0.1:1024","pubkey":"8gNdbr9dG6oj8bhaQ44icyMYsfG3t1dhXKUJLGVav4tn","rpc":"127.0.0.1:8899","shredVersion":23492,"tpu":"127.0.0.1:1027","version":"1.8.1"}],"id":1}`,
-			RpcCall: func(rc RpcClient) (interface{}, error) {
+			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetClusterNodes(
 					context.TODO(),
 				)
 			},
-			ExpectedResponse: GetClusterNodesResponse{
-				GeneralResponse: GeneralResponse{
-					JsonRPC: "2.0",
-					ID:      1,
-					Error:   nil,
-				},
-				Result: []GetClusterNodesResponseResult{
+			ExpectedResponse: JsonRpcResponse[GetClusterNodes]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetClusterNodes{
 					{
 						Pubkey:       "8gNdbr9dG6oj8bhaQ44icyMYsfG3t1dhXKUJLGVav4tn",
 						Gossip:       pointer.String("127.0.0.1:1024"),

@@ -4,10 +4,7 @@ import (
 	"context"
 )
 
-type SendTransactionResponse struct {
-	GeneralResponse
-	Result string `json:"result"`
-}
+type SendTransactionResponse JsonRpcResponse[string]
 
 type SendTransactionConfigEncoding string
 
@@ -24,16 +21,16 @@ type SendTransactionConfig struct {
 }
 
 // SendTransaction submits a signed transaction to the cluster for processing
-func (c *RpcClient) SendTransaction(ctx context.Context, tx string) (SendTransactionResponse, error) {
+func (c *RpcClient) SendTransaction(ctx context.Context, tx string) (JsonRpcResponse[string], error) {
 	return c.processSendTransaction(c.Call(ctx, "sendTransaction", tx))
 }
 
 // SendTransaction submits a signed transaction to the cluster for processing
-func (c *RpcClient) SendTransactionWithConfig(ctx context.Context, tx string, cfg SendTransactionConfig) (SendTransactionResponse, error) {
+func (c *RpcClient) SendTransactionWithConfig(ctx context.Context, tx string, cfg SendTransactionConfig) (JsonRpcResponse[string], error) {
 	return c.processSendTransaction(c.Call(ctx, "sendTransaction", tx, cfg))
 }
 
-func (c *RpcClient) processSendTransaction(body []byte, rpcErr error) (res SendTransactionResponse, err error) {
+func (c *RpcClient) processSendTransaction(body []byte, rpcErr error) (res JsonRpcResponse[string], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

@@ -4,23 +4,18 @@ import (
 	"context"
 )
 
-// GetIdentityResponse is a full raw rpc response of `getIdentity`
-type GetIdentityResponse struct {
-	GeneralResponse
-	Result GetIdentityResult `json:"result"`
-}
+type GetIdentityResponse JsonRpcResponse[GetIdentity]
 
-// GetIdentityResult is a part of raw rpc response of `getIdentity`
-type GetIdentityResult struct {
+type GetIdentity struct {
 	Identity string `json:"identity"`
 }
 
 // GetIdentity returns the identity pubkey for the current node
-func (c *RpcClient) GetIdentity(ctx context.Context) (GetIdentityResponse, error) {
+func (c *RpcClient) GetIdentity(ctx context.Context) (JsonRpcResponse[GetIdentity], error) {
 	return c.processGetIdentity(c.Call(ctx, "getIdentity"))
 }
 
-func (c *RpcClient) processGetIdentity(body []byte, rpcErr error) (res GetIdentityResponse, err error) {
+func (c *RpcClient) processGetIdentity(body []byte, rpcErr error) (res JsonRpcResponse[GetIdentity], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

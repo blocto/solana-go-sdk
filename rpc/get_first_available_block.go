@@ -4,18 +4,14 @@ import (
 	"context"
 )
 
-// GetFirstAvailableBlockResponse is a full raw rpc response of `getFirstAvailableBlock`
-type GetFirstAvailableBlockResponse struct {
-	GeneralResponse
-	Result uint64 `json:"result"`
-}
+type GetFirstAvailableBlockResponse JsonRpcResponse[uint64]
 
 // GetFirstAvailableBlock returns the slot of the lowest confirmed block that has not been purged from the ledger
-func (c *RpcClient) GetFirstAvailableBlock(ctx context.Context) (GetFirstAvailableBlockResponse, error) {
+func (c *RpcClient) GetFirstAvailableBlock(ctx context.Context) (JsonRpcResponse[uint64], error) {
 	return c.processGetFirstAvailableBlock(c.Call(ctx, "getFirstAvailableBlock"))
 }
 
-func (c *RpcClient) processGetFirstAvailableBlock(body []byte, rpcErr error) (res GetFirstAvailableBlockResponse, err error) {
+func (c *RpcClient) processGetFirstAvailableBlock(body []byte, rpcErr error) (res JsonRpcResponse[uint64], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }

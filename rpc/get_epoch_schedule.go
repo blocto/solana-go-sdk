@@ -2,13 +2,9 @@ package rpc
 
 import "context"
 
-// GetEpochScheduleResponse is a full raw rpc response of `getEpochSchedule`
-type GetEpochScheduleResponse struct {
-	GeneralResponse
-	Result GetEpochScheduleResponseResult `json:"result"`
-}
+type GetEpochScheduleResponse JsonRpcResponse[GetEpochSchedule]
 
-type GetEpochScheduleResponseResult struct {
+type GetEpochSchedule struct {
 	FirstNormalEpoch         uint64 `json:"firstNormalEpoch"`
 	FirstNormalSlot          uint64 `json:"firstNormalSlot"`
 	LeaderScheduleSlotOffset uint64 `json:"leaderScheduleSlotOffset"`
@@ -17,11 +13,11 @@ type GetEpochScheduleResponseResult struct {
 }
 
 // GetEpochSchedule returns epoch schedule information from this cluster's genesis config
-func (c *RpcClient) GetEpochSchedule(ctx context.Context) (GetEpochScheduleResponse, error) {
+func (c *RpcClient) GetEpochSchedule(ctx context.Context) (JsonRpcResponse[GetEpochSchedule], error) {
 	return c.processGetEpochSchedule(c.Call(ctx, "getEpochSchedule"))
 }
 
-func (c *RpcClient) processGetEpochSchedule(body []byte, rpcErr error) (res GetEpochScheduleResponse, err error) {
+func (c *RpcClient) processGetEpochSchedule(body []byte, rpcErr error) (res JsonRpcResponse[GetEpochSchedule], err error) {
 	err = c.processRpcCall(body, rpcErr, &res)
 	return
 }
