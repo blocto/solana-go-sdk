@@ -97,7 +97,19 @@ func (m *Message) Serialize() ([]byte, error) {
 	return b, nil
 }
 
+// DecompileInstructions hasn't support v0 message decode
 func (m *Message) DecompileInstructions() []Instruction {
+	switch m.Version {
+	case MessageVersionLegacy:
+		return m.decompileLegacyMessageInstructions()
+	case MessageVersionV0:
+		panic("hasn't supported")
+	default:
+		return m.decompileLegacyMessageInstructions()
+	}
+}
+
+func (m Message) decompileLegacyMessageInstructions() []Instruction {
 	instructions := make([]Instruction, 0, len(m.Instructions))
 	for _, cins := range m.Instructions {
 		accounts := make([]AccountMeta, 0, len(cins.Accounts))

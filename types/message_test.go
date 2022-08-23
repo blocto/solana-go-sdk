@@ -1,7 +1,6 @@
 package types
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/portto/solana-go-sdk/common"
@@ -151,15 +150,18 @@ func TestMessage_Serialize(t *testing.T) {
 
 func TestMessage_DecompileInstructions(t *testing.T) {
 	type fields struct {
-		Header          MessageHeader
-		Accounts        []common.PublicKey
-		RecentBlockHash string
-		Instructions    []CompiledInstruction
+		Version            MessageVersion
+		Header             MessageHeader
+		Accounts           []common.PublicKey
+		RecentBlockHash    string
+		Instructions       []CompiledInstruction
+		AddressLookupTable *CompiledAddressLookupTable
 	}
 	tests := []struct {
 		name   string
 		fields fields
 		want   []Instruction
+		panic  string
 	}{
 		{
 			fields: fields{
@@ -193,17 +195,137 @@ func TestMessage_DecompileInstructions(t *testing.T) {
 				},
 			},
 		},
+		{
+			fields: fields{
+				Version: MessageVersionLegacy,
+				Header: MessageHeader{
+					NumRequireSignatures:        1,
+					NumReadonlySignedAccounts:   0,
+					NumReadonlyUnsignedAccounts: 1,
+				},
+				Accounts: []common.PublicKey{
+					common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+					common.PublicKeyFromString("A4iUVr5KjmsLymUcv4eSKPedUtoaBceiPeGipKMYc69b"),
+					common.SystemProgramID,
+				},
+				RecentBlockHash: "FwRYtTPRk5N4wUeP87rTw9kQVSwigB6kbikGzzeCMrW5",
+				Instructions: []CompiledInstruction{
+					{
+						ProgramIDIndex: 2,
+						Accounts:       []int{0, 1},
+						Data:           []byte{2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+					},
+				},
+			},
+			want: []Instruction{
+				{
+					Accounts: []AccountMeta{
+						{PubKey: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"), IsSigner: true, IsWritable: true},
+						{PubKey: common.PublicKeyFromString("A4iUVr5KjmsLymUcv4eSKPedUtoaBceiPeGipKMYc69b"), IsSigner: false, IsWritable: true},
+					},
+					ProgramID: common.SystemProgramID,
+					Data:      []byte{2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+				},
+			},
+		},
+		{
+			fields: fields{
+				Version: MessageVersionV0,
+				Header: MessageHeader{
+					NumRequireSignatures:        1,
+					NumReadonlySignedAccounts:   0,
+					NumReadonlyUnsignedAccounts: 1,
+				},
+				Accounts: []common.PublicKey{
+					common.PublicKeyFromString("9aE476sH92Vz7DMPyq5WLPkrKWivxeuTKEFKd2sZZcde"),
+					common.PublicKeyFromString("2xNweLHLqrbx4zo1waDvgWJHgsUpPj8Y8icbAFeR4a8i"),
+					common.SystemProgramID,
+				},
+				RecentBlockHash: "9rAtxuhtKn8qagc3UtZFyhLrw5zkh6etv43TibaXuSKo",
+				Instructions: []CompiledInstruction{
+					{
+						ProgramIDIndex: 2,
+						Accounts:       []int{0, 1},
+						Data:           []byte{2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+					},
+				},
+			},
+			panic: "hasn't supported",
+		},
+		{
+			fields: fields{
+				Version: MessageVersionV0,
+				Header: MessageHeader{
+					NumRequireSignatures:        1,
+					NumReadonlySignedAccounts:   0,
+					NumReadonlyUnsignedAccounts: 1,
+				},
+				Accounts: []common.PublicKey{
+					common.PublicKeyFromString("9aE476sH92Vz7DMPyq5WLPkrKWivxeuTKEFKd2sZZcde"),
+					common.PublicKeyFromString("2xNweLHLqrbx4zo1waDvgWJHgsUpPj8Y8icbAFeR4a8i"),
+					common.SystemProgramID,
+				},
+				RecentBlockHash: "9rAtxuhtKn8qagc3UtZFyhLrw5zkh6etv43TibaXuSKo",
+				Instructions: []CompiledInstruction{
+					{
+						ProgramIDIndex: 2,
+						Accounts:       []int{0, 1},
+						Data:           []byte{2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+					},
+				},
+				AddressLookupTable: &CompiledAddressLookupTable{
+					AccountKey:      common.PublicKeyFromString("HEhDGuxaxGr9LuNtBdvbX2uggyAKoxYgHFaAiqxVu8UY"),
+					WritableIndexes: []uint8{},
+					ReadonlyIndexes: []uint8{},
+				},
+			},
+			panic: "hasn't supported",
+		},
+		{
+			fields: fields{
+				Version: MessageVersionV0,
+				Header: MessageHeader{
+					NumRequireSignatures:        1,
+					NumReadonlySignedAccounts:   0,
+					NumReadonlyUnsignedAccounts: 1,
+				},
+				Accounts: []common.PublicKey{
+					common.PublicKeyFromString("9aE476sH92Vz7DMPyq5WLPkrKWivxeuTKEFKd2sZZcde"),
+					common.SystemProgramID,
+				},
+				RecentBlockHash: "5EvWPqKeYfN2P7SAQZ2TLnXhV3Ltjn6qEhK1F279dUUW",
+				Instructions: []CompiledInstruction{
+					{
+						ProgramIDIndex: 1,
+						Accounts:       []int{0, 2},
+						Data:           []byte{2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+					},
+				},
+				AddressLookupTable: &CompiledAddressLookupTable{
+					AccountKey:      common.PublicKeyFromString("HEhDGuxaxGr9LuNtBdvbX2uggyAKoxYgHFaAiqxVu8UY"),
+					WritableIndexes: []uint8{1},
+					ReadonlyIndexes: []uint8{},
+				},
+			},
+			panic: "hasn't supported",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			m := &Message{
-				Header:          tt.fields.Header,
-				Accounts:        tt.fields.Accounts,
-				RecentBlockHash: tt.fields.RecentBlockHash,
-				Instructions:    tt.fields.Instructions,
+				Version:            tt.fields.Version,
+				Header:             tt.fields.Header,
+				Accounts:           tt.fields.Accounts,
+				RecentBlockHash:    tt.fields.RecentBlockHash,
+				Instructions:       tt.fields.Instructions,
+				AddressLookupTable: tt.fields.AddressLookupTable,
 			}
-			if got := m.DecompileInstructions(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Message.DecompileInstructions() = %v, want %v", got, tt.want)
+			if len(tt.panic) == 0 {
+				assert.Equal(t, tt.want, m.DecompileInstructions())
+			} else {
+				assert.PanicsWithValue(t, tt.panic, func() {
+					m.DecompileInstructions()
+				})
 			}
 		})
 	}
