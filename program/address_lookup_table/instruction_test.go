@@ -162,7 +162,7 @@ func TestExtendLookupTable(t *testing.T) {
 				params: ExtendLookupTableParams{
 					LookupTable: common.PublicKeyFromString("HJ6JRbBAPFfeUtiiD2VKAoTH9w7ZCyCGZSaevFFCZtsJ"),
 					Authority:   common.PublicKeyFromString("FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz"),
-					Payer:       pointer.Pubkey(common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7")),
+					Payer:       pointer.Get[common.PublicKey](common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7")),
 					Addresses: []common.PublicKey{
 						common.PublicKeyFromString("9aE476sH92Vz7DMPyq5WLPkrKWivxeuTKEFKd2sZZcde"),
 						common.PublicKeyFromString("2xNweLHLqrbx4zo1waDvgWJHgsUpPj8Y8icbAFeR4a8i"),
