@@ -4,6 +4,10 @@ import (
 	"github.com/portto/solana-go-sdk/common"
 )
 
+func Get[T any](v T) *T {
+	return &v
+}
+
 func Bool(v bool) *bool {
 	return &v
 }
