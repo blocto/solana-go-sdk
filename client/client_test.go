@@ -429,7 +429,7 @@ func TestClient_GetClusterNodes(t *testing.T) {
 					Rpc:          pointer.String("127.0.0.1:8899"),
 					Version:      pointer.String("1.8.1"),
 					FeatureSet:   pointer.Uint32(1797267350),
-					ShredVersion: pointer.Uint16(23492),
+					ShredVersion: pointer.Get[uint16](23492),
 				},
 			},
 			err: nil,
