@@ -51,7 +51,7 @@ func TestGetFeeForMessage(t *testing.T) {
 					Context: Context{
 						Slot: 112884286,
 					},
-					Value: pointer.Uint64(5000),
+					Value: pointer.Get[uint64](5000),
 				},
 			},
 			ExpectedError: nil,

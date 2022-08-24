@@ -69,7 +69,7 @@ func TestGetSignatureStatuses(t *testing.T) {
 						},
 						{
 							Slot:               86136551,
-							Confirmations:      pointer.Uint64(25),
+							Confirmations:      pointer.Get[uint64](25),
 							ConfirmationStatus: (*Commitment)(pointer.String(string(CommitmentConfirmed))),
 							Err:                nil,
 						},

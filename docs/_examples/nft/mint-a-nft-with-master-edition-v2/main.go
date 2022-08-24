@@ -123,7 +123,7 @@ func main() {
 					MintAuthority:   feePayer.PublicKey,
 					Metadata:        tokenMetadataPubkey,
 					Payer:           feePayer.PublicKey,
-					MaxSupply:       pointer.Uint64(0),
+					MaxSupply:       pointer.Get[uint64](0),
 				}),
 			},
 		}),

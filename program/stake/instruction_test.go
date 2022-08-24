@@ -194,7 +194,7 @@ func TestSetLockup(t *testing.T) {
 					Stake: common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
 					Auth:  common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
 					Lockup: LockupParam{
-						Epoch: pointer.Uint64(1),
+						Epoch: pointer.Get[uint64](1),
 					},
 				},
 			},

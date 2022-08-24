@@ -585,7 +585,7 @@ func TestClient_GetSignatureStatus(t *testing.T) {
 			},
 			want: &rpc.SignatureStatus{
 				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
-				Confirmations:      pointer.Uint64(25),
+				Confirmations:      pointer.Get[uint64](25),
 				Err:                nil,
 				Slot:               86136551,
 			},
@@ -664,7 +664,7 @@ func TestClient_GetSignatureStatusWithConfig(t *testing.T) {
 			},
 			want: &rpc.SignatureStatus{
 				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
-				Confirmations:      pointer.Uint64(25),
+				Confirmations:      pointer.Get[uint64](25),
 				Err:                nil,
 				Slot:               86136551,
 			},
@@ -746,7 +746,7 @@ func TestClient_GetSignatureStatuses(t *testing.T) {
 			want: rpc.SignatureStatuses{
 				{
 					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
-					Confirmations:      pointer.Uint64(25),
+					Confirmations:      pointer.Get[uint64](25),
 					Err:                nil,
 					Slot:               86136551,
 				},
@@ -829,7 +829,7 @@ func TestClient_GetSignatureStatusesWithConfig(t *testing.T) {
 			want: rpc.SignatureStatuses{
 				{
 					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
-					Confirmations:      pointer.Uint64(25),
+					Confirmations:      pointer.Get[uint64](25),
 					Err:                nil,
 					Slot:               86136551,
 				},
@@ -1308,7 +1308,7 @@ func TestClient_GetFeeForMessage(t *testing.T) {
 					RecentBlockhash: "9Jf8nJep3oubyeGVernU2kVVmrmnADJFyHu8Bmq23S2C",
 				}),
 			},
-			Want: pointer.Uint64(5000),
+			Want: pointer.Get[uint64](5000),
 			Err:  nil,
 		},
 	}
@@ -1390,7 +1390,7 @@ func TestClient_GetFeeForMessageWithConfig(t *testing.T) {
 					Commitment: rpc.CommitmentProcessed,
 				},
 			},
-			Want: pointer.Uint64(5000),
+			Want: pointer.Get[uint64](5000),
 			Err:  nil,
 		},
 	}
