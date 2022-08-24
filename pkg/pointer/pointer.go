@@ -8,10 +8,6 @@ func Get[T any](v T) *T {
 	return &v
 }
 
-func Uint8(v uint8) *uint8 {
-	return &v
-}
-
 func Uint16(v uint16) *uint16 {
 	return &v
 }

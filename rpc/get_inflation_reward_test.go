@@ -27,7 +27,7 @@ func TestGetInflationReward(t *testing.T) {
 					{
 						Epoch:         34,
 						EffectiveSlot: 1120,
-						Commission:    pointer.Uint8(0),
+						Commission:    pointer.Get[uint8](0),
 						Amount:        154995,
 						PostBalance:   10003564885,
 					},
@@ -56,7 +56,7 @@ func TestGetInflationReward(t *testing.T) {
 					{
 						Epoch:         35,
 						EffectiveSlot: 1152,
-						Commission:    pointer.Uint8(0),
+						Commission:    pointer.Get[uint8](0),
 						Amount:        154995,
 						PostBalance:   10003719880,
 					},
@@ -85,7 +85,7 @@ func TestGetInflationReward(t *testing.T) {
 					{
 						Epoch:         31,
 						EffectiveSlot: 1024,
-						Commission:    pointer.Uint8(0),
+						Commission:    pointer.Get[uint8](0),
 						Amount:        154995,
 						PostBalance:   10003099900,
 					},
