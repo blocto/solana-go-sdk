@@ -26,27 +26,27 @@ func TestGetSignaturesForAddress(t *testing.T) {
 					{
 						Signature: "26UNKcerqcmHhRgFqtvtWUJZod91dGpkkAtRzKewvsZSoah33VZiFgKPmnHmMhBwsHT4bQjKdCgH88Faex5WkChh",
 						Slot:      63372,
-						BlockTime: pointer.Int64(1633580920),
+						BlockTime: pointer.Get[int64](1633580920),
 					},
 					{
 						Signature: "vB73C8nWXv2ZwLjCRhTQXnkqqKDafE9uWyycQqajFzQcNFzjRUYq8ZqmtCm4qnwpGxXJWbkkRuyhiQ26zEpfk28",
 						Slot:      63370,
-						BlockTime: pointer.Int64(1633580919),
+						BlockTime: pointer.Get[int64](1633580919),
 					},
 					{
 						Signature: "4ZAtdQ7wF8EPXVf43ZpyqMiKqpaiGppysSxQ54X31Q92ht1pKgQymiJwRnUc3h4cUjRJfFrVprNJhW6UfybJMAQP",
 						Slot:      63369,
-						BlockTime: pointer.Int64(1633580918),
+						BlockTime: pointer.Get[int64](1633580918),
 					},
 					{
 						Signature: "63BWysCcY6CcVT9G4FrfD1XuZ2DUswSTuJM5jeULUWwgp3BJhMnAStH3gTkUPXeUEjYoQhVNfd61RxxxWwsezi8y",
 						Slot:      63367,
-						BlockTime: pointer.Int64(1633580916),
+						BlockTime: pointer.Get[int64](1633580916),
 					},
 					{
 						Signature: "pxS5UZhzvk8p5qiKonkAeVBjP1ipujERPMMNZ2ZexK1PyU8RvZxQwYjiv9YJYP4CpRrHAxTET2rNZ6LNf4aYvDN",
 						Slot:      63365,
-						BlockTime: pointer.Int64(1633580915),
+						BlockTime: pointer.Get[int64](1633580915),
 					},
 				},
 			},
@@ -73,7 +73,7 @@ func TestGetSignaturesForAddress(t *testing.T) {
 					{
 						Signature: "66z7UgyzEozBQ1moxc2ThzGtzbwETZ9bR5ExSUubWhQzqGuX1hQgCGSV1n22o96yuDCFY2dHeMNNLDnf6zjewy7C",
 						Slot:      64265,
-						BlockTime: pointer.Int64(1633581563),
+						BlockTime: pointer.Get[int64](1633581563),
 					},
 				},
 			},
@@ -99,12 +99,12 @@ func TestGetSignaturesForAddress(t *testing.T) {
 					{
 						Signature: "66z7UgyzEozBQ1moxc2ThzGtzbwETZ9bR5ExSUubWhQzqGuX1hQgCGSV1n22o96yuDCFY2dHeMNNLDnf6zjewy7C",
 						Slot:      64265,
-						BlockTime: pointer.Int64(1633581563),
+						BlockTime: pointer.Get[int64](1633581563),
 					},
 					{
 						Signature: "26UNKcerqcmHhRgFqtvtWUJZod91dGpkkAtRzKewvsZSoah33VZiFgKPmnHmMhBwsHT4bQjKdCgH88Faex5WkChh",
 						Slot:      63372,
-						BlockTime: pointer.Int64(1633580920),
+						BlockTime: pointer.Get[int64](1633580920),
 					},
 				},
 			},
@@ -130,12 +130,12 @@ func TestGetSignaturesForAddress(t *testing.T) {
 					{
 						Signature: "63BWysCcY6CcVT9G4FrfD1XuZ2DUswSTuJM5jeULUWwgp3BJhMnAStH3gTkUPXeUEjYoQhVNfd61RxxxWwsezi8y",
 						Slot:      63367,
-						BlockTime: pointer.Int64(1633580916),
+						BlockTime: pointer.Get[int64](1633580916),
 					},
 					{
 						Signature: "pxS5UZhzvk8p5qiKonkAeVBjP1ipujERPMMNZ2ZexK1PyU8RvZxQwYjiv9YJYP4CpRrHAxTET2rNZ6LNf4aYvDN",
 						Slot:      63365,
-						BlockTime: pointer.Int64(1633580915),
+						BlockTime: pointer.Get[int64](1633580915),
 					},
 				},
 			},
@@ -162,7 +162,7 @@ func TestGetSignaturesForAddress(t *testing.T) {
 					{
 						Signature: "63BWysCcY6CcVT9G4FrfD1XuZ2DUswSTuJM5jeULUWwgp3BJhMnAStH3gTkUPXeUEjYoQhVNfd61RxxxWwsezi8y",
 						Slot:      63367,
-						BlockTime: pointer.Int64(1633580916),
+						BlockTime: pointer.Get[int64](1633580916),
 					},
 				},
 			},

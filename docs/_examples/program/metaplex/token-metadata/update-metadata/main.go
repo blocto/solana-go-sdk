@@ -59,7 +59,7 @@ func main() {
 						},
 					},
 					NewUpdateAuthority:  &alice.PublicKey,
-					PrimarySaleHappened: pointer.Bool(true),
+					PrimarySaleHappened: pointer.Get[bool](true),
 				}),
 			},
 		}),

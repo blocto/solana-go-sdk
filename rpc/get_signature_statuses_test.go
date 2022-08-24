@@ -31,7 +31,7 @@ func TestGetSignatureStatuses(t *testing.T) {
 						{
 							Slot:               86136524,
 							Confirmations:      nil,
-							ConfirmationStatus: (*Commitment)(pointer.String(string(CommitmentFinalized))),
+							ConfirmationStatus: (*Commitment)(pointer.Get(string(CommitmentFinalized))),
 							Err:                nil,
 						},
 					},
@@ -64,13 +64,13 @@ func TestGetSignatureStatuses(t *testing.T) {
 						{
 							Slot:               86136524,
 							Confirmations:      nil,
-							ConfirmationStatus: (*Commitment)(pointer.String(string(CommitmentFinalized))),
+							ConfirmationStatus: (*Commitment)(pointer.Get(string(CommitmentFinalized))),
 							Err:                nil,
 						},
 						{
 							Slot:               86136551,
-							Confirmations:      pointer.Uint64(25),
-							ConfirmationStatus: (*Commitment)(pointer.String(string(CommitmentConfirmed))),
+							Confirmations:      pointer.Get[uint64](25),
+							ConfirmationStatus: (*Commitment)(pointer.Get(string(CommitmentConfirmed))),
 							Err:                nil,
 						},
 					},
@@ -103,7 +103,7 @@ func TestGetSignatureStatuses(t *testing.T) {
 						{
 							Slot:               86136524,
 							Confirmations:      nil,
-							ConfirmationStatus: (*Commitment)(pointer.String(string(CommitmentFinalized))),
+							ConfirmationStatus: (*Commitment)(pointer.Get(string(CommitmentFinalized))),
 							Err:                nil,
 						},
 					},
@@ -136,7 +136,7 @@ func TestGetSignatureStatuses(t *testing.T) {
 						{
 							Slot:               85500622,
 							Confirmations:      nil,
-							ConfirmationStatus: (*Commitment)(pointer.String(string(CommitmentFinalized))),
+							ConfirmationStatus: (*Commitment)(pointer.Get(string(CommitmentFinalized))),
 							Err: map[string]any{
 								"InstructionError": []any{
 									0.,
@@ -202,7 +202,7 @@ func TestGetSignatureStatuses(t *testing.T) {
 						{
 							Slot:               86142617,
 							Confirmations:      nil,
-							ConfirmationStatus: (*Commitment)(pointer.String(string(CommitmentFinalized))),
+							ConfirmationStatus: (*Commitment)(pointer.Get(string(CommitmentFinalized))),
 							Err:                nil,
 						},
 					},

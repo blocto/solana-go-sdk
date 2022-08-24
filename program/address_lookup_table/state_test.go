@@ -71,7 +71,7 @@ func TestDeserializeLookupTable(t *testing.T) {
 				DeactivationSlot:           ^uint64(0),
 				LastExtendedSlot:           0,
 				LastExtendedSlotStartIndex: 0,
-				Authority:                  pointer.Pubkey(common.PublicKeyFromString("FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz")),
+				Authority:                  pointer.Get[common.PublicKey](common.PublicKeyFromString("FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz")),
 				padding:                    0,
 				Addresses:                  []common.PublicKey{},
 			},
@@ -87,7 +87,7 @@ func TestDeserializeLookupTable(t *testing.T) {
 				DeactivationSlot:           ^uint64(0),
 				LastExtendedSlot:           155020262,
 				LastExtendedSlotStartIndex: 0,
-				Authority:                  pointer.Pubkey(common.PublicKeyFromString("FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz")),
+				Authority:                  pointer.Get[common.PublicKey](common.PublicKeyFromString("FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz")),
 				padding:                    0,
 				Addresses: []common.PublicKey{
 					common.PublicKeyFromString("9aE476sH92Vz7DMPyq5WLPkrKWivxeuTKEFKd2sZZcde"),

@@ -42,7 +42,7 @@ func TestInitializeMint(t *testing.T) {
 					Decimals:   5,
 					Mint:       common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
 					MintAuth:   common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-					FreezeAuth: pointer.Pubkey(common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7")),
+					FreezeAuth: pointer.Get[common.PublicKey](common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7")),
 				},
 			},
 			want: types.Instruction{
@@ -926,7 +926,7 @@ func TestSetAuthority(t *testing.T) {
 			args: args{
 				param: SetAuthorityParam{
 					Account:  common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-					NewAuth:  pointer.Pubkey(common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7")),
+					NewAuth:  pointer.Get[common.PublicKey](common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7")),
 					AuthType: AuthorityTypeMintTokens,
 					Auth:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
 					Signers:  []common.PublicKey{},
@@ -945,7 +945,7 @@ func TestSetAuthority(t *testing.T) {
 			args: args{
 				param: SetAuthorityParam{
 					Account:  common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
-					NewAuth:  pointer.Pubkey(common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7")),
+					NewAuth:  pointer.Get[common.PublicKey](common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7")),
 					AuthType: AuthorityTypeMintTokens,
 					Auth:     common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
 					Signers: []common.PublicKey{
@@ -1162,7 +1162,7 @@ func TestInitializeMint2(t *testing.T) {
 					Decimals:   5,
 					Mint:       common.PublicKeyFromString("FtvD2ymcAFh59DGGmJkANyJzEpLDR1GLgqDrUxfe2dPm"),
 					MintAuth:   common.PublicKeyFromString("BkXBQ9ThbQffhmG39c2TbXW94pEmVGJAvxWk6hfxRvUJ"),
-					FreezeAuth: pointer.Pubkey(common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7")),
+					FreezeAuth: pointer.Get[common.PublicKey](common.PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7")),
 				},
 			},
 			want: types.Instruction{

@@ -145,7 +145,7 @@ func TestCreateMasterEdition(t *testing.T) {
 					MintAuthority:   common.PublicKeyFromString("mintAuthority111111111111111111111111111111"),
 					Metadata:        common.PublicKeyFromString("metadata11111111111111111111111111111111111"),
 					Payer:           common.PublicKeyFromString("payer11111111111111111111111111111111111111"),
-					MaxSupply:       pointer.Uint64(2),
+					MaxSupply:       pointer.Get[uint64](2),
 				},
 			},
 			want: types.Instruction{
@@ -256,8 +256,8 @@ func TestUpdateMetadataAccount(t *testing.T) {
 							},
 						},
 					},
-					NewUpdateAuthority:  pointer.Pubkey(common.PublicKeyFromString("newMintAuthority111111111111111111111111111")),
-					PrimarySaleHappened: pointer.Bool(true),
+					NewUpdateAuthority:  pointer.Get[common.PublicKey](common.PublicKeyFromString("newMintAuthority111111111111111111111111111")),
+					PrimarySaleHappened: pointer.Get[bool](true),
 				},
 			},
 			want: types.Instruction{
@@ -360,7 +360,7 @@ func TestCreateMasterEditionV3(t *testing.T) {
 					MintAuthority:   common.PublicKeyFromString("mintAuthority111111111111111111111111111111"),
 					Metadata:        common.PublicKeyFromString("metadata11111111111111111111111111111111111"),
 					Payer:           common.PublicKeyFromString("payer11111111111111111111111111111111111111"),
-					MaxSupply:       pointer.Uint64(2),
+					MaxSupply:       pointer.Get[uint64](2),
 				},
 			},
 			want: types.Instruction{

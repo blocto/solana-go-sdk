@@ -37,7 +37,7 @@ func TestGetTransaction(t *testing.T) {
 			},
 			want: &GetTransactionResponse{
 				Slot:      80218681,
-				BlockTime: pointer.Int64(1631380624),
+				BlockTime: pointer.Get[int64](1631380624),
 				Meta: &TransactionMeta{
 					Fee: 5000,
 					InnerInstructions: []TransactionMetaInnerInstruction{
@@ -157,7 +157,7 @@ func TestGetTransaction(t *testing.T) {
 			},
 			want: &GetTransactionResponse{
 				Slot:      81103164,
-				BlockTime: pointer.Int64(1631744159),
+				BlockTime: pointer.Get[int64](1631744159),
 				Meta: &TransactionMeta{
 					Fee:               5000,
 					InnerInstructions: []TransactionMetaInnerInstruction{},
@@ -266,8 +266,8 @@ func TestGetBlock(t *testing.T) {
 			},
 			want: GetBlockResponse{
 				ParentSLot:        32,
-				BlockHeight:       pointer.Int64(33),
-				BlockTime:         pointer.Int64(1631803928),
+				BlockHeight:       pointer.Get[int64](33),
+				BlockTime:         pointer.Get[int64](1631803928),
 				PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
 				Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
 				Rewards: []rpc.GetBlockReward{
@@ -424,12 +424,12 @@ func TestClient_GetClusterNodes(t *testing.T) {
 			want: []ClusterNode{
 				{
 					Pubkey:       common.PublicKeyFromString("8gNdbr9dG6oj8bhaQ44icyMYsfG3t1dhXKUJLGVav4tn"),
-					Gossip:       pointer.String("127.0.0.1:1024"),
-					Tpu:          pointer.String("127.0.0.1:1027"),
-					Rpc:          pointer.String("127.0.0.1:8899"),
-					Version:      pointer.String("1.8.1"),
-					FeatureSet:   pointer.Uint32(1797267350),
-					ShredVersion: pointer.Uint16(23492),
+					Gossip:       pointer.Get("127.0.0.1:1024"),
+					Tpu:          pointer.Get("127.0.0.1:1027"),
+					Rpc:          pointer.Get("127.0.0.1:8899"),
+					Version:      pointer.Get("1.8.1"),
+					FeatureSet:   pointer.Get[uint32](1797267350),
+					ShredVersion: pointer.Get[uint16](23492),
 				},
 			},
 			err: nil,
@@ -584,8 +584,8 @@ func TestClient_GetSignatureStatus(t *testing.T) {
 				sig: "3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg",
 			},
 			want: &rpc.SignatureStatus{
-				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
-				Confirmations:      pointer.Uint64(25),
+				ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentConfirmed))),
+				Confirmations:      pointer.Get[uint64](25),
 				Err:                nil,
 				Slot:               86136551,
 			},
@@ -599,7 +599,7 @@ func TestClient_GetSignatureStatus(t *testing.T) {
 				sig: "3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg",
 			},
 			want: &rpc.SignatureStatus{
-				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
+				ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentFinalized))),
 				Confirmations:      nil,
 				Err:                nil,
 				Slot:               86136524,
@@ -663,8 +663,8 @@ func TestClient_GetSignatureStatusWithConfig(t *testing.T) {
 				},
 			},
 			want: &rpc.SignatureStatus{
-				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
-				Confirmations:      pointer.Uint64(25),
+				ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentConfirmed))),
+				Confirmations:      pointer.Get[uint64](25),
 				Err:                nil,
 				Slot:               86136551,
 			},
@@ -681,7 +681,7 @@ func TestClient_GetSignatureStatusWithConfig(t *testing.T) {
 				},
 			},
 			want: &rpc.SignatureStatus{
-				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
+				ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentFinalized))),
 				Confirmations:      nil,
 				Err:                nil,
 				Slot:               86136524,
@@ -745,8 +745,8 @@ func TestClient_GetSignatureStatuses(t *testing.T) {
 			},
 			want: rpc.SignatureStatuses{
 				{
-					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
-					Confirmations:      pointer.Uint64(25),
+					ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentConfirmed))),
+					Confirmations:      pointer.Get[uint64](25),
 					Err:                nil,
 					Slot:               86136551,
 				},
@@ -762,7 +762,7 @@ func TestClient_GetSignatureStatuses(t *testing.T) {
 			},
 			want: rpc.SignatureStatuses{
 				{
-					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
+					ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentFinalized))),
 					Confirmations:      nil,
 					Err:                nil,
 					Slot:               86136524,
@@ -828,8 +828,8 @@ func TestClient_GetSignatureStatusesWithConfig(t *testing.T) {
 			},
 			want: rpc.SignatureStatuses{
 				{
-					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
-					Confirmations:      pointer.Uint64(25),
+					ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentConfirmed))),
+					Confirmations:      pointer.Get[uint64](25),
 					Err:                nil,
 					Slot:               86136551,
 				},
@@ -848,7 +848,7 @@ func TestClient_GetSignatureStatusesWithConfig(t *testing.T) {
 			},
 			want: rpc.SignatureStatuses{
 				{
-					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
+					ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentFinalized))),
 					Confirmations:      nil,
 					Err:                nil,
 					Slot:               86136524,
@@ -1308,7 +1308,7 @@ func TestClient_GetFeeForMessage(t *testing.T) {
 					RecentBlockhash: "9Jf8nJep3oubyeGVernU2kVVmrmnADJFyHu8Bmq23S2C",
 				}),
 			},
-			Want: pointer.Uint64(5000),
+			Want: pointer.Get[uint64](5000),
 			Err:  nil,
 		},
 	}
@@ -1390,7 +1390,7 @@ func TestClient_GetFeeForMessageWithConfig(t *testing.T) {
 					Commitment: rpc.CommitmentProcessed,
 				},
 			},
-			Want: pointer.Uint64(5000),
+			Want: pointer.Get[uint64](5000),
 			Err:  nil,
 		},
 	}

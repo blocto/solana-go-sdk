@@ -24,8 +24,8 @@ func TestGetBlock(t *testing.T) {
 				Error:   nil,
 				Result: GetBlock{
 					ParentSLot:        32,
-					BlockHeight:       pointer.Int64(33),
-					BlockTime:         pointer.Int64(1631803928),
+					BlockHeight:       pointer.Get[int64](33),
+					BlockTime:         pointer.Get[int64](1631803928),
 					PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
 					Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
 					Rewards: []GetBlockReward{
@@ -107,7 +107,7 @@ func TestGetBlock(t *testing.T) {
 					33,
 					GetBlockConfig{
 						Encoding: GetBlockConfigEncodingBase64,
-						Rewards:  pointer.Bool(false),
+						Rewards:  pointer.Get[bool](false),
 					},
 				)
 			},
@@ -117,8 +117,8 @@ func TestGetBlock(t *testing.T) {
 				Error:   nil,
 				Result: GetBlock{
 					ParentSLot:        32,
-					BlockHeight:       pointer.Int64(33),
-					BlockTime:         pointer.Int64(1631803928),
+					BlockHeight:       pointer.Get[int64](33),
+					BlockTime:         pointer.Get[int64](1631803928),
 					PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
 					Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
 					Transactions: []GetBlockTransaction{
@@ -176,8 +176,8 @@ func TestGetBlock(t *testing.T) {
 				Error:   nil,
 				Result: GetBlock{
 					ParentSLot:        32,
-					BlockHeight:       pointer.Int64(33),
-					BlockTime:         pointer.Int64(1631803928),
+					BlockHeight:       pointer.Get[int64](33),
+					BlockTime:         pointer.Get[int64](1631803928),
 					PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
 					Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
 					Rewards: []GetBlockReward{
@@ -245,8 +245,8 @@ func TestGetBlock(t *testing.T) {
 				Error:   nil,
 				Result: GetBlock{
 					ParentSLot:        32,
-					BlockHeight:       pointer.Int64(33),
-					BlockTime:         pointer.Int64(1631803928),
+					BlockHeight:       pointer.Get[int64](33),
+					BlockTime:         pointer.Get[int64](1631803928),
 					PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
 					Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
 					Rewards: []GetBlockReward{
@@ -284,8 +284,8 @@ func TestGetBlock(t *testing.T) {
 				Error:   nil,
 				Result: GetBlock{
 					ParentSLot:        32,
-					BlockHeight:       pointer.Int64(33),
-					BlockTime:         pointer.Int64(1631803928),
+					BlockHeight:       pointer.Get[int64](33),
+					BlockTime:         pointer.Get[int64](1631803928),
 					PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
 					Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
 					Rewards: []GetBlockReward{
@@ -321,8 +321,8 @@ func TestGetBlock(t *testing.T) {
 				Error:   nil,
 				Result: GetBlock{
 					ParentSLot:        32,
-					BlockHeight:       pointer.Int64(33),
-					BlockTime:         pointer.Int64(1631803928),
+					BlockHeight:       pointer.Get[int64](33),
+					BlockTime:         pointer.Get[int64](1631803928),
 					PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
 					Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
 					Rewards: []GetBlockReward{
