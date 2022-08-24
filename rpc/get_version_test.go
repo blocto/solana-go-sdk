@@ -23,7 +23,7 @@ func TestGetVersion(t *testing.T) {
 				Error:   nil,
 				Result: GetVersion{
 					SolanaCore: "1.7.14",
-					FeatureSet: pointer.Uint32(1824749018),
+					FeatureSet: pointer.Get[uint32](1824749018),
 				},
 			},
 			ExpectedError: nil,

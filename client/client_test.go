@@ -428,7 +428,7 @@ func TestClient_GetClusterNodes(t *testing.T) {
 					Tpu:          pointer.String("127.0.0.1:1027"),
 					Rpc:          pointer.String("127.0.0.1:8899"),
 					Version:      pointer.String("1.8.1"),
-					FeatureSet:   pointer.Uint32(1797267350),
+					FeatureSet:   pointer.Get[uint32](1797267350),
 					ShredVersion: pointer.Get[uint16](23492),
 				},
 			},
