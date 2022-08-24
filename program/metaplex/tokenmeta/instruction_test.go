@@ -257,7 +257,7 @@ func TestUpdateMetadataAccount(t *testing.T) {
 						},
 					},
 					NewUpdateAuthority:  pointer.Pubkey(common.PublicKeyFromString("newMintAuthority111111111111111111111111111")),
-					PrimarySaleHappened: pointer.Bool(true),
+					PrimarySaleHappened: pointer.Get[bool](true),
 				},
 			},
 			want: types.Instruction{
