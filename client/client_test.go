@@ -424,10 +424,10 @@ func TestClient_GetClusterNodes(t *testing.T) {
 			want: []ClusterNode{
 				{
 					Pubkey:       common.PublicKeyFromString("8gNdbr9dG6oj8bhaQ44icyMYsfG3t1dhXKUJLGVav4tn"),
-					Gossip:       pointer.String("127.0.0.1:1024"),
-					Tpu:          pointer.String("127.0.0.1:1027"),
-					Rpc:          pointer.String("127.0.0.1:8899"),
-					Version:      pointer.String("1.8.1"),
+					Gossip:       pointer.Get("127.0.0.1:1024"),
+					Tpu:          pointer.Get("127.0.0.1:1027"),
+					Rpc:          pointer.Get("127.0.0.1:8899"),
+					Version:      pointer.Get("1.8.1"),
 					FeatureSet:   pointer.Get[uint32](1797267350),
 					ShredVersion: pointer.Get[uint16](23492),
 				},
@@ -584,7 +584,7 @@ func TestClient_GetSignatureStatus(t *testing.T) {
 				sig: "3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg",
 			},
 			want: &rpc.SignatureStatus{
-				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
+				ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentConfirmed))),
 				Confirmations:      pointer.Get[uint64](25),
 				Err:                nil,
 				Slot:               86136551,
@@ -599,7 +599,7 @@ func TestClient_GetSignatureStatus(t *testing.T) {
 				sig: "3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg",
 			},
 			want: &rpc.SignatureStatus{
-				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
+				ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentFinalized))),
 				Confirmations:      nil,
 				Err:                nil,
 				Slot:               86136524,
@@ -663,7 +663,7 @@ func TestClient_GetSignatureStatusWithConfig(t *testing.T) {
 				},
 			},
 			want: &rpc.SignatureStatus{
-				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
+				ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentConfirmed))),
 				Confirmations:      pointer.Get[uint64](25),
 				Err:                nil,
 				Slot:               86136551,
@@ -681,7 +681,7 @@ func TestClient_GetSignatureStatusWithConfig(t *testing.T) {
 				},
 			},
 			want: &rpc.SignatureStatus{
-				ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
+				ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentFinalized))),
 				Confirmations:      nil,
 				Err:                nil,
 				Slot:               86136524,
@@ -745,7 +745,7 @@ func TestClient_GetSignatureStatuses(t *testing.T) {
 			},
 			want: rpc.SignatureStatuses{
 				{
-					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
+					ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentConfirmed))),
 					Confirmations:      pointer.Get[uint64](25),
 					Err:                nil,
 					Slot:               86136551,
@@ -762,7 +762,7 @@ func TestClient_GetSignatureStatuses(t *testing.T) {
 			},
 			want: rpc.SignatureStatuses{
 				{
-					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
+					ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentFinalized))),
 					Confirmations:      nil,
 					Err:                nil,
 					Slot:               86136524,
@@ -828,7 +828,7 @@ func TestClient_GetSignatureStatusesWithConfig(t *testing.T) {
 			},
 			want: rpc.SignatureStatuses{
 				{
-					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentConfirmed))),
+					ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentConfirmed))),
 					Confirmations:      pointer.Get[uint64](25),
 					Err:                nil,
 					Slot:               86136551,
@@ -848,7 +848,7 @@ func TestClient_GetSignatureStatusesWithConfig(t *testing.T) {
 			},
 			want: rpc.SignatureStatuses{
 				{
-					ConfirmationStatus: (*rpc.Commitment)(pointer.String(string(rpc.CommitmentFinalized))),
+					ConfirmationStatus: (*rpc.Commitment)(pointer.Get(string(rpc.CommitmentFinalized))),
 					Confirmations:      nil,
 					Err:                nil,
 					Slot:               86136524,

@@ -24,10 +24,10 @@ func TestGetClusterNodes(t *testing.T) {
 				Result: GetClusterNodes{
 					{
 						Pubkey:       "8gNdbr9dG6oj8bhaQ44icyMYsfG3t1dhXKUJLGVav4tn",
-						Gossip:       pointer.String("127.0.0.1:1024"),
-						Tpu:          pointer.String("127.0.0.1:1027"),
-						Rpc:          pointer.String("127.0.0.1:8899"),
-						Version:      pointer.String("1.8.1"),
+						Gossip:       pointer.Get("127.0.0.1:1024"),
+						Tpu:          pointer.Get("127.0.0.1:1027"),
+						Rpc:          pointer.Get("127.0.0.1:8899"),
+						Version:      pointer.Get("1.8.1"),
 						FeatureSet:   pointer.Get[uint32](1797267350),
 						ShredVersion: pointer.Get[uint16](23492),
 					},
