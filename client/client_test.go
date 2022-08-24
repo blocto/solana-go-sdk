@@ -2,7 +2,7 @@ package client
 
 import (
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -228,7 +228,7 @@ func TestGetTransaction(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-				body, err := ioutil.ReadAll(req.Body)
+				body, err := io.ReadAll(req.Body)
 				assert.Nil(t, err)
 				assert.JSONEq(t, tt.requestBody, string(body))
 				n, err := rw.Write([]byte(tt.responseBody))
@@ -344,7 +344,7 @@ func TestGetBlock(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-				body, err := ioutil.ReadAll(req.Body)
+				body, err := io.ReadAll(req.Body)
 				assert.Nil(t, err)
 				assert.JSONEq(t, tt.requestBody, string(body))
 				n, err := rw.Write([]byte(tt.responseBody))
@@ -387,7 +387,7 @@ func TestGetMinimumBalanceForRentExemption(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-				body, err := ioutil.ReadAll(req.Body)
+				body, err := io.ReadAll(req.Body)
 				assert.Nil(t, err)
 				assert.JSONEq(t, tt.requestBody, string(body))
 				n, err := rw.Write([]byte(tt.responseBody))
@@ -438,7 +438,7 @@ func TestClient_GetClusterNodes(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-				body, err := ioutil.ReadAll(req.Body)
+				body, err := io.ReadAll(req.Body)
 				assert.Nil(t, err)
 				assert.JSONEq(t, tt.requestBody, string(body))
 				n, err := rw.Write([]byte(tt.responseBody))
@@ -488,7 +488,7 @@ func TestClient_GetAccountInfo(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.requestBody, string(body))
 					n, err := rw.Write([]byte(tt.responseBody))
@@ -546,7 +546,7 @@ func TestClient_GetAccountInfoWithConfig(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.requestBody, string(body))
 					n, err := rw.Write([]byte(tt.responseBody))
@@ -621,7 +621,7 @@ func TestClient_GetSignatureStatus(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.requestBody, string(body))
 					n, err := rw.Write([]byte(tt.responseBody))
@@ -706,7 +706,7 @@ func TestClient_GetSignatureStatusWithConfig(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.requestBody, string(body))
 					n, err := rw.Write([]byte(tt.responseBody))
@@ -785,7 +785,7 @@ func TestClient_GetSignatureStatuses(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.requestBody, string(body))
 					n, err := rw.Write([]byte(tt.responseBody))
@@ -874,7 +874,7 @@ func TestClient_GetSignatureStatusesWithConfig(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.requestBody, string(body))
 					n, err := rw.Write([]byte(tt.responseBody))
@@ -939,7 +939,7 @@ func TestClient_SimulateTransaction(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.requestBody, string(body))
 					n, err := rw.Write([]byte(tt.responseBody))
@@ -1051,7 +1051,7 @@ func TestClient_SimulateTransactionWithConfig(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.requestBody, string(body))
 					n, err := rw.Write([]byte(tt.responseBody))
@@ -1097,7 +1097,7 @@ func TestClient_GetLatestBlockhash(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.requestBody, string(body))
 					n, err := rw.Write([]byte(tt.responseBody))
@@ -1147,7 +1147,7 @@ func TestClient_GetLatestBlockhashWithConfig(t *testing.T) {
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Run(tt.Name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.RequestBody, string(body))
 					n, err := rw.Write([]byte(tt.ResponseBody))
@@ -1192,7 +1192,7 @@ func TestClient_IsBlockhashValid(t *testing.T) {
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Run(tt.Name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.RequestBody, string(body))
 					n, err := rw.Write([]byte(tt.ResponseBody))
@@ -1241,7 +1241,7 @@ func TestClient_IsBlockhashValidWithConfig(t *testing.T) {
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Run(tt.Name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.RequestBody, string(body))
 					n, err := rw.Write([]byte(tt.ResponseBody))
@@ -1316,7 +1316,7 @@ func TestClient_GetFeeForMessage(t *testing.T) {
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Run(tt.Name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.RequestBody, string(body))
 					n, err := rw.Write([]byte(tt.ResponseBody))
@@ -1398,7 +1398,7 @@ func TestClient_GetFeeForMessageWithConfig(t *testing.T) {
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Run(tt.Name, func(t *testing.T) {
 				server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-					body, err := ioutil.ReadAll(req.Body)
+					body, err := io.ReadAll(req.Body)
 					assert.Nil(t, err)
 					assert.JSONEq(t, tt.RequestBody, string(body))
 					n, err := rw.Write([]byte(tt.ResponseBody))
