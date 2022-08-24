@@ -37,7 +37,7 @@ func TestGetTransaction(t *testing.T) {
 			},
 			want: &GetTransactionResponse{
 				Slot:      80218681,
-				BlockTime: pointer.Int64(1631380624),
+				BlockTime: pointer.Get[int64](1631380624),
 				Meta: &TransactionMeta{
 					Fee: 5000,
 					InnerInstructions: []TransactionMetaInnerInstruction{
@@ -157,7 +157,7 @@ func TestGetTransaction(t *testing.T) {
 			},
 			want: &GetTransactionResponse{
 				Slot:      81103164,
-				BlockTime: pointer.Int64(1631744159),
+				BlockTime: pointer.Get[int64](1631744159),
 				Meta: &TransactionMeta{
 					Fee:               5000,
 					InnerInstructions: []TransactionMetaInnerInstruction{},
@@ -266,8 +266,8 @@ func TestGetBlock(t *testing.T) {
 			},
 			want: GetBlockResponse{
 				ParentSLot:        32,
-				BlockHeight:       pointer.Int64(33),
-				BlockTime:         pointer.Int64(1631803928),
+				BlockHeight:       pointer.Get[int64](33),
+				BlockTime:         pointer.Get[int64](1631803928),
 				PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
 				Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
 				Rewards: []rpc.GetBlockReward{

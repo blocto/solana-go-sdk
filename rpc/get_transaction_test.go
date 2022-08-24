@@ -24,7 +24,7 @@ func TestGetTransaction(t *testing.T) {
 				Error:   nil,
 				Result: &GetTransaction{
 					Slot:      80218681,
-					BlockTime: pointer.Int64(1631380624),
+					BlockTime: pointer.Get[int64](1631380624),
 					Meta: &TransactionMeta{
 						Fee: 5000,
 						InnerInstructions: []TransactionMetaInnerInstruction{
@@ -155,7 +155,7 @@ func TestGetTransaction(t *testing.T) {
 				Error:   nil,
 				Result: &GetTransaction{
 					Slot:      80218681,
-					BlockTime: pointer.Int64(1631380624),
+					BlockTime: pointer.Get[int64](1631380624),
 					Meta: &TransactionMeta{
 						Fee: 5000,
 						InnerInstructions: []TransactionMetaInnerInstruction{
