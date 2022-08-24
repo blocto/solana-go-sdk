@@ -7,7 +7,7 @@ import (
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/sysprog"
+	"github.com/portto/solana-go-sdk/program/system"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -32,7 +32,7 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: recentBlockhashResponse.Blockhash,
 			Instructions: []types.Instruction{
-				sysprog.UpgradeNonceAccount(sysprog.UpgradeNonceAccountParam{
+				system.UpgradeNonceAccount(system.UpgradeNonceAccountParam{
 					NonceAccountPubkey: nonceAccountPubkey,
 				}),
 			},

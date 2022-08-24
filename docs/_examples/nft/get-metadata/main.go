@@ -8,7 +8,7 @@ import (
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/metaplex/tokenmeta"
+	"github.com/portto/solana-go-sdk/program/metaplex/token_metadata"
 	"github.com/portto/solana-go-sdk/rpc"
 )
 
@@ -18,7 +18,7 @@ func main() {
 	// and you can use `tokenmeta.GetTokenMetaPubkey` to get the metadata account key
 	// here I take a random Degenerate Ape Academy as an example
 	mint := common.PublicKeyFromString("GphF2vTuzhwhLWBWWvD8y5QLCPp1aQC5EnzrWsnbiWPx")
-	metadataAccount, err := tokenmeta.GetTokenMetaPubkey(mint)
+	metadataAccount, err := token_metadata.GetTokenMetaPubkey(mint)
 	if err != nil {
 		log.Fatalf("faield to get metadata account, err: %v", err)
 	}
@@ -33,7 +33,7 @@ func main() {
 	}
 
 	// parse it
-	metadata, err := tokenmeta.MetadataDeserialize(accountInfo.Data)
+	metadata, err := token_metadata.MetadataDeserialize(accountInfo.Data)
 	if err != nil {
 		log.Fatalf("failed to parse metaAccount, err: %v", err)
 	}

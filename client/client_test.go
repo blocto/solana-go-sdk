@@ -9,7 +9,7 @@ import (
 
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/pkg/pointer"
-	"github.com/portto/solana-go-sdk/program/sysprog"
+	"github.com/portto/solana-go-sdk/program/system"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 	"github.com/stretchr/testify/assert"
@@ -916,7 +916,7 @@ func TestClient_SimulateTransaction(t *testing.T) {
 					Message: types.NewMessage(types.NewMessageParam{
 						FeePayer: common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 						Instructions: []types.Instruction{
-							sysprog.Transfer(sysprog.TransferParam{
+							system.Transfer(system.TransferParam{
 								From:   common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 								To:     common.PublicKeyFromString("3T8doiqPi8XDvmPVMA3UyEwvssqA3QrAJYjg92jMT7D9"),
 								Amount: 1,
@@ -985,7 +985,7 @@ func TestClient_SimulateTransactionWithConfig(t *testing.T) {
 					Message: types.NewMessage(types.NewMessageParam{
 						FeePayer: common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 						Instructions: []types.Instruction{
-							sysprog.Transfer(sysprog.TransferParam{
+							system.Transfer(system.TransferParam{
 								From:   common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 								To:     common.PublicKeyFromString("3T8doiqPi8XDvmPVMA3UyEwvssqA3QrAJYjg92jMT7D9"),
 								Amount: 1,
@@ -1028,7 +1028,7 @@ func TestClient_SimulateTransactionWithConfig(t *testing.T) {
 					Message: types.NewMessage(types.NewMessageParam{
 						FeePayer: common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 						Instructions: []types.Instruction{
-							sysprog.Transfer(sysprog.TransferParam{
+							system.Transfer(system.TransferParam{
 								From:   common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 								To:     common.PublicKeyFromString("3T8doiqPi8XDvmPVMA3UyEwvssqA3QrAJYjg92jMT7D9"),
 								Amount: 1,
@@ -1279,7 +1279,7 @@ func TestClient_GetFeeForMessage(t *testing.T) {
 				message: types.NewMessage(types.NewMessageParam{
 					FeePayer: common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 					Instructions: []types.Instruction{
-						sysprog.Transfer(sysprog.TransferParam{
+						system.Transfer(system.TransferParam{
 							From:   common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 							To:     common.PublicKeyFromString("RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"),
 							Amount: 1,
@@ -1299,7 +1299,7 @@ func TestClient_GetFeeForMessage(t *testing.T) {
 				message: types.NewMessage(types.NewMessageParam{
 					FeePayer: common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 					Instructions: []types.Instruction{
-						sysprog.Transfer(sysprog.TransferParam{
+						system.Transfer(system.TransferParam{
 							From:   common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 							To:     common.PublicKeyFromString("RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"),
 							Amount: 1,
@@ -1355,7 +1355,7 @@ func TestClient_GetFeeForMessageWithConfig(t *testing.T) {
 				message: types.NewMessage(types.NewMessageParam{
 					FeePayer: common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 					Instructions: []types.Instruction{
-						sysprog.Transfer(sysprog.TransferParam{
+						system.Transfer(system.TransferParam{
 							From:   common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 							To:     common.PublicKeyFromString("RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"),
 							Amount: 1,
@@ -1378,7 +1378,7 @@ func TestClient_GetFeeForMessageWithConfig(t *testing.T) {
 				message: types.NewMessage(types.NewMessageParam{
 					FeePayer: common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 					Instructions: []types.Instruction{
-						sysprog.Transfer(sysprog.TransferParam{
+						system.Transfer(system.TransferParam{
 							From:   common.PublicKeyFromString("3T7btuZcLDHxRqKJ7YzxH22toGhGedaJnecn5h4mBeL7"),
 							To:     common.PublicKeyFromString("RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"),
 							Amount: 1,

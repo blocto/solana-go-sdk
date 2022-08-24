@@ -8,7 +8,7 @@ import (
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/pkg/pointer"
-	"github.com/portto/solana-go-sdk/program/metaplex/tokenmeta"
+	"github.com/portto/solana-go-sdk/program/metaplex/token_metadata"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -25,7 +25,7 @@ func main() {
 	// mint address
 	nft := common.PublicKeyFromString("FK8eFRgmqewUzr7R6pYUxSPnSNusYmkhAV4e3pUJYdCd")
 
-	tokenMetadataPubkey, err := tokenmeta.GetTokenMetaPubkey(nft)
+	tokenMetadataPubkey, err := token_metadata.GetTokenMetaPubkey(nft)
 	if err != nil {
 		log.Fatalf("failed to find a valid token metadata, err: %v", err)
 
@@ -42,15 +42,15 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: recentBlockhashResponse.Blockhash,
 			Instructions: []types.Instruction{
-				tokenmeta.UpdateMetadataAccount(tokenmeta.UpdateMetadataAccountParam{
+				token_metadata.UpdateMetadataAccount(token_metadata.UpdateMetadataAccountParam{
 					MetadataAccount: tokenMetadataPubkey,
 					UpdateAuthority: feePayer.PublicKey,
-					Data: &tokenmeta.Data{
+					Data: &token_metadata.Data{
 						Name:                 "Fake Fake SMS #1355",
 						Symbol:               "FFSMB",
 						Uri:                  "https://34c7ef24f4v2aejh75xhxy5z6ars4xv47gpsdrei6fiowptk2nqq.arweave.net/3wXyF1wvK6ARJ_9ue-O58CMuXrz5nyHEiPFQ6z5q02E",
 						SellerFeeBasisPoints: 10000,
-						Creators: &[]tokenmeta.Creator{
+						Creators: &[]token_metadata.Creator{
 							{
 								Address:  alice.PublicKey,
 								Verified: false,

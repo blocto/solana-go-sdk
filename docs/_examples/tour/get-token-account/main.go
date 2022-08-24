@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/program/tokenprog"
+	"github.com/portto/solana-go-sdk/program/token"
 	"github.com/portto/solana-go-sdk/rpc"
 )
 
@@ -19,7 +19,7 @@ func main() {
 		log.Fatalf("failed to get account info, err: %v", err)
 	}
 
-	tokenAccount, err := tokenprog.TokenAccountFromData(getAccountInfoResponse.Data)
+	tokenAccount, err := token.TokenAccountFromData(getAccountInfoResponse.Data)
 	if err != nil {
 		log.Fatalf("failed to parse data to a token account, err: %v", err)
 	}

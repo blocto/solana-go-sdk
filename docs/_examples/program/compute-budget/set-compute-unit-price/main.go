@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/program/cmptbdgprog"
-	"github.com/portto/solana-go-sdk/program/memoprog"
+	"github.com/portto/solana-go-sdk/program/compute_budget"
+	"github.com/portto/solana-go-sdk/program/memo"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -28,10 +28,10 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: recentBlockhashResponse.Blockhash,
 			Instructions: []types.Instruction{
-				cmptbdgprog.SetComputeUnitPrice(cmptbdgprog.SetComputeUnitPriceParam{
+				compute_budget.SetComputeUnitPrice(compute_budget.SetComputeUnitPriceParam{
 					MicroLamports: 1_000_000,
 				}),
-				memoprog.BuildMemo(memoprog.BuildMemoParam{
+				memo.BuildMemo(memo.BuildMemoParam{
 					Memo: []byte("👻"),
 				}),
 			},

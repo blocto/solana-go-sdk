@@ -6,7 +6,7 @@ import (
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/memoprog"
+	"github.com/portto/solana-go-sdk/program/memo"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -34,7 +34,7 @@ func main() {
 			RecentBlockhash: recentBlockhashResponse.Blockhash,
 			Instructions: []types.Instruction{
 				// memo instruction
-				memoprog.BuildMemo(memoprog.BuildMemoParam{
+				memo.BuildMemo(memo.BuildMemoParam{
 					SignerPubkeys: []common.PublicKey{alice.PublicKey},
 					Memo:          []byte("🐳"),
 				}),

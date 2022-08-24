@@ -7,7 +7,7 @@ import (
 
 	"github.com/portto/solana-go-sdk/client"
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/sysprog"
+	"github.com/portto/solana-go-sdk/program/system"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -26,7 +26,7 @@ func main() {
 	fmt.Println("nonce account:", nonceAccount.PublicKey)
 
 	// get minimum balance
-	nonceAccountMinimumBalance, err := c.GetMinimumBalanceForRentExemption(context.Background(), sysprog.NonceAccountSize)
+	nonceAccountMinimumBalance, err := c.GetMinimumBalanceForRentExemption(context.Background(), system.NonceAccountSize)
 	if err != nil {
 		log.Fatalf("failed to get minimum balance for nonce account, err: %v", err)
 	}
@@ -44,14 +44,14 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: recentBlockhashResponse.Blockhash,
 			Instructions: []types.Instruction{
-				sysprog.CreateAccount(sysprog.CreateAccountParam{
+				system.CreateAccount(system.CreateAccountParam{
 					From:     feePayer.PublicKey,
 					New:      nonceAccount.PublicKey,
 					Owner:    common.SystemProgramID,
 					Lamports: nonceAccountMinimumBalance,
-					Space:    sysprog.NonceAccountSize,
+					Space:    system.NonceAccountSize,
 				}),
-				sysprog.InitializeNonceAccount(sysprog.InitializeNonceAccountParam{
+				system.InitializeNonceAccount(system.InitializeNonceAccountParam{
 					Nonce: nonceAccount.PublicKey,
 					Auth:  alice.PublicKey,
 				}),
