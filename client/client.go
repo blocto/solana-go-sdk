@@ -941,20 +941,6 @@ func (c *Client) processGetSignaturesForAddress(res rpc.JsonRpcResponse[rpc.GetS
 	return res.Result, nil
 }
 
-func checkRpcResult(res rpc.GeneralResponse, err error) error {
-	if err != nil {
-		return err
-	}
-	if res.Error != nil {
-		errRes, err := json.Marshal(res.Error)
-		if err != nil {
-			return fmt.Errorf("rpc response error: %v", res.Error)
-		}
-		return fmt.Errorf("rpc response error: %v", string(errRes))
-	}
-	return nil
-}
-
 func checkJsonRpcResponse[T any](res rpc.JsonRpcResponse[T], err error) error {
 	if err != nil {
 		return err

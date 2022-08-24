@@ -27,12 +27,6 @@ type Secp256k1InstructionParam struct {
 	Offsets []SecpSignatureOffsets
 }
 
-func zeroBytes(bytes []byte) {
-	for i := range bytes {
-		bytes[i] = 0
-	}
-}
-
 func NewSecp256k1Instruction(msgs [][]byte, sigs [][]byte, addrs [][]byte, thisInstrIndex uint8) (types.Instruction, error) {
 	if len(msgs) != len(sigs) || len(sigs) != len(addrs) {
 		return types.Instruction{}, fmt.Errorf("Provided a different number of keys, messages, or signatures")
