@@ -265,7 +265,7 @@ func TestGetBlock(t *testing.T) {
 				33,
 			},
 			want: GetBlockResponse{
-				ParentSLot:        32,
+				ParentSlot:        32,
 				BlockHeight:       pointer.Get[int64](33),
 				BlockTime:         pointer.Get[int64](1631803928),
 				PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
