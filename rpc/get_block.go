@@ -9,7 +9,7 @@ type GetBlock struct {
 	BlockTime         *int64                `json:"blockTime"`
 	BlockHeight       *int64                `json:"blockHeight"`
 	PreviousBlockhash string                `json:"previousBlockhash"`
-	ParentSLot        uint64                `json:"parentSlot"`
+	ParentSlot        uint64                `json:"parentSlot"`
 	Transactions      []GetBlockTransaction `json:"transactions"`
 	Signatures        []string              `json:"signatures"`
 	Rewards           []GetBlockReward      `json:"rewards"`

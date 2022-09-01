@@ -569,7 +569,7 @@ type GetBlockResponse struct {
 	BlockTime         *int64
 	BlockHeight       *int64
 	PreviousBlockhash string
-	ParentSLot        uint64
+	ParentSlot        uint64
 	Transactions      []GetBlockTransaction
 	Rewards           []rpc.GetBlockReward
 }
@@ -663,7 +663,7 @@ func getBlock(res rpc.JsonRpcResponse[rpc.GetBlock]) (GetBlockResponse, error) {
 		BlockTime:         res.Result.BlockTime,
 		BlockHeight:       res.Result.BlockHeight,
 		PreviousBlockhash: res.Result.PreviousBlockhash,
-		ParentSLot:        res.Result.ParentSLot,
+		ParentSlot:        res.Result.ParentSlot,
 		Rewards:           res.Result.Rewards,
 		Transactions:      txs,
 	}, nil

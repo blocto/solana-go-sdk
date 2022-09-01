@@ -23,7 +23,7 @@ func TestGetBlock(t *testing.T) {
 				Id:      1,
 				Error:   nil,
 				Result: GetBlock{
-					ParentSLot:        32,
+					ParentSlot:        32,
 					BlockHeight:       pointer.Get[int64](33),
 					BlockTime:         pointer.Get[int64](1631803928),
 					PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
@@ -116,7 +116,7 @@ func TestGetBlock(t *testing.T) {
 				Id:      1,
 				Error:   nil,
 				Result: GetBlock{
-					ParentSLot:        32,
+					ParentSlot:        32,
 					BlockHeight:       pointer.Get[int64](33),
 					BlockTime:         pointer.Get[int64](1631803928),
 					PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
@@ -175,7 +175,7 @@ func TestGetBlock(t *testing.T) {
 				Id:      1,
 				Error:   nil,
 				Result: GetBlock{
-					ParentSLot:        32,
+					ParentSlot:        32,
 					BlockHeight:       pointer.Get[int64](33),
 					BlockTime:         pointer.Get[int64](1631803928),
 					PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
@@ -244,7 +244,7 @@ func TestGetBlock(t *testing.T) {
 				Id:      1,
 				Error:   nil,
 				Result: GetBlock{
-					ParentSLot:        32,
+					ParentSlot:        32,
 					BlockHeight:       pointer.Get[int64](33),
 					BlockTime:         pointer.Get[int64](1631803928),
 					PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
@@ -283,7 +283,7 @@ func TestGetBlock(t *testing.T) {
 				Id:      1,
 				Error:   nil,
 				Result: GetBlock{
-					ParentSLot:        32,
+					ParentSlot:        32,
 					BlockHeight:       pointer.Get[int64](33),
 					BlockTime:         pointer.Get[int64](1631803928),
 					PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
@@ -320,7 +320,7 @@ func TestGetBlock(t *testing.T) {
 				Id:      1,
 				Error:   nil,
 				Result: GetBlock{
-					ParentSLot:        32,
+					ParentSlot:        32,
 					BlockHeight:       pointer.Get[int64](33),
 					BlockTime:         pointer.Get[int64](1631803928),
 					PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
