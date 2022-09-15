@@ -36,20 +36,6 @@ type JsonRpcError struct {
 	Data    any    `json:"data"`
 }
 
-// ErrorResponse is a error rpc response
-type ErrorResponse struct {
-	Code    int            `json:"code"`
-	Message string         `json:"message"`
-	Data    map[string]any `json:"data,omitempty"`
-}
-
-// GeneralResponse is a general rpc response
-type GeneralResponse struct {
-	JsonRPC string         `json:"jsonrpc"`
-	ID      uint64         `json:"id"`
-	Error   *ErrorResponse `json:"error,omitempty"`
-}
-
 type RpcClient struct {
 	endpoint   string
 	httpClient *http.Client
