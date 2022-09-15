@@ -948,9 +948,9 @@ func checkJsonRpcResponse[T any](res rpc.JsonRpcResponse[T], err error) error {
 	if res.Error != nil {
 		errRes, err := json.Marshal(res.Error)
 		if err != nil {
-			return fmt.Errorf("rpc response error: %v", res.Error)
+			return fmt.Errorf("fail to marshal error: %v", res.Error)
 		}
-		return fmt.Errorf("rpc response error: %v", string(errRes))
+		return fmt.Errorf("%s", string(errRes))
 	}
 	return nil
 }
