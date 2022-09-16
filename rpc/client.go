@@ -36,6 +36,16 @@ type JsonRpcError struct {
 	Data    any    `json:"data"`
 }
 
+func (e *JsonRpcError) Error() string {
+	s, err := json.Marshal(e)
+	if err == nil {
+		return string(s)
+	}
+
+	// ideally, it should never reach here
+	return fmt.Sprintf("failed to marshal JsonRpcError, err: %v, code: %v, message: %v, data: %v", err, e.Code, e.Message, e.Data)
+}
+
 // ErrorResponse is a error rpc response
 type ErrorResponse struct {
 	Code    int            `json:"code"`
