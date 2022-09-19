@@ -3,7 +3,6 @@ package client
 import (
 	"context"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"strconv"
 
@@ -946,11 +945,7 @@ func checkJsonRpcResponse[T any](res rpc.JsonRpcResponse[T], err error) error {
 		return err
 	}
 	if res.Error != nil {
-		errRes, err := json.Marshal(res.Error)
-		if err != nil {
-			return fmt.Errorf("rpc response error: %v", res.Error)
-		}
-		return fmt.Errorf("rpc response error: %v", string(errRes))
+		return res.Error
 	}
 	return nil
 }
