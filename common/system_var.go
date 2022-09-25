@@ -1,6 +1,7 @@
 package common
 
 var (
+	SysVarPubkey                 = PublicKeyFromString("Sysvar1111111111111111111111111111111111111")
 	SysVarClockPubkey            = PublicKeyFromString("SysvarC1ock11111111111111111111111111111111")
 	SysVarRecentBlockhashsPubkey = PublicKeyFromString("SysvarRecentB1ockHashes11111111111111111111")
 	SysVarRentPubkey             = PublicKeyFromString("SysvarRent111111111111111111111111111111111")
