@@ -340,7 +340,7 @@ func TestGetBlock(t *testing.T) {
 		},
 		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlock", "params":[33, {"encoding": "base64", "rewards": false, "maxSupportedTransactionVersion": 0}]}`,
-			ResponseBody: `{"jsonrpc":"2.0","result":{"blockHeight":33,"blockTime":1631803928,"blockhash":"HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT","parentSlot":32,"previousBlockhash":"CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q","transactions":[{"meta":{"err":null,"fee":10000,"innerInstructions":[],"logMessages":["Program Vote111111111111111111111111111111111111111 invoke [1]","Program Vote111111111111111111111111111111111111111 success"],"postBalances":[499999835001,1000000000000000,143487360,1169280,1],"postTokenBalances":[],"preBalances":[499999845001,1000000000000000,143487360,1169280,1],"preTokenBalances":[],"rewards":[],"status":{"Ok":null}},"transaction":["AQiClQkvASAMI63iTE4VCNKpvDttDlM70bXlosqCRJ4kPeiPcPmIwW4AFNFTjmil/X1BSQJV6yUnXdQ+1+KSlAKAAQACBNcUkx66ahmo9NxsAZr/Jk9fv2jFoo7gs7mHVc451knTB0TvGBo/9u4tBgYjoLxl6Y29BFXLmb1J7Q+3GgPKqJ8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ3pq+XM5t6yI0YkskERvUAAjCSZvYuU8EYJEmCAAAAc4JUQCBBCFja0HaW7x24Mm7k1W45VWHvtEvczqYmigABAwQBAAACDQAAAAC4J9QJAAAAAP4A","base64"], "version": 0}]},"id":1}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":{"blockHeight":33,"blockTime":1631803928,"blockhash":"HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT","parentSlot":32,"previousBlockhash":"CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q","transactions":[{"meta":{"err":null,"fee":10000,"innerInstructions":[],"logMessages":["Program Vote111111111111111111111111111111111111111 invoke [1]","Program Vote111111111111111111111111111111111111111 success"],"postBalances":[499999835001,1000000000000000,143487360,1169280,1],"postTokenBalances":[],"preBalances":[499999845001,1000000000000000,143487360,1169280,1],"preTokenBalances":[],"rewards":[],"status":{"Ok":null}},"transaction":["AQiClQkvASAMI63iTE4VCNKpvDttDlM70bXlosqCRJ4kPeiPcPmIwW4AFNFTjmil/X1BSQJV6yUnXdQ+1+KSlAKAAQACBNcUkx66ahmo9NxsAZr/Jk9fv2jFoo7gs7mHVc451knTB0TvGBo/9u4tBgYjoLxl6Y29BFXLmb1J7Q+3GgPKqJ8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ3pq+XM5t6yI0YkskERvUAAjCSZvYuU8EYJEmCAAAAc4JUQCBBCFja0HaW7x24Mm7k1W45VWHvtEvczqYmigABAwQBAAACDQAAAAC4J9QJAAAAAP4A","base64"], "version": "legacy"}]},"id":1}`,
 			RpcCall: func(rc RpcClient) (any, error) {
 				return rc.GetBlockWithConfig(
 					context.TODO(),
@@ -393,7 +393,7 @@ func TestGetBlock(t *testing.T) {
 								"AQiClQkvASAMI63iTE4VCNKpvDttDlM70bXlosqCRJ4kPeiPcPmIwW4AFNFTjmil/X1BSQJV6yUnXdQ+1+KSlAKAAQACBNcUkx66ahmo9NxsAZr/Jk9fv2jFoo7gs7mHVc451knTB0TvGBo/9u4tBgYjoLxl6Y29BFXLmb1J7Q+3GgPKqJ8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ3pq+XM5t6yI0YkskERvUAAjCSZvYuU8EYJEmCAAAAc4JUQCBBCFja0HaW7x24Mm7k1W45VWHvtEvczqYmigABAwQBAAACDQAAAAC4J9QJAAAAAP4A",
 								"base64",
 							},
-							Version: pointer.Get[uint8](0),
+							Version: "legacy",
 						},
 					},
 				},

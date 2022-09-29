@@ -36,7 +36,7 @@ const (
 type GetBlockTransaction struct {
 	Transaction any              `json:"transaction"`
 	Meta        *TransactionMeta `json:"meta"`
-	Version     *uint8           `json:"version"`
+	Version     any              `json:"version"`
 }
 
 type GetBlockConfig struct {
