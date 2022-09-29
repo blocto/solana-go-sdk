@@ -338,6 +338,68 @@ func TestGetBlock(t *testing.T) {
 			},
 			ExpectedError: nil,
 		},
+		{
+			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlock", "params":[33, {"encoding": "base64", "rewards": false, "maxSupportedTransactionVersion": 0}]}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":{"blockHeight":33,"blockTime":1631803928,"blockhash":"HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT","parentSlot":32,"previousBlockhash":"CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q","transactions":[{"meta":{"err":null,"fee":10000,"innerInstructions":[],"logMessages":["Program Vote111111111111111111111111111111111111111 invoke [1]","Program Vote111111111111111111111111111111111111111 success"],"postBalances":[499999835001,1000000000000000,143487360,1169280,1],"postTokenBalances":[],"preBalances":[499999845001,1000000000000000,143487360,1169280,1],"preTokenBalances":[],"rewards":[],"status":{"Ok":null}},"transaction":["AnXU8JYCIrc73JwxK9traTSp3EZdmnJp0B5luW8CCzr7GnFd/SjIMXiG4qbN5CwyEVhbpORzBUpB/253cNtS1A+0rWE+nrDqWRQ2OVU727PU4NtR611jY+10Q+F6lCZDsJt46b6oXz3PN5WGxTQk7mC4YhCbYsTcalWBkltA8KgPAgADBXszyT4GLb26BFuAAUXtW0B75zurDhXE7UOYKHFkpIlKJMmZpq+FRXTx8jzBMy1YsdkCo0kyLDdF2Q3NhXRdEosGp9UXGS8Kr8byZeP7d8x62oLFKdC+OxNuLQBVIAAAAAan1RcYx3TJKFZjmGkdXraLXrijm0ttXHNVWyEAAAAAB2FIHTV0dLt8TXYk69O9s9g1XnPREEP8DaNTgAAAAACrUBylgzc0SSCUPSfMJC3TI6KJEzs834KdMIMJci+UYAEEBAECAwE9AgAAAAEAAAAAAAAAIAAAAAAAAAAGCHSVIc5Betdf+NkRi4YR2D3abNLvpbI83qnB7EvNsAEZWkNhAAAAAA==","base64"], "version": 0}]},"id":1}`,
+			RpcCall: func(rc RpcClient) (any, error) {
+				return rc.GetBlockWithConfig(
+					context.TODO(),
+					33,
+					GetBlockConfig{
+						Encoding:              GetBlockConfigEncodingBase64,
+						Rewards:               pointer.Get[bool](false),
+						MaxTransactionVersion: pointer.Get[uint8](0),
+					},
+				)
+			},
+			ExpectedResponse: JsonRpcResponse[GetBlock]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetBlock{
+					ParentSlot:        32,
+					BlockHeight:       pointer.Get[int64](33),
+					BlockTime:         pointer.Get[int64](1631803928),
+					PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
+					Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
+					Transactions: []GetBlockTransaction{
+						{
+							Meta: &TransactionMeta{
+								Err: nil,
+								Fee: 10000,
+								PreBalances: []int64{
+									499999845001,
+									1000000000000000,
+									143487360,
+									1169280,
+									1,
+								},
+								PostBalances: []int64{
+									499999835001,
+									1000000000000000,
+									143487360,
+									1169280,
+									1,
+								},
+								PreTokenBalances:  []TransactionMetaTokenBalance{},
+								PostTokenBalances: []TransactionMetaTokenBalance{},
+								LogMessages: []string{
+									"Program Vote111111111111111111111111111111111111111 invoke [1]",
+									"Program Vote111111111111111111111111111111111111111 success",
+								},
+								InnerInstructions: []TransactionMetaInnerInstruction{},
+							},
+							Transaction: []any{
+								"AQiClQkvASAMI63iTE4VCNKpvDttDlM70bXlosqCRJ4kPeiPcPmIwW4AFNFTjmil/X1BSQJV6yUnXdQ+1+KSlAKAAQACBNcUkx66ahmo9NxsAZr/Jk9fv2jFoo7gs7mHVc451knTB0TvGBo/9u4tBgYjoLxl6Y29BFXLmb1J7Q+3GgPKqJ8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ3pq+XM5t6yI0YkskERvUAAjCSZvYuU8EYJEmCAAAAc4JUQCBBCFja0HaW7x24Mm7k1W45VWHvtEvczqYmigABAwQBAAACDQAAAAC4J9QJAAAAAP4A",
+								"base64",
+							},
+							Version: pointer.Get[uint8](0),
+						},
+					},
+				},
+			},
+			ExpectedError: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
