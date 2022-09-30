@@ -40,11 +40,11 @@ type GetBlockTransaction struct {
 }
 
 type GetBlockConfig struct {
-	Encoding              GetBlockConfigEncoding           `json:"encoding,omitempty"`                       // default: "json"
-	TransactionDetails    GetBlockConfigTransactionDetails `json:"transactionDetails,omitempty"`             // default: "full", either "full", "signatures", "none"
-	Rewards               *bool                            `json:"rewards,omitempty"`                        // default: true
-	Commitment            Commitment                       `json:"commitment,omitempty"`                     // "processed" is not supported
-	MaxTransactionVersion *uint8                           `json:"maxSupportedTransactionVersion,omitempty"` // default: nil legacy only
+	Encoding                       GetBlockConfigEncoding           `json:"encoding,omitempty"`                       // default: "json"
+	TransactionDetails             GetBlockConfigTransactionDetails `json:"transactionDetails,omitempty"`             // default: "full", either "full", "signatures", "none"
+	Rewards                        *bool                            `json:"rewards,omitempty"`                        // default: true
+	Commitment                     Commitment                       `json:"commitment,omitempty"`                     // "processed" is not supported
+	MaxSupportedTransactionVersion *uint8                           `json:"maxSupportedTransactionVersion,omitempty"` // default: nil legacy only
 }
 
 type GetBlockConfigEncoding string

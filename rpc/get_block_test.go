@@ -346,9 +346,9 @@ func TestGetBlock(t *testing.T) {
 					context.TODO(),
 					33,
 					GetBlockConfig{
-						Encoding:              GetBlockConfigEncodingBase64,
-						Rewards:               pointer.Get[bool](false),
-						MaxTransactionVersion: pointer.Get[uint8](0),
+						Encoding:                       GetBlockConfigEncodingBase64,
+						Rewards:                        pointer.Get[bool](false),
+						MaxSupportedTransactionVersion: pointer.Get[uint8](0),
 					},
 				)
 			},
