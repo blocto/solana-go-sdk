@@ -400,6 +400,157 @@ func TestGetBlock(t *testing.T) {
 			},
 			ExpectedError: nil,
 		},
+		{
+			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlock", "params":[46986, {"encoding": "base64"}]}`,
+			ResponseBody: `{"jsonrpc":"2.0","error":{"code":-32015,"message":"Transaction version (0) is not supported"},"id":1}`,
+			RpcCall: func(rc RpcClient) (any, error) {
+				return rc.GetBlockWithConfig(
+					context.TODO(),
+					46986,
+					GetBlockConfig{
+						Encoding: GetBlockConfigEncodingBase64,
+					},
+				)
+			},
+			ExpectedResponse: JsonRpcResponse[GetBlock]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error: &JsonRpcError{
+					Code:    -32015,
+					Message: "Transaction version (0) is not supported",
+				},
+				Result: GetBlock{},
+			},
+			ExpectedError: nil,
+		},
+		{
+			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getBlock", "params":[46986, {"encoding": "base64", "rewards": false, "maxSupportedTransactionVersion": 0}]}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":{"blockHeight":46984,"blockTime":1663315273,"blockhash":"5GLYVkvcF7ygCQpFVbeZsaCcSBaw9qofJjdtzwVXYPu1","parentSlot":46985,"previousBlockhash":"2ChS54SSzba9zFqsbQJviVkmXXN7zdpMRXPjvzY93cfX","transactions":[{"meta":{"computeUnitsConsumed":0,"err":null,"fee":5000,"innerInstructions":[],"loadedAddresses":{"readonly":[],"writable":["test111111111111111111111111111111111111111"]},"logMessages":["Program 11111111111111111111111111111111 invoke [1]","Program 11111111111111111111111111111111 success"],"postBalances":[9998999995000,1,1000000000],"postTokenBalances":[],"preBalances":[10000000000000,1,0],"preTokenBalances":[],"rewards":null,"status":{"Ok":null}},"transaction":["Ad8N7teP2bRE2xzLJRc+5zw2OOJWF4cXtfSxbMTwijdxQMkGB4KMAAzG/svcdNGzaA5QiH4tb1ly0e7oFyJ53gCAAQABAn9ga/qYhdDgSftxl4CLVlBlRooyjZnabjgnerV4N1a5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADzHkIXiJ+eq12wXs5ZseAwuBZu+EOsM5tQogx7iqiY+AEBAgACDAIAAAAAypo7AAAAAAGWXqBzSZja4R/6KEg0G0P5Y1bvQBhRNhSSdA0KHQ84BAECAA==","base64"],"version":0},{"meta":{"computeUnitsConsumed":0,"err":null,"fee":5000,"innerInstructions":[],"loadedAddresses":{"readonly":[],"writable":[]},"logMessages":["Program 11111111111111111111111111111111 invoke [1]","Program 11111111111111111111111111111111 success"],"postBalances":[9997999990000,2000000000,1],"postTokenBalances":[],"preBalances":[9998999995000,1000000000,1],"preTokenBalances":[],"rewards":null,"status":{"Ok":null}},"transaction":["Achxxn2FVKasGFueEHTMBFmON/5ztN7JdYvc+Ss5CtLwfj6TDPgqGJvkBbWoIsZn6jM7j4WaV1eRMzlu9jz6cgUBAAEDf2Br+piF0OBJ+3GXgItWUGVGijKNmdpuOCd6tXg3VrkNO3L9o/rpfyK75/JQr7NPRByyLQ5llixat3eAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8x5CF4ifnqtdsF7OWbHgMLgWbvhDrDObUKIMe4qomPgBAgIAAQwCAAAAAMqaOwAAAAA=","base64"],"version":"legacy"},{"meta":{"computeUnitsConsumed":0,"err":null,"fee":10000,"innerInstructions":[],"loadedAddresses":{"readonly":[],"writable":[]},"logMessages":["Program Vote111111111111111111111111111111111111111 invoke [1]","Program Vote111111111111111111111111111111111111111 success"],"postBalances":[499765100000,1000000000000000,1],"postTokenBalances":[],"preBalances":[499765110000,1000000000000000,1],"preTokenBalances":[],"rewards":null,"status":{"Ok":null}},"transaction":["AkC0jBUH+KTvqrw+XF/h4aA2u09VmQDbI8dEqPiGay0clJI52fhNEJ41IPmaBBjaweVM1Mh1B7J3VFNr7nlAxgDyt+2B+en7Q0PKoWT1ONDfEElmzIWVLhXuFX5KXZRpHQSrvKmP4x8j1dKJ2fbHxK0mMZLescxNMQsszjaXCT0GAgABA0DSMuP/AXO4osA2Lche6ae8CYVL66c/suPx4F4or2rxK8rwBthv3Sd+0di7ooNIjpqXz5HxZ1BkFltiD/91+EcHYUgdNXR0u3xNdiTr072z2DVec9EQQ/wNo1OAAAAAABHayu7YzW3oqcYF3ZBq9Na6SY+f1bF5L/g44JhaYX6WAQICAQF0DAAAAGq3AAAAAAAAHwEfAR4BHQEcARsBGgEZARgBFwEWARUBFAETARIBEQEQAQ8BDgENAQwBCwEKAQkBCAEHAQYBBQEEAQMBAgEBUqiGzWLvHkwvxR/wG+1DSHfhah9IsndPja3vZj6mCxAB83w2YwAAAAA=","base64"],"version":"legacy"}]},"id":1}`,
+			RpcCall: func(rc RpcClient) (any, error) {
+				return rc.GetBlockWithConfig(
+					context.TODO(),
+					46986,
+					GetBlockConfig{
+						Encoding:                       GetBlockConfigEncodingBase64,
+						Rewards:                        pointer.Get(false),
+						MaxSupportedTransactionVersion: pointer.Get[uint8](0),
+					},
+				)
+			},
+			ExpectedResponse: JsonRpcResponse[GetBlock]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetBlock{
+					ParentSlot:        46985,
+					BlockHeight:       pointer.Get[int64](46984),
+					BlockTime:         pointer.Get[int64](1663315273),
+					PreviousBlockhash: "2ChS54SSzba9zFqsbQJviVkmXXN7zdpMRXPjvzY93cfX",
+					Blockhash:         "5GLYVkvcF7ygCQpFVbeZsaCcSBaw9qofJjdtzwVXYPu1",
+					Transactions: []GetBlockTransaction{
+						{
+							Meta: &TransactionMeta{
+								Err: nil,
+								Fee: 5000,
+								PreBalances: []int64{
+									10000000000000,
+									1,
+									0,
+								},
+								PostBalances: []int64{
+									9998999995000,
+									1,
+									1000000000,
+								},
+								LogMessages: []string{
+									"Program 11111111111111111111111111111111 invoke [1]",
+									"Program 11111111111111111111111111111111 success",
+								},
+								LoadedAddresses: TransactionLoadedAddresses{
+									Writable: []string{
+										"test111111111111111111111111111111111111111",
+									},
+									Readonly: []string{},
+								},
+								PreTokenBalances:  []TransactionMetaTokenBalance{},
+								PostTokenBalances: []TransactionMetaTokenBalance{},
+								InnerInstructions: []TransactionMetaInnerInstruction{},
+							},
+							Transaction: []any{
+								"Ad8N7teP2bRE2xzLJRc+5zw2OOJWF4cXtfSxbMTwijdxQMkGB4KMAAzG/svcdNGzaA5QiH4tb1ly0e7oFyJ53gCAAQABAn9ga/qYhdDgSftxl4CLVlBlRooyjZnabjgnerV4N1a5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADzHkIXiJ+eq12wXs5ZseAwuBZu+EOsM5tQogx7iqiY+AEBAgACDAIAAAAAypo7AAAAAAGWXqBzSZja4R/6KEg0G0P5Y1bvQBhRNhSSdA0KHQ84BAECAA==",
+								"base64",
+							},
+							Version: float64(0),
+						},
+						{
+							Meta: &TransactionMeta{
+								Err: nil,
+								Fee: 5000,
+								PreBalances: []int64{
+									9998999995000,
+									1000000000,
+									1,
+								},
+								PostBalances: []int64{
+									9997999990000,
+									2000000000,
+									1,
+								},
+								LogMessages: []string{
+									"Program 11111111111111111111111111111111 invoke [1]",
+									"Program 11111111111111111111111111111111 success",
+								},
+								LoadedAddresses: TransactionLoadedAddresses{
+									Writable: []string{},
+									Readonly: []string{},
+								},
+								PreTokenBalances:  []TransactionMetaTokenBalance{},
+								PostTokenBalances: []TransactionMetaTokenBalance{},
+								InnerInstructions: []TransactionMetaInnerInstruction{},
+							},
+							Transaction: []any{
+								"Achxxn2FVKasGFueEHTMBFmON/5ztN7JdYvc+Ss5CtLwfj6TDPgqGJvkBbWoIsZn6jM7j4WaV1eRMzlu9jz6cgUBAAEDf2Br+piF0OBJ+3GXgItWUGVGijKNmdpuOCd6tXg3VrkNO3L9o/rpfyK75/JQr7NPRByyLQ5llixat3eAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8x5CF4ifnqtdsF7OWbHgMLgWbvhDrDObUKIMe4qomPgBAgIAAQwCAAAAAMqaOwAAAAA=",
+								"base64",
+							},
+							Version: "legacy",
+						},
+						{
+							Meta: &TransactionMeta{
+								Err: nil,
+								Fee: 10000,
+								PreBalances: []int64{
+									499765110000,
+									1000000000000000,
+									1,
+								},
+								PostBalances: []int64{
+									499765100000,
+									1000000000000000,
+									1,
+								},
+								LogMessages: []string{
+									"Program Vote111111111111111111111111111111111111111 invoke [1]",
+									"Program Vote111111111111111111111111111111111111111 success",
+								},
+								LoadedAddresses: TransactionLoadedAddresses{
+									Writable: []string{},
+									Readonly: []string{},
+								},
+								PreTokenBalances:  []TransactionMetaTokenBalance{},
+								PostTokenBalances: []TransactionMetaTokenBalance{},
+								InnerInstructions: []TransactionMetaInnerInstruction{},
+							},
+							Transaction: []any{
+								"AkC0jBUH+KTvqrw+XF/h4aA2u09VmQDbI8dEqPiGay0clJI52fhNEJ41IPmaBBjaweVM1Mh1B7J3VFNr7nlAxgDyt+2B+en7Q0PKoWT1ONDfEElmzIWVLhXuFX5KXZRpHQSrvKmP4x8j1dKJ2fbHxK0mMZLescxNMQsszjaXCT0GAgABA0DSMuP/AXO4osA2Lche6ae8CYVL66c/suPx4F4or2rxK8rwBthv3Sd+0di7ooNIjpqXz5HxZ1BkFltiD/91+EcHYUgdNXR0u3xNdiTr072z2DVec9EQQ/wNo1OAAAAAABHayu7YzW3oqcYF3ZBq9Na6SY+f1bF5L/g44JhaYX6WAQICAQF0DAAAAGq3AAAAAAAAHwEfAR4BHQEcARsBGgEZARgBFwEWARUBFAETARIBEQEQAQ8BDgENAQwBCwEKAQkBCAEHAQYBBQEEAQMBAgEBUqiGzWLvHkwvxR/wG+1DSHfhah9IsndPja3vZj6mCxAB83w2YwAAAAA=",
+								"base64",
+							},
+							Version: "legacy",
+						},
+					},
+				},
+			},
+			ExpectedError: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
