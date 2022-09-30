@@ -24,6 +24,7 @@ type TransactionMeta struct {
 	PostTokenBalances []TransactionMetaTokenBalance     `json:"postTokenBalances"`
 	LogMessages       []string                          `json:"logMessages"`
 	InnerInstructions []TransactionMetaInnerInstruction `json:"innerInstructions"`
+	LoadedAddresses   TransactionLoadedAddresses        `json:"loadedAddresses"`
 }
 
 // TransactionMetaTokenBalance is a part of TransactionMeta
@@ -62,6 +63,11 @@ const (
 	// currently only "rent", other types may be added in the future
 	TransactionMetaRewardTypeRent TransactionMetaRewardType = "rent"
 )
+
+type TransactionLoadedAddresses struct {
+	Writable []string `json:"writable"`
+	Readonly []string `json:"readonly"`
+}
 
 // GetTransactionConfig is a option config for `getTransaction`
 type GetTransactionConfig struct {
