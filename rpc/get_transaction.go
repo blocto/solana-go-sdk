@@ -37,14 +37,14 @@ type TransactionMetaTokenBalance struct {
 
 // TransactionMetaInnerInstruction is a part of TransactionMeta
 type TransactionMetaInnerInstruction struct {
-	Index        uint64        `json:"index"`
-	Instructions []Instruction `json:"instructions"`
+	Index        uint64 `json:"index"`
+	Instructions []any  `json:"instructions"`
 }
 
 // Instruction is a part of TransactionMetaInnerInstruction
 type Instruction struct {
 	ProgramIDIndex int    `json:"programIdIndex"`
-	Accounts       []any  `json:"accounts"`
+	Accounts       []int  `json:"accounts"`
 	Data           string `json:"data"`
 }
 

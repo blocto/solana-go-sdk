@@ -519,44 +519,9 @@ func getTransaction(res rpc.JsonRpcResponse[*rpc.GetTransaction]) (GetTransactio
 		return GetTransactionResponse{}, fmt.Errorf("failed to deserialize transaction, err: %v", err)
 	}
 
-	var transactionMeta *TransactionMeta
-	if res.Result.Meta != nil {
-		innerInstructions := make([]TransactionMetaInnerInstruction, 0, len(res.Result.Meta.InnerInstructions))
-		for _, metaInnerInstruction := range res.Result.Meta.InnerInstructions {
-			compiledInstructions := make([]types.CompiledInstruction, 0, len(metaInnerInstruction.Instructions))
-			for _, innerInstruction := range metaInnerInstruction.Instructions {
-				var data []byte
-				if len(innerInstruction.Data) > 0 {
-					data, err = base58.Decode(innerInstruction.Data)
-					if err != nil {
-						return GetTransactionResponse{}, fmt.Errorf("failed to base58 decode data, data: %v, err: %v", innerInstruction.Data, err)
-					}
-				}
-				accounts, err := convertToIntSlice(innerInstruction.Accounts)
-				if err != nil {
-					return GetTransactionResponse{}, fmt.Errorf("failed to cast instructions accounts, err: %v", err)
-				}
-				compiledInstructions = append(compiledInstructions, types.CompiledInstruction{
-					ProgramIDIndex: innerInstruction.ProgramIDIndex,
-					Accounts:       accounts,
-					Data:           data,
-				})
-			}
-			innerInstructions = append(innerInstructions, TransactionMetaInnerInstruction{
-				Index:        metaInnerInstruction.Index,
-				Instructions: compiledInstructions,
-			})
-		}
-		transactionMeta = &TransactionMeta{
-			Err:               res.Result.Meta.Err,
-			Fee:               res.Result.Meta.Fee,
-			PreBalances:       res.Result.Meta.PreBalances,
-			PostBalances:      res.Result.Meta.PostBalances,
-			PreTokenBalances:  res.Result.Meta.PreTokenBalances,
-			PostTokenBalances: res.Result.Meta.PostTokenBalances,
-			LogMessages:       res.Result.Meta.LogMessages,
-			InnerInstructions: innerInstructions,
-		}
+	transactionMeta, err := convertTransactionMeta(res.Result.Meta)
+	if err != nil {
+		return GetTransactionResponse{}, fmt.Errorf("failed to convert transaction meta, err: %v", err)
 	}
 
 	return GetTransactionResponse{
@@ -618,44 +583,9 @@ func getBlock(res rpc.JsonRpcResponse[rpc.GetBlock]) (GetBlockResponse, error) {
 			return GetBlockResponse{}, fmt.Errorf("failed to deserialize transaction, err: %v", err)
 		}
 
-		var transactionMeta *TransactionMeta
-		if rTx.Meta != nil {
-			innerInstructions := make([]TransactionMetaInnerInstruction, 0, len(rTx.Meta.InnerInstructions))
-			for _, metaInnerInstruction := range rTx.Meta.InnerInstructions {
-				compiledInstructions := make([]types.CompiledInstruction, 0, len(metaInnerInstruction.Instructions))
-				for _, innerInstruction := range metaInnerInstruction.Instructions {
-					var data []byte
-					if len(innerInstruction.Data) > 0 {
-						data, err = base58.Decode(innerInstruction.Data)
-						if err != nil {
-							return GetBlockResponse{}, fmt.Errorf("failed to base58 decode data, data: %v, err: %v", innerInstruction.Data, err)
-						}
-					}
-					accounts, err := convertToIntSlice(innerInstruction.Accounts)
-					if err != nil {
-						return GetBlockResponse{}, fmt.Errorf("failed to cast type of accounts, err: %v", err)
-					}
-					compiledInstructions = append(compiledInstructions, types.CompiledInstruction{
-						ProgramIDIndex: innerInstruction.ProgramIDIndex,
-						Accounts:       accounts,
-						Data:           data,
-					})
-				}
-				innerInstructions = append(innerInstructions, TransactionMetaInnerInstruction{
-					Index:        metaInnerInstruction.Index,
-					Instructions: compiledInstructions,
-				})
-			}
-			transactionMeta = &TransactionMeta{
-				Err:               rTx.Meta.Err,
-				Fee:               rTx.Meta.Fee,
-				PreBalances:       rTx.Meta.PreBalances,
-				PostBalances:      rTx.Meta.PostBalances,
-				PreTokenBalances:  rTx.Meta.PreTokenBalances,
-				PostTokenBalances: rTx.Meta.PostTokenBalances,
-				LogMessages:       rTx.Meta.LogMessages,
-				InnerInstructions: innerInstructions,
-			}
+		transactionMeta, err := convertTransactionMeta(rTx.Meta)
+		if err != nil {
+			return GetBlockResponse{}, fmt.Errorf("failed to convert transaction meta, err: %v", err)
 		}
 
 		txs = append(txs,
@@ -995,4 +925,56 @@ func convertToIntSlice(input []any) ([]int, error) {
 		output = append(output, int(v.(float64)))
 	}
 	return output, nil
+}
+
+func convertTransactionMeta(meta *rpc.TransactionMeta) (*TransactionMeta, error) {
+	if meta == nil {
+		return nil, nil
+	}
+
+	innerInstructions := make([]TransactionMetaInnerInstruction, 0, len(meta.InnerInstructions))
+	for _, metaInnerInstruction := range meta.InnerInstructions {
+		compiledInstructions := make([]types.CompiledInstruction, 0, len(metaInnerInstruction.Instructions))
+		for _, innerInstruction := range metaInnerInstruction.Instructions {
+			parsedInstruction, ok := innerInstruction.(map[string]any)
+			if !ok {
+				return nil, fmt.Errorf("failed to convert inner instruction type. value: %v", innerInstruction)
+			}
+
+			accounts, err := convertToIntSlice(parsedInstruction["accounts"].([]any))
+			if err != nil {
+				return nil, fmt.Errorf("failed to cast instructions accounts, err: %v", err)
+			}
+
+			var data []byte
+			if dataString := parsedInstruction["data"].(string); len(dataString) > 0 {
+				data, err = base58.Decode(dataString)
+				if err != nil {
+					return nil, fmt.Errorf("failed to base58 decode data, data: %v, err: %v", parsedInstruction["data"], err)
+				}
+			}
+
+			compiledInstructions = append(compiledInstructions, types.CompiledInstruction{
+				ProgramIDIndex: int(parsedInstruction["programIdIndex"].(float64)),
+				Accounts:       accounts,
+				Data:           data,
+			})
+		}
+
+		innerInstructions = append(innerInstructions, TransactionMetaInnerInstruction{
+			Index:        metaInnerInstruction.Index,
+			Instructions: compiledInstructions,
+		})
+	}
+
+	return &TransactionMeta{
+		Err:               meta.Err,
+		Fee:               meta.Fee,
+		PreBalances:       meta.PreBalances,
+		PostBalances:      meta.PostBalances,
+		PreTokenBalances:  meta.PreTokenBalances,
+		PostTokenBalances: meta.PostTokenBalances,
+		LogMessages:       meta.LogMessages,
+		InnerInstructions: innerInstructions,
+	}, nil
 }

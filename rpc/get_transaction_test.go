@@ -30,26 +30,26 @@ func TestGetTransaction(t *testing.T) {
 						InnerInstructions: []TransactionMetaInnerInstruction{
 							{
 								Index: 0,
-								Instructions: []Instruction{
-									{
-										ProgramIDIndex: 3,
-										Data:           "3Bxs4h24hBtQy9rw",
-										Accounts:       []any{0., 1.},
+								Instructions: []any{
+									map[string]any{
+										"programIdIndex": 3.,
+										"data":           "3Bxs4h24hBtQy9rw",
+										"accounts":       []any{0., 1.},
 									},
-									{
-										ProgramIDIndex: 3,
-										Data:           "9krTDU2LzCSUJuVZ",
-										Accounts:       []any{1.},
+									map[string]any{
+										"programIdIndex": 3.,
+										"data":           "9krTDU2LzCSUJuVZ",
+										"accounts":       []any{1.},
 									},
-									{
-										ProgramIDIndex: 3,
-										Data:           "SYXsBSQy3GeifSEQSGvTbrPNposbSAiSoh1YA85wcvGKSnYg",
-										Accounts:       []any{1.},
+									map[string]any{
+										"programIdIndex": 3.,
+										"data":           "SYXsBSQy3GeifSEQSGvTbrPNposbSAiSoh1YA85wcvGKSnYg",
+										"accounts":       []any{1.},
 									},
-									{
-										ProgramIDIndex: 4,
-										Data:           "2",
-										Accounts:       []any{1., 2., 0., 5.},
+									map[string]any{
+										"programIdIndex": 4.,
+										"data":           "2",
+										"accounts":       []any{1., 2., 0., 5.},
 									},
 								},
 							},
@@ -161,26 +161,26 @@ func TestGetTransaction(t *testing.T) {
 						InnerInstructions: []TransactionMetaInnerInstruction{
 							{
 								Index: 0,
-								Instructions: []Instruction{
-									{
-										ProgramIDIndex: 3,
-										Data:           "3Bxs4h24hBtQy9rw",
-										Accounts:       []any{0., 1.},
+								Instructions: []any{
+									map[string]any{
+										"programIdIndex": 3.,
+										"data":           "3Bxs4h24hBtQy9rw",
+										"accounts":       []any{0., 1.},
 									},
-									{
-										ProgramIDIndex: 3,
-										Data:           "9krTDU2LzCSUJuVZ",
-										Accounts:       []any{1.},
+									map[string]any{
+										"programIdIndex": 3.,
+										"data":           "9krTDU2LzCSUJuVZ",
+										"accounts":       []any{1.},
 									},
-									{
-										ProgramIDIndex: 3,
-										Data:           "SYXsBSQy3GeifSEQSGvTbrPNposbSAiSoh1YA85wcvGKSnYg",
-										Accounts:       []any{1.},
+									map[string]any{
+										"programIdIndex": 3.,
+										"data":           "SYXsBSQy3GeifSEQSGvTbrPNposbSAiSoh1YA85wcvGKSnYg",
+										"accounts":       []any{1.},
 									},
-									{
-										ProgramIDIndex: 4,
-										Data:           "2",
-										Accounts:       []any{1., 2., 0., 5.},
+									map[string]any{
+										"programIdIndex": 4.,
+										"data":           "2",
+										"accounts":       []any{1., 2., 0., 5.},
 									},
 								},
 							},
