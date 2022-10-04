@@ -44,7 +44,7 @@ type TransactionMetaInnerInstruction struct {
 // Instruction is a part of TransactionMetaInnerInstruction
 type Instruction struct {
 	ProgramIDIndex int    `json:"programIdIndex"`
-	Accounts       []int  `json:"accounts"`
+	Accounts       []any  `json:"accounts"`
 	Data           string `json:"data"`
 }
 

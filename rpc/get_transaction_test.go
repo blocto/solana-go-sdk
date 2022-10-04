@@ -34,22 +34,22 @@ func TestGetTransaction(t *testing.T) {
 									{
 										ProgramIDIndex: 3,
 										Data:           "3Bxs4h24hBtQy9rw",
-										Accounts:       []int{0, 1},
+										Accounts:       []any{0., 1.},
 									},
 									{
 										ProgramIDIndex: 3,
 										Data:           "9krTDU2LzCSUJuVZ",
-										Accounts:       []int{1},
+										Accounts:       []any{1.},
 									},
 									{
 										ProgramIDIndex: 3,
 										Data:           "SYXsBSQy3GeifSEQSGvTbrPNposbSAiSoh1YA85wcvGKSnYg",
-										Accounts:       []int{1},
+										Accounts:       []any{1.},
 									},
 									{
 										ProgramIDIndex: 4,
 										Data:           "2",
-										Accounts:       []int{1, 2, 0, 5},
+										Accounts:       []any{1., 2., 0., 5.},
 									},
 								},
 							},
@@ -165,22 +165,22 @@ func TestGetTransaction(t *testing.T) {
 									{
 										ProgramIDIndex: 3,
 										Data:           "3Bxs4h24hBtQy9rw",
-										Accounts:       []int{0, 1},
+										Accounts:       []any{0., 1.},
 									},
 									{
 										ProgramIDIndex: 3,
 										Data:           "9krTDU2LzCSUJuVZ",
-										Accounts:       []int{1},
+										Accounts:       []any{1.},
 									},
 									{
 										ProgramIDIndex: 3,
 										Data:           "SYXsBSQy3GeifSEQSGvTbrPNposbSAiSoh1YA85wcvGKSnYg",
-										Accounts:       []int{1},
+										Accounts:       []any{1.},
 									},
 									{
 										ProgramIDIndex: 4,
 										Data:           "2",
-										Accounts:       []int{1, 2, 0, 5},
+										Accounts:       []any{1., 2., 0., 5.},
 									},
 								},
 							},

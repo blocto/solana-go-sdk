@@ -532,9 +532,13 @@ func getTransaction(res rpc.JsonRpcResponse[*rpc.GetTransaction]) (GetTransactio
 						return GetTransactionResponse{}, fmt.Errorf("failed to base58 decode data, data: %v, err: %v", innerInstruction.Data, err)
 					}
 				}
+				accounts, err := convertToIntSlice(innerInstruction.Accounts)
+				if err != nil {
+					return GetTransactionResponse{}, fmt.Errorf("failed to cast instructions accounts, err: %v", err)
+				}
 				compiledInstructions = append(compiledInstructions, types.CompiledInstruction{
 					ProgramIDIndex: innerInstruction.ProgramIDIndex,
-					Accounts:       innerInstruction.Accounts,
+					Accounts:       accounts,
 					Data:           data,
 				})
 			}
@@ -627,9 +631,13 @@ func getBlock(res rpc.JsonRpcResponse[rpc.GetBlock]) (GetBlockResponse, error) {
 							return GetBlockResponse{}, fmt.Errorf("failed to base58 decode data, data: %v, err: %v", innerInstruction.Data, err)
 						}
 					}
+					accounts, err := convertToIntSlice(innerInstruction.Accounts)
+					if err != nil {
+						return GetBlockResponse{}, fmt.Errorf("failed to cast type of accounts, err: %v", err)
+					}
 					compiledInstructions = append(compiledInstructions, types.CompiledInstruction{
 						ProgramIDIndex: innerInstruction.ProgramIDIndex,
-						Accounts:       innerInstruction.Accounts,
+						Accounts:       accounts,
 						Data:           data,
 					})
 				}
@@ -978,4 +986,13 @@ func (c *Client) GetTokenAccountsByOwner(ctx context.Context, base58Addr string)
 		m[common.PublicKeyFromString(v.Pubkey)] = tokenAccount
 	}
 	return m, err
+}
+
+// helper function
+func convertToIntSlice(input []any) ([]int, error) {
+	output := make([]int, 0, len(input))
+	for _, v := range input {
+		output = append(output, int(v.(float64)))
+	}
+	return output, nil
 }
