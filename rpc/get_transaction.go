@@ -17,16 +17,17 @@ type GetTransaction struct {
 
 // TransactionMeta is a part of GetTransactionResult
 type TransactionMeta struct {
-	Err               any                               `json:"err"`
-	Fee               uint64                            `json:"fee"`
-	PreBalances       []int64                           `json:"preBalances"`
-	PostBalances      []int64                           `json:"postBalances"`
-	PreTokenBalances  []TransactionMetaTokenBalance     `json:"preTokenBalances"`
-	PostTokenBalances []TransactionMetaTokenBalance     `json:"postTokenBalances"`
-	LogMessages       []string                          `json:"logMessages"`
-	InnerInstructions []TransactionMetaInnerInstruction `json:"innerInstructions"`
-	LoadedAddresses   TransactionLoadedAddresses        `json:"loadedAddresses"`
-	ReturnData        *ReturnData                       `json:"returnData"`
+	Err                  any                               `json:"err"`
+	Fee                  uint64                            `json:"fee"`
+	PreBalances          []int64                           `json:"preBalances"`
+	PostBalances         []int64                           `json:"postBalances"`
+	PreTokenBalances     []TransactionMetaTokenBalance     `json:"preTokenBalances"`
+	PostTokenBalances    []TransactionMetaTokenBalance     `json:"postTokenBalances"`
+	LogMessages          []string                          `json:"logMessages"`
+	InnerInstructions    []TransactionMetaInnerInstruction `json:"innerInstructions"`
+	LoadedAddresses      TransactionLoadedAddresses        `json:"loadedAddresses"`
+	ReturnData           *ReturnData                       `json:"returnData"`
+	ComputeUnitsConsumed *uint64                           `json:"computeUnitsConsumed"`
 }
 
 // TransactionMetaTokenBalance is a part of TransactionMeta

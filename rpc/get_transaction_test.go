@@ -309,6 +309,7 @@ func TestGetTransaction(t *testing.T) {
 							ProgramId: "35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP",
 							Data:      []any{"AQIDBAU=", "base64"},
 						},
+						ComputeUnitsConsumed: pointer.Get[uint64](185),
 					},
 					Transaction: []any{
 						"AV/vxqOrdrGio45xsX7l9jdCcQDy3VuY/wHlleHEuBuwDUIYO2ce/YpjkRfZHCq7tYSNEwFCRdolqNg2oibR5wUBAAECBj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4e0EmQh0otX6HS7HumAryrMtxCzacgpjtG6MY9cJWYYGK9azWH/heD6vSj5deOv9pmPQoZfCmIFJqrW8ixgJLtAQEAAA==",
