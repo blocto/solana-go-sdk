@@ -26,6 +26,7 @@ type TransactionMeta struct {
 	LogMessages       []string                          `json:"logMessages"`
 	InnerInstructions []TransactionMetaInnerInstruction `json:"innerInstructions"`
 	LoadedAddresses   TransactionLoadedAddresses        `json:"loadedAddresses"`
+	ReturnData        *ReturnData                       `json:"returnData"`
 }
 
 // TransactionMetaTokenBalance is a part of TransactionMeta
