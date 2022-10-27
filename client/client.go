@@ -776,9 +776,10 @@ func (c *Client) GetSignatureStatusesWithConfig(ctx context.Context, signatures 
 }
 
 type SimulateTransaction struct {
-	Err      any
-	Logs     []string
-	Accounts []*AccountInfo
+	Err        any
+	Logs       []string
+	Accounts   []*AccountInfo
+	ReturnData *ReturnData
 }
 
 type SimulateTransactionConfig struct {
@@ -855,10 +856,20 @@ func (c *Client) processSimulateTransaction(res rpc.JsonRpcResponse[rpc.Simulate
 		}
 	}
 
+	var returnData *ReturnData
+	if v := res.Result.Value.ReturnData; v != nil {
+		d, err := convertReturnData(*v)
+		if err != nil {
+			return SimulateTransaction{}, fmt.Errorf("failed to process return data, err: %v", err)
+		}
+		returnData = &d
+	}
+
 	return SimulateTransaction{
-		Err:      res.Result.Value.Err,
-		Logs:     res.Result.Value.Logs,
-		Accounts: accountInfos,
+		Err:        res.Result.Value.Err,
+		Logs:       res.Result.Value.Logs,
+		Accounts:   accountInfos,
+		ReturnData: returnData,
 	}, nil
 }
 
@@ -976,5 +987,33 @@ func convertTransactionMeta(meta *rpc.TransactionMeta) (*TransactionMeta, error)
 		PostTokenBalances: meta.PostTokenBalances,
 		LogMessages:       meta.LogMessages,
 		InnerInstructions: innerInstructions,
+	}, nil
+}
+
+type ReturnData struct {
+	ProgramId common.PublicKey
+	Data      []byte
+}
+
+func convertReturnData(d rpc.ReturnData) (ReturnData, error) {
+	programId := common.PublicKeyFromString(d.ProgramId)
+	s, ok := d.Data.([]any)
+	if !ok {
+		return ReturnData{}, fmt.Errorf("failed to get data")
+	}
+	if len(s) != 2 {
+		return ReturnData{}, fmt.Errorf("unexpected slice lentgh")
+	}
+	if s[1].(string) != "base64" {
+		return ReturnData{}, fmt.Errorf("unexpected encoding method")
+	}
+	data, err := base64.StdEncoding.DecodeString(s[0].(string))
+	if err != nil {
+		return ReturnData{}, fmt.Errorf("failed to decode data")
+	}
+
+	return ReturnData{
+		ProgramId: programId,
+		Data:      data,
 	}, nil
 }

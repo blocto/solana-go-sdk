@@ -2,10 +2,12 @@ package client
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	"github.com/portto/solana-go-sdk/common"
@@ -938,6 +940,28 @@ func TestClient_SimulateTransaction(t *testing.T) {
 			},
 			err: nil,
 		},
+		{
+			requestBody:  `{"jsonrpc":"2.0","id":1,"method":"simulateTransaction","params":["Ab/yMEK7qNgGxaPMg2XaVnwwLMqnY8FTeJrA9qJ1nOBFX08BHycnp3/9WOxOY53+eZnbkT2/+6Mx7w+DsuVN8ggBAAECBj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4e0EmQh0otX6HS7HumAryrMtxCzacgpjtG6MY9cJWYYEsGZsdWhvaw9ENEPFBEi4eBna4CphPQWWcgU4yARSnVAQEAAA==",{"encoding":"base64"}]}`,
+			responseBody: `{"jsonrpc":"2.0","result":{"context":{"apiVersion":"1.14.5","slot":159776096},"value":{"accounts":null,"err":null,"logs":["Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP invoke [1]","Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP consumed 185 of 200000 compute units","Program return: 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP AQIDBAU=","Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP success"],"returnData":{"data":["AQIDBAU=","base64"],"programId":"35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP"},"unitsConsumed":185}},"id":1}`,
+			args: args{
+				ctx: context.Background(),
+				tx:  mustDeserializeBase64Transaction("Ab/yMEK7qNgGxaPMg2XaVnwwLMqnY8FTeJrA9qJ1nOBFX08BHycnp3/9WOxOY53+eZnbkT2/+6Mx7w+DsuVN8ggBAAECBj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4e0EmQh0otX6HS7HumAryrMtxCzacgpjtG6MY9cJWYYEsGZsdWhvaw9ENEPFBEi4eBna4CphPQWWcgU4yARSnVAQEAAA=="),
+			},
+			want: SimulateTransaction{
+				Accounts: nil,
+				Logs: []string{
+					"Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP invoke [1]",
+					"Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP consumed 185 of 200000 compute units",
+					"Program return: 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP AQIDBAU=",
+					"Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP success",
+				},
+				ReturnData: &ReturnData{
+					ProgramId: common.PublicKeyFromString("35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP"),
+					Data:      []byte{1, 2, 3, 4, 5},
+				},
+			},
+			err: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -1478,4 +1502,49 @@ func Test_checkJsonRpcResponse(t *testing.T) {
 			assert.Equal(t, tt.expectedErr, err)
 		})
 	}
+}
+
+func Test_convertReturnData(t *testing.T) {
+	type args struct {
+		d rpc.ReturnData
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    ReturnData
+		wantErr bool
+	}{
+		{
+			args: args{
+				d: rpc.ReturnData{
+					ProgramId: "35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP",
+					Data:      []any{"AQIDBAU=", "base64"},
+				},
+			},
+			want: ReturnData{
+				ProgramId: common.PublicKeyFromString("35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP"),
+				Data:      []byte{1, 2, 3, 4, 5},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := convertReturnData(tt.args.d)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("convertReturnData() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("convertReturnData() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func mustDeserializeBase64Transaction(s string) types.Transaction {
+	d, err := base64.StdEncoding.DecodeString(s)
+	if err != nil {
+		panic("mustDeserializeBase64Transaction: failed to decode string")
+	}
+	return types.MustTransactionDeserialize(d)
 }
