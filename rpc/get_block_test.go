@@ -551,6 +551,109 @@ func TestGetBlock(t *testing.T) {
 			},
 			ExpectedError: nil,
 		},
+		{
+			RequestBody:  `{"jsonrpc":"2.0","id":1,"method":"getBlock","params":[237,{"encoding":"base64"}]}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":{"blockHeight":237,"blockTime":1666899961,"blockhash":"EdSZ7r12ZipGivMX4NDpFUT9pCmDkCPFHQyWwLSB2Wmv","parentSlot":236,"previousBlockhash":"DhaQz2FuLkredqU2VGBkoUVZzk4QTCskDezYZS7ua9rE","rewards":[{"commission":null,"lamports":7500,"postBalance":499998890000,"pubkey":"D7SRyWHVRfZngyzUciWJXNg6qPRV1Ga5ickasA3RKWbs","rewardType":"Fee"}],"transactions":[{"meta":{"computeUnitsConsumed":185,"err":null,"fee":5000,"innerInstructions":[],"loadedAddresses":{"readonly":[],"writable":[]},"logMessages":["Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP invoke [1]","Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP consumed 185 of 200000 compute units","Program return: 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP AQIDBAU=","Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP success"],"postBalances":[19999995000,1141440],"postTokenBalances":[],"preBalances":[20000000000,1141440],"preTokenBalances":[],"returnData":{"data":["AQIDBAU=","base64"],"programId":"35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP"},"rewards":[],"status":{"Ok":null}},"transaction":["ATzOQjvgBIzjOQc6WnMjWrjVwswSbhuFctuEe07qdy8aQUKCN2wnhexRJOtnuRaO2Ej+0ZVHHUbUuK4dlEXYDQMBAAECBj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4e0EmQh0otX6HS7HumAryrMtxCzacgpjtG6MY9cJWYYBIFo+itoZLn+XpB0rgSk0J0TAnzTRp1+XLycCCIW6nbAQEAAA==","base64"]},{"meta":{"computeUnitsConsumed":0,"err":null,"fee":10000,"innerInstructions":[],"loadedAddresses":{"readonly":[],"writable":[]},"logMessages":["Program Vote111111111111111111111111111111111111111 invoke [1]","Program Vote111111111111111111111111111111111111111 success"],"postBalances":[499998882500,1000000000000000,1],"postTokenBalances":[],"preBalances":[499998892500,1000000000000000,1],"preTokenBalances":[],"rewards":[],"status":{"Ok":null}},"transaction":["AvTyTNWKN/M/HMqK7PHNq92HzS+KzQgUOv+2/9gM5eCIblqBhtNggpRwS8QdEdTGZNPy9sGV4QnQdbwgd29ceAOEIqk0ngBBrb2L3/X1cnxOi3r9HeH5qsMVSF3mrWPQQY0HQMJcJ4P9h6/ZoSWPQ5EoBY6pTITUTYGnfOh4QiMCAgABA7Pye4CQ39EMJf/39tiZcvcBNSICJuXthpHIWtsgthjKpNP8p02KRZAs+x1AyHhXECmbuluryPHNRdTp7sPN4Z4HYUgdNXR0u3xNdiTr072z2DVec9EQQ/wNo1OAAAAAALyxQZliVJ+XOv1JCOY6vzkCK+ooOH3hT8ccNVIAeRWvAQICAQF0DAAAAM0AAAAAAAAAHwEfAR4BHQEcARsBGgEZARgBFwEWARUBFAETARIBEQEQAQ8BDgENAQwBCwEKAQkBCAEHAQYBBQEEAQMBAgEBgvsUbTEPD4Zz4/0zYUTxwrHil3ufJ2oDtVhxgydDp9cB+t9aYwAAAAA=","base64"]}]},"id":1}`,
+			RpcCall: func(rc RpcClient) (any, error) {
+				return rc.GetBlockWithConfig(
+					context.TODO(),
+					237,
+					GetBlockConfig{
+						Encoding: GetBlockConfigEncodingBase64,
+					},
+				)
+			},
+			ExpectedResponse: JsonRpcResponse[GetBlock]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: GetBlock{
+					ParentSlot:        236,
+					BlockHeight:       pointer.Get[int64](237),
+					BlockTime:         pointer.Get[int64](1666899961),
+					PreviousBlockhash: "DhaQz2FuLkredqU2VGBkoUVZzk4QTCskDezYZS7ua9rE",
+					Blockhash:         "EdSZ7r12ZipGivMX4NDpFUT9pCmDkCPFHQyWwLSB2Wmv",
+					Rewards: []GetBlockReward{
+						{
+							Pubkey:       "D7SRyWHVRfZngyzUciWJXNg6qPRV1Ga5ickasA3RKWbs",
+							Lamports:     7500,
+							PostBalances: 499998890000,
+							RewardType:   "Fee",
+							Commission:   nil,
+						},
+					},
+					Transactions: []GetBlockTransaction{
+						{
+							Meta: &TransactionMeta{
+								Err: nil,
+								Fee: 5000,
+								PreBalances: []int64{
+									20000000000,
+									1141440,
+								},
+								PostBalances: []int64{
+									19999995000,
+									1141440,
+								},
+								LogMessages: []string{
+									"Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP invoke [1]",
+									"Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP consumed 185 of 200000 compute units",
+									"Program return: 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP AQIDBAU=",
+									"Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP success",
+								},
+								LoadedAddresses: TransactionLoadedAddresses{
+									Writable: []string{},
+									Readonly: []string{},
+								},
+								PreTokenBalances:  []TransactionMetaTokenBalance{},
+								PostTokenBalances: []TransactionMetaTokenBalance{},
+								InnerInstructions: []TransactionMetaInnerInstruction{},
+								ReturnData: &ReturnData{
+									ProgramId: "35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP",
+									Data:      []any{"AQIDBAU=", "base64"},
+								},
+							},
+							Transaction: []any{
+								"ATzOQjvgBIzjOQc6WnMjWrjVwswSbhuFctuEe07qdy8aQUKCN2wnhexRJOtnuRaO2Ej+0ZVHHUbUuK4dlEXYDQMBAAECBj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4e0EmQh0otX6HS7HumAryrMtxCzacgpjtG6MY9cJWYYBIFo+itoZLn+XpB0rgSk0J0TAnzTRp1+XLycCCIW6nbAQEAAA==",
+								"base64",
+							},
+						},
+						{
+							Meta: &TransactionMeta{
+								Err: nil,
+								Fee: 10000,
+								PreBalances: []int64{
+									499998892500,
+									1000000000000000,
+									1,
+								},
+								PostBalances: []int64{
+									499998882500,
+									1000000000000000,
+									1,
+								},
+								LogMessages: []string{
+									"Program Vote111111111111111111111111111111111111111 invoke [1]",
+									"Program Vote111111111111111111111111111111111111111 success",
+								},
+								LoadedAddresses: TransactionLoadedAddresses{
+									Writable: []string{},
+									Readonly: []string{},
+								},
+								PreTokenBalances:  []TransactionMetaTokenBalance{},
+								PostTokenBalances: []TransactionMetaTokenBalance{},
+								InnerInstructions: []TransactionMetaInnerInstruction{},
+							},
+							Transaction: []any{
+								"AvTyTNWKN/M/HMqK7PHNq92HzS+KzQgUOv+2/9gM5eCIblqBhtNggpRwS8QdEdTGZNPy9sGV4QnQdbwgd29ceAOEIqk0ngBBrb2L3/X1cnxOi3r9HeH5qsMVSF3mrWPQQY0HQMJcJ4P9h6/ZoSWPQ5EoBY6pTITUTYGnfOh4QiMCAgABA7Pye4CQ39EMJf/39tiZcvcBNSICJuXthpHIWtsgthjKpNP8p02KRZAs+x1AyHhXECmbuluryPHNRdTp7sPN4Z4HYUgdNXR0u3xNdiTr072z2DVec9EQQ/wNo1OAAAAAALyxQZliVJ+XOv1JCOY6vzkCK+ooOH3hT8ccNVIAeRWvAQICAQF0DAAAAM0AAAAAAAAAHwEfAR4BHQEcARsBGgEZARgBFwEWARUBFAETARIBEQEQAQ8BDgENAQwBCwEKAQkBCAEHAQYBBQEEAQMBAgEBgvsUbTEPD4Zz4/0zYUTxwrHil3ufJ2oDtVhxgydDp9cB+t9aYwAAAAA=",
+								"base64",
+							},
+						},
+					},
+				},
+			},
+			ExpectedError: nil,
+		},
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
