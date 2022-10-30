@@ -107,7 +107,7 @@ func TestGetBlock(t *testing.T) {
 					33,
 					GetBlockConfig{
 						Encoding: GetBlockConfigEncodingBase64,
-						Rewards:  pointer.Get[bool](false),
+						Rewards:  pointer.Get(false),
 					},
 				)
 			},
@@ -347,7 +347,7 @@ func TestGetBlock(t *testing.T) {
 					33,
 					GetBlockConfig{
 						Encoding:                       GetBlockConfigEncodingBase64,
-						Rewards:                        pointer.Get[bool](false),
+						Rewards:                        pointer.Get(false),
 						MaxSupportedTransactionVersion: pointer.Get[uint8](0),
 					},
 				)
