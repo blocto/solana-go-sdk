@@ -118,17 +118,6 @@ func preparePayload(params []any) ([]byte, error) {
 	return j, nil
 }
 
-func (c *RpcClient) processRpcCall(body []byte, rpcErr error, res any) error {
-	if rpcErr != nil {
-		return fmt.Errorf("rpc: call error, err: %v, body: %v", rpcErr, string(body))
-	}
-	err := json.Unmarshal(body, &res)
-	if err != nil {
-		return fmt.Errorf("rpc: failed to json decode body, err: %v", err)
-	}
-	return nil
-}
-
 func call[T any](c *RpcClient, ctx context.Context, params ...any) (T, error) {
 	var output T
 
