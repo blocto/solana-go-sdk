@@ -13,15 +13,10 @@ type GetSlotConfig struct {
 
 // GetSlot returns the SOL balance
 func (c *RpcClient) GetSlot(ctx context.Context) (JsonRpcResponse[uint64], error) {
-	return c.processGetSlot(c.Call(ctx, "getSlot"))
+	return call[JsonRpcResponse[uint64]](c, ctx, "getSlot")
 }
 
 // GetSlotWithConfig returns the SOL balance
 func (c *RpcClient) GetSlotWithConfig(ctx context.Context, cfg GetSlotConfig) (JsonRpcResponse[uint64], error) {
-	return c.processGetSlot(c.Call(ctx, "getSlot", cfg))
-}
-
-func (c *RpcClient) processGetSlot(body []byte, rpcErr error) (res JsonRpcResponse[uint64], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[uint64]](c, ctx, "getSlot", cfg)
 }
