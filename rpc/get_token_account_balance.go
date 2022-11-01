@@ -15,15 +15,10 @@ type GetTokenAccountBalanceConfig struct {
 
 // GetTokenAccountBalance returns the token balance of an SPL Token account
 func (c *RpcClient) GetTokenAccountBalance(ctx context.Context, base58Addr string) (JsonRpcResponse[GetTokenAccountBalance], error) {
-	return c.processGetTokenAccountBalance(c.Call(ctx, "getTokenAccountBalance", base58Addr))
+	return call[JsonRpcResponse[GetTokenAccountBalance]](c, ctx, "getTokenAccountBalance", base58Addr)
 }
 
 // GetTokenAccountBalance returns the token balance of an SPL Token account
 func (c *RpcClient) GetTokenAccountBalanceWithConfig(ctx context.Context, base58Addr string, cfg GetTokenAccountBalanceConfig) (JsonRpcResponse[GetTokenAccountBalance], error) {
-	return c.processGetTokenAccountBalance(c.Call(ctx, "getTokenAccountBalance", base58Addr, cfg))
-}
-
-func (c *RpcClient) processGetTokenAccountBalance(body []byte, rpcErr error) (res JsonRpcResponse[GetTokenAccountBalance], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetTokenAccountBalance]](c, ctx, "getTokenAccountBalance", base58Addr, cfg)
 }
