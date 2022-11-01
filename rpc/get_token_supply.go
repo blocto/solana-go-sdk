@@ -25,15 +25,10 @@ type GetTokenSupplyConfig struct {
 
 // GetTokenSupply returns the token balance of an SPL Token account
 func (c *RpcClient) GetTokenSupply(ctx context.Context, mintAddr string) (JsonRpcResponse[GetTokenSupply], error) {
-	return c.processGetTokenSupply(c.Call(ctx, "getTokenSupply", mintAddr))
+	return call[JsonRpcResponse[GetTokenSupply]](c, ctx, "getTokenSupply", mintAddr)
 }
 
 // GetTokenSupply returns the token balance of an SPL Token account
 func (c *RpcClient) GetTokenSupplyWithConfig(ctx context.Context, mintAddr string, cfg GetTokenSupplyConfig) (JsonRpcResponse[GetTokenSupply], error) {
-	return c.processGetTokenSupply(c.Call(ctx, "getTokenSupply", mintAddr, cfg))
-}
-
-func (c *RpcClient) processGetTokenSupply(body []byte, rpcErr error) (res JsonRpcResponse[GetTokenSupply], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetTokenSupply]](c, ctx, "getTokenSupply", mintAddr, cfg)
 }
