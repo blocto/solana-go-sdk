@@ -25,14 +25,9 @@ type GetTokenAccountsByOwnerConfigFilter struct {
 }
 
 func (c *RpcClient) GetTokenAccountsByOwner(ctx context.Context, base58Addr string, filter GetTokenAccountsByOwnerConfigFilter) (JsonRpcResponse[GetTokenAccountsByOwner], error) {
-	return c.processGetTokenAccountsByOwner(c.Call(ctx, "getTokenAccountsByOwner", base58Addr, filter))
+	return call[JsonRpcResponse[GetTokenAccountsByOwner]](c, ctx, "getTokenAccountsByOwner", base58Addr, filter)
 }
 
 func (c *RpcClient) GetTokenAccountsByOwnerWithConfig(ctx context.Context, base58Addr string, filter GetTokenAccountsByOwnerConfigFilter, cfg GetTokenAccountsByOwnerConfig) (JsonRpcResponse[GetTokenAccountsByOwner], error) {
-	return c.processGetTokenAccountsByOwner(c.Call(ctx, "getTokenAccountsByOwner", base58Addr, filter, cfg))
-}
-
-func (c *RpcClient) processGetTokenAccountsByOwner(body []byte, rpcErr error) (res JsonRpcResponse[GetTokenAccountsByOwner], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetTokenAccountsByOwner]](c, ctx, "getTokenAccountsByOwner", base58Addr, filter, cfg)
 }
