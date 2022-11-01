@@ -23,15 +23,10 @@ type GetInflationRewardConfig struct {
 
 // GetInflationReward returns the inflation reward for a list of addresses for an epoch
 func (c *RpcClient) GetInflationReward(ctx context.Context, stakeAccountAddrs []string) (JsonRpcResponse[[]*GetInflationReward], error) {
-	return c.processGetInflationReward(c.Call(ctx, "getInflationReward", stakeAccountAddrs))
+	return call[JsonRpcResponse[[]*GetInflationReward]](c, ctx, "getInflationReward", stakeAccountAddrs)
 }
 
 // GetInflationRewardWithConfig returns the inflation reward for a list of addresses for an epoch
 func (c *RpcClient) GetInflationRewardWithConfig(ctx context.Context, stakeAccountAddrs []string, cfg GetInflationRewardConfig) (JsonRpcResponse[[]*GetInflationReward], error) {
-	return c.processGetInflationReward(c.Call(ctx, "getInflationReward", stakeAccountAddrs, cfg))
-}
-
-func (c *RpcClient) processGetInflationReward(body []byte, rpcErr error) (res JsonRpcResponse[[]*GetInflationReward], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[[]*GetInflationReward]](c, ctx, "getInflationReward", stakeAccountAddrs, cfg)
 }
