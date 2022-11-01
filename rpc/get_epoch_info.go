@@ -20,15 +20,10 @@ type GetEpochInfoConfig struct {
 
 // GetEpochInfo returns the SOL balance
 func (c *RpcClient) GetEpochInfo(ctx context.Context) (JsonRpcResponse[GetEpochInfo], error) {
-	return c.processGetEpochInfo(c.Call(ctx, "getEpochInfo"))
+	return call[JsonRpcResponse[GetEpochInfo]](c, ctx, "getEpochInfo")
 }
 
 // GetEpochInfoWithConfig returns the SOL balance
 func (c *RpcClient) GetEpochInfoWithConfig(ctx context.Context, cfg GetEpochInfoConfig) (JsonRpcResponse[GetEpochInfo], error) {
-	return c.processGetEpochInfo(c.Call(ctx, "getEpochInfo", cfg))
-}
-
-func (c *RpcClient) processGetEpochInfo(body []byte, rpcErr error) (res JsonRpcResponse[GetEpochInfo], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetEpochInfo]](c, ctx, "getEpochInfo", cfg)
 }
