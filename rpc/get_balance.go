@@ -19,15 +19,10 @@ type GetBalanceConfig struct {
 
 // GetBalance returns the SOL balance
 func (c *RpcClient) GetBalance(ctx context.Context, base58Addr string) (JsonRpcResponse[GetBalance], error) {
-	return c.processGetBalance(c.Call(ctx, "getBalance", base58Addr))
+	return call[JsonRpcResponse[GetBalance]](c, ctx, "getBalance", base58Addr)
 }
 
 // GetBalanceWithConfig returns the SOL balance
 func (c *RpcClient) GetBalanceWithConfig(ctx context.Context, base58Addr string, cfg GetBalanceConfig) (JsonRpcResponse[GetBalance], error) {
-	return c.processGetBalance(c.Call(ctx, "getBalance", base58Addr, cfg))
-}
-
-func (c *RpcClient) processGetBalance(body []byte, rpcErr error) (res JsonRpcResponse[GetBalance], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetBalance]](c, ctx, "getBalance", base58Addr, cfg)
 }
