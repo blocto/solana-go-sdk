@@ -547,20 +547,25 @@ type GetBlockTransaction struct {
 	Transaction types.Transaction
 }
 
+// GetBlockWithConfig returns identity and transaction information about a confirmed block in the ledger
+func (c *Client) GetBlockWithConfig(ctx context.Context, slot uint64, cfg rpc.GetBlockConfig) (GetBlockResponse, error) {
+	res, err := c.RpcClient.GetBlockWithConfig(ctx, slot, cfg)
+	err = checkJsonRpcResponse(res, err)
+	if err != nil {
+		return GetBlockResponse{}, err
+	}
+	return getBlock(res)
+}
+
 // GetBlock returns identity and transaction information about a confirmed block in the ledger
 func (c *Client) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, error) {
-	res, err := c.RpcClient.GetBlockWithConfig(
+	return c.GetBlockWithConfig(
 		ctx,
 		slot,
 		rpc.GetBlockConfig{
 			Encoding: rpc.GetBlockConfigEncodingBase64,
 		},
 	)
-	err = checkJsonRpcResponse(res, err)
-	if err != nil {
-		return GetBlockResponse{}, err
-	}
-	return getBlock(res)
 }
 
 // add test and get block
