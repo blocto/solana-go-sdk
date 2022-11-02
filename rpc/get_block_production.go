@@ -31,15 +31,10 @@ type GetBlockProductionRange struct {
 
 // GetBlockProduction returns the current block height of the node
 func (c *RpcClient) GetBlockProduction(ctx context.Context) (JsonRpcResponse[GetBlockProduction], error) {
-	return c.processGetBlockProduction(c.Call(ctx, "getBlockProduction"))
+	return call[JsonRpcResponse[GetBlockProduction]](c, ctx, "getBlockProduction")
 }
 
 // GetBlockProductionWithConfig returns the current block height of the node
 func (c *RpcClient) GetBlockProductionWithConfig(ctx context.Context, cfg GetBlockProductionConfig) (JsonRpcResponse[GetBlockProduction], error) {
-	return c.processGetBlockProduction(c.Call(ctx, "getBlockProduction", cfg))
-}
-
-func (c *RpcClient) processGetBlockProduction(body []byte, rpcErr error) (res JsonRpcResponse[GetBlockProduction], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetBlockProduction]](c, ctx, "getBlockProduction", cfg)
 }

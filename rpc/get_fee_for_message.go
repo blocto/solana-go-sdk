@@ -19,16 +19,11 @@ type GetFeeForMessageConfig struct {
 // NEW: This method is only available in solana-core v1.9 or newer. Please use getFees for solana-core v1.8
 // GetFeeForMessage get the fee the network will charge for a particular Message
 func (c *RpcClient) GetFeeForMessage(ctx context.Context, message string) (JsonRpcResponse[GetFeeForMessage], error) {
-	return c.processGetFeeForMessage(c.Call(ctx, "getFeeForMessage", message))
+	return call[JsonRpcResponse[GetFeeForMessage]](c, ctx, "getFeeForMessage", message)
 }
 
 // NEW: This method is only available in solana-core v1.9 or newer. Please use getFees for solana-core v1.8
 // GetFeeForMessageWithConfig get the fee the network will charge for a particular Message
 func (c *RpcClient) GetFeeForMessageWithConfig(ctx context.Context, message string, cfg GetFeeForMessageConfig) (JsonRpcResponse[GetFeeForMessage], error) {
-	return c.processGetFeeForMessage(c.Call(ctx, "getFeeForMessage", message, cfg))
-}
-
-func (c *RpcClient) processGetFeeForMessage(body []byte, rpcErr error) (res JsonRpcResponse[GetFeeForMessage], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetFeeForMessage]](c, ctx, "getFeeForMessage", message, cfg)
 }

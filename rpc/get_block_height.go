@@ -13,15 +13,10 @@ type GetBlockHeightConfig struct {
 
 // GetBlockHeight returns the current block height of the node
 func (c *RpcClient) GetBlockHeight(ctx context.Context) (JsonRpcResponse[uint64], error) {
-	return c.processGetBlockHeight(c.Call(ctx, "getBlockHeight"))
+	return call[JsonRpcResponse[uint64]](c, ctx, "getBlockHeight")
 }
 
 // GetBlockHeightWithConfig returns the current block height of the node
 func (c *RpcClient) GetBlockHeightWithConfig(ctx context.Context, cfg GetBlockHeightConfig) (JsonRpcResponse[uint64], error) {
-	return c.processGetBlockHeight(c.Call(ctx, "getBlockHeight", cfg))
-}
-
-func (c *RpcClient) processGetBlockHeight(body []byte, rpcErr error) (res JsonRpcResponse[uint64], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[uint64]](c, ctx, "getBlockHeight", cfg)
 }

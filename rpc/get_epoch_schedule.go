@@ -14,10 +14,5 @@ type GetEpochSchedule struct {
 
 // GetEpochSchedule returns epoch schedule information from this cluster's genesis config
 func (c *RpcClient) GetEpochSchedule(ctx context.Context) (JsonRpcResponse[GetEpochSchedule], error) {
-	return c.processGetEpochSchedule(c.Call(ctx, "getEpochSchedule"))
-}
-
-func (c *RpcClient) processGetEpochSchedule(body []byte, rpcErr error) (res JsonRpcResponse[GetEpochSchedule], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetEpochSchedule]](c, ctx, "getEpochSchedule")
 }

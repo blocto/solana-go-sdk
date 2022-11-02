@@ -23,15 +23,10 @@ type GetMultipleAccountsConfig struct {
 
 // GetMultipleAccounts returns all information associated with the account of provided Pubkey
 func (c *RpcClient) GetMultipleAccounts(ctx context.Context, base58Addrs []string) (JsonRpcResponse[GetMultipleAccounts], error) {
-	return c.processGetMultipleAccounts(c.Call(ctx, "getMultipleAccounts", base58Addrs))
+	return call[JsonRpcResponse[GetMultipleAccounts]](c, ctx, "getMultipleAccounts", base58Addrs)
 }
 
 // GetMultipleAccounts returns all information associated with the account of provided Pubkey
 func (c *RpcClient) GetMultipleAccountsWithConfig(ctx context.Context, base58Addrs []string, cfg GetMultipleAccountsConfig) (JsonRpcResponse[GetMultipleAccounts], error) {
-	return c.processGetMultipleAccounts(c.Call(ctx, "getMultipleAccounts", base58Addrs, cfg))
-}
-
-func (c *RpcClient) processGetMultipleAccounts(body []byte, rpcErr error) (res JsonRpcResponse[GetMultipleAccounts], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetMultipleAccounts]](c, ctx, "getMultipleAccounts", base58Addrs, cfg)
 }

@@ -12,10 +12,5 @@ type GetIdentity struct {
 
 // GetIdentity returns the identity pubkey for the current node
 func (c *RpcClient) GetIdentity(ctx context.Context) (JsonRpcResponse[GetIdentity], error) {
-	return c.processGetIdentity(c.Call(ctx, "getIdentity"))
-}
-
-func (c *RpcClient) processGetIdentity(body []byte, rpcErr error) (res JsonRpcResponse[GetIdentity], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetIdentity]](c, ctx, "getIdentity")
 }

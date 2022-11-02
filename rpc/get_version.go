@@ -12,10 +12,5 @@ type GetVersion struct {
 
 // GetVersion returns the current solana versions running on the node
 func (c *RpcClient) GetVersion(ctx context.Context) (JsonRpcResponse[GetVersion], error) {
-	return c.processGetVersion(c.Call(ctx, "getVersion"))
-}
-
-func (c *RpcClient) processGetVersion(body []byte, rpcErr error) (res JsonRpcResponse[GetVersion], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetVersion]](c, ctx, "getVersion")
 }

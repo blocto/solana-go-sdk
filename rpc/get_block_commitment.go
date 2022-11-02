@@ -14,10 +14,5 @@ type GetBlockCommitment struct {
 
 // GetBlockCommitment returns commitment for particular block
 func (c *RpcClient) GetBlockCommitment(ctx context.Context, slot uint64) (JsonRpcResponse[GetBlockCommitment], error) {
-	return c.processGetBlockCommitment(c.Call(ctx, "getBlockCommitment", slot))
-}
-
-func (c *RpcClient) processGetBlockCommitment(body []byte, rpcErr error) (res JsonRpcResponse[GetBlockCommitment], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetBlockCommitment]](c, ctx, "getBlockCommitment", slot)
 }
