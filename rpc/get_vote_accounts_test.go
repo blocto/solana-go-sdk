@@ -20,7 +20,7 @@ func TestGetVoteAccounts(t *testing.T) {
 				Id:      1,
 				Error:   nil,
 				Result: GetVoteAccounts{
-					Current: VoteAccountInfos{
+					Current: VoteAccounts{
 						{
 							ActivatedStake:   999999997717120,
 							Commission:       0,
@@ -36,7 +36,7 @@ func TestGetVoteAccounts(t *testing.T) {
 							RootSlot:   103,
 						},
 					},
-					Deliquent: VoteAccountInfos{},
+					Deliquent: VoteAccounts{},
 				},
 			},
 			ExpectedError: nil,
@@ -57,7 +57,7 @@ func TestGetVoteAccounts(t *testing.T) {
 				Id:      1,
 				Error:   nil,
 				Result: GetVoteAccounts{
-					Current: VoteAccountInfos{
+					Current: VoteAccounts{
 						{
 							ActivatedStake:   999999997717120,
 							Commission:       0,
@@ -73,7 +73,7 @@ func TestGetVoteAccounts(t *testing.T) {
 							RootSlot:   2931,
 						},
 					},
-					Deliquent: VoteAccountInfos{},
+					Deliquent: VoteAccounts{},
 				},
 			},
 			ExpectedError: nil,
@@ -94,7 +94,7 @@ func TestGetVoteAccounts(t *testing.T) {
 				Id:      1,
 				Error:   nil,
 				Result: GetVoteAccounts{
-					Current: VoteAccountInfos{
+					Current: VoteAccounts{
 						{
 							ActivatedStake:   999999997717120,
 							Commission:       0,
@@ -110,7 +110,7 @@ func TestGetVoteAccounts(t *testing.T) {
 							RootSlot:   2899,
 						},
 					},
-					Deliquent: VoteAccountInfos{},
+					Deliquent: VoteAccounts{},
 				},
 			},
 			ExpectedError: nil,
@@ -131,8 +131,8 @@ func TestGetVoteAccounts(t *testing.T) {
 				Id:      1,
 				Error:   nil,
 				Result: GetVoteAccounts{
-					Current:   VoteAccountInfos{},
-					Deliquent: VoteAccountInfos{},
+					Current:   VoteAccounts{},
+					Deliquent: VoteAccounts{},
 				},
 			},
 			ExpectedError: nil,
@@ -153,7 +153,7 @@ func TestGetVoteAccounts(t *testing.T) {
 				Id:      1,
 				Error:   nil,
 				Result: GetVoteAccounts{
-					Current: VoteAccountInfos{
+					Current: VoteAccounts{
 						{
 							ActivatedStake:   999999997717120,
 							Commission:       0,
@@ -169,7 +169,7 @@ func TestGetVoteAccounts(t *testing.T) {
 							RootSlot:   2899,
 						},
 					},
-					Deliquent: VoteAccountInfos{},
+					Deliquent: VoteAccounts{},
 				},
 			},
 			ExpectedError: nil,
@@ -190,7 +190,7 @@ func TestGetVoteAccounts(t *testing.T) {
 				Id:      1,
 				Error:   nil,
 				Result: GetVoteAccounts{
-					Current: VoteAccountInfos{
+					Current: VoteAccounts{
 						{
 							ActivatedStake:   999999997717120,
 							Commission:       0,
@@ -206,7 +206,7 @@ func TestGetVoteAccounts(t *testing.T) {
 							RootSlot:   2899,
 						},
 					},
-					Deliquent: VoteAccountInfos{},
+					Deliquent: VoteAccounts{},
 				},
 			},
 			ExpectedError: nil,

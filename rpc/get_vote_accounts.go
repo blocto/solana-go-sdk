@@ -5,13 +5,13 @@ import "context"
 type GetVoteAccountsResponse JsonRpcResponse[GetVoteAccounts]
 
 type GetVoteAccounts struct {
-	Current   VoteAccountInfos `json:"current"`
-	Deliquent VoteAccountInfos `json:"delinquent"`
+	Current   VoteAccounts `json:"current"`
+	Deliquent VoteAccounts `json:"delinquent"`
 }
 
-type VoteAccountInfos []VoteAccountInfo
+type VoteAccounts []VoteAccount
 
-type VoteAccountInfo struct {
+type VoteAccount struct {
 	VotePubkey       string      `json:"votePubkey"`
 	NodePubkey       string      `json:"nodePubkey"`
 	ActivatedStake   uint64      `json:"activatedStake"`
