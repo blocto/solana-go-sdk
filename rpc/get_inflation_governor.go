@@ -21,15 +21,10 @@ type GetInflationGovernorConfig struct {
 
 // GetInflationGovernor returns the current inflation governor
 func (c *RpcClient) GetInflationGovernor(ctx context.Context) (JsonRpcResponse[GetInflationGovernor], error) {
-	return c.processGetInflationGovernor(c.Call(ctx, "getInflationGovernor"))
+	return call[JsonRpcResponse[GetInflationGovernor]](c, ctx, "getInflationGovernor")
 }
 
 // GetInflationGovernorWithConfig returns the current inflation governor
 func (c *RpcClient) GetInflationGovernorWithConfig(ctx context.Context, cfg GetInflationGovernorConfig) (JsonRpcResponse[GetInflationGovernor], error) {
-	return c.processGetInflationGovernor(c.Call(ctx, "getInflationGovernor", cfg))
-}
-
-func (c *RpcClient) processGetInflationGovernor(body []byte, rpcErr error) (res JsonRpcResponse[GetInflationGovernor], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetInflationGovernor]](c, ctx, "getInflationGovernor", cfg)
 }

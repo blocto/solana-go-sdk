@@ -13,10 +13,5 @@ type GetInflationRate struct {
 
 // GetInflationRate returns the specific inflation values for the current epoch
 func (c *RpcClient) GetInflationRate(ctx context.Context) (JsonRpcResponse[GetInflationRate], error) {
-	return c.processGetInflationRate(c.Call(ctx, "getInflationRate"))
-}
-
-func (c *RpcClient) processGetInflationRate(body []byte, rpcErr error) (res JsonRpcResponse[GetInflationRate], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetInflationRate]](c, ctx, "getInflationRate")
 }

@@ -18,10 +18,5 @@ type GetClusterNode struct {
 
 // GetClusterNodes returns information about all the nodes participating in the cluster
 func (c *RpcClient) GetClusterNodes(ctx context.Context) (JsonRpcResponse[GetClusterNodes], error) {
-	return c.processGetClusterNodes(c.Call(ctx, "getClusterNodes"))
-}
-
-func (c *RpcClient) processGetClusterNodes(body []byte, rpcErr error) (res JsonRpcResponse[GetClusterNodes], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetClusterNodes]](c, ctx, "getClusterNodes")
 }

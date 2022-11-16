@@ -81,15 +81,10 @@ type GetTransactionConfig struct {
 
 // GetTransaction returns transaction details for a confirmed transaction
 func (c *RpcClient) GetTransaction(ctx context.Context, txhash string) (JsonRpcResponse[*GetTransaction], error) {
-	return c.processGetTransaction(c.Call(ctx, "getTransaction", txhash))
+	return call[JsonRpcResponse[*GetTransaction]](c, ctx, "getTransaction", txhash)
 }
 
 // GetTransactionWithConfig returns transaction details for a confirmed transaction
 func (c *RpcClient) GetTransactionWithConfig(ctx context.Context, txhash string, cfg GetTransactionConfig) (JsonRpcResponse[*GetTransaction], error) {
-	return c.processGetTransaction(c.Call(ctx, "getTransaction", txhash, cfg))
-}
-
-func (c *RpcClient) processGetTransaction(body []byte, rpcErr error) (res JsonRpcResponse[*GetTransaction], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[*GetTransaction]](c, ctx, "getTransaction", txhash, cfg)
 }

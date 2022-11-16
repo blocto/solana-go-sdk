@@ -13,15 +13,10 @@ type GetTransactionCountConfig struct {
 
 // GetTransactionCount returns the current Transaction count from the ledger
 func (c *RpcClient) GetTransactionCount(ctx context.Context) (JsonRpcResponse[uint64], error) {
-	return c.processGetTransactionCount(c.Call(ctx, "getTransactionCount"))
+	return call[JsonRpcResponse[uint64]](c, ctx, "getTransactionCount")
 }
 
 // GetTransactionCountWithConfig returns the current Transaction count from the ledger
 func (c *RpcClient) GetTransactionCountWithConfig(ctx context.Context, cfg GetTransactionCountConfig) (JsonRpcResponse[uint64], error) {
-	return c.processGetTransactionCount(c.Call(ctx, "getTransactionCount", cfg))
-}
-
-func (c *RpcClient) processGetTransactionCount(body []byte, rpcErr error) (res JsonRpcResponse[uint64], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[uint64]](c, ctx, "getTransactionCount", cfg)
 }

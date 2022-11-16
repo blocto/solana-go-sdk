@@ -45,29 +45,19 @@ type GetProgramAccountsConfigFilterMemCmp struct {
 }
 
 func (c *RpcClient) GetProgramAccounts(ctx context.Context, programId string) (JsonRpcResponse[GetProgramAccounts], error) {
-	return c.processGetProgramAccounts(c.Call(ctx, "getProgramAccounts", programId))
+	return call[JsonRpcResponse[GetProgramAccounts]](c, ctx, "getProgramAccounts", programId)
 }
 
 func (c *RpcClient) GetProgramAccountsWithConfig(ctx context.Context, programId string, cfg GetProgramAccountsConfig) (JsonRpcResponse[GetProgramAccounts], error) {
-	return c.processGetProgramAccounts(c.Call(ctx, "getProgramAccounts", programId, c.toInternalGetProgramAccountsConfig(cfg, false)))
-}
-
-func (c *RpcClient) processGetProgramAccounts(body []byte, rpcErr error) (res JsonRpcResponse[GetProgramAccounts], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetProgramAccounts]](c, ctx, "getProgramAccounts", programId, c.toInternalGetProgramAccountsConfig(cfg, false))
 }
 
 func (c *RpcClient) GetProgramAccountsWithContext(ctx context.Context, programId string) (JsonRpcResponse[GetProgramAccountsWithContext], error) {
-	return c.processGetProgramAccountsWithContext(c.Call(ctx, "getProgramAccounts", programId, c.toInternalGetProgramAccountsConfig(GetProgramAccountsConfig{}, true)))
+	return call[JsonRpcResponse[GetProgramAccountsWithContext]](c, ctx, "getProgramAccounts", programId, c.toInternalGetProgramAccountsConfig(GetProgramAccountsConfig{}, true))
 }
 
 func (c *RpcClient) GetProgramAccountsWithContextAndConfig(ctx context.Context, programId string, cfg GetProgramAccountsConfig) (JsonRpcResponse[GetProgramAccountsWithContext], error) {
-	return c.processGetProgramAccountsWithContext(c.Call(ctx, "getProgramAccounts", programId, c.toInternalGetProgramAccountsConfig(cfg, true)))
-}
-
-func (c *RpcClient) processGetProgramAccountsWithContext(body []byte, rpcErr error) (res JsonRpcResponse[GetProgramAccountsWithContext], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetProgramAccountsWithContext]](c, ctx, "getProgramAccounts", programId, c.toInternalGetProgramAccountsConfig(cfg, true))
 }
 
 func (c *RpcClient) toInternalGetProgramAccountsConfig(cfg GetProgramAccountsConfig, withContext bool) getProgramAccountsConfig {
