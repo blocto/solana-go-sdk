@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/portto/solana-go-sdk/common"
@@ -837,6 +838,11 @@ func TestMessageDeserialize(t *testing.T) {
 					},
 				},
 			},
+		},
+		{
+			args: args{messageData: []byte{128}},
+			want: Message{},
+			err:  fmt.Errorf("message header #1 parse error: data is empty"),
 		},
 	}
 	for _, tt := range tests {
