@@ -211,56 +211,6 @@ func TestGetMultipleAccounts(t *testing.T) {
 			ExpectedError: nil,
 		},
 		{
-			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getMultipleAccounts", "params":[["F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb"], {"dataSlice": {"length": 32}}]}`,
-			ResponseBody: `{"jsonrpc":"2.0","error":{"code":-32602,"message":"Invalid params: missing field` + "`offset`" + `."},"id":1}`,
-			RpcCall: func(rc RpcClient) (any, error) {
-				return rc.GetMultipleAccountsWithConfig(
-					context.Background(),
-					[]string{"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb"},
-					GetMultipleAccountsConfig{
-						DataSlice: &DataSlice{
-							Length: 32,
-						},
-					},
-				)
-			},
-			ExpectedResponse: JsonRpcResponse[GetMultipleAccounts]{
-				JsonRpc: "2.0",
-				Id:      1,
-				Error: &JsonRpcError{
-					Code:    -32602,
-					Message: `Invalid params: missing field` + "`offset`" + `.`,
-				},
-				Result: GetMultipleAccounts{},
-			},
-			ExpectedError: nil,
-		},
-		{
-			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getMultipleAccounts", "params":[["F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb"], {"dataSlice": {"offset": 4}}]}`,
-			ResponseBody: `{"jsonrpc":"2.0","error":{"code":-32602,"message":"Invalid params: missing field` + "`length`" + `."},"id":1}`,
-			RpcCall: func(rc RpcClient) (any, error) {
-				return rc.GetMultipleAccountsWithConfig(
-					context.Background(),
-					[]string{"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb"},
-					GetMultipleAccountsConfig{
-						DataSlice: &DataSlice{
-							Offset: 4,
-						},
-					},
-				)
-			},
-			ExpectedResponse: JsonRpcResponse[GetMultipleAccounts]{
-				JsonRpc: "2.0",
-				Id:      1,
-				Error: &JsonRpcError{
-					Code:    -32602,
-					Message: `Invalid params: missing field` + "`length`" + `.`,
-				},
-				Result: GetMultipleAccounts{},
-			},
-			ExpectedError: nil,
-		},
-		{
 			RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getMultipleAccounts", "params":[["F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb"], {"dataSlice": {"offset": 4, "length": 32}}]}`,
 			ResponseBody: `{"jsonrpc":"2.0","result":{"context":{"slot":77322439},"value":[{"data":"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7","executable":false,"lamports":1461600,"owner":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","rentEpoch":178}]},"id":1}`,
 			RpcCall: func(rc RpcClient) (any, error) {
