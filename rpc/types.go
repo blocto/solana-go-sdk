@@ -34,8 +34,8 @@ const (
 )
 
 type DataSlice struct {
-	Offset uint64 `json:"offset,omitempty"`
-	Length uint64 `json:"length,omitempty"`
+	Offset uint64 `json:"offset"`
+	Length uint64 `json:"length"`
 }
 
 type AccountInfo struct {
