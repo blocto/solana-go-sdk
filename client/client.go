@@ -439,14 +439,17 @@ type GetTransactionResponse struct {
 }
 
 type TransactionMeta struct {
-	Err               any
-	Fee               uint64
-	PreBalances       []int64
-	PostBalances      []int64
-	PreTokenBalances  []rpc.TransactionMetaTokenBalance
-	PostTokenBalances []rpc.TransactionMetaTokenBalance
-	LogMessages       []string
-	InnerInstructions []TransactionMetaInnerInstruction
+	Err                  any
+	Fee                  uint64
+	PreBalances          []int64
+	PostBalances         []int64
+	PreTokenBalances     []rpc.TransactionMetaTokenBalance
+	PostTokenBalances    []rpc.TransactionMetaTokenBalance
+	LogMessages          []string
+	InnerInstructions    []TransactionMetaInnerInstruction
+	LoadedAddresses      rpc.TransactionLoadedAddresses
+	ReturnData           *ReturnData
+	ComputeUnitsConsumed *uint64
 }
 
 type TransactionMetaInnerInstruction struct {
@@ -984,15 +987,27 @@ func convertTransactionMeta(meta *rpc.TransactionMeta) (*TransactionMeta, error)
 		})
 	}
 
+	var returnData *ReturnData
+	if v := meta.ReturnData; v != nil {
+		d, err := convertReturnData(*v)
+		if err != nil {
+			return nil, fmt.Errorf("failed to process return data, err: %v", err)
+		}
+		returnData = &d
+	}
+
 	return &TransactionMeta{
-		Err:               meta.Err,
-		Fee:               meta.Fee,
-		PreBalances:       meta.PreBalances,
-		PostBalances:      meta.PostBalances,
-		PreTokenBalances:  meta.PreTokenBalances,
-		PostTokenBalances: meta.PostTokenBalances,
-		LogMessages:       meta.LogMessages,
-		InnerInstructions: innerInstructions,
+		Err:                  meta.Err,
+		Fee:                  meta.Fee,
+		PreBalances:          meta.PreBalances,
+		PostBalances:         meta.PostBalances,
+		PreTokenBalances:     meta.PreTokenBalances,
+		PostTokenBalances:    meta.PostTokenBalances,
+		LogMessages:          meta.LogMessages,
+		InnerInstructions:    innerInstructions,
+		LoadedAddresses:      meta.LoadedAddresses,
+		ReturnData:           returnData,
+		ComputeUnitsConsumed: meta.ComputeUnitsConsumed,
 	}, nil
 }
 
