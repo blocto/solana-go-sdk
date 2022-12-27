@@ -6,10 +6,7 @@ import (
 
 type GetTokenAccountsByOwnerResponse JsonRpcResponse[GetTokenAccountsByOwner]
 
-type GetTokenAccountsByOwner struct {
-	Context Context            `json:"context"`
-	Value   GetProgramAccounts `json:"value"`
-}
+type GetTokenAccountsByOwner ValueWithContext[GetProgramAccounts]
 
 // GetTokenAccountsByOwnerConfig is a option config for `GetTokenAccountsByOwner`
 type GetTokenAccountsByOwnerConfig struct {

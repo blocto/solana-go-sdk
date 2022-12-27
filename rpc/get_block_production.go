@@ -6,11 +6,7 @@ import (
 
 type GetBlockProductionResponse JsonRpcResponse[GetBlockProduction]
 
-// GetBlockProductionResponseResult is a part of raw rpc response of `getBlockProduction`
-type GetBlockProduction struct {
-	Context Context                               `json:"context"`
-	Value   GetBlockProductionResponseResultValue `json:"value"`
-}
+type GetBlockProduction ValueWithContext[GetBlockProductionResponseResultValue]
 
 type GetBlockProductionResponseResultValue struct {
 	ByIdentity map[string][]uint64     `json:"byIdentity"`

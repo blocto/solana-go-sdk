@@ -6,11 +6,7 @@ import (
 
 type GetSignatureStatusesResponse JsonRpcResponse[GetSignatureStatuses]
 
-// GetSignatureStatusesResult is a part of raw rpc response of `getSignatureStatuses`
-type GetSignatureStatuses struct {
-	Context Context           `json:"context"`
-	Value   SignatureStatuses `json:"value"`
-}
+type GetSignatureStatuses ValueWithContext[SignatureStatuses]
 
 type SignatureStatus struct {
 	Slot               uint64      `json:"slot"`

@@ -6,10 +6,7 @@ import (
 
 type GetLatestBlockhashResponse JsonRpcResponse[GetLatestBlockhash]
 
-type GetLatestBlockhash struct {
-	Context Context                 `json:"context"`
-	Value   GetLatestBlockhashValue `json:"value"`
-}
+type GetLatestBlockhash ValueWithContext[GetLatestBlockhashValue]
 
 // GetLatestBlockhashResult is a part of raw rpc response of `getLatestBlockhash`
 type GetLatestBlockhashValue struct {

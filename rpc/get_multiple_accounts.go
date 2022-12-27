@@ -6,10 +6,7 @@ import (
 
 type GetMultipleAccountsResponse JsonRpcResponse[GetMultipleAccounts]
 
-type GetMultipleAccounts struct {
-	Context Context       `json:"context"`
-	Value   []AccountInfo `json:"value"`
-}
+type GetMultipleAccounts ValueWithContext[[]AccountInfo]
 
 // GetMultipleAccountsConfigEncoding is account's data encode format
 type GetMultipleAccountsConfigEncoding string

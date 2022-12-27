@@ -15,10 +15,7 @@ type GetProgramAccount struct {
 
 type GetProgramAccounts []GetProgramAccount
 
-type GetProgramAccountsWithContext struct {
-	Context Context            `json:"context"`
-	Value   GetProgramAccounts `json:"value"`
-}
+type GetProgramAccountsWithContext ValueWithContext[GetProgramAccounts]
 
 // GetProgramAccountsConfig is a option config for `getProgramAccounts`
 type GetProgramAccountsConfig struct {

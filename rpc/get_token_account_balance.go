@@ -4,10 +4,7 @@ import "context"
 
 type GetTokenAccountBalanceResponse JsonRpcResponse[GetTokenAccountBalance]
 
-type GetTokenAccountBalance struct {
-	Context Context             `json:"context"`
-	Value   TokenAccountBalance `json:"value"`
-}
+type GetTokenAccountBalance ValueWithContext[TokenAccountBalance]
 
 type GetTokenAccountBalanceConfig struct {
 	Commitment Commitment `json:"commitment,omitempty"`

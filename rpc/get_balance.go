@@ -6,11 +6,7 @@ import (
 
 type GetBalanceResponse JsonRpcResponse[GetBalance]
 
-// GetBalance is a part of raw rpc response of `getBalance`
-type GetBalance struct {
-	Context Context `json:"context"`
-	Value   uint64  `json:"value"`
-}
+type GetBalance ValueWithContext[uint64]
 
 // GetBalanceConfig is a option config for `getBalance`
 type GetBalanceConfig struct {
