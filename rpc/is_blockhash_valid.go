@@ -6,11 +6,7 @@ import (
 
 type IsBlockhashValidResponse JsonRpcResponse[IsBlockhashValid]
 
-// IsBlockhashValid is a part of raw rpc response of `isBlockhashValid`
-type IsBlockhashValid struct {
-	Context Context `json:"context"`
-	Value   bool    `json:"value"`
-}
+type IsBlockhashValid ValueWithContext[bool]
 
 // IsBlockhashValidConfig is a option config for `IsBlockhashValid`
 type IsBlockhashValidConfig struct {

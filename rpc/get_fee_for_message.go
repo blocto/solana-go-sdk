@@ -6,10 +6,7 @@ import (
 
 type GetFeeForMessageResponse JsonRpcResponse[GetFeeForMessage]
 
-type GetFeeForMessage struct {
-	Context Context `json:"context"`
-	Value   *uint64 `json:"value"`
-}
+type GetFeeForMessage ValueWithContext[*uint64]
 
 // GetFeeForMessageConfig is a option config for `GetFeeForMessage`
 type GetFeeForMessageConfig struct {

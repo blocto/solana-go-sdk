@@ -6,11 +6,7 @@ import (
 
 type SimulateTransactionResponse JsonRpcResponse[SimulateTransaction]
 
-// SimulateTransactionResponseResult is a part of SimulateTransactionResponse
-type SimulateTransaction struct {
-	Context Context                  `json:"context"`
-	Value   SimulateTransactionValue `json:"value"`
-}
+type SimulateTransaction ValueWithContext[SimulateTransactionValue]
 
 // SimulateTransactionValue is a part of SimulateTransactionResponseResult
 type SimulateTransactionValue struct {

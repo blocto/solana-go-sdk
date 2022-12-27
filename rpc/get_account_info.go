@@ -6,11 +6,7 @@ import (
 
 type GetAccountResponse JsonRpcResponse[GetAccountInfo]
 
-// GetAccountInfo is rpc result of `getAccountInfo`
-type GetAccountInfo struct {
-	Context Context     `json:"context"`
-	Value   AccountInfo `json:"value"`
-}
+type GetAccountInfo ValueWithContext[AccountInfo]
 
 // GetAccountInfoConfig is an option config for `getAccountInfo`
 type GetAccountInfoConfig struct {

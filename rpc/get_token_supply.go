@@ -6,10 +6,7 @@ import (
 
 type GetTokenSupplyResponse JsonRpcResponse[GetTokenSupply]
 
-type GetTokenSupply struct {
-	Context Context                   `json:"context"`
-	Value   GetTokenSupplyResultValue `json:"value"`
-}
+type GetTokenSupply ValueWithContext[GetTokenSupplyResultValue]
 
 // GetTokenSupplyResultValue is a part of `getTokenSupply` raw response
 type GetTokenSupplyResultValue struct {

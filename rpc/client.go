@@ -46,6 +46,11 @@ func (e *JsonRpcError) Error() string {
 	return fmt.Sprintf("failed to marshal JsonRpcError, err: %v, code: %v, message: %v, data: %v", err, e.Code, e.Message, e.Data)
 }
 
+type ValueWithContext[T any] struct {
+	Context Context `json:"context"`
+	Value   T       `json:"value"`
+}
+
 type RpcClient struct {
 	endpoint   string
 	httpClient *http.Client
