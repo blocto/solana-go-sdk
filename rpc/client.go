@@ -30,6 +30,17 @@ type JsonRpcResponse[T any] struct {
 	Error   *JsonRpcError `json:"error,omitempty"`
 }
 
+func (j JsonRpcResponse[T]) GetResult() T {
+	return j.Result
+}
+
+func (j JsonRpcResponse[T]) GetError() error {
+	if j.Error == nil {
+		return nil
+	}
+	return j.Error
+}
+
 type JsonRpcError struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
