@@ -27,26 +27,6 @@ func NewClient(endpoint string) *Client {
 	return &Client{rpc.New(rpc.WithEndpoint(endpoint))}
 }
 
-// GetBalance fetch users lamports(SOL) balance
-func (c *Client) GetBalance(ctx context.Context, base58Addr string) (uint64, error) {
-	res, err := c.RpcClient.GetBalance(ctx, base58Addr)
-	err = checkJsonRpcResponse(res, err)
-	if err != nil {
-		return 0, err
-	}
-	return res.Result.Value, nil
-}
-
-// GetBalance fetch users lamports(SOL) balance with specific commitment
-func (c *Client) GetBalanceWithConfig(ctx context.Context, base58Addr string, cfg rpc.GetBalanceConfig) (uint64, error) {
-	res, err := c.RpcClient.GetBalanceWithConfig(ctx, base58Addr, cfg)
-	err = checkJsonRpcResponse(res, err)
-	if err != nil {
-		return 0, err
-	}
-	return res.Result.Value, nil
-}
-
 // GetTokenAccountBalance returns the token balance of an SPL Token account
 func (c *Client) GetTokenAccountBalance(ctx context.Context, base58Addr string) (uint64, uint8, error) {
 	res, err := c.RpcClient.GetTokenAccountBalance(ctx, base58Addr)
