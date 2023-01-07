@@ -140,6 +140,10 @@ func (m Message) decompileLegacyMessageInstructions() []Instruction {
 }
 
 func MessageDeserialize(messageData []byte) (Message, error) {
+	if len(messageData) == 0 {
+		return Message{}, errors.New("empty message data")
+	}
+
 	var version MessageVersion
 	if v := uint8(messageData[0]); v > 127 {
 		version = MessageVersion(fmt.Sprintf("v%v", v-128))
