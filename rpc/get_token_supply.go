@@ -21,11 +21,11 @@ type GetTokenSupplyConfig struct {
 }
 
 // GetTokenSupply returns the token balance of an SPL Token account
-func (c *RpcClient) GetTokenSupply(ctx context.Context, mintAddr string) (JsonRpcResponse[GetTokenSupply], error) {
-	return call[JsonRpcResponse[GetTokenSupply]](c, ctx, "getTokenSupply", mintAddr)
+func (c *RpcClient) GetTokenSupply(ctx context.Context, mintAddr string) (JsonRpcResponse[ValueWithContext[GetTokenSupplyResultValue]], error) {
+	return call[JsonRpcResponse[ValueWithContext[GetTokenSupplyResultValue]]](c, ctx, "getTokenSupply", mintAddr)
 }
 
 // GetTokenSupply returns the token balance of an SPL Token account
-func (c *RpcClient) GetTokenSupplyWithConfig(ctx context.Context, mintAddr string, cfg GetTokenSupplyConfig) (JsonRpcResponse[GetTokenSupply], error) {
-	return call[JsonRpcResponse[GetTokenSupply]](c, ctx, "getTokenSupply", mintAddr, cfg)
+func (c *RpcClient) GetTokenSupplyWithConfig(ctx context.Context, mintAddr string, cfg GetTokenSupplyConfig) (JsonRpcResponse[ValueWithContext[GetTokenSupplyResultValue]], error) {
+	return call[JsonRpcResponse[ValueWithContext[GetTokenSupplyResultValue]]](c, ctx, "getTokenSupply", mintAddr, cfg)
 }
