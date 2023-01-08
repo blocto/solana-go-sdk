@@ -18,11 +18,11 @@ func TestGetLatestBlockhash(t *testing.T) {
 					c := NewRpcClient(url)
 					return c.GetLatestBlockhash(context.TODO())
 				},
-				ExpectedValue: JsonRpcResponse[GetLatestBlockhash]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[GetLatestBlockhashValue]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetLatestBlockhash{
+					Result: ValueWithContext[GetLatestBlockhashValue]{
 						Context: Context{
 							Slot: 112872139,
 						},
@@ -41,11 +41,11 @@ func TestGetLatestBlockhash(t *testing.T) {
 					c := NewRpcClient(url)
 					return c.GetLatestBlockhashWithConfig(context.TODO(), GetLatestBlockhashConfig{Commitment: CommitmentProcessed})
 				},
-				ExpectedValue: JsonRpcResponse[GetLatestBlockhash]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[GetLatestBlockhashValue]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetLatestBlockhash{
+					Result: ValueWithContext[GetLatestBlockhashValue]{
 						Context: Context{
 							Slot: 112871314,
 						},
@@ -64,11 +64,11 @@ func TestGetLatestBlockhash(t *testing.T) {
 					c := NewRpcClient(url)
 					return c.GetLatestBlockhashWithConfig(context.TODO(), GetLatestBlockhashConfig{Commitment: CommitmentConfirmed})
 				},
-				ExpectedValue: JsonRpcResponse[GetLatestBlockhash]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[GetLatestBlockhashValue]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetLatestBlockhash{
+					Result: ValueWithContext[GetLatestBlockhashValue]{
 						Context: Context{
 							Slot: 112871311,
 						},
@@ -87,11 +87,11 @@ func TestGetLatestBlockhash(t *testing.T) {
 					c := NewRpcClient(url)
 					return c.GetLatestBlockhashWithConfig(context.TODO(), GetLatestBlockhashConfig{Commitment: CommitmentFinalized})
 				},
-				ExpectedValue: JsonRpcResponse[GetLatestBlockhash]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[GetLatestBlockhashValue]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetLatestBlockhash{
+					Result: ValueWithContext[GetLatestBlockhashValue]{
 						Context: Context{
 							Slot: 112871221,
 						},

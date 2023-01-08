@@ -21,12 +21,12 @@ type GetLatestBlockhashConfig struct {
 
 // NEW: This method is only available in solana-core v1.9 or newer. Please use getRecentBlockhash for solana-core v1.8
 // GetLatestBlockhash returns the latest blockhash
-func (c *RpcClient) GetLatestBlockhash(ctx context.Context) (JsonRpcResponse[GetLatestBlockhash], error) {
-	return call[JsonRpcResponse[GetLatestBlockhash]](c, ctx, "getLatestBlockhash")
+func (c *RpcClient) GetLatestBlockhash(ctx context.Context) (JsonRpcResponse[ValueWithContext[GetLatestBlockhashValue]], error) {
+	return call[JsonRpcResponse[ValueWithContext[GetLatestBlockhashValue]]](c, ctx, "getLatestBlockhash")
 }
 
 // NEW: This method is only available in solana-core v1.9 or newer. Please use getRecentBlockhash for solana-core v1.8
 // GetLatestBlockhashWithConfig returns the latest blockhash
-func (c *RpcClient) GetLatestBlockhashWithConfig(ctx context.Context, cfg GetLatestBlockhashConfig) (JsonRpcResponse[GetLatestBlockhash], error) {
-	return call[JsonRpcResponse[GetLatestBlockhash]](c, ctx, "getLatestBlockhash", cfg)
+func (c *RpcClient) GetLatestBlockhashWithConfig(ctx context.Context, cfg GetLatestBlockhashConfig) (JsonRpcResponse[ValueWithContext[GetLatestBlockhashValue]], error) {
+	return call[JsonRpcResponse[ValueWithContext[GetLatestBlockhashValue]]](c, ctx, "getLatestBlockhash", cfg)
 }
