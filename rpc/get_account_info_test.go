@@ -21,11 +21,11 @@ func TestGetAccountInfo(t *testing.T) {
 						"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetAccountInfo]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetAccountInfo{
+					Result: ValueWithContext[AccountInfo]{
 						Context: Context{
 							Slot: 77317716,
 						},
@@ -50,11 +50,11 @@ func TestGetAccountInfo(t *testing.T) {
 						"FaTGhPTgKeZZzQwLenoxn2VZXPWV1FpjQ1AQe77JUeJw",
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetAccountInfo]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetAccountInfo{
+					Result: ValueWithContext[AccountInfo]{
 						Context: Context{
 							Slot: 77382573,
 						},
@@ -72,11 +72,11 @@ func TestGetAccountInfo(t *testing.T) {
 						"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb",
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetAccountInfo]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetAccountInfo{
+					Result: ValueWithContext[AccountInfo]{
 						Context: Context{
 							Slot: 77317716,
 						},
@@ -101,14 +101,14 @@ func TestGetAccountInfo(t *testing.T) {
 						"9ywX3U33UZC1HThhoBR2Ys7SiouXDkkDoH6brJApFh5D",
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetAccountInfo]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error: &JsonRpcError{
 						Code:    -32600,
 						Message: "Encoded binary (base 58) data should be less than 128 bytes, please use Base64 encoding.",
 					},
-					Result: GetAccountInfo{},
+					Result: ValueWithContext[AccountInfo]{},
 				},
 				ExpectedError: nil,
 			},
@@ -125,11 +125,11 @@ func TestGetAccountInfo(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetAccountInfo]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetAccountInfo{
+					Result: ValueWithContext[AccountInfo]{
 						Context: Context{
 							Slot: 77317716,
 						},
@@ -157,11 +157,11 @@ func TestGetAccountInfo(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetAccountInfo]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetAccountInfo{
+					Result: ValueWithContext[AccountInfo]{
 						Context: Context{
 							Slot: 77317717,
 						},
@@ -192,11 +192,11 @@ func TestGetAccountInfo(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetAccountInfo]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetAccountInfo{
+					Result: ValueWithContext[AccountInfo]{
 						Context: Context{
 							Slot: 77322439,
 						},
@@ -228,11 +228,11 @@ func TestGetAccountInfo(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetAccountInfo]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetAccountInfo{
+					Result: ValueWithContext[AccountInfo]{
 						Context: Context{
 							Slot: 77317718,
 						},
@@ -260,11 +260,11 @@ func TestGetAccountInfo(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetAccountInfo]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetAccountInfo{
+					Result: ValueWithContext[AccountInfo]{
 						Context: Context{
 							Slot: 121172974,
 						},
@@ -289,11 +289,11 @@ func TestGetAccountInfo(t *testing.T) {
 						"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetAccountInfo]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetAccountInfo{
+					Result: ValueWithContext[AccountInfo]{
 						Context: Context{
 							Slot:       155401599,
 							ApiVersion: "1.10.34",
