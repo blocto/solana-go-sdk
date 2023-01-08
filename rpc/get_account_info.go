@@ -16,11 +16,11 @@ type GetAccountInfoConfig struct {
 }
 
 // GetAccountInfo returns all information associated with the account of provided Pubkey
-func (c *RpcClient) GetAccountInfo(ctx context.Context, base58Addr string) (JsonRpcResponse[GetAccountInfo], error) {
-	return call[JsonRpcResponse[GetAccountInfo]](c, ctx, "getAccountInfo", base58Addr)
+func (c *RpcClient) GetAccountInfo(ctx context.Context, base58Addr string) (JsonRpcResponse[ValueWithContext[AccountInfo]], error) {
+	return call[JsonRpcResponse[ValueWithContext[AccountInfo]]](c, ctx, "getAccountInfo", base58Addr)
 }
 
 // GetAccountInfo returns all information associated with the account of provided Pubkey
-func (c *RpcClient) GetAccountInfoWithConfig(ctx context.Context, base58Addr string, cfg GetAccountInfoConfig) (JsonRpcResponse[GetAccountInfo], error) {
-	return call[JsonRpcResponse[GetAccountInfo]](c, ctx, "getAccountInfo", base58Addr, cfg)
+func (c *RpcClient) GetAccountInfoWithConfig(ctx context.Context, base58Addr string, cfg GetAccountInfoConfig) (JsonRpcResponse[ValueWithContext[AccountInfo]], error) {
+	return call[JsonRpcResponse[ValueWithContext[AccountInfo]]](c, ctx, "getAccountInfo", base58Addr, cfg)
 }
