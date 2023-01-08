@@ -21,11 +21,11 @@ func TestGetMultipleAccounts(t *testing.T) {
 						[]string{"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7"},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetMultipleAccounts]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[[]AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetMultipleAccounts{
+					Result: ValueWithContext[[]AccountInfo]{
 						Context: Context{
 							Slot: 77317716,
 						},
@@ -52,11 +52,11 @@ func TestGetMultipleAccounts(t *testing.T) {
 						[]string{"FaTGhPTgKeZZzQwLenoxn2VZXPWV1FpjQ1AQe77JUeJw"},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetMultipleAccounts]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[[]AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetMultipleAccounts{
+					Result: ValueWithContext[[]AccountInfo]{
 						Context: Context{
 							Slot: 77382573,
 						},
@@ -77,11 +77,11 @@ func TestGetMultipleAccounts(t *testing.T) {
 						[]string{"F5RYi7FMPefkc7okJNh21Hcsch7RUaLVr8Rzc8SQqxUb"},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetMultipleAccounts]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[[]AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetMultipleAccounts{
+					Result: ValueWithContext[[]AccountInfo]{
 						Context: Context{
 							Slot: 77317716,
 						},
@@ -108,14 +108,14 @@ func TestGetMultipleAccounts(t *testing.T) {
 						[]string{"9ywX3U33UZC1HThhoBR2Ys7SiouXDkkDoH6brJApFh5D"},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetMultipleAccounts]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[[]AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error: &JsonRpcError{
 						Code:    -32600,
 						Message: "Encoded binary (base 58) data should be less than 128 bytes, please use Base64 encoding.",
 					},
-					Result: GetMultipleAccounts{},
+					Result: ValueWithContext[[]AccountInfo]{},
 				},
 				ExpectedError: nil,
 			},
@@ -132,11 +132,11 @@ func TestGetMultipleAccounts(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetMultipleAccounts]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[[]AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetMultipleAccounts{
+					Result: ValueWithContext[[]AccountInfo]{
 						Context: Context{
 							Slot: 77317716,
 						},
@@ -166,11 +166,11 @@ func TestGetMultipleAccounts(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetMultipleAccounts]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[[]AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetMultipleAccounts{
+					Result: ValueWithContext[[]AccountInfo]{
 						Context: Context{
 							Slot: 77317717,
 						},
@@ -200,11 +200,11 @@ func TestGetMultipleAccounts(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetMultipleAccounts]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[[]AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetMultipleAccounts{
+					Result: ValueWithContext[[]AccountInfo]{
 						Context: Context{
 							Slot: 77317717,
 						},
@@ -237,11 +237,11 @@ func TestGetMultipleAccounts(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetMultipleAccounts]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[[]AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetMultipleAccounts{
+					Result: ValueWithContext[[]AccountInfo]{
 						Context: Context{
 							Slot: 77322439,
 						},
@@ -275,11 +275,11 @@ func TestGetMultipleAccounts(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetMultipleAccounts]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[[]AccountInfo]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetMultipleAccounts{
+					Result: ValueWithContext[[]AccountInfo]{
 						Context: Context{
 							Slot: 77317718,
 						},

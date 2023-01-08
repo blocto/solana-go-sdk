@@ -17,6 +17,30 @@ type AccountInfo struct {
 	Data       []byte
 }
 
+func convertAccountInfo(v rpc.AccountInfo) (AccountInfo, error) {
+	if v == (rpc.AccountInfo{}) {
+		return AccountInfo{}, nil
+	}
+	data, ok := v.Data.([]any)
+	if !ok {
+		return AccountInfo{}, fmt.Errorf("failed to cast raw response to []any")
+	}
+	if data[1] != string(rpc.AccountEncodingBase64) {
+		return AccountInfo{}, fmt.Errorf("return value should be base64 encoded")
+	}
+	rawData, err := base64.StdEncoding.DecodeString(data[0].(string))
+	if err != nil {
+		return AccountInfo{}, fmt.Errorf("failed to base64 decode data")
+	}
+	return AccountInfo{
+		Lamports:   v.Lamports,
+		Owner:      common.PublicKeyFromString(v.Owner),
+		Executable: v.Executable,
+		RentEpoch:  v.RentEpoch,
+		Data:       rawData,
+	}, nil
+}
+
 type GetAccountInfoConfig struct {
 	Commitment rpc.Commitment
 	DataSlice  *rpc.DataSlice
@@ -71,27 +95,7 @@ func (c *Client) GetAccountInfoAndContextWithConfig(ctx context.Context, base58A
 }
 
 func convertGetAccountInfo(v rpc.ValueWithContext[rpc.AccountInfo]) (AccountInfo, error) {
-	if v.Value == (rpc.AccountInfo{}) {
-		return AccountInfo{}, nil
-	}
-	data, ok := v.Value.Data.([]any)
-	if !ok {
-		return AccountInfo{}, fmt.Errorf("failed to cast raw response to []any")
-	}
-	if data[1] != string(rpc.AccountEncodingBase64) {
-		return AccountInfo{}, fmt.Errorf("return value should be base64 encoded")
-	}
-	rawData, err := base64.StdEncoding.DecodeString(data[0].(string))
-	if err != nil {
-		return AccountInfo{}, fmt.Errorf("failed to base64 decode data")
-	}
-	return AccountInfo{
-		Lamports:   v.Value.Lamports,
-		Owner:      common.PublicKeyFromString(v.Value.Owner),
-		Executable: v.Value.Executable,
-		RentEpoch:  v.Value.RentEpoch,
-		Data:       rawData,
-	}, nil
+	return convertAccountInfo(v.Value)
 }
 
 func convertGetAccountInfoAndContext(v rpc.ValueWithContext[rpc.AccountInfo]) (rpc.ValueWithContext[AccountInfo], error) {
