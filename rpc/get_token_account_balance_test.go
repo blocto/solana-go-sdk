@@ -21,11 +21,11 @@ func TestGetTokenBalance(t *testing.T) {
 						"AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ",
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetTokenAccountBalance]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[TokenAccountBalance]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetTokenAccountBalance{
+					Result: ValueWithContext[TokenAccountBalance]{
 						Context: Context{
 							Slot: 80218700,
 						},
@@ -51,11 +51,11 @@ func TestGetTokenBalance(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetTokenAccountBalance]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[TokenAccountBalance]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetTokenAccountBalance{
+					Result: ValueWithContext[TokenAccountBalance]{
 						Context: Context{
 							Slot: 80219466,
 						},
