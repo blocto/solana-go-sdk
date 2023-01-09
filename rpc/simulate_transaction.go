@@ -38,11 +38,11 @@ const (
 )
 
 // SimulateTransaction simulate sending a transaction
-func (c *RpcClient) SimulateTransaction(ctx context.Context, rawTx string) (JsonRpcResponse[SimulateTransaction], error) {
-	return call[JsonRpcResponse[SimulateTransaction]](c, ctx, "simulateTransaction", rawTx)
+func (c *RpcClient) SimulateTransaction(ctx context.Context, rawTx string) (JsonRpcResponse[ValueWithContext[SimulateTransactionValue]], error) {
+	return call[JsonRpcResponse[ValueWithContext[SimulateTransactionValue]]](c, ctx, "simulateTransaction", rawTx)
 }
 
 // SimulateTransaction simulate sending a transaction
-func (c *RpcClient) SimulateTransactionWithConfig(ctx context.Context, rawTx string, cfg SimulateTransactionConfig) (JsonRpcResponse[SimulateTransaction], error) {
-	return call[JsonRpcResponse[SimulateTransaction]](c, ctx, "simulateTransaction", rawTx, cfg)
+func (c *RpcClient) SimulateTransactionWithConfig(ctx context.Context, rawTx string, cfg SimulateTransactionConfig) (JsonRpcResponse[ValueWithContext[SimulateTransactionValue]], error) {
+	return call[JsonRpcResponse[ValueWithContext[SimulateTransactionValue]]](c, ctx, "simulateTransaction", rawTx, cfg)
 }

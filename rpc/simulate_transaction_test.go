@@ -21,11 +21,11 @@ func TestSimulateTransaction(t *testing.T) {
 						"5nxpoKAc5anKyiJuwj5f2SLxnruNHDjpFFz1TAw5VvpL1L4TbF4mVUMwiH36uBMnJEhpxqtKvjPFMaBms2vNe2LYQjydRs2niy5pBsBjjxif5mxkEa3S27pc5epeYATPA9Xhgagz2TDzniZEYQgQ6uEGyKGJRQ2AX9qpTY7LtHxN8sUqn5SuZAMnM27iZ9bwwyjjBGepRmz1mfQfFvSV92exnJRjCrzcR5VPuViSAxDtwZFVzB8CVcA3M9ZFaUn8mhTe9U8wKFYEm1mH9cPjWHpwm5h4S2yvMVSw1",
 					)
 				},
-				ExpectedValue: JsonRpcResponse[SimulateTransaction]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[SimulateTransactionValue]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: SimulateTransaction{
+					Result: ValueWithContext[SimulateTransactionValue]{
 						Context: Context{
 							Slot: 80208054,
 						},
@@ -46,11 +46,11 @@ func TestSimulateTransaction(t *testing.T) {
 						"3vDU6xomZYLVZDefJLUEKXdzQLxRvJ8m1u31a4m6ynNDrPmFUUC9ogWH1yTnqaKm5SRcYbrp1xXExzhVKdCiv1KTkZdmZ7oNgTMSq4SN1nu1nL4hkZPSKGNGxXk6fViefXGiaHvzmC6mR2coVhvjs75eayuGyhomCfEUnKfUuQK99UC8pYJNenHTQQ4DX92sJmuiPoQHGDBVDwtVAkvLEfav89uSUxS1jbpfMPBs7fTNGiEhgMgYq5p4rsvPAYG6EZpDnK3VFjbBGBeUAdkCbjxLQGRJs3UEUNwjD",
 					)
 				},
-				ExpectedValue: JsonRpcResponse[SimulateTransaction]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[SimulateTransactionValue]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: SimulateTransaction{
+					Result: ValueWithContext[SimulateTransactionValue]{
 						Context: Context{
 							Slot: 80207873,
 						},
@@ -79,11 +79,11 @@ func TestSimulateTransaction(t *testing.T) {
 						"3vDU6xomZYLVZDefJLUEKXdzQLxRvJ8m1u31a4m6ynNDrPmFUUC9ogWH1yTnqaKm5SRcYbrp1xXExzhVKdCiv1KTkZdmZ7oNgTMSq4SN1nu1nL4hkZPSKGNGxXk6fViefXGiaHvzmC6mR2coVhvjs75eayuGyhomCfEUnKfUuQK99UC8pYJNenHTQQ4DX92sJmuiPoQHGDBVDwtVAkvLEfav89uSUxS1jbpfMPBs7fTNGiEhgMgYq5p4rsvPAYG6EZpDnK3VFjbBGBeUAdkCbjxLQGRJs3UEUNwjD",
 					)
 				},
-				ExpectedValue: JsonRpcResponse[SimulateTransaction]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[SimulateTransactionValue]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: SimulateTransaction{
+					Result: ValueWithContext[SimulateTransactionValue]{
 						Context: Context{
 							Slot: 80208056,
 						},
@@ -108,11 +108,11 @@ func TestSimulateTransaction(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[SimulateTransaction]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[SimulateTransactionValue]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: SimulateTransaction{
+					Result: ValueWithContext[SimulateTransactionValue]{
 						Context: Context{
 							Slot: 80208226,
 						},
@@ -149,11 +149,11 @@ func TestSimulateTransaction(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[SimulateTransaction]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[SimulateTransactionValue]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: SimulateTransaction{
+					Result: ValueWithContext[SimulateTransactionValue]{
 						Context: Context{
 							Slot: 80208978,
 						},
@@ -186,11 +186,11 @@ func TestSimulateTransaction(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[SimulateTransaction]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[SimulateTransactionValue]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: SimulateTransaction{
+					Result: ValueWithContext[SimulateTransactionValue]{
 						Context: Context{
 							ApiVersion: "1.14.5",
 							Slot:       159776096,
