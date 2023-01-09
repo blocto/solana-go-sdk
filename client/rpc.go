@@ -1,9 +1,11 @@
 package client
 
 import (
+	"encoding/base64"
 	"fmt"
 	"strconv"
 
+	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/rpc"
 )
 
@@ -42,5 +44,33 @@ func newTokenAmount(amount string, decimals uint8, uiAmountString string) (Token
 		Amount:         u64Amount,
 		Decimals:       decimals,
 		UIAmountString: uiAmountString,
+	}, nil
+}
+
+type ReturnData struct {
+	ProgramId common.PublicKey
+	Data      []byte
+}
+
+func convertReturnData(d rpc.ReturnData) (ReturnData, error) {
+	programId := common.PublicKeyFromString(d.ProgramId)
+	s, ok := d.Data.([]any)
+	if !ok {
+		return ReturnData{}, fmt.Errorf("failed to get data")
+	}
+	if len(s) != 2 {
+		return ReturnData{}, fmt.Errorf("unexpected slice lentgh")
+	}
+	if s[1].(string) != "base64" {
+		return ReturnData{}, fmt.Errorf("unexpected encoding method")
+	}
+	data, err := base64.StdEncoding.DecodeString(s[0].(string))
+	if err != nil {
+		return ReturnData{}, fmt.Errorf("failed to decode data")
+	}
+
+	return ReturnData{
+		ProgramId: programId,
+		Data:      data,
 	}, nil
 }
