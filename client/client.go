@@ -57,6 +57,7 @@ type QuickSendTransactionParam struct {
 	FeePayer     common.PublicKey
 }
 
+// Deprecated: please use sendTransaction
 // QuickSendTransaction is a quick way to send tx
 func (c *Client) QuickSendTransaction(ctx context.Context, param QuickSendTransactionParam) (string, error) {
 	recentBlockhashRes, err := c.GetLatestBlockhash(ctx)
