@@ -128,7 +128,7 @@ func convertGetAccountInfo(v rpc.ValueWithContext[rpc.AccountInfo]) (AccountInfo
 	return convertAccountInfo(v.Value)
 }
 
-func convertGetAccountInfoWithData(v rpc.ValueWithContext[rpc.AccountInfo]) (AccountInfo, error) {
+func convertGetAccountInfoWithData(v rpc.ValueWithContext[rpc.AccountInfoWithData]) (AccountInfo, error) {
 	return convertAccountInfoWithData(v.Value)
 }
 
