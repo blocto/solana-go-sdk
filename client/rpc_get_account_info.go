@@ -48,6 +48,9 @@ type GetAccountInfoConfig struct {
 }
 
 func (c GetAccountInfoConfig) toRpc() rpc.GetAccountInfoConfig {
+	if c.Encoding == "" {
+		c.Encoding = rpc.AccountEncodingBase64
+	}
 	return rpc.GetAccountInfoConfig{
 		Encoding:   c.Encoding,
 		Commitment: c.Commitment,
@@ -59,7 +62,7 @@ func (c GetAccountInfoConfig) toRpc() rpc.GetAccountInfoConfig {
 func (c *Client) GetAccountInfo(ctx context.Context, base58Addr string) (AccountInfo, error) {
 	return process(
 		func() (rpc.JsonRpcResponse[rpc.ValueWithContext[rpc.AccountInfo]], error) {
-			return c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, GetAccountInfoConfig{Encoding: rpc.AccountEncodingBase64}.toRpc())
+			return c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, GetAccountInfoConfig{}.toRpc())
 		},
 		convertGetAccountInfo,
 	)
@@ -79,7 +82,7 @@ func (c *Client) GetAccountInfoWithConfig(ctx context.Context, base58Addr string
 func (c *Client) GetAccountInfoAndContext(ctx context.Context, base58Addr string) (rpc.ValueWithContext[AccountInfo], error) {
 	return process(
 		func() (rpc.JsonRpcResponse[rpc.ValueWithContext[rpc.AccountInfo]], error) {
-			return c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, GetAccountInfoConfig{}.toRpc())
+			return c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, GetAccountInfoConfig{Encoding: rpc.AccountEncodingBase64}.toRpc())
 		},
 		convertGetAccountInfoAndContext,
 	)
