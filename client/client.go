@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/mr-tron/base58"
 	"github.com/portto/solana-go-sdk/common"
 	"github.com/portto/solana-go-sdk/program/token"
 	"github.com/portto/solana-go-sdk/rpc"
@@ -89,111 +88,6 @@ func (c *Client) QuickSendTransaction(ctx context.Context, param QuickSendTransa
 		return "", err
 	}
 	return res.Result, nil
-}
-
-type GetTransactionResponse struct {
-	Slot        uint64
-	Meta        *TransactionMeta
-	Transaction types.Transaction
-	BlockTime   *int64
-}
-
-type TransactionMeta struct {
-	Err                  any
-	Fee                  uint64
-	PreBalances          []int64
-	PostBalances         []int64
-	PreTokenBalances     []rpc.TransactionMetaTokenBalance
-	PostTokenBalances    []rpc.TransactionMetaTokenBalance
-	LogMessages          []string
-	InnerInstructions    []TransactionMetaInnerInstruction
-	LoadedAddresses      rpc.TransactionLoadedAddresses
-	ReturnData           *ReturnData
-	ComputeUnitsConsumed *uint64
-}
-
-type TransactionMetaInnerInstruction struct {
-	Index        uint64
-	Instructions []types.CompiledInstruction
-}
-
-// GetTransaction returns transaction details for a confirmed transaction
-func (c *Client) GetTransaction(ctx context.Context, txhash string) (*GetTransactionResponse, error) {
-	res, err := c.RpcClient.GetTransactionWithConfig(
-		ctx,
-		txhash,
-		rpc.GetTransactionConfig{
-			Encoding: rpc.TransactionEncodingBase64,
-		},
-	)
-	err = checkJsonRpcResponse(res, err)
-	if err != nil {
-		return nil, err
-	}
-	if res.Result == nil {
-		return nil, nil
-	}
-	tx, err := getTransaction(res)
-	if err != nil {
-		return nil, err
-	}
-	return &tx, nil
-}
-
-// GetTransactionWithConfig returns transaction details for a confirmed transaction
-// will ignore encoding
-func (c *Client) GetTransactionWithConfig(ctx context.Context, txhash string, cfg rpc.GetTransactionConfig) (*GetTransactionResponse, error) {
-	res, err := c.RpcClient.GetTransactionWithConfig(
-		ctx,
-		txhash,
-		rpc.GetTransactionConfig{
-			Encoding:                       rpc.TransactionEncodingBase64,
-			Commitment:                     cfg.Commitment,
-			MaxSupportedTransactionVersion: cfg.MaxSupportedTransactionVersion,
-		},
-	)
-	err = checkJsonRpcResponse(res, err)
-	if err != nil {
-		return nil, err
-	}
-	if res.Result == nil {
-		return nil, nil
-	}
-	tx, err := getTransaction(res)
-	if err != nil {
-		return nil, err
-	}
-	return &tx, nil
-}
-
-func getTransaction(res rpc.JsonRpcResponse[*rpc.GetTransaction]) (GetTransactionResponse, error) {
-	data, ok := res.Result.Transaction.([]any)
-	if !ok {
-		return GetTransactionResponse{}, fmt.Errorf("failed to cast raw response to []any")
-	}
-	if data[1] != string(rpc.TransactionEncodingBase64) {
-		return GetTransactionResponse{}, fmt.Errorf("encoding mistmatch")
-	}
-	rawTx, err := base64.StdEncoding.DecodeString(data[0].(string))
-	if err != nil {
-		return GetTransactionResponse{}, fmt.Errorf("failed to base64 decode data, err: %v", err)
-	}
-	tx, err := types.TransactionDeserialize(rawTx)
-	if err != nil {
-		return GetTransactionResponse{}, fmt.Errorf("failed to deserialize transaction, err: %v", err)
-	}
-
-	transactionMeta, err := convertTransactionMeta(res.Result.Meta)
-	if err != nil {
-		return GetTransactionResponse{}, fmt.Errorf("failed to convert transaction meta, err: %v", err)
-	}
-
-	return GetTransactionResponse{
-		Slot:        res.Result.Slot,
-		BlockTime:   res.Result.BlockTime,
-		Transaction: tx,
-		Meta:        transactionMeta,
-	}, nil
 }
 
 type GetBlockResponse struct {
@@ -358,68 +252,4 @@ func convertToIntSlice(input []any) ([]int, error) {
 		output = append(output, int(v.(float64)))
 	}
 	return output, nil
-}
-
-func convertTransactionMeta(meta *rpc.TransactionMeta) (*TransactionMeta, error) {
-	if meta == nil {
-		return nil, nil
-	}
-
-	innerInstructions := make([]TransactionMetaInnerInstruction, 0, len(meta.InnerInstructions))
-	for _, metaInnerInstruction := range meta.InnerInstructions {
-		compiledInstructions := make([]types.CompiledInstruction, 0, len(metaInnerInstruction.Instructions))
-		for _, innerInstruction := range metaInnerInstruction.Instructions {
-			parsedInstruction, ok := innerInstruction.(map[string]any)
-			if !ok {
-				return nil, fmt.Errorf("failed to convert inner instruction type. value: %v", innerInstruction)
-			}
-
-			accounts, err := convertToIntSlice(parsedInstruction["accounts"].([]any))
-			if err != nil {
-				return nil, fmt.Errorf("failed to cast instructions accounts, err: %v", err)
-			}
-
-			var data []byte
-			if dataString := parsedInstruction["data"].(string); len(dataString) > 0 {
-				data, err = base58.Decode(dataString)
-				if err != nil {
-					return nil, fmt.Errorf("failed to base58 decode data, data: %v, err: %v", parsedInstruction["data"], err)
-				}
-			}
-
-			compiledInstructions = append(compiledInstructions, types.CompiledInstruction{
-				ProgramIDIndex: int(parsedInstruction["programIdIndex"].(float64)),
-				Accounts:       accounts,
-				Data:           data,
-			})
-		}
-
-		innerInstructions = append(innerInstructions, TransactionMetaInnerInstruction{
-			Index:        metaInnerInstruction.Index,
-			Instructions: compiledInstructions,
-		})
-	}
-
-	var returnData *ReturnData
-	if v := meta.ReturnData; v != nil {
-		d, err := convertReturnData(*v)
-		if err != nil {
-			return nil, fmt.Errorf("failed to process return data, err: %v", err)
-		}
-		returnData = &d
-	}
-
-	return &TransactionMeta{
-		Err:                  meta.Err,
-		Fee:                  meta.Fee,
-		PreBalances:          meta.PreBalances,
-		PostBalances:         meta.PostBalances,
-		PreTokenBalances:     meta.PreTokenBalances,
-		PostTokenBalances:    meta.PostTokenBalances,
-		LogMessages:          meta.LogMessages,
-		InnerInstructions:    innerInstructions,
-		LoadedAddresses:      meta.LoadedAddresses,
-		ReturnData:           returnData,
-		ComputeUnitsConsumed: meta.ComputeUnitsConsumed,
-	}, nil
 }
