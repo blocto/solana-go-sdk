@@ -326,6 +326,175 @@ func TestGetTransaction(t *testing.T) {
 				},
 				ExpectedError: nil,
 			},
+			{
+				RequestBody:  `{"jsonrpc":"2.0", "id":1, "method":"getTransaction", "params": ["4fSTSDTTuYa1XXAFxFenuY3SoZWUwCzpMq7kUiya1zW6uqqh6C76GFqTQ3wvegEbZhbPJyr33iDAbieQVWCtVXmf", {"encoding": "base64", "maxSupportedTransactionVersion": 0}]}`,
+				ResponseBody: `{"jsonrpc":"2.0","result":{"blockTime":1675511254,"meta":{"computeUnitsConsumed":12344,"err":null,"fee":5000,"innerInstructions":[],"loadedAddresses":{"readonly":["F1rcBbZB6tQZUTR2z8jKQxaAwUUkxnghSh941Q62hMi8","5jHeQFBSNxFqqkMF9YCYwtJbkzGarSGwGsmi2ZuPG6yw"],"writable":["3Yvq7e9UXLoFK4PKyxrpEA3y3TKmFK2Wb1f5tVFUgwPu","5McxjaxNKYLHtv9DqbMfoi6GNs7ZEMHGkJDrouPib4sW","GAXzq8BWdAWaS1kWFiL5tzV2h3AbRBtYGP5psNTWrM9g"]},"logMessages":["Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [1]","Program log: Instruction: TransferChecked","Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 6172 of 400000 compute units","Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success","Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [1]","Program log: Instruction: TransferChecked","Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 6172 of 393828 compute units","Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success"],"postBalances":[112595188235,2039280,934087680,2039280,2039280,2039280,1461600,1461600],"postTokenBalances":[{"accountIndex":1,"mint":"5jHeQFBSNxFqqkMF9YCYwtJbkzGarSGwGsmi2ZuPG6yw","owner":"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7","programId":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","uiTokenAmount":{"amount":"101","decimals":0,"uiAmount":101.0,"uiAmountString":"101"}},{"accountIndex":3,"mint":"F1rcBbZB6tQZUTR2z8jKQxaAwUUkxnghSh941Q62hMi8","owner":"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7","programId":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","uiTokenAmount":{"amount":"99","decimals":0,"uiAmount":99.0,"uiAmountString":"99"}},{"accountIndex":4,"mint":"5jHeQFBSNxFqqkMF9YCYwtJbkzGarSGwGsmi2ZuPG6yw","owner":"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7","programId":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","uiTokenAmount":{"amount":"99","decimals":0,"uiAmount":99.0,"uiAmountString":"99"}},{"accountIndex":5,"mint":"F1rcBbZB6tQZUTR2z8jKQxaAwUUkxnghSh941Q62hMi8","owner":"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7","programId":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","uiTokenAmount":{"amount":"101","decimals":0,"uiAmount":101.0,"uiAmountString":"101"}}],"preBalances":[112595193235,2039280,934087680,2039280,2039280,2039280,1461600,1461600],"preTokenBalances":[{"accountIndex":1,"mint":"5jHeQFBSNxFqqkMF9YCYwtJbkzGarSGwGsmi2ZuPG6yw","owner":"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7","programId":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","uiTokenAmount":{"amount":"100","decimals":0,"uiAmount":100.0,"uiAmountString":"100"}},{"accountIndex":3,"mint":"F1rcBbZB6tQZUTR2z8jKQxaAwUUkxnghSh941Q62hMi8","owner":"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7","programId":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","uiTokenAmount":{"amount":"100","decimals":0,"uiAmount":100.0,"uiAmountString":"100"}},{"accountIndex":4,"mint":"5jHeQFBSNxFqqkMF9YCYwtJbkzGarSGwGsmi2ZuPG6yw","owner":"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7","programId":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","uiTokenAmount":{"amount":"100","decimals":0,"uiAmount":100.0,"uiAmountString":"100"}},{"accountIndex":5,"mint":"F1rcBbZB6tQZUTR2z8jKQxaAwUUkxnghSh941Q62hMi8","owner":"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7","programId":"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA","uiTokenAmount":{"amount":"100","decimals":0,"uiAmount":100.0,"uiAmountString":"100"}}],"rewards":[],"status":{"Ok":null}},"slot":193487858,"transaction":["AbczATLXANCJ0Y2NoK0du6pwKuLSbYyG7YaFgJgQVtvjd7oKxHCE11YBK9DlyS2t2Fslh+oDT02oSJNGpJuCsQaAAQABAwY+cNmRV5jco+7bkTfPZMcP+vtizdOCgQUlC9drHWze+il9VuGydqFkeFhh/iremTB8Ngd13K3Xt+TOOJY8/QQG3fbh12Whk9nL4UbO63msHLSF7V9bN5E6jPWFfv8AqUTB7DdvVxpi/fsG318JDpL57X6sICK5kJnx/HugOWK7AgIEAwYFAAoMAQAAAAAAAAAAAgQEBwEACgwBAAAAAAAAAAACWt1BI7yRb9qO/G87o+tplZPL5F1W7UbkIFKWOJjtmUECAQIBAKMGCIabnF0TqEjGtz+67okLc/n3dwUqej+EGtkfc+eaAQIBAA==","base64"],"version":0},"id":1}`,
+				F: func(url string) (any, error) {
+					c := NewRpcClient(url)
+					return c.GetTransactionWithConfig(
+						context.TODO(),
+						"4fSTSDTTuYa1XXAFxFenuY3SoZWUwCzpMq7kUiya1zW6uqqh6C76GFqTQ3wvegEbZhbPJyr33iDAbieQVWCtVXmf",
+						GetTransactionConfig{
+							Encoding:                       TransactionEncodingBase64,
+							MaxSupportedTransactionVersion: pointer.Get[uint8](0),
+						},
+					)
+				},
+				ExpectedValue: JsonRpcResponse[*GetTransaction]{
+					JsonRpc: "2.0",
+					Id:      1,
+					Error:   nil,
+					Result: &GetTransaction{
+						Slot:      193487858,
+						BlockTime: pointer.Get[int64](1675511254),
+						Version:   0.,
+						Meta: &TransactionMeta{
+							Err: nil,
+							Fee: 5000,
+							PreBalances: []int64{
+								112595193235,
+								2039280,
+								934087680,
+								2039280,
+								2039280,
+								2039280,
+								1461600,
+								1461600,
+							},
+							PostBalances: []int64{
+								112595188235,
+								2039280,
+								934087680,
+								2039280,
+								2039280,
+								2039280,
+								1461600,
+								1461600,
+							},
+							LogMessages: []string{
+								"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [1]",
+								"Program log: Instruction: TransferChecked",
+								"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 6172 of 400000 compute units",
+								"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success",
+								"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA invoke [1]",
+								"Program log: Instruction: TransferChecked",
+								"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 6172 of 393828 compute units",
+								"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success",
+							},
+							LoadedAddresses: TransactionLoadedAddresses{
+								Readonly: []string{
+									"F1rcBbZB6tQZUTR2z8jKQxaAwUUkxnghSh941Q62hMi8",
+									"5jHeQFBSNxFqqkMF9YCYwtJbkzGarSGwGsmi2ZuPG6yw",
+								},
+								Writable: []string{
+									"3Yvq7e9UXLoFK4PKyxrpEA3y3TKmFK2Wb1f5tVFUgwPu",
+									"5McxjaxNKYLHtv9DqbMfoi6GNs7ZEMHGkJDrouPib4sW",
+									"GAXzq8BWdAWaS1kWFiL5tzV2h3AbRBtYGP5psNTWrM9g",
+								},
+							},
+							PreTokenBalances: []TransactionMetaTokenBalance{
+								{
+									AccountIndex: 1,
+									Mint:         "5jHeQFBSNxFqqkMF9YCYwtJbkzGarSGwGsmi2ZuPG6yw",
+									Owner:        "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
+									ProgramId:    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+									UITokenAmount: TokenAccountBalance{
+										Amount:         "100",
+										Decimals:       0,
+										UIAmountString: "100",
+									},
+								},
+								{
+									AccountIndex: 3,
+									Mint:         "F1rcBbZB6tQZUTR2z8jKQxaAwUUkxnghSh941Q62hMi8",
+									Owner:        "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
+									ProgramId:    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+									UITokenAmount: TokenAccountBalance{
+										Amount:         "100",
+										Decimals:       0,
+										UIAmountString: "100",
+									},
+								},
+								{
+									AccountIndex: 4,
+									Mint:         "5jHeQFBSNxFqqkMF9YCYwtJbkzGarSGwGsmi2ZuPG6yw",
+									Owner:        "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
+									ProgramId:    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+									UITokenAmount: TokenAccountBalance{
+										Amount:         "100",
+										Decimals:       0,
+										UIAmountString: "100",
+									},
+								},
+								{
+									AccountIndex: 5,
+									Mint:         "F1rcBbZB6tQZUTR2z8jKQxaAwUUkxnghSh941Q62hMi8",
+									Owner:        "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
+									ProgramId:    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+									UITokenAmount: TokenAccountBalance{
+										Amount:         "100",
+										Decimals:       0,
+										UIAmountString: "100",
+									},
+								},
+							},
+							PostTokenBalances: []TransactionMetaTokenBalance{
+								{
+									AccountIndex: 1,
+									Mint:         "5jHeQFBSNxFqqkMF9YCYwtJbkzGarSGwGsmi2ZuPG6yw",
+									Owner:        "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
+									ProgramId:    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+									UITokenAmount: TokenAccountBalance{
+										Amount:         "101",
+										Decimals:       0,
+										UIAmountString: "101",
+									},
+								},
+								{
+									AccountIndex: 3,
+									Mint:         "F1rcBbZB6tQZUTR2z8jKQxaAwUUkxnghSh941Q62hMi8",
+									Owner:        "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
+									ProgramId:    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+									UITokenAmount: TokenAccountBalance{
+										Amount:         "99",
+										Decimals:       0,
+										UIAmountString: "99",
+									},
+								},
+								{
+									AccountIndex: 4,
+									Mint:         "5jHeQFBSNxFqqkMF9YCYwtJbkzGarSGwGsmi2ZuPG6yw",
+									Owner:        "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
+									ProgramId:    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+									UITokenAmount: TokenAccountBalance{
+										Amount:         "99",
+										Decimals:       0,
+										UIAmountString: "99",
+									},
+								},
+								{
+									AccountIndex: 5,
+									Mint:         "F1rcBbZB6tQZUTR2z8jKQxaAwUUkxnghSh941Q62hMi8",
+									Owner:        "RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
+									ProgramId:    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+									UITokenAmount: TokenAccountBalance{
+										Amount:         "101",
+										Decimals:       0,
+										UIAmountString: "101",
+									},
+								},
+							},
+							InnerInstructions:    []TransactionMetaInnerInstruction{},
+							ComputeUnitsConsumed: pointer.Get[uint64](12344),
+						},
+						Transaction: []any{
+							"AbczATLXANCJ0Y2NoK0du6pwKuLSbYyG7YaFgJgQVtvjd7oKxHCE11YBK9DlyS2t2Fslh+oDT02oSJNGpJuCsQaAAQABAwY+cNmRV5jco+7bkTfPZMcP+vtizdOCgQUlC9drHWze+il9VuGydqFkeFhh/iremTB8Ngd13K3Xt+TOOJY8/QQG3fbh12Whk9nL4UbO63msHLSF7V9bN5E6jPWFfv8AqUTB7DdvVxpi/fsG318JDpL57X6sICK5kJnx/HugOWK7AgIEAwYFAAoMAQAAAAAAAAAAAgQEBwEACgwBAAAAAAAAAAACWt1BI7yRb9qO/G87o+tplZPL5F1W7UbkIFKWOJjtmUECAQIBAKMGCIabnF0TqEjGtz+67okLc/n3dwUqej+EGtkfc+eaAQIBAA==",
+							"base64",
+						},
+					},
+				},
+				ExpectedError: nil,
+			},
 		},
 	)
 }
