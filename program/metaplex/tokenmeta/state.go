@@ -80,6 +80,7 @@ const (
 	FungibleAsset
 	Fungible
 	NonFungibleEdition
+	ProgrammableNonFungible
 )
 
 type Collection struct {
