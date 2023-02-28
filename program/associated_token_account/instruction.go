@@ -11,6 +11,7 @@ type Instruction borsh.Enum
 const (
 	InstructionCreate Instruction = iota
 	InstructionCreateIdempotent
+	InstructionRecoverNested
 )
 
 type CreateAssociatedTokenAccountParam struct {
@@ -41,6 +42,41 @@ func CreateAssociatedTokenAccount(param CreateAssociatedTokenAccountParam) types
 			{PubKey: common.SystemProgramID, IsSigner: false, IsWritable: false},
 			{PubKey: common.TokenProgramID, IsSigner: false, IsWritable: false},
 			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
+		},
+		Data: data,
+	}
+}
+
+type RecoverNestedParam struct {
+	Owner                             common.PublicKey
+	OwnerMint                         common.PublicKey
+	OwnerAssociatedTokenAccount       common.PublicKey
+	NestedMint                        common.PublicKey
+	NestedMintAssociatedTokenAccount  common.PublicKey
+	DestinationAssociatedTokenAccount common.PublicKey
+}
+
+// CreateAssociatedTokenAccount is the only instruction in associated token program
+func RecoverNested(param RecoverNestedParam) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionRecoverNested,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.SPLAssociatedTokenAccountProgramID,
+		Accounts: []types.AccountMeta{
+			{PubKey: param.NestedMintAssociatedTokenAccount, IsSigner: false, IsWritable: true},
+			{PubKey: param.NestedMint, IsSigner: false, IsWritable: false},
+			{PubKey: param.DestinationAssociatedTokenAccount, IsSigner: false, IsWritable: true},
+			{PubKey: param.OwnerAssociatedTokenAccount, IsSigner: false, IsWritable: true},
+			{PubKey: param.OwnerMint, IsSigner: false, IsWritable: false},
+			{PubKey: param.Owner, IsSigner: true, IsWritable: true},
+			{PubKey: common.TokenProgramID, IsSigner: false, IsWritable: false},
 		},
 		Data: data,
 	}
