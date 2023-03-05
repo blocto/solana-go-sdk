@@ -21,8 +21,42 @@ type CreateAssociatedTokenAccountParam struct {
 	AssociatedTokenAccount common.PublicKey
 }
 
-// CreateAssociatedTokenAccount is the only instruction in associated token program
+// CreateAssociatedTokenAccount creates an associated token account for the given wallet address and token mint. Return an error if the account exists.
+// Deprecated: please use `Create`
 func CreateAssociatedTokenAccount(param CreateAssociatedTokenAccountParam) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionCreate,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.SPLAssociatedTokenAccountProgramID,
+		Accounts: []types.AccountMeta{
+			{PubKey: param.Funder, IsSigner: true, IsWritable: true},
+			{PubKey: param.AssociatedTokenAccount, IsSigner: false, IsWritable: true},
+			{PubKey: param.Owner, IsSigner: false, IsWritable: false},
+			{PubKey: param.Mint, IsSigner: false, IsWritable: false},
+			{PubKey: common.SystemProgramID, IsSigner: false, IsWritable: false},
+			{PubKey: common.TokenProgramID, IsSigner: false, IsWritable: false},
+			{PubKey: common.SysVarRentPubkey, IsSigner: false, IsWritable: false},
+		},
+		Data: data,
+	}
+}
+
+type CreateParam struct {
+	Funder                 common.PublicKey
+	Owner                  common.PublicKey
+	Mint                   common.PublicKey
+	AssociatedTokenAccount common.PublicKey
+}
+
+// Create creates an associated token account for the given wallet address and token mint. Return an error if the account exists.
+func Create(param CreateParam) types.Instruction {
 	data, err := borsh.Serialize(struct {
 		Instruction Instruction
 	}{
@@ -54,7 +88,8 @@ type CreateIdempotentParam struct {
 	AssociatedTokenAccount common.PublicKey
 }
 
-// CreateIdempotent is the only instruction in associated token program
+// CreateIdempotent creates an associated token account for the given wallet address and token mint,
+// if it doesn't already exist. Returns an error if the account exists, but with a different owner.
 func CreateIdempotent(param CreateIdempotentParam) types.Instruction {
 	data, err := borsh.Serialize(struct {
 		Instruction Instruction
@@ -89,7 +124,7 @@ type RecoverNestedParam struct {
 	DestinationAssociatedTokenAccount common.PublicKey
 }
 
-// CreateAssociatedTokenAccount is the only instruction in associated token program
+// RecoverNested transfers from and closes a nested associated token account: an associated token account owned by an associated token account.
 func RecoverNested(param RecoverNestedParam) types.Instruction {
 	data, err := borsh.Serialize(struct {
 		Instruction Instruction

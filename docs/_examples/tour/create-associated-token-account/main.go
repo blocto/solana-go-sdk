@@ -39,7 +39,7 @@ func main() {
 			FeePayer:        feePayer.PublicKey,
 			RecentBlockhash: res.Blockhash,
 			Instructions: []types.Instruction{
-				associated_token_account.CreateAssociatedTokenAccount(associated_token_account.CreateAssociatedTokenAccountParam{
+				associated_token_account.Create(associated_token_account.CreateParam{
 					Funder:                 feePayer.PublicKey,
 					Owner:                  alice.PublicKey,
 					Mint:                   mintPubkey,
