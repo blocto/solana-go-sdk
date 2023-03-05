@@ -91,7 +91,7 @@ func main() {
 						},
 					},
 				}),
-				associated_token_account.CreateAssociatedTokenAccount(associated_token_account.CreateAssociatedTokenAccountParam{
+				associated_token_account.Create(associated_token_account.CreateParam{
 					Funder:                 feePayer.PublicKey,
 					Owner:                  feePayer.PublicKey,
 					Mint:                   mint.PublicKey,
