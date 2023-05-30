@@ -14,4 +14,5 @@ var (
 	MetaplexTokenMetaProgramID         = PublicKeyFromString("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s")
 	ComputeBudgetProgramID             = PublicKeyFromString("ComputeBudget111111111111111111111111111111")
 	AddressLookupTableProgramID        = PublicKeyFromString("AddressLookupTab1e1111111111111111111111111")
+	Token2022ProgramID                 = PublicKeyFromString("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb")
 )
