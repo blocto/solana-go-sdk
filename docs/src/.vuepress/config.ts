@@ -70,6 +70,19 @@ export default defineUserConfig<DefaultThemeOptions>({
               { text: "Get Signatures For Address", link: "/rpc/get-signatures-for-address" },
             ],
           },
+          {
+            text: "Program",
+            children: [
+              {
+                text: "101",
+                children: [
+                  { text: "Hello", link: "/programs/101/hello" },
+                  { text: "Accounts", link: "/programs/101/accounts" },
+                  { text: "Data", link: "/programs/101/data" },
+                ],
+              },
+            ],
+          },
         ],
       },
     },
