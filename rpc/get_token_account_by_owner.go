@@ -21,10 +21,10 @@ type GetTokenAccountsByOwnerConfigFilter struct {
 	ProgramId string `json:"programId,omitempty"`
 }
 
-func (c *RpcClient) GetTokenAccountsByOwner(ctx context.Context, base58Addr string, filter GetTokenAccountsByOwnerConfigFilter) (JsonRpcResponse[GetTokenAccountsByOwner], error) {
-	return call[JsonRpcResponse[GetTokenAccountsByOwner]](c, ctx, "getTokenAccountsByOwner", base58Addr, filter)
+func (c *RpcClient) GetTokenAccountsByOwner(ctx context.Context, base58Addr string, filter GetTokenAccountsByOwnerConfigFilter) (JsonRpcResponse[ValueWithContext[GetProgramAccounts]], error) {
+	return call[JsonRpcResponse[ValueWithContext[GetProgramAccounts]]](c, ctx, "getTokenAccountsByOwner", base58Addr, filter)
 }
 
-func (c *RpcClient) GetTokenAccountsByOwnerWithConfig(ctx context.Context, base58Addr string, filter GetTokenAccountsByOwnerConfigFilter, cfg GetTokenAccountsByOwnerConfig) (JsonRpcResponse[GetTokenAccountsByOwner], error) {
-	return call[JsonRpcResponse[GetTokenAccountsByOwner]](c, ctx, "getTokenAccountsByOwner", base58Addr, filter, cfg)
+func (c *RpcClient) GetTokenAccountsByOwnerWithConfig(ctx context.Context, base58Addr string, filter GetTokenAccountsByOwnerConfigFilter, cfg GetTokenAccountsByOwnerConfig) (JsonRpcResponse[ValueWithContext[GetProgramAccounts]], error) {
+	return call[JsonRpcResponse[ValueWithContext[GetProgramAccounts]]](c, ctx, "getTokenAccountsByOwner", base58Addr, filter, cfg)
 }

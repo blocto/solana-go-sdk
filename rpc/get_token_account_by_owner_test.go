@@ -25,11 +25,11 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetTokenAccountsByOwner]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[GetProgramAccounts]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetTokenAccountsByOwner{
+					Result: ValueWithContext[GetProgramAccounts]{
 						Context: Context{
 							Slot: 88024144,
 						},
@@ -62,11 +62,11 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetTokenAccountsByOwner]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[GetProgramAccounts]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetTokenAccountsByOwner{
+					Result: ValueWithContext[GetProgramAccounts]{
 						Context: Context{
 							Slot: 88024144,
 						},
@@ -102,11 +102,11 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetTokenAccountsByOwner]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[GetProgramAccounts]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetTokenAccountsByOwner{
+					Result: ValueWithContext[GetProgramAccounts]{
 						Context: Context{
 							Slot: 88024145,
 						},
@@ -149,11 +149,11 @@ func TestGetTokenAccountsByOwner(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetTokenAccountsByOwner]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[GetProgramAccounts]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetTokenAccountsByOwner{
+					Result: ValueWithContext[GetProgramAccounts]{
 						Context: Context{
 							Slot: 88024145,
 						},

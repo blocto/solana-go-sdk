@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/token"
 	"github.com/portto/solana-go-sdk/rpc"
 	"github.com/portto/solana-go-sdk/types"
 )
@@ -23,31 +22,6 @@ func New(opts ...rpc.Option) *Client {
 
 func NewClient(endpoint string) *Client {
 	return &Client{rpc.New(rpc.WithEndpoint(endpoint))}
-}
-
-func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.AccountInfo) (AccountInfo, error) {
-	if v == (rpc.AccountInfo{}) {
-		return AccountInfo{}, nil
-	}
-
-	data, ok := v.Data.([]any)
-	if !ok {
-		return AccountInfo{}, fmt.Errorf("failed to cast raw response to []any")
-	}
-	if data[1] != string(rpc.AccountEncodingBase64) {
-		return AccountInfo{}, fmt.Errorf("encoding mistmatch")
-	}
-	rawData, err := base64.StdEncoding.DecodeString(data[0].(string))
-	if err != nil {
-		return AccountInfo{}, fmt.Errorf("failed to base64 decode data")
-	}
-	return AccountInfo{
-		Lamports:   v.Lamports,
-		Owner:      common.PublicKeyFromString(v.Owner),
-		Executable: v.Executable,
-		RentEpoch:  v.RentEpoch,
-		Data:       rawData,
-	}, nil
 }
 
 type QuickSendTransactionParam struct {
@@ -213,36 +187,6 @@ func checkJsonRpcResponse[T any](res rpc.JsonRpcResponse[T], err error) error {
 		return res.Error
 	}
 	return nil
-}
-
-func (c *Client) GetTokenAccountsByOwner(ctx context.Context, base58Addr string) (map[common.PublicKey]token.TokenAccount, error) {
-	getTokenAccountsByOwnerResponse, err := c.RpcClient.GetTokenAccountsByOwnerWithConfig(
-		ctx,
-		base58Addr,
-		rpc.GetTokenAccountsByOwnerConfigFilter{
-			ProgramId: common.TokenProgramID.ToBase58(),
-		},
-		rpc.GetTokenAccountsByOwnerConfig{
-			Encoding: rpc.AccountEncodingBase64,
-		},
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	m := map[common.PublicKey]token.TokenAccount{}
-	for _, v := range getTokenAccountsByOwnerResponse.Result.Value {
-		accountInfo, err := c.rpcAccountInfoToClientAccountInfo(v.Account)
-		if err != nil {
-			return nil, err
-		}
-		tokenAccount, err := token.DeserializeTokenAccount(accountInfo.Data, accountInfo.Owner)
-		if err != nil {
-			return nil, err
-		}
-		m[common.PublicKeyFromString(v.Pubkey)] = tokenAccount
-	}
-	return m, err
 }
 
 // helper function
