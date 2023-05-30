@@ -1,0 +1,11 @@
+[package]
+authors = ["yihau <yihau.chen@icloud.com>"]
+edition = "2021"
+name = "hello"
+version = "0.1.0"
+
+[dependencies]
+solana-program = "=1.14.17"
+
+[lib]
+crate-type = ["cdylib", "lib"]
