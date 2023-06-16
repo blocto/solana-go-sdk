@@ -32,12 +32,12 @@ func TestGetBlock(t *testing.T) {
 						BlockTime:         pointer.Get[int64](1631803928),
 						PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
 						Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
-						Rewards: []GetBlockReward{
+						Rewards: []Reward{
 							{
 								Pubkey:       "9HvwukipCq1TVcSWoNQW7ajTUDFyC16KrARqnXppBdwX",
 								Lamports:     5000,
 								PostBalances: 499999840001,
-								RewardType:   "Fee",
+								RewardType:   pointer.Get[RewardType](RewardTypeFee),
 								Commission:   nil,
 							},
 						},
@@ -66,6 +66,7 @@ func TestGetBlock(t *testing.T) {
 										"Program Vote111111111111111111111111111111111111111 invoke [1]",
 										"Program Vote111111111111111111111111111111111111111 success",
 									},
+									Rewards:           []Reward{},
 									InnerInstructions: []TransactionMetaInnerInstruction{},
 								},
 								Transaction: map[string]any{
@@ -151,6 +152,7 @@ func TestGetBlock(t *testing.T) {
 										"Program Vote111111111111111111111111111111111111111 invoke [1]",
 										"Program Vote111111111111111111111111111111111111111 success",
 									},
+									Rewards:           []Reward{},
 									InnerInstructions: []TransactionMetaInnerInstruction{},
 								},
 								Transaction: []any{
@@ -186,12 +188,12 @@ func TestGetBlock(t *testing.T) {
 						BlockTime:         pointer.Get[int64](1631803928),
 						PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
 						Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
-						Rewards: []GetBlockReward{
+						Rewards: []Reward{
 							{
 								Pubkey:       "9HvwukipCq1TVcSWoNQW7ajTUDFyC16KrARqnXppBdwX",
 								Lamports:     5000,
 								PostBalances: 499999840001,
-								RewardType:   "Fee",
+								RewardType:   pointer.Get[RewardType](RewardTypeFee),
 								Commission:   nil,
 							},
 						},
@@ -220,6 +222,7 @@ func TestGetBlock(t *testing.T) {
 										"Program Vote111111111111111111111111111111111111111 invoke [1]",
 										"Program Vote111111111111111111111111111111111111111 success",
 									},
+									Rewards:           []Reward{},
 									InnerInstructions: []TransactionMetaInnerInstruction{},
 								},
 								Transaction: []any{
@@ -256,12 +259,12 @@ func TestGetBlock(t *testing.T) {
 						BlockTime:         pointer.Get[int64](1631803928),
 						PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
 						Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
-						Rewards: []GetBlockReward{
+						Rewards: []Reward{
 							{
 								Pubkey:       "9HvwukipCq1TVcSWoNQW7ajTUDFyC16KrARqnXppBdwX",
 								Lamports:     5000,
 								PostBalances: 499999840001,
-								RewardType:   "Fee",
+								RewardType:   pointer.Get[RewardType](RewardTypeFee),
 								Commission:   nil,
 							},
 						},
@@ -296,12 +299,12 @@ func TestGetBlock(t *testing.T) {
 						BlockTime:         pointer.Get[int64](1631803928),
 						PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
 						Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
-						Rewards: []GetBlockReward{
+						Rewards: []Reward{
 							{
 								Pubkey:       "9HvwukipCq1TVcSWoNQW7ajTUDFyC16KrARqnXppBdwX",
 								Lamports:     5000,
 								PostBalances: 499999840001,
-								RewardType:   "Fee",
+								RewardType:   pointer.Get[RewardType](RewardTypeFee),
 								Commission:   nil,
 							},
 						},
@@ -334,12 +337,12 @@ func TestGetBlock(t *testing.T) {
 						BlockTime:         pointer.Get[int64](1631803928),
 						PreviousBlockhash: "CXjZvhmFVa4ATW8Qq7XSXJFmB25aEqfHiEbCieujPd9q",
 						Blockhash:         "HUonDijNaSHAPobKtAkg1ewJjy2wECpynbCq5wQ5dkCT",
-						Rewards: []GetBlockReward{
+						Rewards: []Reward{
 							{
 								Pubkey:       "9HvwukipCq1TVcSWoNQW7ajTUDFyC16KrARqnXppBdwX",
 								Lamports:     5000,
 								PostBalances: 499999840001,
-								RewardType:   "Fee",
+								RewardType:   pointer.Get[RewardType](RewardTypeFee),
 								Commission:   nil,
 							},
 						},
@@ -397,6 +400,7 @@ func TestGetBlock(t *testing.T) {
 										"Program Vote111111111111111111111111111111111111111 invoke [1]",
 										"Program Vote111111111111111111111111111111111111111 success",
 									},
+									Rewards:           []Reward{},
 									InnerInstructions: []TransactionMetaInnerInstruction{},
 								},
 								Transaction: []any{
@@ -589,12 +593,12 @@ func TestGetBlock(t *testing.T) {
 						BlockTime:         pointer.Get[int64](1666899961),
 						PreviousBlockhash: "DhaQz2FuLkredqU2VGBkoUVZzk4QTCskDezYZS7ua9rE",
 						Blockhash:         "EdSZ7r12ZipGivMX4NDpFUT9pCmDkCPFHQyWwLSB2Wmv",
-						Rewards: []GetBlockReward{
+						Rewards: []Reward{
 							{
 								Pubkey:       "D7SRyWHVRfZngyzUciWJXNg6qPRV1Ga5ickasA3RKWbs",
 								Lamports:     7500,
 								PostBalances: 499998890000,
-								RewardType:   "Fee",
+								RewardType:   pointer.Get[RewardType](RewardTypeFee),
 								Commission:   nil,
 							},
 						},
@@ -617,6 +621,7 @@ func TestGetBlock(t *testing.T) {
 										"Program return: 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP AQIDBAU=",
 										"Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP success",
 									},
+									Rewards: []Reward{},
 									LoadedAddresses: TransactionLoadedAddresses{
 										Writable: []string{},
 										Readonly: []string{},
@@ -653,6 +658,7 @@ func TestGetBlock(t *testing.T) {
 										"Program Vote111111111111111111111111111111111111111 invoke [1]",
 										"Program Vote111111111111111111111111111111111111111 success",
 									},
+									Rewards: []Reward{},
 									LoadedAddresses: TransactionLoadedAddresses{
 										Writable: []string{},
 										Readonly: []string{},

@@ -23,6 +23,7 @@ type TransactionMeta struct {
 	PostBalances         []int64                           `json:"postBalances"`
 	PreTokenBalances     []TransactionMetaTokenBalance     `json:"preTokenBalances"`
 	PostTokenBalances    []TransactionMetaTokenBalance     `json:"postTokenBalances"`
+	Rewards              []Reward                          `json:"rewards"`
 	LogMessages          []string                          `json:"logMessages"`
 	InnerInstructions    []TransactionMetaInnerInstruction `json:"innerInstructions"`
 	LoadedAddresses      TransactionLoadedAddresses        `json:"loadedAddresses"`
@@ -51,22 +52,6 @@ type Instruction struct {
 	Accounts       []int  `json:"accounts"`
 	Data           string `json:"data"`
 }
-
-// TransactionMetaReward is a part of TransactionMeta
-type TransactionMetaReward struct {
-	Pubkey       string                    `json:"pubkey"`
-	Lamports     int64                     `json:"lamports"`
-	PostBalances uint64                    `json:"postBalance"`
-	RewardType   TransactionMetaRewardType `json:"rewardType"`
-	Commission   *uint8                    `json:"commission"`
-}
-
-type TransactionMetaRewardType string
-
-const (
-	// currently only "rent", other types may be added in the future
-	TransactionMetaRewardTypeRent TransactionMetaRewardType = "rent"
-)
 
 type TransactionLoadedAddresses struct {
 	Writable []string `json:"writable"`

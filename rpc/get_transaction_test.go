@@ -77,6 +77,7 @@ func TestGetTransaction(t *testing.T) {
 								"Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 27016 of 200000 compute units",
 								"Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success",
 							},
+							Rewards: []Reward{},
 							PreBalances: []int64{
 								38026659881,
 								0,
@@ -209,6 +210,7 @@ func TestGetTransaction(t *testing.T) {
 								"Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL consumed 27016 of 200000 compute units",
 								"Program ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL success",
 							},
+							Rewards: []Reward{},
 							PreBalances: []int64{
 								38026659881,
 								0,
@@ -305,6 +307,7 @@ func TestGetTransaction(t *testing.T) {
 								"Program return: 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP AQIDBAU=",
 								"Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP success",
 							},
+							Rewards: []Reward{},
 							LoadedAddresses: TransactionLoadedAddresses{
 								Writable: []string{},
 								Readonly: []string{},
@@ -381,6 +384,7 @@ func TestGetTransaction(t *testing.T) {
 								"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA consumed 6172 of 393828 compute units",
 								"Program TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA success",
 							},
+							Rewards: []Reward{},
 							LoadedAddresses: TransactionLoadedAddresses{
 								Readonly: []string{
 									"F1rcBbZB6tQZUTR2z8jKQxaAwUUkxnghSh941Q62hMi8",

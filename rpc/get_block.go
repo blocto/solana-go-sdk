@@ -12,26 +12,8 @@ type GetBlock struct {
 	ParentSlot        uint64                `json:"parentSlot"`
 	Transactions      []GetBlockTransaction `json:"transactions"`
 	Signatures        []string              `json:"signatures"`
-	Rewards           []GetBlockReward      `json:"rewards"`
+	Rewards           []Reward              `json:"rewards"`
 }
-
-type GetBlockReward struct {
-	Pubkey       string             `json:"pubkey"`
-	Lamports     int64              `json:"lamports"`
-	PostBalances uint64             `json:"postBalance"`
-	RewardType   GetBlockRewardType `json:"rewardType"`
-	Commission   *uint8             `json:"commission"`
-}
-
-type GetBlockRewardType string
-
-const (
-	GetBlockRewardTypeNone    GetBlockRewardType = ""
-	GetBlockRewardTypeFee     GetBlockRewardType = "fee"
-	GetBlockRewardTypeRent    GetBlockRewardType = "rent"
-	GetBlockRewardTypeVoting  GetBlockRewardType = "voting"
-	GetBlockRewardTypeStaking GetBlockRewardType = "staking"
-)
 
 type GetBlockTransaction struct {
 	Transaction any              `json:"transaction"`

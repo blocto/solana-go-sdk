@@ -56,3 +56,20 @@ type ReturnData struct {
 	ProgramId string `json:"programId"`
 	Data      any    `json:"data"`
 }
+
+type RewardType string
+
+const (
+	RewardTypeFee     RewardType = "Fee"
+	RewardTypeRent    RewardType = "Rent"
+	RewardTypeVoting  RewardType = "Voting"
+	RewardTypeStaking RewardType = "Staking"
+)
+
+type Reward struct {
+	Pubkey       string      `json:"pubkey"`
+	Lamports     int64       `json:"lamports"`
+	PostBalances uint64      `json:"postBalance"`
+	RewardType   *RewardType `json:"rewardType"`
+	Commission   *uint8      `json:"commission"`
+}
