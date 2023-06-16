@@ -65,11 +65,11 @@ const (
 )
 
 // GetBlock returns identity and transaction information about a confirmed block in the ledger
-func (c *RpcClient) GetBlock(ctx context.Context, slot uint64) (JsonRpcResponse[GetBlock], error) {
-	return call[JsonRpcResponse[GetBlock]](c, ctx, "getBlock", slot)
+func (c *RpcClient) GetBlock(ctx context.Context, slot uint64) (JsonRpcResponse[*GetBlock], error) {
+	return call[JsonRpcResponse[*GetBlock]](c, ctx, "getBlock", slot)
 }
 
 // GetBlockWithConfig returns identity and transaction information about a confirmed block in the ledger
-func (c *RpcClient) GetBlockWithConfig(ctx context.Context, slot uint64, cfg GetBlockConfig) (JsonRpcResponse[GetBlock], error) {
-	return call[JsonRpcResponse[GetBlock]](c, ctx, "getBlock", slot, cfg)
+func (c *RpcClient) GetBlockWithConfig(ctx context.Context, slot uint64, cfg GetBlockConfig) (JsonRpcResponse[*GetBlock], error) {
+	return call[JsonRpcResponse[*GetBlock]](c, ctx, "getBlock", slot, cfg)
 }

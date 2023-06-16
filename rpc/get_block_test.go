@@ -22,11 +22,11 @@ func TestGetBlock(t *testing.T) {
 						33,
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetBlock]{
+				ExpectedValue: JsonRpcResponse[*GetBlock]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetBlock{
+					Result: &GetBlock{
 						ParentSlot:        32,
 						BlockHeight:       pointer.Get[int64](33),
 						BlockTime:         pointer.Get[int64](1631803928),
@@ -116,11 +116,11 @@ func TestGetBlock(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetBlock]{
+				ExpectedValue: JsonRpcResponse[*GetBlock]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetBlock{
+					Result: &GetBlock{
 						ParentSlot:        32,
 						BlockHeight:       pointer.Get[int64](33),
 						BlockTime:         pointer.Get[int64](1631803928),
@@ -176,11 +176,11 @@ func TestGetBlock(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetBlock]{
+				ExpectedValue: JsonRpcResponse[*GetBlock]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetBlock{
+					Result: &GetBlock{
 						ParentSlot:        32,
 						BlockHeight:       pointer.Get[int64](33),
 						BlockTime:         pointer.Get[int64](1631803928),
@@ -246,11 +246,11 @@ func TestGetBlock(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetBlock]{
+				ExpectedValue: JsonRpcResponse[*GetBlock]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetBlock{
+					Result: &GetBlock{
 						ParentSlot:        32,
 						BlockHeight:       pointer.Get[int64](33),
 						BlockTime:         pointer.Get[int64](1631803928),
@@ -286,11 +286,11 @@ func TestGetBlock(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetBlock]{
+				ExpectedValue: JsonRpcResponse[*GetBlock]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetBlock{
+					Result: &GetBlock{
 						ParentSlot:        32,
 						BlockHeight:       pointer.Get[int64](33),
 						BlockTime:         pointer.Get[int64](1631803928),
@@ -324,11 +324,11 @@ func TestGetBlock(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetBlock]{
+				ExpectedValue: JsonRpcResponse[*GetBlock]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetBlock{
+					Result: &GetBlock{
 						ParentSlot:        32,
 						BlockHeight:       pointer.Get[int64](33),
 						BlockTime:         pointer.Get[int64](1631803928),
@@ -362,11 +362,11 @@ func TestGetBlock(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetBlock]{
+				ExpectedValue: JsonRpcResponse[*GetBlock]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetBlock{
+					Result: &GetBlock{
 						ParentSlot:        32,
 						BlockHeight:       pointer.Get[int64](33),
 						BlockTime:         pointer.Get[int64](1631803928),
@@ -423,14 +423,14 @@ func TestGetBlock(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetBlock]{
+				ExpectedValue: JsonRpcResponse[*GetBlock]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error: &JsonRpcError{
 						Code:    -32015,
 						Message: "Transaction version (0) is not supported",
 					},
-					Result: GetBlock{},
+					Result: nil,
 				},
 				ExpectedError: nil,
 			},
@@ -449,11 +449,11 @@ func TestGetBlock(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetBlock]{
+				ExpectedValue: JsonRpcResponse[*GetBlock]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetBlock{
+					Result: &GetBlock{
 						ParentSlot:        46985,
 						BlockHeight:       pointer.Get[int64](46984),
 						BlockTime:         pointer.Get[int64](1663315273),
@@ -579,11 +579,11 @@ func TestGetBlock(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetBlock]{
+				ExpectedValue: JsonRpcResponse[*GetBlock]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetBlock{
+					Result: &GetBlock{
 						ParentSlot:        236,
 						BlockHeight:       pointer.Get[int64](237),
 						BlockTime:         pointer.Get[int64](1666899961),
