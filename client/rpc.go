@@ -74,3 +74,29 @@ func convertReturnData(d rpc.ReturnData) (ReturnData, error) {
 		Data:      data,
 	}, nil
 }
+
+type Reward struct {
+	Pubkey       common.PublicKey `json:"pubkey"`
+	Lamports     int64            `json:"lamports"`
+	PostBalances uint64           `json:"postBalance"`
+	RewardType   *rpc.RewardType  `json:"rewardType"`
+	Commission   *uint8           `json:"commission"`
+}
+
+func convertReward(r rpc.Reward) Reward {
+	return Reward{
+		Pubkey:       common.PublicKeyFromString(r.Pubkey),
+		Lamports:     r.Lamports,
+		PostBalances: r.PostBalances,
+		RewardType:   r.RewardType,
+		Commission:   r.Commission,
+	}
+}
+
+func convertRewards(rs []rpc.Reward) []Reward {
+	output := make([]Reward, 0, len(rs))
+	for _, r := range rs {
+		output = append(output, convertReward(r))
+	}
+	return output
+}

@@ -83,43 +83,15 @@ func convertTransaction(v *rpc.GetTransaction) (*Transaction, error) {
 		return nil, nil
 	}
 
-	// transaction
-	data, ok := v.Transaction.([]any)
-	if !ok {
-		return nil, fmt.Errorf("failed to cast raw response to []any")
-	}
-	if data[1] != string(rpc.TransactionEncodingBase64) {
-		return nil, fmt.Errorf("encoding mistmatch")
-	}
-	rawTx, err := base64.StdEncoding.DecodeString(data[0].(string))
-	if err != nil {
-		return nil, fmt.Errorf("failed to base64 decode data, err: %v", err)
-	}
-	tx, err := types.TransactionDeserialize(rawTx)
-	if err != nil {
-		return nil, fmt.Errorf("failed to deserialize transaction, err: %v", err)
-	}
-
 	// transaction meta
 	transactionMeta, err := convertTransactionMeta(v.Meta)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert transaction meta, err: %v", err)
 	}
 
-	// account keys
-	l := len(tx.Message.Accounts)
-	for _, alt := range tx.Message.AddressLookupTables {
-		l += (len(alt.WritableIndexes) + len(alt.ReadonlyIndexes))
-	}
-	accountKeys := make([]common.PublicKey, 0, l)
-	accountKeys = append(accountKeys, tx.Message.Accounts...)
-	if transactionMeta != nil {
-		for _, s := range transactionMeta.LoadedAddresses.Writable {
-			accountKeys = append(accountKeys, common.PublicKeyFromString(s))
-		}
-		for _, s := range transactionMeta.LoadedAddresses.Readonly {
-			accountKeys = append(accountKeys, common.PublicKeyFromString(s))
-		}
+	tx, accountKeys, err := parseBase64Tx(v.Transaction, transactionMeta)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse tx, err: %v", err)
 	}
 
 	return &Transaction{
@@ -193,4 +165,41 @@ func convertTransactionMeta(meta *rpc.TransactionMeta) (*TransactionMeta, error)
 		ReturnData:           returnData,
 		ComputeUnitsConsumed: meta.ComputeUnitsConsumed,
 	}, nil
+}
+
+func parseBase64Tx(raw any, transactionMeta *TransactionMeta) (types.Transaction, []common.PublicKey, error) {
+	// transaction
+	data, ok := raw.([]any)
+	if !ok {
+		return types.Transaction{}, nil, fmt.Errorf("failed to cast raw response to []any")
+	}
+	if data[1] != string(rpc.TransactionEncodingBase64) {
+		return types.Transaction{}, nil, fmt.Errorf("encoding mistmatch")
+	}
+	rawTx, err := base64.StdEncoding.DecodeString(data[0].(string))
+	if err != nil {
+		return types.Transaction{}, nil, fmt.Errorf("failed to base64 decode data, err: %v", err)
+	}
+	tx, err := types.TransactionDeserialize(rawTx)
+	if err != nil {
+		return types.Transaction{}, nil, fmt.Errorf("failed to deserialize transaction, err: %v", err)
+	}
+
+	// account keys
+	l := len(tx.Message.Accounts)
+	for _, alt := range tx.Message.AddressLookupTables {
+		l += (len(alt.WritableIndexes) + len(alt.ReadonlyIndexes))
+	}
+	accountKeys := make([]common.PublicKey, 0, l)
+	accountKeys = append(accountKeys, tx.Message.Accounts...)
+	if transactionMeta != nil {
+		for _, s := range transactionMeta.LoadedAddresses.Writable {
+			accountKeys = append(accountKeys, common.PublicKeyFromString(s))
+		}
+		for _, s := range transactionMeta.LoadedAddresses.Readonly {
+			accountKeys = append(accountKeys, common.PublicKeyFromString(s))
+		}
+	}
+
+	return tx, accountKeys, nil
 }
