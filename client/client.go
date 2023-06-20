@@ -109,12 +109,3 @@ func checkJsonRpcResponse[T any](res rpc.JsonRpcResponse[T], err error) error {
 	}
 	return nil
 }
-
-// helper function
-func convertToIntSlice(input []any) ([]int, error) {
-	output := make([]int, 0, len(input))
-	for _, v := range input {
-		output = append(output, int(v.(float64)))
-	}
-	return output, nil
-}

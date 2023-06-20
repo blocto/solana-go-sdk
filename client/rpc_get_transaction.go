@@ -117,12 +117,17 @@ func convertTransactionMeta(meta *rpc.TransactionMeta) (*TransactionMeta, error)
 				return nil, fmt.Errorf("failed to convert inner instruction type. value: %v", innerInstruction)
 			}
 
-			accounts, err := convertToIntSlice(parsedInstruction["accounts"].([]any))
-			if err != nil {
-				return nil, fmt.Errorf("failed to cast instructions accounts, err: %v", err)
+			rawAccounts, ok := parsedInstruction["accounts"].([]any)
+			if !ok {
+				return nil, fmt.Errorf("failed to parse instruction accounts")
+			}
+			accounts := make([]int, 0, len(rawAccounts))
+			for _, v := range rawAccounts {
+				accounts = append(accounts, int(v.(float64)))
 			}
 
 			var data []byte
+			var err error
 			if dataString := parsedInstruction["data"].(string); len(dataString) > 0 {
 				data, err = base58.Decode(dataString)
 				if err != nil {
