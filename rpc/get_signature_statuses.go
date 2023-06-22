@@ -23,11 +23,11 @@ type GetSignatureStatusesConfig struct {
 }
 
 // GetSignatureStatuses returns the SOL balance
-func (c *RpcClient) GetSignatureStatuses(ctx context.Context, signatures []string) (JsonRpcResponse[GetSignatureStatuses], error) {
-	return call[JsonRpcResponse[GetSignatureStatuses]](c, ctx, "getSignatureStatuses", signatures)
+func (c *RpcClient) GetSignatureStatuses(ctx context.Context, signatures []string) (JsonRpcResponse[ValueWithContext[SignatureStatuses]], error) {
+	return call[JsonRpcResponse[ValueWithContext[SignatureStatuses]]](c, ctx, "getSignatureStatuses", signatures)
 }
 
 // GetSignatureStatusesWithConfig returns the SOL balance
-func (c *RpcClient) GetSignatureStatusesWithConfig(ctx context.Context, signatures []string, cfg GetSignatureStatusesConfig) (JsonRpcResponse[GetSignatureStatuses], error) {
-	return call[JsonRpcResponse[GetSignatureStatuses]](c, ctx, "getSignatureStatuses", signatures, cfg)
+func (c *RpcClient) GetSignatureStatusesWithConfig(ctx context.Context, signatures []string, cfg GetSignatureStatusesConfig) (JsonRpcResponse[ValueWithContext[SignatureStatuses]], error) {
+	return call[JsonRpcResponse[ValueWithContext[SignatureStatuses]]](c, ctx, "getSignatureStatuses", signatures, cfg)
 }

@@ -23,11 +23,11 @@ func TestGetSignatureStatuses(t *testing.T) {
 						[]string{"3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg"},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetSignatureStatuses]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[SignatureStatuses]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetSignatureStatuses{
+					Result: ValueWithContext[SignatureStatuses]{
 						Context: Context{
 							Slot: 86136583,
 						},
@@ -57,11 +57,11 @@ func TestGetSignatureStatuses(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetSignatureStatuses]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[SignatureStatuses]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetSignatureStatuses{
+					Result: ValueWithContext[SignatureStatuses]{
 						Context: Context{
 							Slot: 86136583,
 						},
@@ -97,11 +97,11 @@ func TestGetSignatureStatuses(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetSignatureStatuses]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[SignatureStatuses]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetSignatureStatuses{
+					Result: ValueWithContext[SignatureStatuses]{
 						Context: Context{
 							Slot: 86136583,
 						},
@@ -131,11 +131,11 @@ func TestGetSignatureStatuses(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetSignatureStatuses]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[SignatureStatuses]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetSignatureStatuses{
+					Result: ValueWithContext[SignatureStatuses]{
 						Context: Context{
 							Slot: 86143308,
 						},
@@ -172,11 +172,11 @@ func TestGetSignatureStatuses(t *testing.T) {
 						},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetSignatureStatuses]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[SignatureStatuses]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetSignatureStatuses{
+					Result: ValueWithContext[SignatureStatuses]{
 						Context: Context{
 							Slot: 86138946,
 						},
@@ -198,11 +198,11 @@ func TestGetSignatureStatuses(t *testing.T) {
 						[]string{"3E6jD48LnMeNDs1QTXXunXGaqYybZKHXYdriDwqXGJbCXzVkMZNexuiGnTtUSba7PcmbKcsxKsAcBKLSmqjUKDRg", "4jSRBMUh8HvfPkjZt8enXBFvKykhGdDW5uqtXy8ys52rqeEQuG8Y9hyRSjsSwjEkYYQht7aqEoLwJnuxv9YD99EQ"},
 					)
 				},
-				ExpectedValue: JsonRpcResponse[GetSignatureStatuses]{
+				ExpectedValue: JsonRpcResponse[ValueWithContext[SignatureStatuses]]{
 					JsonRpc: "2.0",
 					Id:      1,
 					Error:   nil,
-					Result: GetSignatureStatuses{
+					Result: ValueWithContext[SignatureStatuses]{
 						Context: Context{
 							Slot: 86142683,
 						},
