@@ -64,42 +64,6 @@ func (c *Client) QuickSendTransaction(ctx context.Context, param QuickSendTransa
 	return res.Result, nil
 }
 
-func (c *Client) GetSignatureStatus(ctx context.Context, signature string) (*rpc.SignatureStatus, error) {
-	res, err := c.RpcClient.GetSignatureStatuses(ctx, []string{signature})
-	err = checkJsonRpcResponse(res, err)
-	if err != nil {
-		return nil, err
-	}
-	return res.Result.Value[0], nil
-}
-
-func (c *Client) GetSignatureStatusWithConfig(ctx context.Context, signature string, cfg rpc.GetSignatureStatusesConfig) (*rpc.SignatureStatus, error) {
-	res, err := c.RpcClient.GetSignatureStatusesWithConfig(ctx, []string{signature}, cfg)
-	err = checkJsonRpcResponse(res, err)
-	if err != nil {
-		return nil, err
-	}
-	return res.Result.Value[0], nil
-}
-
-func (c *Client) GetSignatureStatuses(ctx context.Context, signatures []string) (rpc.SignatureStatuses, error) {
-	res, err := c.RpcClient.GetSignatureStatuses(ctx, signatures)
-	err = checkJsonRpcResponse(res, err)
-	if err != nil {
-		return nil, err
-	}
-	return res.Result.Value, nil
-}
-
-func (c *Client) GetSignatureStatusesWithConfig(ctx context.Context, signatures []string, cfg rpc.GetSignatureStatusesConfig) (rpc.SignatureStatuses, error) {
-	res, err := c.RpcClient.GetSignatureStatusesWithConfig(ctx, signatures, cfg)
-	err = checkJsonRpcResponse(res, err)
-	if err != nil {
-		return nil, err
-	}
-	return res.Result.Value, nil
-}
-
 func checkJsonRpcResponse[T any](res rpc.JsonRpcResponse[T], err error) error {
 	if err != nil {
 		return err
