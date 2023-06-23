@@ -25,6 +25,9 @@ func main() {
 	mint := types.NewAccount()
 	fmt.Printf("NFT: %v\n", mint.PublicKey.ToBase58())
 
+	collection := types.NewAccount()
+	fmt.Printf("collection: %v\n", collection.PublicKey.ToBase58())
+
 	ata, _, err := common.FindAssociatedTokenAddress(feePayer.PublicKey, mint.PublicKey)
 	if err != nil {
 		log.Fatalf("failed to find a valid ata, err: %v", err)
@@ -35,7 +38,6 @@ func main() {
 		log.Fatalf("failed to find a valid token metadata, err: %v", err)
 
 	}
-
 	tokenMasterEditionPubkey, err := token_metadata.GetMasterEdition(mint.PublicKey)
 	if err != nil {
 		log.Fatalf("failed to find a valid master edition, err: %v", err)
@@ -65,11 +67,12 @@ func main() {
 					Space:    token.MintAccountSize,
 				}),
 				token.InitializeMint(token.InitializeMintParam{
-					Decimals: 0,
-					Mint:     mint.PublicKey,
-					MintAuth: feePayer.PublicKey,
+					Decimals:   0,
+					Mint:       mint.PublicKey,
+					MintAuth:   feePayer.PublicKey,
+					FreezeAuth: &feePayer.PublicKey,
 				}),
-				token_metadata.CreateMetadataAccount(token_metadata.CreateMetadataAccountParam{
+				token_metadata.CreateMetadataAccountV3(token_metadata.CreateMetadataAccountV3Param{
 					Metadata:                tokenMetadataPubkey,
 					Mint:                    mint.PublicKey,
 					MintAuthority:           feePayer.PublicKey,
@@ -77,7 +80,7 @@ func main() {
 					UpdateAuthority:         feePayer.PublicKey,
 					UpdateAuthorityIsSigner: true,
 					IsMutable:               true,
-					MintData: token_metadata.Data{
+					Data: token_metadata.DataV2{
 						Name:                 "Fake SMS #1355",
 						Symbol:               "FSMB",
 						Uri:                  "https://34c7ef24f4v2aejh75xhxy5z6ars4xv47gpsdrei6fiowptk2nqq.arweave.net/3wXyF1wvK6ARJ_9ue-O58CMuXrz5nyHEiPFQ6z5q02E",
@@ -89,9 +92,15 @@ func main() {
 								Share:    100,
 							},
 						},
+						Collection: &token_metadata.Collection{
+							Verified: false,
+							Key:      collection.PublicKey,
+						},
+						Uses: nil,
 					},
+					CollectionDetails: nil,
 				}),
-				associated_token_account.Create(associated_token_account.CreateParam{
+				associated_token_account.CreateAssociatedTokenAccount(associated_token_account.CreateAssociatedTokenAccountParam{
 					Funder:                 feePayer.PublicKey,
 					Owner:                  feePayer.PublicKey,
 					Mint:                   mint.PublicKey,
@@ -103,7 +112,7 @@ func main() {
 					Auth:   feePayer.PublicKey,
 					Amount: 1,
 				}),
-				token_metadata.CreateMasterEdition(token_metadata.CreateMasterEditionParam{
+				token_metadata.CreateMasterEditionV3(token_metadata.CreateMasterEditionParam{
 					Edition:         tokenMasterEditionPubkey,
 					Mint:            mint.PublicKey,
 					UpdateAuthority: feePayer.PublicKey,
@@ -124,5 +133,5 @@ func main() {
 		log.Fatalf("failed to send tx, err: %v", err)
 	}
 
-	fmt.Println(sig)
+	fmt.Println("txid:", sig)
 }

@@ -38,6 +38,32 @@ const (
 	InstructionFreezeDelegatedAccount
 	InstructionThawDelegatedAccount
 	InstructionRemoveCreatorVerification
+	InstructionBurnNft
+	InstructionVerifySizedCollectionItem
+	InstructionUnverifySizedCollectionItem
+	InstructionSetAndVerifySizedCollectionItem
+	InstructionCreateMetadataAccountV3
+	InstructionSetCollectionSize
+	InstructionSetTokenStandard
+	InstructionBubblegumSetCollectionSize
+	InstructionBurnEditionNft
+	InstructionCreateEscrowAccount
+	InstructionCloseEscrowAccount
+	InstructionTransferOutOfEscrow
+	InstructionBurn
+	InstructionCreate
+	InstructionMint
+	InstructionDelegate
+	InstructionRevoke
+	InstructionLock
+	InstructionUnlock
+	InstructionMigrate
+	InstructionTransfer
+	InstructionUpdate
+	InstructionUse
+	InstructionVerify
+	InstructionUnverify
+	InstructionCollect
 )
 
 type CreateMetadataAccountParam struct {
@@ -488,6 +514,78 @@ func CreateMasterEditionV3(param CreateMasterEditionParam) types.Instruction {
 			{
 				PubKey:     common.TokenProgramID,
 				IsSigner:   false,
+				IsWritable: false,
+			},
+			{
+				PubKey:     common.SystemProgramID,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+			{
+				PubKey:     common.SysVarRentPubkey,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+		},
+		Data: data,
+	}
+}
+
+type CreateMetadataAccountV3Param struct {
+	Metadata                common.PublicKey
+	Mint                    common.PublicKey
+	MintAuthority           common.PublicKey
+	Payer                   common.PublicKey
+	UpdateAuthority         common.PublicKey
+	UpdateAuthorityIsSigner bool
+	IsMutable               bool
+	Data                    DataV2
+	CollectionDetails       *CollectionDetails
+}
+
+func CreateMetadataAccountV3(param CreateMetadataAccountV3Param) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction       Instruction
+		Data              DataV2
+		IsMutable         bool
+		CollectionDetails *CollectionDetails
+	}{
+		Instruction:       InstructionCreateMetadataAccountV3,
+		Data:              param.Data,
+		IsMutable:         param.IsMutable,
+		CollectionDetails: param.CollectionDetails,
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.MetaplexTokenMetaProgramID,
+		Accounts: []types.AccountMeta{
+			{
+				PubKey:     param.Metadata,
+				IsSigner:   false,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.Mint,
+				IsSigner:   false,
+				IsWritable: false,
+			},
+			{
+				PubKey:     param.MintAuthority,
+				IsSigner:   true,
+				IsWritable: false,
+			},
+			{
+				PubKey:     param.Payer,
+				IsSigner:   true,
+				IsWritable: true,
+			},
+			{
+				PubKey:     param.UpdateAuthority,
+				IsSigner:   param.UpdateAuthorityIsSigner,
 				IsWritable: false,
 			},
 			{
