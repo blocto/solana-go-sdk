@@ -3,7 +3,7 @@ package nsprog
 import (
 	"crypto/sha256"
 
-	"github.com/portto/solana-go-sdk/common"
+	"github.com/blocto/solana-go-sdk/common"
 )
 
 var TwitterVerificationAuthority = common.PublicKeyFromString("FvPH7PrVrLGKPfqaf3xJodFTjZriqrAXXLTVWEorTFBi")

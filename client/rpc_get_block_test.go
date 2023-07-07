@@ -5,11 +5,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/internal/client_test"
-	"github.com/portto/solana-go-sdk/pkg/pointer"
-	"github.com/portto/solana-go-sdk/rpc"
-	"github.com/portto/solana-go-sdk/types"
+	"github.com/blocto/solana-go-sdk/common"
+	"github.com/blocto/solana-go-sdk/internal/client_test"
+	"github.com/blocto/solana-go-sdk/pkg/pointer"
+	"github.com/blocto/solana-go-sdk/rpc"
+	"github.com/blocto/solana-go-sdk/types"
 )
 
 func TestClient_BlockWithConfig(t *testing.T) {

@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/address_lookup_table"
-	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/blocto/solana-go-sdk/client"
+	"github.com/blocto/solana-go-sdk/common"
+	"github.com/blocto/solana-go-sdk/program/address_lookup_table"
+	"github.com/blocto/solana-go-sdk/rpc"
 )
 
 func main() {

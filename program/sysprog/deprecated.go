@@ -1,2 +1,2 @@
-// Deprecated: please use github.com/portto/solana-go-sdk/program/system
+// Deprecated: please use github.com/blocto/solana-go-sdk/program/system
 package sysprog

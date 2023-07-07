@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/program/token"
-	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/blocto/solana-go-sdk/client"
+	"github.com/blocto/solana-go-sdk/common"
+	"github.com/blocto/solana-go-sdk/program/token"
+	"github.com/blocto/solana-go-sdk/rpc"
 )
 
 var mintPubkey = common.PublicKeyFromString("F6tecPzBMF47yJ2EN6j2aGtE68yR5jehXcZYVZa6ZETo")

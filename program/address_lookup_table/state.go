@@ -3,7 +3,7 @@ package address_lookup_table
 import (
 	"encoding/binary"
 
-	"github.com/portto/solana-go-sdk/common"
+	"github.com/blocto/solana-go-sdk/common"
 )
 
 const LOOKUP_TABLE_MAX_ADDRESSES uint = 256

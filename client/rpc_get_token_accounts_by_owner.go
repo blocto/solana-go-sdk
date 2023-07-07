@@ -3,8 +3,8 @@ package client
 import (
 	"context"
 
-	"github.com/portto/solana-go-sdk/program/token"
-	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/blocto/solana-go-sdk/program/token"
+	"github.com/blocto/solana-go-sdk/rpc"
 )
 
 func (c *Client) GetTokenAccountsByOwnerByMint(ctx context.Context, owner, mintAddr string) ([]token.TokenAccount, error) {

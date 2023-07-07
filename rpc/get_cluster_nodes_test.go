@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/portto/solana-go-sdk/internal/client_test"
-	"github.com/portto/solana-go-sdk/pkg/pointer"
+	"github.com/blocto/solana-go-sdk/internal/client_test"
+	"github.com/blocto/solana-go-sdk/pkg/pointer"
 )
 
 func TestGetClusterNodes(t *testing.T) {

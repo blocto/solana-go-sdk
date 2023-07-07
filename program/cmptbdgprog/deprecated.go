@@ -1,2 +1,2 @@
-// Deprecated: please use github.com/portto/solana-go-sdk/program/compute_budget
+// Deprecated: please use github.com/blocto/solana-go-sdk/program/compute_budget
 package cmptbdgprog

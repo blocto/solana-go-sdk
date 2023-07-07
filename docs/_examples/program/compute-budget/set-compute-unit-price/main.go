@@ -4,11 +4,11 @@ import (
 	"context"
 	"log"
 
-	"github.com/portto/solana-go-sdk/client"
-	"github.com/portto/solana-go-sdk/program/compute_budget"
-	"github.com/portto/solana-go-sdk/program/memo"
-	"github.com/portto/solana-go-sdk/rpc"
-	"github.com/portto/solana-go-sdk/types"
+	"github.com/blocto/solana-go-sdk/client"
+	"github.com/blocto/solana-go-sdk/program/compute_budget"
+	"github.com/blocto/solana-go-sdk/program/memo"
+	"github.com/blocto/solana-go-sdk/rpc"
+	"github.com/blocto/solana-go-sdk/types"
 )
 
 // FUarP2p5EnxD66vVDL4PWRoWMzA56ZVHG24hpEDFShEz

@@ -3,7 +3,7 @@ package client
 import (
 	"context"
 
-	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/blocto/solana-go-sdk/rpc"
 )
 
 // GetGenesisHash returns the genesis hash

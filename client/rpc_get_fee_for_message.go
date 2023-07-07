@@ -5,8 +5,8 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/portto/solana-go-sdk/rpc"
-	"github.com/portto/solana-go-sdk/types"
+	"github.com/blocto/solana-go-sdk/rpc"
+	"github.com/blocto/solana-go-sdk/types"
 )
 
 type GetFeeForMessageConfig struct {

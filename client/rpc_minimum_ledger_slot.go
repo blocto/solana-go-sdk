@@ -3,7 +3,7 @@ package client
 import (
 	"context"
 
-	"github.com/portto/solana-go-sdk/rpc"
+	"github.com/blocto/solana-go-sdk/rpc"
 )
 
 // MinimumLedgerSlot returns the lowest slot that the node has information about in its ledger.

@@ -3,7 +3,7 @@ package client
 import (
 	"context"
 
-	"github.com/portto/solana-go-sdk/program/token"
+	"github.com/blocto/solana-go-sdk/program/token"
 )
 
 func (c *Client) GetTokenAccount(ctx context.Context, base58Addr string) (token.TokenAccount, error) {

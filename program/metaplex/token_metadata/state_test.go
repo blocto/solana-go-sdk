@@ -3,8 +3,8 @@ package token_metadata
 import (
 	"testing"
 
-	"github.com/portto/solana-go-sdk/common"
-	"github.com/portto/solana-go-sdk/pkg/pointer"
+	"github.com/blocto/solana-go-sdk/common"
+	"github.com/blocto/solana-go-sdk/pkg/pointer"
 	"github.com/stretchr/testify/assert"
 )
 
