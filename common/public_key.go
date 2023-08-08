@@ -70,6 +70,15 @@ func (p *PublicKey) MarshalJSON() ([]byte, error) {
 	return json.Marshal(p.ToBase58())
 }
 
+func (p *PublicKey) UnmarshalJSON(b []byte) error {
+	b, err := base58.Decode(string(b))
+	if err != nil {
+		return err
+	}
+
+	return json.Unmarshal(b, p)
+}
+
 func IsOnCurve(p PublicKey) bool {
 	_, err := new(edwards25519.Point).SetBytes(p.Bytes())
 	return err == nil
