@@ -25,16 +25,19 @@ func TestClient_GetTokenAccountsByOwnerByMint(t *testing.T) {
 						"4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3",
 					)
 				},
-				ExpectedValue: []token.TokenAccount{
+				ExpectedValue: []TokenAccount{
 					{
-						Mint:            common.PublicKeyFromString("4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3"),
-						Owner:           common.PublicKeyFromString("27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ"),
-						Amount:          9000000000,
-						Delegate:        nil,
-						State:           token.TokenAccountStateInitialized,
-						IsNative:        nil,
-						DelegatedAmount: 0,
-						CloseAuthority:  nil,
+						TokenAccount: token.TokenAccount{
+							Mint:            common.PublicKeyFromString("4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3"),
+							Owner:           common.PublicKeyFromString("27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ"),
+							Amount:          9000000000,
+							Delegate:        nil,
+							State:           token.TokenAccountStateInitialized,
+							IsNative:        nil,
+							DelegatedAmount: 0,
+							CloseAuthority:  nil,
+						},
+						PublicKey: common.PublicKeyFromString("AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ"),
 					},
 				},
 				ExpectedError: nil,
@@ -58,16 +61,19 @@ func TestClient_GetTokenAccountsByOwnerByProgram(t *testing.T) {
 						common.TokenProgramID.ToBase58(),
 					)
 				},
-				ExpectedValue: []token.TokenAccount{
+				ExpectedValue: []TokenAccount{
 					{
-						Mint:            common.PublicKeyFromString("4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3"),
-						Owner:           common.PublicKeyFromString("27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ"),
-						Amount:          9000000000,
-						Delegate:        nil,
-						State:           token.TokenAccountStateInitialized,
-						IsNative:        nil,
-						DelegatedAmount: 0,
-						CloseAuthority:  nil,
+						TokenAccount: token.TokenAccount{
+							Mint:            common.PublicKeyFromString("4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3"),
+							Owner:           common.PublicKeyFromString("27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ"),
+							Amount:          9000000000,
+							Delegate:        nil,
+							State:           token.TokenAccountStateInitialized,
+							IsNative:        nil,
+							DelegatedAmount: 0,
+							CloseAuthority:  nil,
+						},
+						PublicKey: common.PublicKeyFromString("AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ"),
 					},
 				},
 				ExpectedError: nil,
@@ -91,21 +97,24 @@ func TestClient_GetTokenAccountsByOwnerWithContextByMint(t *testing.T) {
 						"4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3",
 					)
 				},
-				ExpectedValue: rpc.ValueWithContext[[]token.TokenAccount]{
+				ExpectedValue: rpc.ValueWithContext[[]TokenAccount]{
 					Context: rpc.Context{
 						ApiVersion: "1.14.17",
 						Slot:       219416878,
 					},
-					Value: []token.TokenAccount{
+					Value: []TokenAccount{
 						{
-							Mint:            common.PublicKeyFromString("4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3"),
-							Owner:           common.PublicKeyFromString("27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ"),
-							Amount:          9000000000,
-							Delegate:        nil,
-							State:           token.TokenAccountStateInitialized,
-							IsNative:        nil,
-							DelegatedAmount: 0,
-							CloseAuthority:  nil,
+							TokenAccount: token.TokenAccount{
+								Mint:            common.PublicKeyFromString("4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3"),
+								Owner:           common.PublicKeyFromString("27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ"),
+								Amount:          9000000000,
+								Delegate:        nil,
+								State:           token.TokenAccountStateInitialized,
+								IsNative:        nil,
+								DelegatedAmount: 0,
+								CloseAuthority:  nil,
+							},
+							PublicKey: common.PublicKeyFromString("AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ"),
 						},
 					},
 				},
@@ -130,21 +139,24 @@ func TestClient_GetTokenAccountsByOwnerWithContextByProgram(t *testing.T) {
 						common.TokenProgramID.ToBase58(),
 					)
 				},
-				ExpectedValue: rpc.ValueWithContext[[]token.TokenAccount]{
+				ExpectedValue: rpc.ValueWithContext[[]TokenAccount]{
 					Context: rpc.Context{
 						ApiVersion: "1.14.17",
 						Slot:       219416878,
 					},
-					Value: []token.TokenAccount{
+					Value: []TokenAccount{
 						{
-							Mint:            common.PublicKeyFromString("4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3"),
-							Owner:           common.PublicKeyFromString("27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ"),
-							Amount:          9000000000,
-							Delegate:        nil,
-							State:           token.TokenAccountStateInitialized,
-							IsNative:        nil,
-							DelegatedAmount: 0,
-							CloseAuthority:  nil,
+							TokenAccount: token.TokenAccount{
+								Mint:            common.PublicKeyFromString("4UyUTBdhPkFiu7ZE8zfxnE6hbbzf8LKo1uR5wSi5MYE3"),
+								Owner:           common.PublicKeyFromString("27kVX7JpPZ1bsrSckbR76mV6GeRqtrjoddubfg2zBpHZ"),
+								Amount:          9000000000,
+								Delegate:        nil,
+								State:           token.TokenAccountStateInitialized,
+								IsNative:        nil,
+								DelegatedAmount: 0,
+								CloseAuthority:  nil,
+							},
+							PublicKey: common.PublicKeyFromString("AyHWro8zumyZN68Mhuk6mhNUUQ2VX5qux2pMD4HnN3aJ"),
 						},
 					},
 				},

@@ -3,11 +3,17 @@ package client
 import (
 	"context"
 
+	"github.com/blocto/solana-go-sdk/common"
 	"github.com/blocto/solana-go-sdk/program/token"
 	"github.com/blocto/solana-go-sdk/rpc"
 )
 
-func (c *Client) GetTokenAccountsByOwnerByMint(ctx context.Context, owner, mintAddr string) ([]token.TokenAccount, error) {
+type TokenAccount struct {
+	token.TokenAccount
+	PublicKey common.PublicKey
+}
+
+func (c *Client) GetTokenAccountsByOwnerByMint(ctx context.Context, owner, mintAddr string) ([]TokenAccount, error) {
 	return process(
 		func() (rpc.JsonRpcResponse[rpc.ValueWithContext[rpc.GetProgramAccounts]], error) {
 			return c.RpcClient.GetTokenAccountsByOwnerWithConfig(
@@ -25,7 +31,7 @@ func (c *Client) GetTokenAccountsByOwnerByMint(ctx context.Context, owner, mintA
 	)
 }
 
-func (c *Client) GetTokenAccountsByOwnerByProgram(ctx context.Context, owner, programId string) ([]token.TokenAccount, error) {
+func (c *Client) GetTokenAccountsByOwnerByProgram(ctx context.Context, owner, programId string) ([]TokenAccount, error) {
 	return process(
 		func() (rpc.JsonRpcResponse[rpc.ValueWithContext[rpc.GetProgramAccounts]], error) {
 			return c.RpcClient.GetTokenAccountsByOwnerWithConfig(
@@ -43,7 +49,7 @@ func (c *Client) GetTokenAccountsByOwnerByProgram(ctx context.Context, owner, pr
 	)
 }
 
-func (c *Client) GetTokenAccountsByOwnerWithContextByMint(ctx context.Context, owner, mintAddr string) (rpc.ValueWithContext[[]token.TokenAccount], error) {
+func (c *Client) GetTokenAccountsByOwnerWithContextByMint(ctx context.Context, owner, mintAddr string) (rpc.ValueWithContext[[]TokenAccount], error) {
 	return process(
 		func() (rpc.JsonRpcResponse[rpc.ValueWithContext[rpc.GetProgramAccounts]], error) {
 			return c.RpcClient.GetTokenAccountsByOwnerWithConfig(
@@ -61,7 +67,7 @@ func (c *Client) GetTokenAccountsByOwnerWithContextByMint(ctx context.Context, o
 	)
 }
 
-func (c *Client) GetTokenAccountsByOwnerWithContextByProgram(ctx context.Context, owner, programId string) (rpc.ValueWithContext[[]token.TokenAccount], error) {
+func (c *Client) GetTokenAccountsByOwnerWithContextByProgram(ctx context.Context, owner, programId string) (rpc.ValueWithContext[[]TokenAccount], error) {
 	return process(
 		func() (rpc.JsonRpcResponse[rpc.ValueWithContext[rpc.GetProgramAccounts]], error) {
 			return c.RpcClient.GetTokenAccountsByOwnerWithConfig(
@@ -79,8 +85,8 @@ func (c *Client) GetTokenAccountsByOwnerWithContextByProgram(ctx context.Context
 	)
 }
 
-func convertGetTokenAccountsByOwner(v rpc.ValueWithContext[rpc.GetProgramAccounts]) ([]token.TokenAccount, error) {
-	tokenAccounts := make([]token.TokenAccount, 0, len(v.Value))
+func convertGetTokenAccountsByOwner(v rpc.ValueWithContext[rpc.GetProgramAccounts]) ([]TokenAccount, error) {
+	tokenAccounts := make([]TokenAccount, 0, len(v.Value))
 	for _, v := range v.Value {
 		accountInfo, err := convertAccountInfo(v.Account)
 		if err != nil {
@@ -90,17 +96,20 @@ func convertGetTokenAccountsByOwner(v rpc.ValueWithContext[rpc.GetProgramAccount
 		if err != nil {
 			return nil, err
 		}
-		tokenAccounts = append(tokenAccounts, tokenAccount)
+		tokenAccounts = append(tokenAccounts, TokenAccount{
+			TokenAccount: tokenAccount,
+			PublicKey:    common.PublicKeyFromString(v.Pubkey),
+		})
 	}
 	return tokenAccounts, nil
 }
 
-func convertGetTokenAccountsByOwnerAndContext(v rpc.ValueWithContext[rpc.GetProgramAccounts]) (rpc.ValueWithContext[[]token.TokenAccount], error) {
+func convertGetTokenAccountsByOwnerAndContext(v rpc.ValueWithContext[rpc.GetProgramAccounts]) (rpc.ValueWithContext[[]TokenAccount], error) {
 	tokenAccounts, err := convertGetTokenAccountsByOwner(v)
 	if err != nil {
-		return rpc.ValueWithContext[[]token.TokenAccount]{}, err
+		return rpc.ValueWithContext[[]TokenAccount]{}, err
 	}
-	return rpc.ValueWithContext[[]token.TokenAccount]{
+	return rpc.ValueWithContext[[]TokenAccount]{
 		Context: v.Context,
 		Value:   tokenAccounts,
 	}, nil
