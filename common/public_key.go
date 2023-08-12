@@ -2,7 +2,6 @@ package common
 
 import (
 	"crypto/sha256"
-	"encoding/json"
 	"errors"
 
 	"filippo.io/edwards25519"
@@ -64,19 +63,6 @@ func (p PublicKey) ToBase58() string {
 
 func (p PublicKey) Bytes() []byte {
 	return p[:]
-}
-
-func (p *PublicKey) MarshalJSON() ([]byte, error) {
-	return json.Marshal(p.ToBase58())
-}
-
-func (p *PublicKey) UnmarshalJSON(b []byte) error {
-	b, err := base58.Decode(string(b))
-	if err != nil {
-		return err
-	}
-
-	return json.Unmarshal(b, p)
 }
 
 func IsOnCurve(p PublicKey) bool {
