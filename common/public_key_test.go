@@ -1,9 +1,12 @@
 package common
 
 import (
+	"encoding/json"
 	"errors"
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPublicKeyFromBytes(t *testing.T) {
@@ -237,4 +240,31 @@ func TestIsOnCurve(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestPublicKey_JSON(t *testing.T) {
+	type A struct {
+		P PublicKey `json:"pubkey"`
+	}
+
+	a1 := A{
+		P: PublicKeyFromString("EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"),
+	}
+	b, err := json.Marshal(a1)
+	assert.Nil(t, err)
+	assert.Equal(t, `{"pubkey":"EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx7"}`, string(b))
+
+	var a2 A
+	err = json.Unmarshal(b, &a2)
+	assert.Nil(t, err)
+
+	assert.Equal(t, a1, a2)
+
+	var a3 A
+	err = json.Unmarshal([]byte(`{"pubkey":"0"}`), &a3)
+	assert.Equal(t, err, errors.New("invalid base58 digit ('0')"))
+
+	var a4 A
+	err = json.Unmarshal([]byte(`{"pubkey":"EvN4kgKmCmYzdbd5kL8Q8YgkUW5RoqMTpBczrfLExtx123"}`), &a4)
+	assert.Equal(t, err, errors.New("a valid pubkey should be a 32-byte array. got: 34"))
 }

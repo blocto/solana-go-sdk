@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"filippo.io/edwards25519"
 	"github.com/mr-tron/base58"
@@ -66,8 +67,28 @@ func (p PublicKey) Bytes() []byte {
 	return p[:]
 }
 
-func (p *PublicKey) MarshalJSON() ([]byte, error) {
+func (p PublicKey) MarshalJSON() ([]byte, error) {
 	return json.Marshal(p.ToBase58())
+}
+
+func (p *PublicKey) UnmarshalJSON(data []byte) error {
+	var s string
+	err := json.Unmarshal(data, &s)
+	if err != nil {
+		return err
+	}
+
+	b, err := base58.Decode(s)
+	if err != nil {
+		return err
+	}
+	if len(b) != 32 {
+		return fmt.Errorf("a valid pubkey should be a 32-byte array. got: %v", len(b))
+	}
+
+	*p = PublicKeyFromString(s)
+
+	return nil
 }
 
 func IsOnCurve(p PublicKey) bool {
