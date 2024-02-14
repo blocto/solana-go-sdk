@@ -81,6 +81,15 @@ export default defineUserConfig<DefaultThemeOptions>({
                   { text: "Data", link: "/programs/101/data" },
                 ],
               },
+              {
+                text: "Stake",
+                children: [
+                  { text: "Initialize Account", link: "/programs/stake/initialize-account" },
+                  { text: "Delegate (stake)", link: "/programs/stake/delegate" },
+                  { text: "Deactivate (unstake)", link: "/programs/stake/deactivate" },
+                  { text: "Withdraw", link: "/programs/stake/withdraw" },
+                ],
+              },
             ],
           },
         ],
