@@ -1,0 +1,1 @@
+const e={key:"v-254605e9",path:"/programs/stake/deactivate.html",title:"Deactivate (unstake)",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1707888442e3,contributors:[{name:"yihau",email:"yihau.chen@icloud.com",commits:1}]},filePathRelative:"programs/stake/deactivate.md"};export{e as data};

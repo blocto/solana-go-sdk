@@ -1,0 +1,1 @@
+const e={key:"v-5f2dec78",path:"/programs/stake/delegate.html",title:"Delegate (stake)",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1707888442e3,contributors:[{name:"yihau",email:"yihau.chen@icloud.com",commits:1}]},filePathRelative:"programs/stake/delegate.md"};export{e as data};

@@ -1,0 +1,1 @@
+const t={key:"v-10776a13",path:"/programs/stake/withdraw.html",title:"Withdraw",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1707888442e3,contributors:[{name:"yihau",email:"yihau.chen@icloud.com",commits:1}]},filePathRelative:"programs/stake/withdraw.md"};export{t as data};
