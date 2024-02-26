@@ -135,6 +135,7 @@ func CreateMetadataAccount(param CreateMetadataAccountParam) types.Instruction {
 	}
 }
 
+// Deprecated: please use UpdateMetadataAccountV2
 type UpdateMetadataAccountParam struct {
 	MetadataAccount     common.PublicKey
 	UpdateAuthority     common.PublicKey
@@ -143,6 +144,7 @@ type UpdateMetadataAccountParam struct {
 	PrimarySaleHappened *bool
 }
 
+// Deprecated: please use UpdateMetadataAccountV2
 func UpdateMetadataAccount(param UpdateMetadataAccountParam) types.Instruction {
 	data, err := borsh.Serialize(struct {
 		Instruction         Instruction
@@ -172,6 +174,43 @@ func UpdateMetadataAccount(param UpdateMetadataAccountParam) types.Instruction {
 				IsSigner:   true,
 				IsWritable: false,
 			},
+		},
+		Data: data,
+	}
+}
+
+type UpdateMetadataAccountV2Param struct {
+	MetadataAccount     common.PublicKey
+	UpdateAuthority     common.PublicKey
+	Data                *DataV2
+	NewUpdateAuthority  *common.PublicKey
+	PrimarySaleHappened *bool
+	IsMutable           *bool
+}
+
+func UpdateMetadataAccountV2(param UpdateMetadataAccountV2Param) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction         Instruction
+		Data                *DataV2
+		NewUpdateAuthority  *common.PublicKey
+		PrimarySaleHappened *bool
+		IsMutable           *bool
+	}{
+		Instruction:         InstructionUpdateMetadataAccountV2,
+		Data:                param.Data,
+		NewUpdateAuthority:  param.NewUpdateAuthority,
+		PrimarySaleHappened: param.PrimarySaleHappened,
+		IsMutable:           param.IsMutable,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return types.Instruction{
+		ProgramID: common.MetaplexTokenMetaProgramID,
+		Accounts: []types.AccountMeta{
+			{PubKey: param.MetadataAccount, IsSigner: false, IsWritable: true},
+			{PubKey: param.UpdateAuthority, IsSigner: true, IsWritable: false},
 		},
 		Data: data,
 	}
