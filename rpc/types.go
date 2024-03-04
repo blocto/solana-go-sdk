@@ -46,6 +46,33 @@ type AccountInfo struct {
 	Executable bool   `json:"executable"`
 }
 
+type AccountInfoWithData struct {
+	Lamports   uint64          `json:"lamports"`
+	Owner      string          `json:"owner"`
+	Executable bool            `json:"executable"`
+	RentEpoch  uint64          `json:"rentEpoch"`
+	Data       DataResultValue `json:"data"`
+}
+
+type DataResultValue struct {
+	Program string      `json:"program"`
+	Space   uint64      `json:"space"`
+	Parsed  ParseStruct `json:"parsed"`
+}
+
+type ParseStruct struct {
+	Type string     `json:"type"`
+	Info InfoStruct `json:"info"`
+}
+
+type InfoStruct struct {
+	IsNative    bool        `json:"isNative"`
+	Mint        string      `json:"mint"`
+	Owner       string      `json:"owner"`
+	State       string      `json:"state"`
+	TokenAmount interface{} `json:"tokenAmount"`
+}
+
 type TokenAccountBalance struct {
 	Amount         string `json:"amount"`
 	Decimals       uint8  `json:"decimals"`

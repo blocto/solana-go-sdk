@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 
 	"github.com/blocto/solana-go-sdk/common"
@@ -41,14 +42,35 @@ func convertAccountInfo(v rpc.AccountInfo) (AccountInfo, error) {
 	}, nil
 }
 
+func convertAccountInfoWithData(v rpc.AccountInfoWithData) (AccountInfo, error) {
+	if v == (rpc.AccountInfoWithData{}) {
+		return AccountInfo{}, nil
+	}
+	rawData, err := json.Marshal(v.Data)
+	if err != nil {
+		return AccountInfo{}, fmt.Errorf("failed to base64 decode data")
+	}
+	return AccountInfo{
+		Lamports:   v.Lamports,
+		Owner:      common.PublicKeyFromString(v.Owner),
+		Executable: v.Executable,
+		RentEpoch:  v.RentEpoch,
+		Data:       rawData,
+	}, nil
+}
+
 type GetAccountInfoConfig struct {
+	Encoding   rpc.AccountEncoding
 	Commitment rpc.Commitment
 	DataSlice  *rpc.DataSlice
 }
 
 func (c GetAccountInfoConfig) toRpc() rpc.GetAccountInfoConfig {
+	if c.Encoding == "" {
+		c.Encoding = rpc.AccountEncodingBase64
+	}
 	return rpc.GetAccountInfoConfig{
-		Encoding:   rpc.AccountEncodingBase64,
+		Encoding:   c.Encoding,
 		Commitment: c.Commitment,
 		DataSlice:  c.DataSlice,
 	}
@@ -66,6 +88,14 @@ func (c *Client) GetAccountInfo(ctx context.Context, base58Addr string) (Account
 
 // GetAccountInfoWithConfig return account's info
 func (c *Client) GetAccountInfoWithConfig(ctx context.Context, base58Addr string, cfg GetAccountInfoConfig) (AccountInfo, error) {
+	if cfg.Encoding == rpc.AccountEncodingJsonParsed {
+		return process(
+			func() (rpc.JsonRpcResponse[rpc.ValueWithContext[rpc.AccountInfo]], error) {
+				return c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, cfg.toRpc())
+			},
+			convertGetAccountInfoWithData,
+		)
+	}
 	return process(
 		func() (rpc.JsonRpcResponse[rpc.ValueWithContext[rpc.AccountInfo]], error) {
 			return c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, cfg.toRpc())
@@ -78,7 +108,7 @@ func (c *Client) GetAccountInfoWithConfig(ctx context.Context, base58Addr string
 func (c *Client) GetAccountInfoAndContext(ctx context.Context, base58Addr string) (rpc.ValueWithContext[AccountInfo], error) {
 	return process(
 		func() (rpc.JsonRpcResponse[rpc.ValueWithContext[rpc.AccountInfo]], error) {
-			return c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, GetAccountInfoConfig{}.toRpc())
+			return c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, GetAccountInfoConfig{Encoding: rpc.AccountEncodingBase64}.toRpc())
 		},
 		convertGetAccountInfoAndContext,
 	)
@@ -96,6 +126,10 @@ func (c *Client) GetAccountInfoAndContextWithConfig(ctx context.Context, base58A
 
 func convertGetAccountInfo(v rpc.ValueWithContext[rpc.AccountInfo]) (AccountInfo, error) {
 	return convertAccountInfo(v.Value)
+}
+
+func convertGetAccountInfoWithData(v rpc.ValueWithContext[rpc.AccountInfoWithData]) (AccountInfo, error) {
+	return convertAccountInfoWithData(v.Value)
 }
 
 func convertGetAccountInfoAndContext(v rpc.ValueWithContext[rpc.AccountInfo]) (rpc.ValueWithContext[AccountInfo], error) {
