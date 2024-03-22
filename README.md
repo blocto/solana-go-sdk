@@ -85,7 +85,7 @@ func main() {
 	balance, err = c.GetBalanceWithConfig(
 		context.TODO(),
 		"RNfp4xTbBb4C3kcv2KqtAj8mu4YhMHxqm1Skg9uchZ7",
-		rpc.GetBalanceConfig{
+		client.GetBalanceConfig{
 			Commitment: rpc.CommitmentProcessed,
 		},
 	)
@@ -109,7 +109,7 @@ func main() {
 
 ## Programing model & Program
 
-There are some important tpyes in solana.
+There are some important types in solana.
 
 - Program
 
