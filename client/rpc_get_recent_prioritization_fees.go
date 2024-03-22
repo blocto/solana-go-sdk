@@ -20,3 +20,17 @@ func (c *Client) GetRecentPrioritizationFees(ctx context.Context, addresses []co
 		forward[rpc.PrioritizationFees],
 	)
 }
+
+// GetRecentPrioritizationFeesWithConfig ...
+func (c *Client) GetRecentPrioritizationFeesWithConfig(ctx context.Context, addresses []common.PublicKey, cfg rpc.GetRecentPrioritizationFeesConfig) (rpc.PrioritizationFees, error) {
+	return process(
+		func() (rpc.JsonRpcResponse[rpc.PrioritizationFees], error) {
+			a := make([]string, 0, len(addresses))
+			for _, address := range addresses {
+				a = append(a, address.ToBase58())
+			}
+			return c.RpcClient.GetRecentPrioritizationFeesWithConfig(ctx, a, cfg)
+		},
+		forward[rpc.PrioritizationFees],
+	)
+}
