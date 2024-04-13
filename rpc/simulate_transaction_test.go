@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/blocto/solana-go-sdk/internal/client_test"
+	"github.com/blocto/solana-go-sdk/pkg/pointer"
 )
 
 func TestSimulateTransaction(t *testing.T) {
@@ -207,6 +208,7 @@ func TestSimulateTransaction(t *testing.T) {
 								ProgramId: "35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP",
 								Data:      []any{"AQIDBAU=", "base64"},
 							},
+							UnitConsumed: pointer.Get[uint64](185),
 						},
 					},
 				},

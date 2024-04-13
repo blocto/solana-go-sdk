@@ -6,6 +6,7 @@ import (
 
 	"github.com/blocto/solana-go-sdk/common"
 	"github.com/blocto/solana-go-sdk/internal/client_test"
+	"github.com/blocto/solana-go-sdk/pkg/pointer"
 	"github.com/blocto/solana-go-sdk/rpc"
 )
 
@@ -36,6 +37,7 @@ func TestClient_SimulateTransaction(t *testing.T) {
 						ProgramId: common.PublicKeyFromString("35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP"),
 						Data:      []byte{1, 2, 3, 4, 5},
 					},
+					UnitConsumed: pointer.Get[uint64](185),
 				},
 				ExpectedError: nil,
 			},
@@ -75,6 +77,7 @@ func TestClient_SimulateTransactionAndContext(t *testing.T) {
 							ProgramId: common.PublicKeyFromString("35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP"),
 							Data:      []byte{1, 2, 3, 4, 5},
 						},
+						UnitConsumed: pointer.Get[uint64](185),
 					},
 				},
 				ExpectedError: nil,

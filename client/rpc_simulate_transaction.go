@@ -10,10 +10,11 @@ import (
 )
 
 type SimulateTransaction struct {
-	Err        any
-	Logs       []string
-	Accounts   []*AccountInfo
-	ReturnData *ReturnData
+	Err          any
+	Logs         []string
+	Accounts     []*AccountInfo
+	ReturnData   *ReturnData
+	UnitConsumed *uint64
 }
 
 type SimulateTransactionConfig struct {
@@ -135,10 +136,11 @@ func convertSimulateTransaction(v rpc.ValueWithContext[rpc.SimulateTransactionVa
 	}
 
 	return SimulateTransaction{
-		Err:        v.Value.Err,
-		Logs:       v.Value.Logs,
-		Accounts:   accountInfos,
-		ReturnData: returnData,
+		Err:          v.Value.Err,
+		Logs:         v.Value.Logs,
+		Accounts:     accountInfos,
+		ReturnData:   returnData,
+		UnitConsumed: v.Value.UnitConsumed,
 	}, nil
 }
 

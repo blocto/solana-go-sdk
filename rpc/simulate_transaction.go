@@ -10,10 +10,11 @@ type SimulateTransaction ValueWithContext[SimulateTransactionValue]
 
 // SimulateTransactionValue is a part of SimulateTransactionResponseResult
 type SimulateTransactionValue struct {
-	Err        any            `json:"err"`
-	Logs       []string       `json:"logs,omitempty"`
-	Accounts   []*AccountInfo `json:"accounts,omitempty"`
-	ReturnData *ReturnData    `json:"returnData,omitempty"`
+	Err          any            `json:"err"`
+	Logs         []string       `json:"logs,omitempty"`
+	Accounts     []*AccountInfo `json:"accounts,omitempty"`
+	ReturnData   *ReturnData    `json:"returnData,omitempty"`
+	UnitConsumed *uint64        `json:"unitsConsumed,omitempty"`
 }
 
 type SimulateTransactionConfig struct {
