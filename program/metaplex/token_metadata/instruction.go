@@ -642,6 +642,63 @@ func CreateMetadataAccountV3(param CreateMetadataAccountV3Param) types.Instructi
 	}
 }
 
+type VerifyCollectionParams struct {
+	Metadata                       common.PublicKey
+	CollectionAuthority            common.PublicKey
+	Payer                          common.PublicKey
+	CollectionMint                 common.PublicKey
+	Collection                     common.PublicKey
+	CollectionMasterEditionAccount common.PublicKey
+}
+
+func CreateVerifyCollection(param VerifyCollectionParams) types.Instruction {
+	data, err := borsh.Serialize(struct {
+		Instruction Instruction
+	}{
+		Instruction: InstructionVerifyCollection,
+	})
+	if err != nil {
+		panic(err)
+	}
+	accounts := []types.AccountMeta{
+		{
+			PubKey:     param.Metadata,
+			IsWritable: true,
+			IsSigner:   false,
+		},
+		{
+			PubKey:     param.CollectionAuthority,
+			IsWritable: true,
+			IsSigner:   true,
+		},
+		{
+			PubKey:     param.Payer,
+			IsWritable: true,
+			IsSigner:   true,
+		},
+		{
+			PubKey:     param.CollectionMint,
+			IsWritable: false,
+			IsSigner:   false,
+		},
+		{
+			PubKey:     param.Collection,
+			IsWritable: false,
+			IsSigner:   false,
+		},
+		{
+			PubKey:     param.CollectionMasterEditionAccount,
+			IsWritable: false,
+			IsSigner:   false,
+		},
+	}
+	return types.Instruction{
+		ProgramID: common.MetaplexTokenMetaProgramID,
+		Accounts:  accounts,
+		Data:      data,
+	}
+}
+
 type SetAndVerifyCollectionParams struct {
 	Metadata                       common.PublicKey
 	CollectionAuthority            common.PublicKey
