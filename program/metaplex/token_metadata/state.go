@@ -149,52 +149,8 @@ func MetadataDeserialize(data []byte) (Metadata, error) {
 	return metadata, nil
 }
 
-type MetadataWithEdition struct {
-	Key                 Key
-	UpdateAuthority     common.PublicKey
-	Mint                common.PublicKey
-	Data                Data
-	PrimarySaleHappened bool
-	IsMutable           bool
-	EditionNonce        *uint8
-	TokenStandard       *TokenStandard
-	Collection          *Collection
-	Uses                *Uses
-	CollectionDetails   *CollectionDetails
-	ProgrammableConfig  *ProgrammableConfig
-	MasterEditionV2     *MasterEditionV2 `json:"edition,omitempty"`
-}
-
 type MasterEditionV2 struct {
 	Key       Key
 	Supply    uint64
 	MaxSupply *uint64
-}
-
-func MetadataWithEditionDeserialize(data []byte) (MetadataWithEdition, error) {
-	var metadata MetadataWithEdition
-	err := borsh.Deserialize(&metadata, data)
-	if err != nil {
-		// https://github.com/samuelvanderwaal/metaboss/issues/121
-		// https://github.com/metaplex-foundation/metaplex-program-library/pull/407
-		// C.f. https://github.com/metaplex-foundation/metaplex-program-library/blob/master/token-metadata/program/src/deser.rs#L12
-		var metadataPreV11 metadataPreV11
-		err := borsh.Deserialize(&metadataPreV11, data)
-		if err != nil {
-			return MetadataWithEdition{}, fmt.Errorf("failed to deserialize data, err: %v", err)
-		} else {
-			metadata.Key = metadataPreV11.Key
-			metadata.UpdateAuthority = metadataPreV11.UpdateAuthority
-			metadata.Mint = metadataPreV11.Mint
-			metadata.Data = metadataPreV11.Data
-			metadata.PrimarySaleHappened = metadataPreV11.PrimarySaleHappened
-			metadata.IsMutable = metadataPreV11.IsMutable
-			metadata.EditionNonce = metadataPreV11.EditionNonce
-		}
-	}
-	// trim null byte
-	metadata.Data.Name = strings.TrimRight(metadata.Data.Name, "\x00")
-	metadata.Data.Symbol = strings.TrimRight(metadata.Data.Symbol, "\x00")
-	metadata.Data.Uri = strings.TrimRight(metadata.Data.Uri, "\x00")
-	return metadata, nil
 }
