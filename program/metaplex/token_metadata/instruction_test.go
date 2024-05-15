@@ -455,3 +455,44 @@ func TestCreateMetadataAccountV2(t *testing.T) {
 		})
 	}
 }
+
+func TestCreateVerifyCollection(t *testing.T) {
+	type args struct {
+		param VerifyCollectionParams
+	}
+	tests := []struct {
+		name string
+		args args
+		want types.Instruction
+	}{
+		{
+			args: args{
+				param: VerifyCollectionParams{
+					Metadata:                       common.PublicKeyFromString("MetaData11111111111111111111111111111111111"),
+					CollectionUpdateAuthority:      common.PublicKeyFromString("CollectionUpdateAuthority111111111111111111"),
+					Payer:                          common.PublicKeyFromString("payer11111111111111111111111111111111111111"),
+					CollectionMint:                 common.PublicKeyFromString("CollectionMint11111111111111111111111111111"),
+					Collection:                     common.PublicKeyFromString("Collection111111111111111111111111111111111"),
+					CollectionMasterEditionAccount: common.PublicKeyFromString("CollectionMasterEditionAccount1111111111111"),
+				},
+			},
+			want: types.Instruction{
+				ProgramID: common.MetaplexTokenMetaProgramID,
+				Accounts: []types.AccountMeta{
+					{PubKey: common.PublicKeyFromString("MetaData11111111111111111111111111111111111"), IsSigner: false, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("CollectionUpdateAuthority111111111111111111"), IsSigner: true, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("payer11111111111111111111111111111111111111"), IsSigner: true, IsWritable: true},
+					{PubKey: common.PublicKeyFromString("CollectionMint11111111111111111111111111111"), IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("Collection111111111111111111111111111111111"), IsSigner: false, IsWritable: false},
+					{PubKey: common.PublicKeyFromString("CollectionMasterEditionAccount1111111111111"), IsSigner: false, IsWritable: false},
+				},
+				Data: []byte{18},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, CreateVerifyCollection(tt.args.param), "CreateVerifyCollection(%v)", tt.args.param)
+		})
+	}
+}

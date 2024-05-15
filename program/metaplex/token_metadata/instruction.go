@@ -644,7 +644,7 @@ func CreateMetadataAccountV3(param CreateMetadataAccountV3Param) types.Instructi
 
 type VerifyCollectionParams struct {
 	Metadata                       common.PublicKey
-	CollectionAuthority            common.PublicKey
+	CollectionUpdateAuthority      common.PublicKey
 	Payer                          common.PublicKey
 	CollectionMint                 common.PublicKey
 	Collection                     common.PublicKey
@@ -667,7 +667,7 @@ func CreateVerifyCollection(param VerifyCollectionParams) types.Instruction {
 			IsSigner:   false,
 		},
 		{
-			PubKey:     param.CollectionAuthority,
+			PubKey:     param.CollectionUpdateAuthority,
 			IsWritable: true,
 			IsSigner:   true,
 		},
@@ -691,77 +691,6 @@ func CreateVerifyCollection(param VerifyCollectionParams) types.Instruction {
 			IsWritable: false,
 			IsSigner:   false,
 		},
-	}
-	return types.Instruction{
-		ProgramID: common.MetaplexTokenMetaProgramID,
-		Accounts:  accounts,
-		Data:      data,
-	}
-}
-
-type SetAndVerifyCollectionParams struct {
-	Metadata                       common.PublicKey
-	CollectionAuthority            common.PublicKey
-	Payer                          common.PublicKey
-	UpdateAuthority                common.PublicKey
-	CollectionMint                 common.PublicKey
-	Collection                     common.PublicKey
-	CollectionMasterEditionAccount common.PublicKey
-	CollectionAuthorityRecord      *common.PublicKey
-}
-
-func CreateSetAndVerifyCollection(param SetAndVerifyCollectionParams) types.Instruction {
-	data, err := borsh.Serialize(struct {
-		Instruction Instruction
-	}{
-		Instruction: InstructionSetAndVerifyCollection,
-	})
-	if err != nil {
-		panic(err)
-	}
-	accounts := []types.AccountMeta{
-		{
-			PubKey:     param.Metadata,
-			IsWritable: true,
-			IsSigner:   false,
-		},
-		{
-			PubKey:     param.CollectionAuthority,
-			IsWritable: true,
-			IsSigner:   true,
-		},
-		{
-			PubKey:     param.Payer,
-			IsWritable: true,
-			IsSigner:   true,
-		},
-		{
-			PubKey:     param.UpdateAuthority,
-			IsWritable: false,
-			IsSigner:   false,
-		},
-		{
-			PubKey:     param.CollectionMint,
-			IsWritable: false,
-			IsSigner:   false,
-		},
-		{
-			PubKey:     param.Collection,
-			IsWritable: false,
-			IsSigner:   false,
-		},
-		{
-			PubKey:     param.CollectionMasterEditionAccount,
-			IsWritable: false,
-			IsSigner:   false,
-		},
-	}
-	if param.CollectionAuthorityRecord != nil {
-		accounts = append(accounts, types.AccountMeta{
-			PubKey:     *param.CollectionAuthorityRecord,
-			IsWritable: false,
-			IsSigner:   false,
-		})
 	}
 	return types.Instruction{
 		ProgramID: common.MetaplexTokenMetaProgramID,
