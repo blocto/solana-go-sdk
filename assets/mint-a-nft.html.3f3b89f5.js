@@ -1,0 +1,1 @@
+const t={key:"v-23bafe30",path:"/nft/mint-a-nft.html",title:"Mint A NFT",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1646244832e3,contributors:[{name:"yihau",email:"a122092487@gmail.com",commits:1}]},filePathRelative:"nft/mint-a-nft.md"};export{t as data};

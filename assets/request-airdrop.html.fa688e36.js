@@ -1,0 +1,1 @@
+const t={key:"v-79469b88",path:"/tour/request-airdrop.html",title:"Request Airdrop",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1646071383e3,contributors:[{name:"yihau",email:"a122092487@gmail.com",commits:1}]},filePathRelative:"tour/request-airdrop.md"};export{t as data};

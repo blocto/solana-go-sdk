@@ -1,0 +1,1 @@
+const t={key:"v-2c025226",path:"/programs/stake/initialize-account.html",title:"Initialize Account",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1707888442e3,contributors:[{name:"yihau",email:"yihau.chen@icloud.com",commits:1}]},filePathRelative:"programs/stake/initialize-account.md"};export{t as data};

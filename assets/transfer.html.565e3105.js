@@ -1,0 +1,1 @@
+const e={key:"v-7c3a81e0",path:"/tour/transfer.html",title:"Transfer",lang:"en-US",frontmatter:{},excerpt:"",headers:[{level:2,title:"Full Code",slug:"full-code",children:[]}],git:{updatedTime:1646071383e3,contributors:[{name:"yihau",email:"a122092487@gmail.com",commits:1}]},filePathRelative:"tour/transfer.md"};export{e as data};

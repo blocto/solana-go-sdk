@@ -1,0 +1,1 @@
+const e={key:"v-ab1b707e",path:"/advanced/durable-nonce/get-nonce-account-by-owner.html",title:"Get Nonce Account By Owner",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:16553163e5,contributors:[{name:"yihau",email:"a122092487@gmail.com",commits:1}]},filePathRelative:"advanced/durable-nonce/get-nonce-account-by-owner.md"};export{e as data};

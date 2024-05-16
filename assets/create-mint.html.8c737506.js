@@ -1,0 +1,1 @@
+const t={key:"v-6a1127a4",path:"/tour/create-mint.html",title:"Create Mint",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1646071383e3,contributors:[{name:"yihau",email:"a122092487@gmail.com",commits:1}]},filePathRelative:"tour/create-mint.md"};export{t as data};

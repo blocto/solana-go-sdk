@@ -1,0 +1,1 @@
+const t={key:"v-a02bf734",path:"/nft/sign-metadata.html",title:"Sign Metadata",lang:"en-US",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1646244832e3,contributors:[{name:"yihau",email:"a122092487@gmail.com",commits:1}]},filePathRelative:"nft/sign-metadata.md"};export{t as data};
