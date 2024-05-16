@@ -649,6 +649,7 @@ type VerifyCollectionParams struct {
 	CollectionMint                 common.PublicKey
 	Collection                     common.PublicKey
 	CollectionMasterEditionAccount common.PublicKey
+	CollectionAuthorityRecord      *common.PublicKey
 }
 
 func CreateVerifyCollection(param VerifyCollectionParams) types.Instruction {
@@ -691,6 +692,13 @@ func CreateVerifyCollection(param VerifyCollectionParams) types.Instruction {
 			IsWritable: false,
 			IsSigner:   false,
 		},
+	}
+	if param.CollectionAuthorityRecord != nil {
+		accounts = append(accounts, types.AccountMeta{
+			PubKey:     *param.CollectionAuthorityRecord,
+			IsWritable: false,
+			IsSigner:   false,
+		})
 	}
 	return types.Instruction{
 		ProgramID: common.MetaplexTokenMetaProgramID,
