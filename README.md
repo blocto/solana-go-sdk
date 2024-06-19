@@ -119,7 +119,7 @@ resides in the `program/` folder.
 
 resides in the `common/` folder.
 
-- Insturciton (contain many pubkeys and program ID)
+- Instruction (contain many pubkeys and program ID)
 - Message (contain many instructions)
 - Transaction (contain a message and many signatures)
 - Account (a pub/pri keypair )
